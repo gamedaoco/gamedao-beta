@@ -16,76 +16,86 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
+import Crowdfunding from './Crowdfunding';
+
 function Main () {
-  const [accountAddress, setAccountAddress] = useState(null);
-  const { apiState, keyring, keyringState, apiError } = useSubstrate();
-  const accountPair =
-    accountAddress &&
-    keyringState === 'READY' &&
-    keyring.getPair(accountAddress);
 
-  const loader = text =>
-    <Dimmer active>
-      <Loader size='small'>{text}</Loader>
-    </Dimmer>;
+	const [accountAddress, setAccountAddress] = useState(null);
+	const { apiState, keyring, keyringState, apiError } = useSubstrate();
+	const accountPair =
+		accountAddress &&
+		keyringState === 'READY' &&
+		keyring.getPair(accountAddress);
 
-  const message = err =>
-    <Grid centered columns={2} padded>
-      <Grid.Column>
-        <Message negative compact floating
-          header='Error Connecting to Substrate'
-          content={`${JSON.stringify(err, null, 4)}`}
-        />
-      </Grid.Column>
-    </Grid>;
+	const loader = text =>
+		<Dimmer active>
+			<Loader size='small'>{text}</Loader>
+		</Dimmer>;
 
-  if (apiState === 'ERROR') return message(apiError);
-  else if (apiState !== 'READY') return loader('Connecting to Substrate');
+	const message = err =>
+		<Grid centered columns={2} padded>
+			<Grid.Column>
+				<Message negative compact floating
+					header='Error Connecting to ZERO.IO'
+					content={`${JSON.stringify(err, null, 4)}`}
+				/>
+			</Grid.Column>
+		</Grid>;
 
-  if (keyringState !== 'READY') {
-    return loader('Loading accounts (please review any extension\'s authorization)');
-  }
+	if (apiState === 'ERROR') return message(apiError);
+	else if (apiState !== 'READY') return loader('Connecting to ZERO.IO');
 
-  const contextRef = createRef();
+	if (keyringState !== 'READY') {
+		return loader('Loading accounts (please review any extension\'s authorization)');
+	}
 
-  return (
-    <div ref={contextRef}>
-      <Sticky context={contextRef}>
-        <AccountSelector setAccountAddress={setAccountAddress} />
-      </Sticky>
-      <Container>
-        <Grid stackable columns='equal'>
-          <Grid.Row stretched>
-            <NodeInfo />
-            <Metadata />
-            <BlockNumber />
-            <BlockNumber finalized />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
-          <Grid.Row>
-            <Transfer accountPair={accountPair} />
-            <Upgrade accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row>
-            <Interactor accountPair={accountPair} />
-            <Events />
-          </Grid.Row>
-          <Grid.Row>
-            <TemplateModule accountPair={accountPair} />
-          </Grid.Row>
-        </Grid>
-      </Container>
-      <DeveloperConsole />
-    </div>
-  );
+	const contextRef = createRef();
+
+	return (
+
+		<div ref={contextRef}>
+
+			<Sticky context={contextRef}>
+				<AccountSelector setAccountAddress={setAccountAddress} />
+			</Sticky>
+
+			<Container>
+				<Grid stackable columns='equal'>
+
+					<Grid.Row stretched>
+						<Crowdfunding accountPair={accountPair}/>
+					</Grid.Row>
+
+					<Grid.Row stretched>
+						<NodeInfo />
+						<Metadata />
+						<BlockNumber />
+						<BlockNumber finalized />
+					</Grid.Row>
+
+					<Grid.Row stretched>
+						{/*<Balances />*/}
+					</Grid.Row>
+
+					<Grid.Row stretched>
+						<Interactor accountPair={accountPair} />
+					</Grid.Row>
+
+					<Grid.Row stretched>
+						<Events />
+					</Grid.Row>
+
+				</Grid>
+			</Container>
+			<DeveloperConsole />
+		</div>
+	);
 }
 
 export default function App () {
-  return (
-    <SubstrateContextProvider>
-      <Main />
-    </SubstrateContextProvider>
-  );
+	return (
+		<SubstrateContextProvider>
+			<Main />
+		</SubstrateContextProvider>
+	);
 }
