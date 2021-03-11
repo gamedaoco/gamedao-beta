@@ -16,7 +16,7 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
-import Crowdfunding from './Crowdfunding';
+import GameDAO from './GameDAO';
 
 function Main () {
 
@@ -63,7 +63,7 @@ function Main () {
 				<Grid stackable columns='equal'>
 
 					<Grid.Row stretched>
-						<Crowdfunding accountPair={accountPair}/>
+						<GameDAO accountPair={accountPair}/>
 					</Grid.Row>
 
 					<Grid.Row stretched>
