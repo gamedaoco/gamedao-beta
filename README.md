@@ -1,19 +1,16 @@
-# Substrate Front End Template
+# GameDAO Frontend
 
-This template allows you to create a front-end application that connects to a
-[Substrate](https://github.com/paritytech/substrate) node back-end with minimal
-configuration. To learn about Substrate itself, visit the
-[Substrate Developer Hub](https://substrate.dev).
+GameDAO is a EU based community owned and governed cooperative providing crowdfunding and governance protocols for the videogames, creative content and eSports community.
 
-The template is built with [Create React App](https://github.com/facebook/create-react-app)
-and [Polkadot js API](https://polkadot.js.org/api/). Familiarity with these tools
-will be helpful, but the template strives to be self-explanatory.
+GameDAO as a dApp is running on [ZERO.IO](https://zero.io), a substrate based multichain network for the Metaverse featuring unique, decentralised protocols for the videogames industry.
+
+This is a proof of concept dApp featuring fundraising, governance and other functionality based on [Substrate Frontend Template](https://github.com/substrate-developer-hub/substrate-front-end-template).
 
 ## Using The Template
 
 ### Installation
 
-The codebase is installed using [git](https://git-scm.com/) and [yarn](https://yarnpkg.com/). This tutorial assumes you have installed yarn globally prior to installing it within the subdirectories. For the most recent version and how to install yarn, please refer to [yarn](https://yarnpkg.com/) documentation and installation guides. 
+The codebase is installed using [git](https://git-scm.com/) and [yarn](https://yarnpkg.com/). This tutorial assumes you have installed yarn globally prior to installing it within the subdirectories. For the most recent version and how to install yarn, please refer to [yarn](https://yarnpkg.com/) documentation and installation guides.
 
 ```bash
 # Clone the repository
