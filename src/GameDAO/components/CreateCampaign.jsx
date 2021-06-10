@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 
 import moment from 'moment'
 
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../../substrate-lib'
 import { TxButton } from '../../substrate-lib/components'
 
@@ -45,6 +46,10 @@ export const Create = props => {
 	const { accountPair, accountAddress } = props
 	const [ status, setStatus ] = useState(true)
 
+	const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
+
+
+
 	const initialState = {
 		// to ipfs
 		applicant_name: '',
@@ -66,11 +71,34 @@ export const Create = props => {
 
 	    console.log('values',values);
 
+		const getFromAcct = async () => {
+			const {
+				address,
+				meta: { source, isInjected }
+			} = accountPair;
+			let fromAcct;
+
+			// signer is from Polkadot-js browser extension
+			if (isInjected) {
+				const injected = await web3FromSource(source);
+				fromAcct = address;
+				api.setSigner(injected.signer);
+			} else {
+				fromAcct = accountPair;
+			}
+
+			return fromAcct;
+		}
+
+		const fromAcct = getFromAcct()
+		console.log (fromAcct.address)
+
 		const subscribe = async () => {
+
 
 			// const payload = [ accountPair.address, 'test', 10000, 10, 5000, 1, 1, 0 ]
 			const payload = [
-				accountPair.address,
+				fromAcct.address, //accountPair.address,
 				values.campaign_name,
 				values.target,
 				values.deposit,
@@ -92,9 +120,11 @@ export const Create = props => {
 							if (error.isModule) {
 								const decoded = api.registry.findMetaError(error.asModule);
 								const { documentation, method, section } = decoded;
-								console.log(`${section}.${method}: ${documentation.join(' ')}`);
+								const msg = `${section}.${method}: ${documentation.join(' ')}`
+								console.log('msg', msg);
 							} else {
-								console.log(error.toString());
+								const err = error.toString()
+								console.log('err', err);
 							}
 						});
 						formikApi.setSubmitting(false)
