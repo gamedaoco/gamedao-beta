@@ -112,7 +112,7 @@ const CampaignCard = props => {
 	const protocol = CampaignProtocol[data.protocol]
 	const governance = data.governance
 
-	// console.log(data)
+	console.log(data)
 	// const remaining = blocksToTime(data.expiry) - new Date().now()
 	// console.log('update',Date.now())
 	//
@@ -169,12 +169,13 @@ const CampaignGrid = props => {
 
 	const { campaigns } = props
 	const [ content, setContent ] = useState([])
-	const { gridOffset, setGridOffset } = useState(0)
-	const { gridItems, setGridItems } = useState(3)
-	const { page, setPage } = useState(0)
 
 	if ( !campaigns ) return <div>No campaigns yet. Create one!</div>
 	if ( content !== campaigns ) setContent( campaigns )
+
+	const { gridOffset, setGridOffset } = useState(0)
+	const { gridItems, setGridItems } = useState(3)
+	const { page, setPage } = useState(0)
 
 	return (
 		<Container>

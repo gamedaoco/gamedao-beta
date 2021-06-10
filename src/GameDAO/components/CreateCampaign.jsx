@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 
 import moment from 'moment'
 
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../../substrate-lib'
 import { TxButton } from '../../substrate-lib/components'
 
@@ -23,7 +24,7 @@ import {
 	Grid,
 	Card,
 	Statistic,
-	Divider
+	Divider,
 } from 'semantic-ui-react'
 
 import {
@@ -43,9 +44,11 @@ export const Create = props => {
 
 	const { api } = useSubstrate()
 	const { accountPair, accountAddress } = props
-	console.log( 'address', accountPair && accountPair.address )
-
 	const [ status, setStatus ] = useState(true)
+
+	const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
+
+
 
 	const initialState = {
 		// to ipfs
@@ -64,31 +67,51 @@ export const Create = props => {
 		governance: false,
 	}
 
-	const [ formData, setFormData ] = useState(initialState)
-	const { campaign_name, deposit, target, duration } = formData
-
 	const handleSubmit = (values, formikApi) => {
 
-	    console.log(values);
+	    console.log('values',values);
+
+		const getFromAcct = async () => {
+			const {
+				address,
+				meta: { source, isInjected }
+			} = accountPair;
+			let fromAcct;
+
+			// signer is from Polkadot-js browser extension
+			if (isInjected) {
+				const injected = await web3FromSource(source);
+				fromAcct = address;
+				api.setSigner(injected.signer);
+			} else {
+				fromAcct = accountPair;
+			}
+
+			return fromAcct;
+		}
+
+		const fromAcct = getFromAcct()
+		console.log (fromAcct.address)
 
 		const subscribe = async () => {
 
-			console.log('create')
 
-			const c = [
-				accountPair.address,
-	    		'test',
-	    		10000,
-	    		10,
-	    		5000,
-	    		1,
-	    		1,
-	    		0
-	    	]
-
-		    const campaign = api.tx.gameDaoCrowdfunding.create(...c)
+			// const payload = [ accountPair.address, 'test', 10000, 10, 5000, 1, 1, 0 ]
+			const payload = [
+				fromAcct.address, //accountPair.address,
+				values.campaign_name,
+				values.target,
+				values.deposit,
+				values.duration,
+				values.protocol,
+				( values.governance ) ? 1 : 0,
+				'cid'
+			]
+		    const campaign = api.tx.gameDaoCrowdfunding.create(...payload)
 		    const send = campaign.signAndSend(
+
 		    	accountPair, ({ status, events }) => {
+
 					if (status.isInBlock || status.isFinalized) {
 						events.filter(({ event }) =>
 							api.events.system.ExtrinsicFailed.is(event)
@@ -97,25 +120,24 @@ export const Create = props => {
 							if (error.isModule) {
 								const decoded = api.registry.findMetaError(error.asModule);
 								const { documentation, method, section } = decoded;
-								console.log(`${section}.${method}: ${documentation.join(' ')}`);
+								const msg = `${section}.${method}: ${documentation.join(' ')}`
+								console.log('msg', msg);
 							} else {
-								console.log(error.toString());
+								const err = error.toString()
+								console.log('err', err);
 							}
 						});
 						formikApi.setSubmitting(false)
+						console.log('completed.')
 					}
+
 				}
+
 			)
 
 		}
 		subscribe()
 
-		// setTimeout(() => {
-		// 	Object.keys(values).forEach(key => {
-		// 		formikApi.setFieldError(key, 'Some Error');
-		// 	});
-		// 	formikApi.setSubmitting(false);
-		// }, 1000);
 	};
 
 	// dropdown content
@@ -171,22 +193,22 @@ export const Create = props => {
 			</p>
 
 			<Form
-				initialValues={initialState}
-				onSubmit={ handleSubmit }
-				render={({ handleReset }) => (
-
-					<Form.Children>
+				initialValues={ initialState }
+				onSubmit={ handleSubmit }>
 
 					{/* campaign name to be listed as */}
 
-					<Form.Input
+					<Input
 						fluid
-						label='Campaign name' placeholder='Campaign name' name={campaign_name} />
+						label='Campaign name'
+						placeholder='Campaign name'
+						name='campaign_name'
+						/>
 
 					{/* legal body applying for the funding */}
 
 					<Form.Group widths='equal'>
-						<Form.Input
+						<Input
 							fluid
 							label='Applicant Name'
 							placeholder='Applicant Name'
@@ -228,7 +250,7 @@ export const Create = props => {
 							/>
 
 					</Form.Group>
-						<Form.Checkbox
+						<Checkbox
 							label='DAO Governance'
 							name='governance'
 							/>
@@ -236,56 +258,21 @@ export const Create = props => {
 					{/*  */}
 
 					<Form.Group widths='equal'>
-						<Form.Input fluid label='Deposit (PLAY)' placeholder='Deposit'  name='deposit' />
-						<Form.Input fluid label='Funding Target (PLAY)' placeholder='Cap'  name='target' />
-						<Form.Input fluid label='Campaign Duration (blocks)' placeholder='blocks'  name='duration' />
+						<Input fluid label='Deposit (PLAY)' placeholder='Deposit'  name='deposit' />
+						<Input fluid label='Funding Target (PLAY)' placeholder='Cap'  name='target' />
+						<Input fluid label='Campaign Duration (blocks)' placeholder='blocks'  name='duration' />
 					</Form.Group>
 
-					<Form.TextArea label='Campaign Description' placeholder='Tell us more about your idea...'  name='description' />
+					<TextArea label='Campaign Description' placeholder='Tell us more about your idea...'  name='description' />
 
-					<Form.Checkbox label='I agree to the Terms and Conditions'  name='accept'/>
+					<Checkbox label='I agree to the Terms and Conditions'  name='accept'/>
 
 					<Container textAlign='right'>
+						<Button.Reset>Cancel</Button.Reset>
+						<Button.Submit>Submit</Button.Submit>
+        			</Container>
 
-						<Form.Button>Submit</Form.Button>
-
-						{ accountPair &&
-							// admin: T::AccountId,
-							// name: Vec<u8>,
-							// target: T::Balance,
-							// deposit: T::Balance,
-							// expiry: T::BlockNumber,
-							// TODO:current block + duration
-							// protocol: u8,
-							// governance: bool
-							<TxButton
-								accountPair={ accountPair }
-								label='Create'
-								type='SIGNED-TX'
-								setStatus={ setStatus }
-								attrs={{
-									palletRpc: 'gameDao',
-									callable: 'create',
-									inputParams: [
-										accountPair.address,
-										formData.campaign_name,
-										formData.target,
-										formData.deposit,
-										formData.duration,
-										formData.protocol,
-										formData.governance,
-									],
-									paramFields: [
-									true, true,
-									true,true,true,true,true
-									]
-								}}
-								/>
-						}
-
-					</Container>
-				</Form.Children>
-			)}/>
+			</Form>
 
 		</div>
 	)

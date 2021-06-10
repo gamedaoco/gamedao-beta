@@ -23,10 +23,11 @@ export const Stats = props => {
 	const { api } = useSubstrate()
 	const { accountPair } = props
 	const [ status, setStatus ] = useState('')
+
 	const [ data, setData ] = useState({
-		campaigns: 0,
-		contributions: 0,
-		contributors: 0,
+		total_campaigns: 0,    // all campaigns
+		total_value_locked: 0, // all contributions cumulated
+		total_contributors: 0, // all contributors
 	})
 
 	useEffect(() => {

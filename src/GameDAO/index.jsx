@@ -14,8 +14,11 @@ import { useSubstrate } from '../substrate-lib'
 
 import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
 // import Loader from '../components/Loader'
+//
 import Campaigns from './components/Campaigns'
-import CreateCampaign from './components/Create'
+import CreateCampaign from './components/CreateCampaign'
+// import Proposals from './components/Proposals'
+// import CreateProposal from './components/CreateProposal'
 
 const GameDAO = props => {
 
