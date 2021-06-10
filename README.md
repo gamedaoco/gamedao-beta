@@ -1,4 +1,4 @@
-# GameDAO Frontend
+# GameDAO POC
 
 GameDAO is a EU based community owned and governed cooperative providing crowdfunding and governance protocols for the videogames, creative content and eSports community.
 
