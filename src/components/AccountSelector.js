@@ -11,7 +11,7 @@ import {
   Label
 } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import { useSubstrate } from '../substrate-lib';
 
 function Main (props) {
   const { keyring } = useSubstrate();
@@ -48,13 +48,13 @@ function Main (props) {
       style={{
         backgroundColor: '#fff',
         borderColor: '#fff',
-        paddingTop: '1em',
-        paddingBottom: '1em'
+        paddingTop: '2em',
+        paddingBottom: '2em'
       }}
     >
       <Container>
         <Menu.Menu>
-          <Image src={`${process.env.PUBLIC_URL}/assets/zero-logo.png`} size='mini' />
+          <Image src={`${process.env.PUBLIC_URL}/assets/gamedao.png`} size='mini' />
         </Menu.Menu>
         <Menu.Menu position='right' style={{ alignItems: 'center' }}>
           { !accountSelected

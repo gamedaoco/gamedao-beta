@@ -5,15 +5,22 @@ import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
 import { Container, Grid, Sticky } from 'semantic-ui-react'
+
 import AccountSelector from './components/AccountSelector'
+import Balances from './components/Balances'
+import BlockNumber from './components/BlockNumber'
+import Events from './components/Events'
+import Interactor from './components/Interactor'
+import Metadata from './components/Metadata'
+import NodeInfo from './components/NodeInfo'
+import TemplateModule from './components/TemplateModule'
+import Transfer from './components/Transfer'
+import Upgrade from './components/Upgrade'
+
 import Loader from './components/Loader'
 import Message from './components/Message'
 
-import GameDAO from './GameDAO'
-
-function Main () {
-
-	const [sidebar, setSidebar] = useState(true)
+export const Network = () => {
 
 	const [ accountAddress, setAccountAddress ] = useState(null)
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
@@ -24,36 +31,35 @@ function Main () {
 
 	if (apiState === 'ERROR') return (<Message err={apiError} />)
 	else if (apiState !== 'READY') return (<Loader text='Connecting to ZERO.IO' />)
-
 	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
-
-	const contextRef = createRef()
 
 	return (
 		<React.Fragment>
-			<div ref={contextRef}>
+			<Grid stackable columns='equal'>
 
-				<Sticky context={contextRef}>
-					<AccountSelector setAccountAddress={setAccountAddress} />
-				</Sticky>
+				<Grid.Row stretched>
+					<NodeInfo />
+					<Metadata />
+					<BlockNumber />
+					<BlockNumber finalized />
+				</Grid.Row>
 
-				<Container>
-					<Grid>
-						<Grid.Row stretched>
-							<GameDAO accountPair={accountPair}/>
-						</Grid.Row>
-					</Grid>
-				</Container>
+				<Grid.Row stretched>
+					{/*<Balances />*/}
+				</Grid.Row>
 
-			</div>
+				<Grid.Row stretched>
+					<Interactor accountPair={accountPair} />
+				</Grid.Row>
+
+				<Grid.Row stretched>
+					<Events />
+				</Grid.Row>
+
+			</Grid>
+			<DeveloperConsole />
 		</React.Fragment>
 	)
 }
 
-export default function App () {
-	return (
-		<SubstrateContextProvider>
-			<Main />
-		</SubstrateContextProvider>
-	)
-}
+export default Network

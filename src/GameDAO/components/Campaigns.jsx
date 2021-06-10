@@ -200,41 +200,75 @@ const CampaignGrid = props => {
 export const Campaigns = props => {
 
 	const { api } = useSubstrate()
-	const { accountPair } = props
+	const { accountPair, accountAddress } = props
 	const [ hashes, setHashes ] = useState()
 	const [ campaigns, setCampaigns ] = useState()
+	const [ contributions, setContributions ] = useState()
 	const [ state, setState ] = useState({
+		nonce: 0,
 		all: 0,
 		owned: 0,
 		contributed: 0,
-		time: 0,
-		block: 0,
+		// time: 0,
+		// block: 0,
 	})
+
+	// get campaigns by index
+	//
+
+	const query = api.query.gameDaoCrowdfunding
+
+	useEffect(() => {
+
+		if (!accountPair) return
+		let unsubscribe
+
+		const subscribe = async () => {
+
+			let nonce
+			query.campaignsCount( nonce => {
+
+				const _state = {
+					...state,
+					nonce: nonce.toNumber()
+				}
+				setState( _state )
+				// console.log('nonce',nonce.toNumber())
+
+			}).then(unsub => {
+				unsubscribe = unsub;
+			}).catch(console.error);
+
+		}
+		subscribe()
+
+		return () => unsubscribe && unsubscribe()
+
+	}, [query.nonce, accountPair])
 
 	useEffect(() => {
 
 		if (!accountPair) return
 
-		const asyncSubscription = async () => {
+		let unsubscribe;
 
-			let unsubscribe;
+		const subscribe = async () => {
+
 			let all, contributed, owned
 
 			api.queryMulti([
-				api.query.gameDao.allCampaignsCount,
-				[api.query.gameDao.contributedCampaignsCount,accountPair.address],
-				[api.query.gameDao.ownedCampaignsCount,accountPair.address],
-				api.query.timestamp.now,
-				// api.derive.chain.bestNumber,
-			],([all,contributed,owned,time,block]) => {
+				query.campaignsCount,
+				[query.campaignsContributedCount, accountPair.address],
+				[query.campaignsOwnedCount, accountPair.address],
+				// api.query.timestamp.now,
+			],([all,contributed,owned,time]) => {
 
 				const _state = {
 					...state,
 					all: all.toNumber(),
 					contributed: contributed.toNumber(),
 					owned: owned.toNumber(),
-					time: time.toNumber(),
-					// block: block.toNumber(),
+					// time: time.toNumber(),
 				}
 				setState( _state )
 
@@ -242,35 +276,37 @@ export const Campaigns = props => {
 				unsubscribe = unsub;
 			}).catch(console.error);
 
-			return () => unsubscribe && unsubscribe()
 		}
+		subscribe()
 
-		asyncSubscription()
+		return () => unsubscribe && unsubscribe()
 
-	}, [api.query.gameDao.allCampaignsCount, accountPair])
+	}, [accountPair])
 
 	useEffect(() => {
 
-		if ( !accountPair ) return
+		if ( state.nonce === 0 ) return
 
-		// collect campaign hashes
-		const getHashes = async () => {
-			let _req = []
-			try {
-				for (var i = 0; i < state.all; i++) { _req.push(api.query.gameDao.allCampaignsArray(i)) }
-				const _hashes = await Promise.all(_req).then(_=>_.map(_h=>_h.toHuman()))
-				getCampaigns(_hashes)
-				getContributions(_hashes)
-			} catch ( err ) {
-				console.error( err )
-			}
+		const nonce = state.nonce
+		const req = [...new Array(nonce)].map((a,i)=>i)
+
+		const queryHashes = async args => {
+			const hashes = await query.campaignsArray.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+			setHashes(hashes)
 		}
+		queryHashes()
+
+	}, [state])
+
+	useEffect(() => {
+
+		if ( !hashes ) return
 
 		// get campaign description
-		const getCampaigns = async args => {
+		const queryCampaigns = async args => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDao.campaigns(args[i]))
+				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoCrowdfunding.campaigns(args[i]))
 				const _campaigns = await Promise.all(_req).then(_=>_.map(_c=>_c.toHuman()))
 				setCampaigns(_campaigns)
 				console.log(campaigns)
@@ -279,37 +315,24 @@ export const Campaigns = props => {
 			}
 		}
 
-		// get campaign meta data
-		const getMeta = async args => {
-			console.log('args',args)
-			let _req = []
-			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDao.campaigns(args[i]))
-				const _campaigns = await Promise.all(_req).then(_=>_.map(_c=>_c.toHuman()))
-				setCampaigns(_campaigns)
-			} catch ( err ) {
-				console.error( err )
-			}
-		}
-
 		// get contributions
-		const getContributions = async args => {
-			const query = api.query.gameDao.totalContributions
-			let req = []
-			try {
-				for ( var i = 0; i < args.length; i++ ) req.push( query(hashes[i]) )
-				const res = ( await Promise.all( req ) )
-				setContributions( res )
-			} catch ( err ) {
-				console.error( err )
-			}
-
-		}
+		// const queryContributions = async args => {
+		// 	const query = api.query.gameDaoCrowdfunding.campaignBalance
+		// 	let req = []
+		// 	try {
+		// 		for ( var i = 0; i < args.length; i++ ) req.push( query(hashes[i]) )
+		// 		const res = ( await Promise.all( req ) )
+		// 		setContributions( res )
+		// 	} catch ( err ) {
+		// 		console.error( err )
+		// 	}
+		// }
 
 		// kick it
-		getHashes()
+		queryCampaigns(hashes)
+		// queryContributions(hashes)
 
-	}, [state.all])
+	}, [hashes])
 
 	return (
 		<div>
