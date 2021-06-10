@@ -2,7 +2,7 @@
   "name": "gamedao",
   "version": "0.1.2",
   "private": true,
-  "author": "ZERO.IO <play@zero.io>",
+  "author": "2075@zero.io",
   "license": "Apache-2.0",
   "scripts": {
     "start": "react-app-rewired start",
@@ -16,49 +16,52 @@
     "deploy": "gh-pages -d build -m '[ci skip] Updates'"
   },
   "dependencies": {
-    "@polkadot/api": "^4.0.3",
-    "@polkadot/api-contract": "^4.0.3",
-    "@polkadot/extension-dapp": "~0.37.2",
-    "@polkadot/keyring": "~6.0.5",
-    "@polkadot/types": "~4.0.3",
-    "@polkadot/ui-keyring": "~0.71.3",
-    "@polkadot/ui-settings": "~0.71.3",
-    "@polkadot/util": "~6.0.5",
-    "@polkadot/util-crypto": "~6.0.5",
-    "ipfs-http-client": "^49.0.4",
+    "@polkadot/api": "^4.13.1",
+    "@polkadot/api-contract": "^4.13.1",
+    "@polkadot/extension-dapp": "~0.38.3",
+    "@polkadot/keyring": "~6.7.1",
+    "@polkadot/types": "~4.13.1",
+    "@polkadot/ui-keyring": "~0.79.1",
+    "@polkadot/ui-settings": "~0.79.1",
+    "@polkadot/util": "~6.7.1",
+    "@polkadot/util-crypto": "~6.7.1",
+    "formik": "^2.2.9",
+    "formik-semantic-ui": "^0.10.0",
+    "ipfs-http-client": "^50.1.1",
+    "moment": "^2.29.1",
     "prop-types": "~15.7.2",
-    "query-string": "~6.14.1",
-    "react": "~17.0.1",
+    "query-string": "~7.0.0",
+    "react": "~17.0.2",
     "react-copy-to-clipboard": "~5.0.2",
-    "react-dom": "~17.0.1",
+    "react-dom": "~17.0.2",
     "react-scripts": "~4.0.3",
     "semantic-ui-css": "~2.4.1",
     "semantic-ui-react": "^2.0.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-export-extensions": "^6.22.0",
     "eslint-config-semistandard": "~15.0.1",
-    "eslint-config-standard": "~16.0.2",
-    "eslint-plugin-import": "~2.22.1",
+    "eslint-config-standard": "~16.0.3",
+    "eslint-plugin-import": "~2.23.4",
     "eslint-plugin-node": "~11.1.0",
     "eslint-plugin-only-warn": "~1.0.2",
-    "eslint-plugin-promise": "~4.3.1",
+    "eslint-plugin-promise": "~5.1.0",
     "eslint-plugin-standard": "~5.0.0",
-    "gh-pages": "~3.1.0",
+    "gh-pages": "~3.2.0",
     "react-app-rewired": "~2.1.8",
     "semistandard": "~16.0.0"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "semistandard"
+      "react-app"
     ],
     "plugins": [
       "only-warn"
     ],
     "rules": {
       "semi": [
-        1,
-        "always"
+        0,
+        "never"
       ],
       "no-extra-semi": 1
     }
