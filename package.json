@@ -25,6 +25,8 @@
     "@polkadot/ui-settings": "~0.79.1",
     "@polkadot/util": "~6.7.1",
     "@polkadot/util-crypto": "~6.7.1",
+    "axios": "^0.21.1",
+    "form-data": "^4.0.0",
     "formik": "^2.2.9",
     "formik-semantic-ui": "^0.10.0",
     "ipfs-http-client": "^50.1.1",
