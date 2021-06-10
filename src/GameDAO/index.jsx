@@ -11,120 +11,100 @@
 
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
-import { TxButton } from '../substrate-lib/components'
 
-import { Container, Menu, Label, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider } from 'semantic-ui-react'
-
+import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
+// import Loader from '../components/Loader'
 import Campaigns from './components/Campaigns'
-import Create from './components/Create'
+import CreateCampaign from './components/Create'
 
-const Loader = text => <Dimmer active> <Loader size='small'>{text}</Loader> </Dimmer>
+const GameDAO = props => {
 
-const Crowdfunding = props => {
-
-	const { accountPair } = props
+	const { accountPair, accountAddress } = props
 	const { api, keyring } = useSubstrate()
 	const [ state, setState ] = useState({
-		all: 0,
-		owned: 0,
-		contributed: 0,
+		campaigns: 0,
+		proposals: 0,
 	})
 
 	useEffect(() => {
-
 		if (!accountPair) return
+		let unsubscribe = null
+		api.query.gameDaoGovernance.nonce(number => {
+			setState({
+				...state,
+				proposals: number.toNumber()
+			})
+		}).then( unsub => {
+			unsubscribe = unsub
+		}).catch( console.error )
+		return () => unsubscribe && unsubscribe()
+	}, [accountPair])
 
-		const asyncSubscription = async () => {
-
-			let unsubscribe;
-			let all, contributed, owned
-
-			api.queryMulti([
-				api.query.gameDao.allCampaignsCount,
-				[api.query.gameDao.contributedCampaignsCount,accountPair.address],
-				[api.query.gameDao.ownedCampaignsCount,accountPair.address],
-			],([all,contributed,owned]) => {
-				const _state = {
-					...state,
-					all: all.toNumber(),
-					contributed: contributed.toNumber(),
-					owned: owned.toNumber(),
-				}
-				setState(_state)
-			}).then(unsub => {
-				unsubscribe = unsub;
-			}).catch(console.error);
-
-			return () => unsubscribe && unsubscribe()
-
-		}
-		asyncSubscription()
-
-	}, [api.query.gameDao, accountPair]);
+	useEffect(() => {
+		if (!accountPair) return
+		let unsubscribe = null
+		api.query.gameDaoCrowdfunding.nonce(number => {
+			setState({
+				...state,
+				campaigns: number.toNumber()
+			})
+		}).then( unsub => {
+			unsubscribe = unsub
+		}).catch( console.error )
+		return () => unsubscribe && unsubscribe()
+	}, [accountPair])
 
 	const panes = [
+
 		{
 			menuItem: (
 				<Menu.Item key='campaigns'>
-					All Campaigns<Label>{state.all}</Label>
+					All Campaigns<Label>{state.campaigns}</Label>
 				</Menu.Item>
 			),
 			render: () =>
-				<Tab.Pane key="campaigns">
+				<Tab.Pane key='campaigns'>
 					<Campaigns accountPair={accountPair}/>
 				</Tab.Pane>
 		},
 		{
-			menuItem: (
-				<Menu.Item key='contributions'>
-					My Contributions<Label>{state.contributed}</Label>
-				</Menu.Item>
-			),
-			render: () => null
-			// 	<Tab.Pane key="contributions">
-			// 		<Campaigns filter={'contributed'}/>
-			// 	</Tab.Pane>
-		},
-		{
-			menuItem: (
-				<Menu.Item key=''>
-					My Campaigns<Label>{state.owned}</Label>
-				</Menu.Item>
-			),
-			render: () => null
-			// 	<Tab.Pane key="requests">
-			// 		<Campaigns filter={'owned'} />
-			// 	</Tab.Pane>
-		},
-		{	menuItem: 'Create Campaign',
+			menuItem: 'Create Campaign',
 			render: () =>
-				<Tab.Pane key="create">
-					<Create />
+				<Tab.Pane key='create_campaign'>
+					<CreateCampaign
+						accountPair={accountPair}
+						accountAddress={accountAddress}
+						/>
 				</Tab.Pane>
 			,
 		},
 		{
-			menuItem: (
-				<Menu.Item key='nft'>
-					NFT<Label></Label>
-				</Menu.Item>
-			),
-			render: () => null
-			// 	<Tab.Pane key="contributions">
-			// 		<Campaigns filter={'contributed'}/>
-			// 	</Tab.Pane>
+			menuItem:
+				<Menu.Item key='proposals'>
+					Proposals<Label>{state.proposals}</Label>
+				</Menu.Item>,
+			render: () =>
+				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+		},
+		{
+			menuItem:
+				<Menu.Item key='create_proposal'>
+					Create Proposal
+				</Menu.Item>,
+			render: () =>
+			<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
 		},
 	]
 
 	return (
-		<Container>
+		<Grid.Column width={16}>
 			<Tab panes={ panes }/>
-		</Container>
+		</Grid.Column>
 	)
 
 }
 
-export default Crowdfunding
+export default GameDAO
 
 //
 //
