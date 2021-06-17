@@ -19,6 +19,7 @@ import { TxButton } from '../../substrate-lib/components'
 import { Loader } from '../../components/Loader'
 import {
 	Container,
+	Button,
 	Segment,
 	Tab,
 	Grid,
@@ -32,7 +33,8 @@ const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
 const generateState = () => {
 	return {
-		// ipfs
+		// general data (ipfs)
+		title: faker.commerce.productName(),
 		applicant_name: faker.name.findName(),
 		applicant_email: faker.internet.email(),
 		applicant_type: '',
@@ -40,15 +42,17 @@ const generateState = () => {
 		usage: '',
 		description: faker.company.catchPhrase,
 		accept: false,
-		//
-		title: faker.commerce.productName(),
-		// network
+		tags: ['dao','game'],
+		// campaign data (network)
 		cap: Math.round(Math.random()*100000),
 		deposit: Math.round(Math.random()*10),
 		duration: Math.round(Math.random()*100000),
 		protocol: Math.round(Math.random()*5),
 		governance: Math.round(Math.random()*1),
-		cid: 'cid'
+		// campaign cid should be a pinned
+		// ipfs hash containing a json
+		// with campaign data
+		cid: 'cid',
 	}
 }
 
@@ -61,72 +65,114 @@ export const Main = props => {
 	const { accountPair } = props
 	const [ status, setStatus ] = useState('')
 	const [ formData, updateFormData ] = useState(initialState)
+	const [ nonce, updateNonce ] = useState(0)
+
+	const generateIPFSBlob = () => { return {
+		nonce: nonce,
+		campaign_hash: null,
+		creator_hash: accountPair.address,
+		payload: formData,
+		images: [
+		// cids to images
+		],
+	}}
+
+	useEffect(() => {
+
+		let unsubscribe;
+
+		api.query.gameDaoCrowdfunding.nonce(n => {
+			if (n.isNone) {
+				updateNonce('<None>');
+			} else {
+				updateNonce(n.toNumber());
+			}
+		}).then(unsub => {
+			unsubscribe = unsub;
+		})
+		.catch(console.error);
+
+		return () => unsubscribe && unsubscribe();
+
+	}, [api.query.gameDaoCrowdfunding.nonce]);
 
 	useEffect(()=>{
-		// setStatus('hello')
-	})
 
-	// useEffect(()=>{
+		const data = generateState()
+		updateFormData({
+			...formData,
+			...data
+		})
 
-	// 	if (!accountPair) return
-
-	// 	async function send () {
-
-		// const allInjected = await web3Enable('my cool dapp');
-
-// // returns an array of { address, meta: { name, source } }
-// // meta.source contains the name of the extension that provides this account
-// const allAccounts = await web3Accounts();
-
-// // the address we use to use for signing, as injected
-// const SENDER = '5DTestUPts3kjeXSTMyerHihn1uwMfLj8vU8sqF7qYrFabHE';
-
-// // finds an injector for an address
-// const injector = await web3FromAddress(SENDER);
-
-// // sign and send our transaction - notice here that the address of the account
-// // (as retrieved injected) is passed through as the param to the `signAndSend`,
-// // the API then calls the extension to present to the user and get it signed.
-// // Once complete, the api sends the tx + signature via the normal process
-// api.tx.balances
-//   .transfer('5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ', 123456)
-//   .signAndSend(SENDER, { signer: injector.signer }, (status) => { console.log(status) });
-
-
-
-
-	  //       const sender = accountPair
-			// const recipient = '3SycwgreF5hHafBbmBkpfhJXvPZNjCiggTzdC35u3EUjydJf'
-			// const amount = 10
-
-			// for (let i = 0; i < 10; i++) {
-			// 	console.log(i)
-			// 	const txhash = await api.tx.balances
-			// 		.transfer(recipient, amount)
-			// 		.signAndSend(sender, { nonce: -1 });
-
-			// const tx = api.tx.gameDaoCrowdfunding.create(payload)
-			// await tx.signAsync(accountPair.address,)
-			//   signAsync (
-			//   	account: AddressOrPair,
-			//   	_options?: Partial<SignerOptions>
-			//   )
-			// await tx.send()
-
-
-		// }
-		// send()
-
-	// }, [accountPair] )
+	},[nonce])
 
 	const handleOnChange = e => {
 
 		console.log( e.target.name, e.target.value )
-
 		updateFormData({
 			...formData,
 			[e.target.name]: e.target.value
 		})
+
+	}
+
+	const handleSubmit = e => {
+
+		e.preventDefault()
+
+		console.log('submit')
+
+		const payload = [
+			accountPair.address,
+			formData.title,
+			formData.cap,
+			formData.deposit,
+			formData.duration,
+			formData.protocol,
+			formData.governance,
+			formData.cid
+		]
+
+		async function send () {
+			const from = accountPair
+			const tx = api.tx.gameDaoCrowdfunding.create(...payload)
+			const hash = await tx.signAndSend( from, ({ status, events }) => {
+
+				if(events.length) {
+					console.log(`\nReceived ${events.length} events:`);
+					events.forEach((record) => {
+						// Extract the phase, event and the event types
+						const { event, phase } = record;
+						const types = event.typeDef;
+
+						// Show what we are busy with
+						console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+						console.log(`\t\t${event.meta.documentation.toString()}`);
+
+						// Loop through each of the parameters, displaying the type and data
+						event.data.forEach((data, index) => {
+							console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+						});
+					});
+				}
+
+				if (status.isInBlock || status.isFinalized) {
+					events
+					.filter(({ event }) => api.events.system.ExtrinsicFailed.is(event) )
+					.forEach(({ event: { data: [error, info] } }) => {
+						if (error.isModule) {
+							const decoded = api.registry.findMetaError(error.asModule);
+							const { documentation, method, section } = decoded;
+							console.log(`${section}.${method}: ${documentation.join(' ')}`);
+						} else {
+							console.log(error.toString());
+						}
+						console.log(info)
+					});
+				}
+			});
+		}
+		send()
 
 	}
 
@@ -281,6 +327,7 @@ export const Main = props => {
 					<Form.Checkbox label='I agree to the Terms and Conditions' name='accept' selected={formData.accept} onChange={handleOnChange} />
 
 					<Container textAlign='right'>
+						{ accountPair && <Button onClick={handleSubmit}>Create Campaign Manually</Button> }
 						{ accountPair &&
 							<TxButton
 								accountPair={accountPair}
