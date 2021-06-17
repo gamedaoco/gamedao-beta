@@ -1,9 +1,9 @@
-//imports needed for this function
 const axios = require('axios')
 const fs = require('fs')
 const FormData = require('form-data')
 
 export const testAuthentication = () => {
+
 	const url = `https://api.pinata.cloud/data/testAuthentication`
 	return axios
 		.get(url, {
@@ -18,6 +18,7 @@ export const testAuthentication = () => {
 		.catch(function (error) {
 			//handle error here
 		})
+
 }
 
 export const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey) => {

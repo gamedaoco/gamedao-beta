@@ -1,22 +1,22 @@
 /**
-					 _______________________________ ________
-					 \____    /\_   _____/\______   \\_____  \
-						 /     /  |    __)_  |       _/ /   |   \
-						/     /_  |        \ |    |   \/    |    \
-					 /_______ \/_______  / |____|_  /\_______  /
-									 \/        \/         \/         \/
-					 Z  E  R  O  .  I  O     N  E  T  W  O  R  K
-					 © C O P Y R I O T   2 0 7 5   Z E R O . I O
+ _______________________________ ________
+ \____    /\_   _____/\______   \\_____  \
+	 /     /  |    __)_  |       _/ /   |   \
+	/     /_  |        \ |    |   \/    |    \
+ /_______ \/_______  / |____|_  /\_______  /
+				 \/        \/         \/         \/
+ Z  E  R  O  .  I  O     N  E  T  W  O  R  K
+ © C O P Y R I O T   2 0 7 5   Z E R O . I O
 **/
 
 import React, { useEffect, useState } from 'react'
-
 import moment from 'moment'
+import faker from 'faker'
 
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../../substrate-lib'
 import { TxButton } from '../../substrate-lib/components'
 
+import { Loader } from '../../components/Loader'
 import {
 	Container,
 	Segment,
@@ -25,120 +25,110 @@ import {
 	Card,
 	Statistic,
 	Divider,
+	Form
 } from 'semantic-ui-react'
 
-import {
-	Button,
-	Checkbox,
-	Dropdown,
-	Form,
-	Input,
-	TextArea,
-} from 'formik-semantic-ui';
+const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
-//
-//
-//
-
-export const Create = props => {
-
-	const { api } = useSubstrate()
-	const { accountPair, accountAddress } = props
-	const [ status, setStatus ] = useState(true)
-
-	const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
-
-
-
-	const initialState = {
-		// to ipfs
-		applicant_name: '',
+const generateState = () => {
+	return {
+		// ipfs
+		applicant_name: faker.name.findName(),
+		applicant_email: faker.internet.email(),
 		applicant_type: '',
 		country: '',
 		usage: '',
-		description: '',
+		description: faker.company.catchPhrase,
 		accept: false,
-		// to contract
-		campaign_name: '',
-		protocol: '',
-		deposit: '',
-		target: '',
-		duration: '',
-		governance: false,
+		//
+		title: faker.commerce.productName(),
+		// network
+		cap: Math.round(Math.random()*100000),
+		deposit: Math.round(Math.random()*10),
+		duration: Math.round(Math.random()*100000),
+		protocol: Math.round(Math.random()*5),
+		governance: Math.round(Math.random()*1),
+		cid: 'cid'
 	}
+}
 
-	const handleSubmit = (values, formikApi) => {
+const initialState = generateState()
 
-	    console.log('values',values);
-
-		const getFromAcct = async () => {
-			const {
-				address,
-				meta: { source, isInjected }
-			} = accountPair;
-			let fromAcct;
-
-			// signer is from Polkadot-js browser extension
-			if (isInjected) {
-				const injected = await web3FromSource(source);
-				fromAcct = address;
-				api.setSigner(injected.signer);
-			} else {
-				fromAcct = accountPair;
-			}
-
-			return fromAcct;
-		}
-
-		const fromAcct = getFromAcct()
-		console.log (fromAcct.address)
-
-		const subscribe = async () => {
+export const Main = props => {
 
 
-			// const payload = [ accountPair.address, 'test', 10000, 10, 5000, 1, 1, 0 ]
-			const payload = [
-				fromAcct.address, //accountPair.address,
-				values.campaign_name,
-				values.target,
-				values.deposit,
-				values.duration,
-				values.protocol,
-				( values.governance ) ? 1 : 0,
-				'cid'
-			]
-		    const campaign = api.tx.gameDaoCrowdfunding.create(...payload)
-		    const send = campaign.signAndSend(
+	const { api } = useSubstrate()
+	const { accountPair } = props
+	const [ status, setStatus ] = useState('')
+	const [ formData, updateFormData ] = useState(initialState)
 
-		    	accountPair, ({ status, events }) => {
+	useEffect(()=>{
+		// setStatus('hello')
+	})
 
-					if (status.isInBlock || status.isFinalized) {
-						events.filter(({ event }) =>
-							api.events.system.ExtrinsicFailed.is(event)
-						)
-						.forEach(({ event: { data: [error, info] } }) => {
-							if (error.isModule) {
-								const decoded = api.registry.findMetaError(error.asModule);
-								const { documentation, method, section } = decoded;
-								const msg = `${section}.${method}: ${documentation.join(' ')}`
-								console.log('msg', msg);
-							} else {
-								const err = error.toString()
-								console.log('err', err);
-							}
-						});
-						formikApi.setSubmitting(false)
-						console.log('completed.')
-					}
+	// useEffect(()=>{
 
-				}
+	// 	if (!accountPair) return
 
-			)
+	// 	async function send () {
 
-		}
-		subscribe()
+		// const allInjected = await web3Enable('my cool dapp');
 
-	};
+// // returns an array of { address, meta: { name, source } }
+// // meta.source contains the name of the extension that provides this account
+// const allAccounts = await web3Accounts();
+
+// // the address we use to use for signing, as injected
+// const SENDER = '5DTestUPts3kjeXSTMyerHihn1uwMfLj8vU8sqF7qYrFabHE';
+
+// // finds an injector for an address
+// const injector = await web3FromAddress(SENDER);
+
+// // sign and send our transaction - notice here that the address of the account
+// // (as retrieved injected) is passed through as the param to the `signAndSend`,
+// // the API then calls the extension to present to the user and get it signed.
+// // Once complete, the api sends the tx + signature via the normal process
+// api.tx.balances
+//   .transfer('5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ', 123456)
+//   .signAndSend(SENDER, { signer: injector.signer }, (status) => { console.log(status) });
+
+
+
+
+	  //       const sender = accountPair
+			// const recipient = '3SycwgreF5hHafBbmBkpfhJXvPZNjCiggTzdC35u3EUjydJf'
+			// const amount = 10
+
+			// for (let i = 0; i < 10; i++) {
+			// 	console.log(i)
+			// 	const txhash = await api.tx.balances
+			// 		.transfer(recipient, amount)
+			// 		.signAndSend(sender, { nonce: -1 });
+
+			// const tx = api.tx.gameDaoCrowdfunding.create(payload)
+			// await tx.signAsync(accountPair.address,)
+			//   signAsync (
+			//   	account: AddressOrPair,
+			//   	_options?: Partial<SignerOptions>
+			//   )
+			// await tx.send()
+
+
+		// }
+		// send()
+
+	// }, [accountPair] )
+
+	const handleOnChange = e => {
+
+		console.log( e.target.name, e.target.value )
+
+		updateFormData({
+			...formData,
+			[e.target.name]: e.target.value
+		})
+
+	}
 
 	// dropdown content
 
@@ -175,6 +165,7 @@ export const Create = props => {
 
 	return (
 		<div>
+
 			<h1>Create Campaign</h1>
 
 			<p>
@@ -185,41 +176,56 @@ export const Create = props => {
 				giving your supporters different types of guarantees and influence opportunity along the process of creating
 				your project. If you choose to use DAO Governance, you will propose either milestones or deliverables
 				which in turn release funds, when the DAO approves. If you don't utilise DAO Governance,
-				the funding protocol will determine, how funds are paid to you:<br/>
-				- Grants pay immediately to you, the creator.<br/>
-				- Prepaid campaigns release payments on a vesting schedule.<br/>
-				- Loans will release immediately to you, the creator.<br/>
-				- Shares will immediately release, but imply further regulatory requirements.<br/>
+				the funding protocol will determine, how funds are paid to you:<br/><br/>
+				A Grants pay immediately to you, the creator.<br/>
+				B Prepaid campaigns release payments on a vesting schedule.<br/>
+				(C Loans will release immediately to you, the creator.)<br/>
+				(D Shares will immediately release, but imply further regulatory requirements.)<br/>
 			</p>
 
-			<Form
-				initialValues={ initialState }
-				onSubmit={ handleSubmit }>
+			<Form>
 
 					{/* campaign name to be listed as */}
 
-					<Input
+					<Form.Input
 						fluid
 						label='Campaign name'
 						placeholder='Campaign name'
-						name='campaign_name'
+						name='title'
+						value={formData.title}
+						onChange={handleOnChange}
 						/>
 
 					{/* legal body applying for the funding */}
 
 					<Form.Group widths='equal'>
-						<Input
+						<Form.Input
 							fluid
 							label='Applicant Name'
 							placeholder='Applicant Name'
 							name='applicant_name'
+							value={formData.applicant_name}
+							onChange={handleOnChange}
 							/>
+						<Form.Input
+							fluid
+							label='Applicant Email'
+							placeholder='Applicant Email'
+							name='applicant_email'
+							value={formData.applicant_email}
+							onChange={handleOnChange}
+							/>
+					</Form.Group>
+
+					<Form.Group widths='equal'>
 						<Form.Select
 							fluid
 							label='Applicant Type'
 							options={legal_entities}
 							placeholder='Applicant Type'
 							name='applicant_type'
+							selected={formData.applicant_type}
+							onChange={handleOnChange}
 							/>
 						<Form.Select
 							fluid
@@ -228,6 +234,8 @@ export const Create = props => {
 							options={countries}
 							placeholder='Country'
 							name='country'
+							selected={formData.country}
+							onChange={handleOnChange}
 							/>
 					</Form.Group>
 
@@ -240,6 +248,9 @@ export const Create = props => {
 							options={application_entities}
 							placeholder='Usage'
 							name='usage'
+							selected={formData.usage}
+							onChange={handleOnChange}
+
 							/>
 						<Form.Select
 							fluid
@@ -247,29 +258,52 @@ export const Create = props => {
 							options={protocol_types}
 							placeholder='Protocol'
 							name='protocol'
+							selected={formData.protocol}
+							onChange={handleOnChange}
 							/>
-
 					</Form.Group>
-						<Checkbox
-							label='DAO Governance'
-							name='governance'
-							/>
 
-					{/*  */}
+					<Form.Checkbox
+						label='DAO Governance'
+						name='governance'
+						selected={formData.governance}
+						onChange={handleOnChange}
+						/>
 
 					<Form.Group widths='equal'>
-						<Input fluid label='Deposit (PLAY)' placeholder='Deposit'  name='deposit' />
-						<Input fluid label='Funding Target (PLAY)' placeholder='Cap'  name='target' />
-						<Input fluid label='Campaign Duration (blocks)' placeholder='blocks'  name='duration' />
+						<Form.Input fluid label='Deposit (PLAY)' placeholder='Deposit' name='deposit' value={formData.deposit} onChange={handleOnChange} />
+						<Form.Input fluid label='Funding Target (PLAY)' placeholder='Cap' name='target' value={formData.cap} onChange={handleOnChange} />
+						<Form.Input fluid label='Campaign Duration (blocks)' placeholder='blocks' name='duration' value={formData.duration} onChange={handleOnChange} />
 					</Form.Group>
 
-					<TextArea label='Campaign Description' placeholder='Tell us more about your idea...'  name='description' />
-
-					<Checkbox label='I agree to the Terms and Conditions'  name='accept'/>
+{/*					<Form.TextArea label='Campaign Description' placeholder='Tell us more about your idea...' name='description' value={formData.description} onChange={handleOnChange} />
+*/}
+					<Form.Checkbox label='I agree to the Terms and Conditions' name='accept' selected={formData.accept} onChange={handleOnChange} />
 
 					<Container textAlign='right'>
-						<Button.Reset>Cancel</Button.Reset>
-						<Button.Submit>Submit</Button.Submit>
+						{ accountPair &&
+							<TxButton
+								accountPair={accountPair}
+								label='Create Campaign'
+								type='SIGNED-TX'
+								setStatus={setStatus}
+								attrs={{
+									palletRpc: 'gameDaoCrowdfunding',
+									callable: 'create',
+									inputParams: [
+										accountPair.address,
+										formData.title,
+										formData.cap,
+										formData.deposit,
+										formData.duration,
+										formData.protocol,
+										formData.governance,
+										formData.cid
+									],
+									paramFields: [true,true,true,true,true,true,true,true]
+								}}
+							/>
+						}
         			</Container>
 
 			</Form>
@@ -279,7 +313,16 @@ export const Create = props => {
 
 }
 
-export default Create
+export default function Module (props) {
+
+	const { accountPair } = props;
+	const { api } = useSubstrate();
+
+	return api && api.query.gameDaoCrowdfunding && accountPair
+		? <Main {...props} />
+		: null;
+
+}
 
 //
 //
