@@ -32,16 +32,18 @@ function Main (props) {
 		: api.derive.chain.bestNumber;
 
 	useEffect(()=>{
+
 		const data = {
 			address: accountPair.address,
 			title: faker.commerce.productName(),
-			cap:Math.round(Math.random()*100000),
-			deposit: Math.round(Math.random()*10),
-			duration: Math.round(Math.random()*100000),
-			protocol: Math.round(Math.random()*5),
-			governance: Math.round(Math.random()*1),
+			cap:Math.round(Math.random() * 100000 ),
+			deposit: Math.round(Math.random() * 10 ),
+			duration: 1000000 + ( Math.round(Math.random() * 10 ) * 14400 ),
+			protocol: Math.round(Math.random() * 5 ),
+			governance: Math.round(Math.random() * 1 ),
 			cid: 'cid'
 		}
+
 		// console.log('data',data)
 		setTxData(data)
 	},[accountPair])

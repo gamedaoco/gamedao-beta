@@ -1,7 +1,7 @@
 import configCommon from './common.json'
 
-const configEnv = require(`./${process.env.NODE_ENV}.json`)
-// const configEnv = require(`./production.json`)
+// const configEnv = require(`./${process.env.NODE_ENV}.json`)
+const configEnv = require(`./production.json`)
 
 const types = require('./types.json')
 

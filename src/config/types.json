@@ -18,6 +18,7 @@
     "gen": "u64"
   },
 
+  "SpaceId": "Hash",
   "HypaspaceId": "Hash",
   "HypaspaceMetadata": {
     "name": "Vec<u8>"
