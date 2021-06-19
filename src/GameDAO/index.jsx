@@ -30,8 +30,9 @@ const GameDAO = props => {
 	})
 
 	useEffect(() => {
-		if (!accountPair) return
+
 		let unsubscribe = null
+
 		api.query.gameDaoGovernance.nonce(number => {
 			setState({
 				...state,
@@ -40,12 +41,15 @@ const GameDAO = props => {
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
+
 		return () => unsubscribe && unsubscribe()
+
 	}, [accountPair])
 
 	useEffect(() => {
-		if (!accountPair) return
+
 		let unsubscribe = null
+
 		api.query.gameDaoCrowdfunding.nonce(number => {
 			setState({
 				...state,
@@ -54,7 +58,9 @@ const GameDAO = props => {
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
+
 		return () => unsubscribe && unsubscribe()
+
 	}, [accountPair])
 
 	const panes = [
@@ -107,7 +113,16 @@ const GameDAO = props => {
 
 }
 
-export default GameDAO
+export default function Dapp (props) {
+
+	const { accountPair } = props;
+	const { api } = useSubstrate();
+
+	return api && api.query.gameDaoCrowdfunding && accountPair
+		? <GameDAO {...props} />
+		: null;
+
+}
 
 //
 //
