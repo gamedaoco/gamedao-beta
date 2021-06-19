@@ -28,8 +28,6 @@
     "axios": "^0.21.1",
     "faker": "^5.5.3",
     "form-data": "^4.0.0",
-    "formik": "^2.2.9",
-    "formik-semantic-ui": "^0.10.0",
     "ipfs-http-client": "^50.1.1",
     "moment": "^2.29.1",
     "prop-types": "~15.7.2",
@@ -42,6 +40,8 @@
     "semantic-ui-react": "^2.0.0"
   },
   "devDependencies": {
+    "@types/node": "^15.12.4",
+    "@types/react": "^17.0.11",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "eslint-config-semistandard": "~15.0.1",
     "eslint-config-standard": "~16.0.3",
@@ -52,7 +52,8 @@
     "eslint-plugin-standard": "~5.0.0",
     "gh-pages": "~3.2.0",
     "react-app-rewired": "~2.1.8",
-    "semistandard": "~16.0.0"
+    "semistandard": "~16.0.0",
+    "typescript": "^4.3.4"
   },
   "eslintConfig": {
     "extends": [
