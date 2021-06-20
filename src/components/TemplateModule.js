@@ -35,7 +35,7 @@ function Main (props) {
 		const data = {
 			address: accountPair.address,
 			title: faker.commerce.productName(),
-			cap:Math.round(Math.random() * 100000 ),
+			cap:Math.round(Math.random() * 100000 ) + 1000000000000,
 			deposit: Math.round(Math.random() * 10 ),
 			duration: 1000000 + ( Math.round(Math.random() * 10 ) * 14400 ),
 			protocol: Math.round(Math.random() * 5 ),

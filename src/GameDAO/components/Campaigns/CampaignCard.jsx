@@ -27,13 +27,13 @@ const CampaignCard = ({ item, index }) => {
 
 	if (!item) return null
 
+	// on chain
 	const { id, name, admin, cap, cid, created, deposit, expiry, governance, owner, protocol, state, balance } = item
 
+	// off chain
 	const image_url = 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
-
-	// console.log( index, id )
-
-	const blocksRemain = ( item.expiry - item.created )
+	const json_url = 'https://gateway.pinata.cloud/ipfs/'+ cid
+	const blocksRemain = ( expiry )
 
 	// const remaining = blocksToTime(data.expiry) - new Date().now()
 	// console.log('update',Date.now())
@@ -49,9 +49,9 @@ const CampaignCard = ({ item, index }) => {
 		if (backers > 100) return 'peace'
 		return 'plus circle'
 	}
-
-
-	const date = new Date(created.replace(',','')).toString()
+	const epoch = created.replaceAll(',','')
+	const options = { year: 'numeric', month: 'long', day: 'numeric' };
+	const date = new Date( epoch * 1000 ).toLocaleDateString(undefined, options)
 
 	return (
 		<Grid.Column mobile={16} tablet={8} computer={4}>
@@ -59,25 +59,24 @@ const CampaignCard = ({ item, index }) => {
 				<Image src={image_url} wrapped ui={true} />
 				<Card.Content>
 					<Card.Header><a href={`/campaigns/${id}`}>{name}</a></Card.Header>
-					<Card.Meta>
+{/*					<Card.Meta>
 						<Rating icon='star' defaultRating={3} maxRating={5} />
 					</Card.Meta>
-					<Card.Description>
-					</Card.Description>
+*/}{/*					<Card.Description>
+					</Card.Description>*/}
 				</Card.Content>
 				<Card.Content extra>
-				<Button size='mini' positive>support</Button>
+				<Button size='mini'>join</Button>
 				</Card.Content>
 				<Card.Content extra>
-					<a href={`/campaigns/admin/${admin}`}> <Icon name='eye' />{views} views.</a><br/>
-					<a href={`/campaigns/admin/${admin}`}> <Icon name={icon} />{backers} backers.</a><br/>
+{/*					<Icon name='eye' />{views} views.<br/>
+*/}					<Icon name='money bill alternate' />
+					{backers} backers contributed {balance} / {cap}.<br/>
 					<br/>
-					<a href={`/campaigns/filter/block/${expiry}`}> <Icon name='money bill alternate' />{balance} raised.</a><br/>
-					<a href={`/campaigns/filter/block/${expiry}`}> <Icon name='money bill alternate outline' />{cap} target.</a><br/>
-					<br/>
-					<a href={`/campaigns/filter/block/${created}`}> <Icon name='birthday' />{date}</a><br/>
-					<a href={`/campaigns/admin/${owner}`}> <Icon name='at' />Creator Name</a><br/>
-					<a href={`/campaigns/filter/block/${expiry}`}> <Icon name='tag' />{tags.join(', ')} </a><br/>
+					<Icon name='rocket' />{date}<br/>
+					<Icon name='target' />{blocksRemain}<br/>
+					<a href={`/campaigns/admin/${owner}`}> <Icon name='at' />Creator</a><br/>
+					<Icon name='tag' />{tags.join(', ')} <br/>
 				</Card.Content>
 			</Card>
 		</Grid.Column>

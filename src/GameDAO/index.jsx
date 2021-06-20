@@ -59,6 +59,16 @@ const GameDAO = props => {
 	const panes = [
 
 		{
+			menuItem: 'Create Campaign',
+			render: () =>
+				<Tab.Pane key='create_campaign'>
+					<CreateCampaign
+						accountPair={accountPair}
+						/>
+				</Tab.Pane>
+			,
+		},
+		{
 			menuItem: (
 				<Menu.Item key='campaigns'>
 					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
@@ -68,16 +78,6 @@ const GameDAO = props => {
 				<Tab.Pane key='campaigns'>
 					<Campaigns accountPair={accountPair}/>
 				</Tab.Pane>
-		},
-		{
-			menuItem: 'Create Campaign',
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign
-						accountPair={accountPair}
-						/>
-				</Tab.Pane>
-			,
 		},
 		{
 			menuItem:
