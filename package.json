@@ -16,6 +16,7 @@
     "deploy": "gh-pages -d build -m '[ci skip] Updates'"
   },
   "dependencies": {
+    "@pinata/sdk": "^1.1.23",
     "@polkadot/api": "^4.13.1",
     "@polkadot/api-contract": "^4.13.1",
     "@polkadot/extension-dapp": "~0.38.3",
