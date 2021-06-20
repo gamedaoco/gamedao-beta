@@ -181,8 +181,6 @@ export const Campaigns = props => {
 
 		if ( !campaigns || !balances || !states ) return
 
-			console.log(campaigns)
-
 		const content = campaigns.map( ( item, index ) => {
 
 			let state, balance = 0, id = item.id
@@ -211,7 +209,7 @@ export const Campaigns = props => {
 
 	}, [campaigns, balances, states])
 
-	console.log('update', content)
+	console.log('update')
 
 	return ( !content || content.length === 0 )
 		?	<React.Fragment>
