@@ -22,64 +22,46 @@ import CreateCampaign from './components/CreateCampaign'
 
 const GameDAO = props => {
 
-	const { accountPair, accountAddress } = props
-	const { api, keyring } = useSubstrate()
-	const [ state, setState ] = useState({
-		campaigns: 0,
-		proposals: 0,
-	})
+	const { accountPair } = props
+	const { api } = useSubstrate()
+
+	const [campaigns, setCampaigns] = useState(null)
+	const [proposals, setProposals] = useState(null)
 
 	useEffect(() => {
 
 		let unsubscribe = null
 
-		api.query.gameDaoGovernance.nonce(number => {
-			setState({
-				...state,
-				proposals: number.toNumber()
-			})
+		api.query.gameDaoGovernance.nonce(n => {
+			setProposals(n.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
 
 		return () => unsubscribe && unsubscribe()
 
-	}, [accountPair])
+	}, [api.query.gameDaoGovernance])
 
 	useEffect(() => {
 
 		let unsubscribe = null
 
-		api.query.gameDaoCrowdfunding.nonce(number => {
-			setState({
-				...state,
-				campaigns: number.toNumber()
-			})
+		api.query.gameDaoCrowdfunding.nonce(n => {
+			setCampaigns(n.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
 
 		return () => unsubscribe && unsubscribe()
 
-	}, [accountPair])
+	}, [api.query.gameDaoCrowdfunding])
 
 	const panes = [
 
 		{
-			menuItem: 'Create Campaign',
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign
-						accountPair={accountPair}
-						accountAddress={accountAddress}
-						/>
-				</Tab.Pane>
-			,
-		},
-		{
 			menuItem: (
 				<Menu.Item key='campaigns'>
-					All Campaigns<Label>{state.campaigns}</Label>
+					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
@@ -88,9 +70,19 @@ const GameDAO = props => {
 				</Tab.Pane>
 		},
 		{
+			menuItem: 'Create Campaign',
+			render: () =>
+				<Tab.Pane key='create_campaign'>
+					<CreateCampaign
+						accountPair={accountPair}
+						/>
+				</Tab.Pane>
+			,
+		},
+		{
 			menuItem:
 				<Menu.Item key='proposals'>
-					Proposals<Label>{state.proposals}</Label>
+					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
 				</Menu.Item>,
 			render: () =>
 				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
