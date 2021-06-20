@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import faker from 'faker'
-import { useSubstrate } from '../substrate-lib';
-import { TxButton } from '../substrate-lib/components';
-import { Form, Input, Grid, Card, Statistic } from 'semantic-ui-react';
+import { useSubstrate } from '../substrate-lib'
+import { TxButton } from '../substrate-lib/components'
+import { Form, Grid, Card, Statistic } from 'semantic-ui-react'
 
 function Main (props) {
-	const { api } = useSubstrate();
-	const { accountPair } = props;
-	const { finalized } = props;
+	const { api } = useSubstrate()
+	const { accountPair } = props
+	const { finalized } = props
 
 	// The transaction submission status
-	const [status, setStatus] = useState('');
+	const [status, setStatus] = useState('')
 
-	const [nonce, updateNonce] = useState();
-	const [block, setBlock] = useState();
+	const [nonce, updateNonce] = useState()
+	const [block, setBlock] = useState()
 
-	const [formValue, setFormValue] = useState(0);
 	const [txData,setTxData] = useState({
 		address:null,
 		title: '',
@@ -29,7 +28,7 @@ function Main (props) {
 
 	const bestBlock = finalized
 		? api.derive.chain.bestNumberFinalized
-		: api.derive.chain.bestNumber;
+		: api.derive.chain.bestNumber
 
 	useEffect(()=>{
 
@@ -49,43 +48,43 @@ function Main (props) {
 	},[accountPair])
 
 	useEffect(() => {
-		let unsubscribeAll = null;
+		let unsubscribeAll = null
 
 		bestBlock(number => {
-			setBlock(number.toNumber());
+			setBlock(number.toNumber())
 		})
 		.then(unsub => {
-			unsubscribeAll = unsub;
+			unsubscribeAll = unsub
 		})
-		.catch(console.error);
+		.catch(console.error)
 
-		return () => unsubscribeAll && unsubscribeAll();
-	}, [bestBlock]);
+		return () => unsubscribeAll && unsubscribeAll()
+	}, [bestBlock])
 
 	useEffect(() => {
 
 		if(!api.query.gameDaoCrowdfunding.nonce) return
-		let unsubscribe;
+		let unsubscribe
 
 		api.query.gameDaoCrowdfunding.nonce(n => {
 			if (n.isNone) {
-				updateNonce('<None>');
+				updateNonce('<None>')
 			} else {
-				updateNonce(n.toNumber());
+				updateNonce(n.toNumber())
 			}
 		}).then(unsub => {
-			unsubscribe = unsub;
+			unsubscribe = unsub
 		})
-		.catch(console.error);
+		.catch(console.error)
 
-		return () => unsubscribe && unsubscribe();
-	}, [api.query.gameDaoCrowdfunding.nonce]);
+		return () => unsubscribe && unsubscribe()
+	}, [api.query.gameDaoCrowdfunding])
 
 	return (
 		<Grid.Column width={8}>
 			<h1>Generate Campaign</h1>
 
-		    <Grid.Column>
+			<Grid.Column>
 				<Card centered>
 					<Card.Content textAlign='center'>
 						<Statistic
@@ -100,7 +99,7 @@ function Main (props) {
 						/>
 					</Card.Content>
 				</Card>
-		    </Grid.Column>
+			</Grid.Column>
 
 			<Form>
 
@@ -130,14 +129,14 @@ function Main (props) {
 				<div style={{ overflowWrap: 'break-word' }}>{status}</div>
 			</Form>
 		</Grid.Column>
-	);
+	)
 }
 
 export default function TemplateModule (props) {
-	const { api } = useSubstrate();
-	const { accountPair } = props;
+	const { api } = useSubstrate()
+	const { accountPair } = props
 
 	return api.query.gameDaoCrowdfunding && accountPair
 		? <Main {...props} />
-		: null;
+		: null
 }

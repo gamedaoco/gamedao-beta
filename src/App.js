@@ -16,22 +16,16 @@ import GameDAO from './GameDAO'
 function Main () {
 
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
-
 	const [ accountAddress, setAccountAddress ] = useState(null)
-
 	const accountPair =
 		accountAddress &&
 		keyringState === 'READY' &&
 		keyring.getPair(accountAddress)
 
-//
-//
 	if (apiState === 'ERROR') return (<Message err={apiError} />)
 	else if (apiState !== 'READY') return (<Loader text='Connecting to ZERO.IO' />)
-
 	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
-//
-//
+
 	const contextRef = createRef()
 
 	return (
@@ -43,7 +37,6 @@ function Main () {
 				</Sticky>
 
 				<Container>
-
 
 					<Grid>
 						<Grid.Row stretched>
@@ -69,8 +62,6 @@ function Main () {
 								/>
 						</Grid.Row>
 					</Grid>
-{/*
-*/}
 
 				</Container>
 
