@@ -1,15 +1,16 @@
-const axios = require('axios')
-const fs = require('fs')
-const FormData = require('form-data')
+import axios from 'axios'
+import fs from 'fs'
+import FormData from 'form-data'
+import config from '../config'
+
 
 export const testAuthentication = () => {
 
-	const url = `https://api.pinata.cloud/data/testAuthentication`
 	return axios
 		.get(url, {
 			headers: {
-				pinata_api_key: 'your pinata api key',
-				pinata_secret_api_key: 'your pinata secret api key'
+				pinata_api_key: config.PINATA_KEY,
+				pinata_secret_api_key: config.PINATA_SECRET
 			}
 		})
 		.then(function (response) {
@@ -21,22 +22,22 @@ export const testAuthentication = () => {
 
 }
 
-export const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey) => {
-	const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`
+export const pinFileToIPFS = ( file, name ) => {
 
-	//we gather a local file for this example, but any valid readStream source will work here.
-	let data = new FormData()
-	data.append('file', fs.createReadStream('./yourfile.png'))
+	// we gather a local file for this example, but any valid readStream source will work here.
+	// let data = new FormData()
+	// data.append('file', fs.createReadStream('./yourfile.png'))
 
-	//You'll need to make sure that the metadata is in the form of a JSON object that's been convered to a string
-	//metadata is optional
-	const metadata = JSON.stringify({
-		name: 'testname',
-		keyvalues: {
-			exampleKey: 'exampleValue'
-		}
-	})
-	data.append('pinataMetadata', metadata)
+	// You'll need to make sure that the metadata is in the form
+	// of a JSON object that's been convered to a string
+	// metadata is optional
+	// const metadata = JSON.stringify({
+	// 	name,
+		// keyvalues: {
+		// 	exampleKey: 'exampleValue'
+		// }
+	// })
+	// data.append('pinataMetadata', metadata)
 
 	//pinataOptions are optional
 	const pinataOptions = JSON.stringify({
@@ -73,19 +74,24 @@ export const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey) => {
 		})
 }
 
-export const pinJSONToIPFS = (pinataApiKey, pinataSecretApiKey, JSONBody) => {
-	const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
+export const pinJSONToIPFS = ( JSONBody ) => {
+
+	const url = `${config.PINATA_URL}/data/testAuthentication`
+	const key = config.PINATA_KEY
+	const secret = config.PINATA_SECRET
+
 	return axios
-		.post(url, JSONBody, {
-			headers: {
-				pinata_api_key: pinataApiKey,
-				pinata_secret_api_key: pinataSecretApiKey
+		.post(
+			url,
+			JSONBody, {
+				headers: {
+					pinata_api_key: key,
+					pinata_secret_api_key: secret
+				}
 			}
-		})
-		.then(function (response) {
+		).then(function (response) {
 			//handle response here
-		})
-		.catch(function (error) {
+		}).catch(function (error) {
 			//handle error here
 		})
 }
