@@ -43,9 +43,9 @@ function Main (props) {
 			cid: 'cid'
 		}
 
-		// console.log('data',data)
+		console.log('data',data)
 		setTxData(data)
-	},[accountPair])
+	},[ nonce ])
 
 	useEffect(() => {
 		let unsubscribeAll = null
