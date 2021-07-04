@@ -5,27 +5,33 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 import { TxButton } from '../../substrate-lib/components'
 
-import { Pagination, Button, Modal, Rating, Search, Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider, Icon, Image } from 'semantic-ui-react'
+import { Pagination, Table, Header, Button, Modal, Rating, Search, Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider, Icon, Image } from 'semantic-ui-react'
+import { data as d } from '../lib/data'
 
-const ItemCard = ({ data }) => {
+const ListItem = ({ data }) => {
+
+	const index = data.index
+	const imageURL = `https://ipfs.infura.io/ipfs/${data.cid}`
+	const name = data.name
+	const body = d.dao_bodies.filter( b => b.value === Number(data.body))[0].text
 
 	return (
-		<Grid.Column mobile={16} tablet={8} computer={4}>
-			<Card color={(state==1)?'green':'red'}>
-				<Card.Content>
-					<Card.Header><a href={`/daos/${data.id}`}>{data.name}</a></Card.Header>
-					<Card.Meta>
-						<Rating icon='star' defaultRating={3} maxRating={5} />
-					</Card.Meta>
-					<Card.Description>
-						{data.cid}
-					</Card.Description>
-				</Card.Content>
-				<Card.Content extra>
-				<Button size='mini' positive>apply</Button>
-				</Card.Content>
-			</Card>
-		</Grid.Column>
+		<Table.Row>
+			<Table.Cell>
+				<Header as='h4' image>
+					<Image rounded src={imageURL} />
+					<Header.Content>
+						{name}
+						<Header.Subheader>{body}</Header.Subheader>
+					</Header.Content>
+				</Header>
+			</Table.Cell>
+			<Table.Cell>{data.member_count}</Table.Cell>
+			<Table.Cell>0</Table.Cell>
+			<Table.Cell>0</Table.Cell>
+			<Table.Cell>0</Table.Cell>
+			<Table.Cell><Button size='mini'>Join</Button></Table.Cell>
+		</Table.Row>
 	)
 
 }
@@ -34,28 +40,41 @@ const ItemGrid = ({ data }) => {
 
 	const [ content, setContent ] = useState([])
 
-	if ( !data ) return <div>No organizations exist yet. Create one!</div>
-	if ( content !== data ) setContent( data )
+	if ( !data.content ) return <div>No organizations exist yet. Create one!</div>
+	if ( content !== data.content ) setContent(data.content)
 
 	return (
 		<Container>
-			<Grid stackable colums={5} >
-				{ content.map((d,i)=><ItemCard key={i} data={d}/>) }
-			</Grid>
+			<Table celled striped>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell/>
+						<Table.HeaderCell>Members</Table.HeaderCell>
+						<Table.HeaderCell>Balance</Table.HeaderCell>
+						<Table.HeaderCell>Motions</Table.HeaderCell>
+						<Table.HeaderCell>Campaigns</Table.HeaderCell>
+						<Table.HeaderCell/>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{ content.map((d,i)=><ListItem key={i} data={d} />) }
+				</Table.Body>
+			</Table>
 		</Container>
 	)
 
 }
 
 export const Items = props => {
-
 	const { api } = useSubstrate()
 	const { accountPair, accountAddress } = props
 
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
-	const [ daos, setDaos ] = useState()
+	const [ configs, setConfigs ] = useState()
+	const [ balances, setBalances ] = useState()
 	const [ members, setMembers ] = useState()
+	const [ content, setContent ] = useState()
 
 	useEffect(() => {
 		let unsubscribe = null
@@ -82,11 +101,67 @@ export const Items = props => {
 		queryHashes()
 	}, [nonce])
 
+	useEffect(() => {
+		if ( !hashes ) return
+		// const query = api.query.gameDaoControl.body_by_hash
+		const getContent = async args => {
+			let _req = []
+			try {
+				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodies(args[i]))
+				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
+				setContent(res)
+			} catch ( err ) {
+				console.error( err )
+			}
+		}
+		getContent(hashes)
+	}, [hashes])
+
+	// useEffect(() => {
+	// 	if ( !hashes ) return
+	// 	const getContent = async args => {
+	// 		let _req = []
+	// 		try {
+	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyConfig(args[i]))
+	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
+	// 			setConfigs(res)
+	// 		} catch ( err ) {
+	// 			console.error( err )
+	// 		}
+	// 	}
+	// 	getContent(hashes)
+	// }, [hashes])
+
+	// useEffect(() => {
+	// 	if ( !hashes || !content ) return
+	// 	const getContent = async args => {
+	// 		let _req = []
+	// 		try {
+	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyMembers(args[i]))
+	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=> [ args[_i], _c.toHuman() ] ))
+	// 			// setMembers(res)
+	// 			setContent(
+	// 				content.map((c,i)=>{
+	// 					const count = res.filter(t=>t[0]===c.id)[0][1] || 0
+	// 					console.log(count, i)
+	// 					return {
+	// 						...c,
+	// 						member_count: count
+	// 				}
+	// 			}))
+	// 		} catch ( err ) {
+	// 			console.error( err )
+	// 		}
+	// 	}
+	// 	getContent(hashes)
+	// }, [hashes])
+
+	// TODO: get balances
+
 	return (
 		<div>
 			<h3>Total organizations: { nonce }</h3>
-
-			{ hashes && hashes.map((h,i)=><div key={i}>{(i+1)}. {h}</div>)}
+			{ content && <ItemGrid data={{content}} /> }
 
 		</div>
 	)
