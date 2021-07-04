@@ -32,7 +32,7 @@ export const Main = props => {
 
 		if(!accountPair) return
 
-		const name = faker.name.findName()
+		const name = faker.commerce.productName()
 		const body = 0
 
 		const creator = accountPair.address
@@ -53,8 +53,6 @@ export const Main = props => {
 			access, member_limit, fee_model, fee,
 			cid, gov_asset, pay_asset,
 		}
-
-		console.log( _ )
 		updateFormData( _ )
 
 	},[accountPair])
@@ -114,7 +112,7 @@ export const Main = props => {
 			<p>Note: In case you want to create a DAO,
 			the controller must be the organization.</p>
 
-			{fileURL && <><img src={fileURL} width="600px" /><br/><br/></> }
+			{fileURL && <><img src={fileURL} width="128px" /><br/><br/></> }
 
 			<Form loading={loading}>
 
