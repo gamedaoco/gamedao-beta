@@ -61,17 +61,8 @@ const GameDAO = props => {
 	const panes = [
 
 		{
-			menuItem: 'Create Organization',
-			render: () =>
-				<Tab.Pane key='create_dao'>
-					<CreateDAO accountPair={accountPair} />
-				</Tab.Pane>
-			,
-		},
-
-		{
 			menuItem: (
-				<Menu.Item>
+				<Menu.Item key='2'>
 					Organizations{ (bodies>0) && <Label>{ bodies }</Label> }
 				</Menu.Item>
 			),
@@ -81,9 +72,18 @@ const GameDAO = props => {
 				</Tab.Pane>
 			,
 		},
+		{
+			menuItem: (<Menu.Item key='1'> Create Organization </Menu.Item>),
+			render: () =>
+				<Tab.Pane key='create_dao'>
+					<CreateDAO accountPair={accountPair} />
+				</Tab.Pane>
+			,
+		},
+
 
 		{
-			menuItem: 'Create Campaign',
+			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
 			render: () =>
 				<Tab.Pane key='create_campaign'>
 					<CreateCampaign
@@ -95,7 +95,7 @@ const GameDAO = props => {
 
 		{
 			menuItem: (
-				<Menu.Item>
+				<Menu.Item key='4'>
 					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
 				</Menu.Item>
 			),

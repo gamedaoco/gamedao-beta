@@ -43,7 +43,7 @@ function Main (props) {
 			cid: 'cid'
 		}
 
-		console.log('data',data)
+		// console.log('data',data)
 		setTxData(data)
 	},[ nonce ])
 
