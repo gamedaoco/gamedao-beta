@@ -13,90 +13,114 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 
 import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
-// import Loader from '../components/Loader'
-//
-import Campaigns from './components/Campaigns'
-import CreateCampaign from './components/CreateCampaign'
-// import Proposals from './components/Proposals'
-// import CreateProposal from './components/CreateProposal'
+
+import DAO from './DAO'
+import CreateDAO from './DAO/Create'
+import Campaign from './Campaign'
+import CreateCampaign from './Campaign/Create'
+// import Proposal from './Proposal'
+// import CreateProposal from './Proposal/Create'
 
 const GameDAO = props => {
 
-	const { accountPair, accountAddress } = props
-	const { api, keyring } = useSubstrate()
-	const [ state, setState ] = useState({
-		campaigns: 0,
-		proposals: 0,
-	})
+	const { accountPair } = props
+	const { api } = useSubstrate()
+
+	const [bodies, setBodies] = useState(null)
+	const [campaigns, setCampaigns] = useState(null)
+	const [proposals, setProposals] = useState(null)
 
 	useEffect(() => {
-		if (!accountPair) return
+
 		let unsubscribe = null
-		api.query.gameDaoGovernance.nonce(number => {
-			setState({
-				...state,
-				proposals: number.toNumber()
-			})
+
+		api.query.gameDaoControl.nonce(n => {
+			setBodies(n.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
+
 		return () => unsubscribe && unsubscribe()
-	}, [accountPair])
+
+	}, [api.query.gameDaoControl])
 
 	useEffect(() => {
-		if (!accountPair) return
+
 		let unsubscribe = null
-		api.query.gameDaoCrowdfunding.nonce(number => {
-			setState({
-				...state,
-				campaigns: number.toNumber()
-			})
+
+		api.query.gameDaoCrowdfunding.nonce(n => {
+			setCampaigns(n.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
+
 		return () => unsubscribe && unsubscribe()
-	}, [accountPair])
+
+	}, [api.query.gameDaoCrowdfunding])
 
 	const panes = [
 
 		{
+			menuItem: 'Create Organization',
+			render: () =>
+				<Tab.Pane key='create_dao'>
+					<CreateDAO accountPair={accountPair} />
+				</Tab.Pane>
+			,
+		},
+
+		{
 			menuItem: (
-				<Menu.Item key='campaigns'>
-					All Campaigns<Label>{state.campaigns}</Label>
+				<Menu.Item>
+					Organizations{ (bodies>0) && <Label>{ bodies }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
-				<Tab.Pane key='campaigns'>
-					<Campaigns accountPair={accountPair}/>
+				<Tab.Pane key='dao'>
+					<DAO accountPair={accountPair} />
 				</Tab.Pane>
+			,
 		},
+
 		{
 			menuItem: 'Create Campaign',
 			render: () =>
 				<Tab.Pane key='create_campaign'>
 					<CreateCampaign
 						accountPair={accountPair}
-						accountAddress={accountAddress}
 						/>
 				</Tab.Pane>
 			,
 		},
+
 		{
-			menuItem:
-				<Menu.Item key='proposals'>
-					Proposals<Label>{state.proposals}</Label>
-				</Menu.Item>,
+			menuItem: (
+				<Menu.Item>
+					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
+				</Menu.Item>
+			),
 			render: () =>
-				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+				<Tab.Pane key='campaigns'>
+					<Campaign accountPair={accountPair}/>
+				</Tab.Pane>
 		},
-		{
-			menuItem:
-				<Menu.Item key='create_proposal'>
-					Create Proposal
-				</Menu.Item>,
-			render: () =>
-			<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
-		},
+
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='proposals'>
+		// 			Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 		<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+		// },
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='create_proposal'>
+		// 			Create Proposal
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 	<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
+		// },
 	]
 
 	return (
@@ -107,7 +131,16 @@ const GameDAO = props => {
 
 }
 
-export default GameDAO
+export default function Dapp (props) {
+
+	const { accountPair } = props;
+	const { api } = useSubstrate();
+
+	return api && api.query.gameDaoCrowdfunding && accountPair
+		? <GameDAO {...props} />
+		: null;
+
+}
 
 //
 //
