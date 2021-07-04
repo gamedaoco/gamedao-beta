@@ -11,6 +11,23 @@
     "data": "AccountData"
   },
 
+"Body": {
+    "id": "Hash",
+    "index": "u128",
+    "creator": "AccountId",
+    "name": "Vec<u8>",
+    "cid": "Vec<u8>",
+    "body": "u8",
+    "asset": "u8",
+    "created": "BlockNumber",
+    "mutated": "BlockNumber"
+  },
+  "BConfig": {
+    "fee_model": "u8",
+    "fee": "Balance",
+    "native_asset": "u8",
+    "member_imit": "u64"
+  },
   "Space": {
     "id": "H256",
     "dna": "H256",
