@@ -91,6 +91,7 @@ export const Main = props => {
 			const added = await client.add(file)
 			const url = `https://ipfs.infura.io/ipfs/${added.path}`
 			updateFileURL(url)
+			setContentCID(added.path)
 			updateContent()
 
 		} catch (error) {
@@ -214,7 +215,7 @@ export const Main = props => {
 									formData.controller,
 									formData.treasury,
 									formData.name,
-									formData.cid,
+									contentCID,
 									formData.body,
 									formData.access,
 									formData.fee_model,
