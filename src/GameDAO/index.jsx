@@ -13,18 +13,20 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 
 import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
-// import Loader from '../components/Loader'
-//
-import Campaigns from './components/Campaigns'
-import CreateCampaign from './components/CreateCampaign'
-// import Proposals from './components/Proposals'
-// import CreateProposal from './components/CreateProposal'
+
+import DAO from './DAO'
+import CreateDAO from './DAO/Create'
+import Campaign from './Campaign'
+import CreateCampaign from './Campaign/Create'
+// import Proposal from './Proposal'
+// import CreateProposal from './Proposal/Create'
 
 const GameDAO = props => {
 
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
+	const [bodies, setBodies] = useState(null)
 	const [campaigns, setCampaigns] = useState(null)
 	const [proposals, setProposals] = useState(null)
 
@@ -32,15 +34,15 @@ const GameDAO = props => {
 
 		let unsubscribe = null
 
-		api.query.gameDaoGovernance.nonce(n => {
-			setProposals(n.toNumber())
+		api.query.gameDaoControl.nonce(n => {
+			setBodies(n.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
 
 		return () => unsubscribe && unsubscribe()
 
-	}, [api.query.gameDaoGovernance])
+	}, [api.query.gameDaoControl])
 
 	useEffect(() => {
 
@@ -59,6 +61,28 @@ const GameDAO = props => {
 	const panes = [
 
 		{
+			menuItem: 'Create Organization',
+			render: () =>
+				<Tab.Pane key='create_dao'>
+					<CreateDAO accountPair={accountPair} />
+				</Tab.Pane>
+			,
+		},
+
+		{
+			menuItem: (
+				<Menu.Item>
+					Organizations{ (bodies>0) && <Label>{ bodies }</Label> }
+				</Menu.Item>
+			),
+			render: () =>
+				<Tab.Pane key='dao'>
+					<DAO accountPair={accountPair} />
+				</Tab.Pane>
+			,
+		},
+
+		{
 			menuItem: 'Create Campaign',
 			render: () =>
 				<Tab.Pane key='create_campaign'>
@@ -68,33 +92,35 @@ const GameDAO = props => {
 				</Tab.Pane>
 			,
 		},
+
 		{
 			menuItem: (
-				<Menu.Item key='campaigns'>
+				<Menu.Item>
 					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
 				<Tab.Pane key='campaigns'>
-					<Campaigns accountPair={accountPair}/>
+					<Campaign accountPair={accountPair}/>
 				</Tab.Pane>
 		},
-		{
-			menuItem:
-				<Menu.Item key='proposals'>
-					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
-				</Menu.Item>,
-			render: () =>
-				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
-		},
-		{
-			menuItem:
-				<Menu.Item key='create_proposal'>
-					Create Proposal
-				</Menu.Item>,
-			render: () =>
-			<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
-		},
+
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='proposals'>
+		// 			Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 		<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+		// },
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='create_proposal'>
+		// 			Create Proposal
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 	<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
+		// },
 	]
 
 	return (
