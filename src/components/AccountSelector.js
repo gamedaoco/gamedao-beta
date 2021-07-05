@@ -54,7 +54,7 @@ function Main (props) {
     >
       <Container>
         <Menu.Menu>
-          <Image src={`${process.env.PUBLIC_URL}/assets/gamedao.png`} size='mini' />
+          <a href='#footer'><Image alt='GameDAO' src={`${process.env.PUBLIC_URL}/assets/gamedao.png`} size='mini' /></a>
         </Menu.Menu>
         <Menu.Menu position='right' style={{ alignItems: 'center' }}>
           { !accountSelected

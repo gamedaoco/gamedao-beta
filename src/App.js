@@ -1,10 +1,9 @@
 import React, { useState, createRef } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
-// import { DeveloperConsole } from './substrate-lib/components'
+import { Container, Grid, Sticky, Segment } from 'semantic-ui-react'
+import { Footer } from './components/Footer'
 
-import { Container, Grid, Sticky } from 'semantic-ui-react'
 import AccountSelector from './components/AccountSelector'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
@@ -12,6 +11,8 @@ import Loader from './components/Loader'
 import Message from './components/Message'
 
 import GameDAO from './GameDAO'
+
+const DEV = (process.env.NODE_ENV!=='production')
 
 function Main () {
 
@@ -28,14 +29,15 @@ function Main () {
 
 	const contextRef = createRef()
 
+
 	return (
 		<React.Fragment>
-			<div ref={contextRef}>
 
-				<Sticky context={contextRef}>
-					<AccountSelector setAccountAddress={setAccountAddress} />
-				</Sticky>
+			<Sticky id='top' context={contextRef}>
+				<AccountSelector setAccountAddress={setAccountAddress} />
+			</Sticky>
 
+			<Segment ref={contextRef} vertical style={{ minHeight: '95vh', padding: '5em 0em' }}>
 				<Container>
 
 					<Grid>
@@ -48,24 +50,28 @@ function Main () {
 						</Grid.Row>
 					</Grid>
 
-					<Grid>
-						<Grid.Row stretched>
-							<Transfer
-								accountPair={accountPair}
-								accountAddress={accountAddress}
-								setAccountAddress={setAccountAddress}
-								/>
-							<Template
-								accountPair={accountPair}
-								accountAddress={accountAddress}
-								setAccountAddress={setAccountAddress}
-								/>
-						</Grid.Row>
-					</Grid>
+					{ DEV &&
+						<Grid>
+							<Grid.Row stretched>
+								<Transfer
+									accountPair={accountPair}
+									accountAddress={accountAddress}
+									setAccountAddress={setAccountAddress}
+									/>
+								<Template
+									accountPair={accountPair}
+									accountAddress={accountAddress}
+									setAccountAddress={setAccountAddress}
+									/>
+							</Grid.Row>
+						</Grid>
+					}
 
 				</Container>
+			</Segment>
 
-			</div>
+			<Footer/>
+
 		</React.Fragment>
 	)
 }
