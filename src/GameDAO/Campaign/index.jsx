@@ -189,9 +189,11 @@ export const Campaigns = props => {
 
 	return ( !content || content.length === 0 )
 		?	<React.Fragment>
+				<h1>Campaigns</h1>
 				<h3>No campaigns yet. Create one!</h3>
 			</React.Fragment>
 		:	<React.Fragment>
+				<h1>Campaigns</h1>
 				<h3>Total Campaigns: { nonce }</h3>
 				<CampaignGrid content={content} />
 			</React.Fragment>

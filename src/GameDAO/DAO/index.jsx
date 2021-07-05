@@ -68,9 +68,13 @@ export const Items = props => {
 
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
+	 // eslint-disable-next-line
 	const [ configs, setConfigs ] = useState()
+	 // eslint-disable-next-line
 	const [ balances, setBalances ] = useState()
+	 // eslint-disable-next-line
 	const [ members, setMembers ] = useState()
+	 // eslint-disable-next-line
 	const [ content, setContent ] = useState()
 
 	useEffect(() => {
@@ -155,13 +159,16 @@ export const Items = props => {
 
 	// TODO: get balances
 
-	return (
-		<div>
-			<h3>Total organizations: { nonce }</h3>
-			{ content && <ItemGrid data={{content}} /> }
-
-		</div>
-	)
+	return ( !content || content.length === 0 )
+		?	<React.Fragment>
+				<h1>Organizations</h1>
+				<h3>No organizations yet. Create one!</h3>
+			</React.Fragment>
+		:	<React.Fragment>
+				<h1>Organizations</h1>
+				<h3>Total organizations: { nonce }</h3>
+				<ItemGrid data={{content}} />
+			</React.Fragment>
 
 }
 

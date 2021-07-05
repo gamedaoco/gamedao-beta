@@ -13,12 +13,12 @@ import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../substrate-lib'
 
 import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
+import Loader from '../components/Loader'
 
 const DAO = lazy( () => import ('./DAO') )
 const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
 const CreateCampaign = lazy( () => import ('./Campaign/Create') )
-
 // import Proposal from './Proposal'
 // import CreateProposal from './Proposal/Create'
 
@@ -126,7 +126,9 @@ const GameDAO = props => {
 					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
 				</Menu.Item>,
 			render: () =>
-				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+				<Tab.Pane key='proposals'>
+					<div>Proposals</div>
+				</Tab.Pane>
 		},
 		// {
 		// 	menuItem:
@@ -140,7 +142,7 @@ const GameDAO = props => {
 
 	return (
 		<Grid.Column width={16}>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<Loader text="Loading..."></Loader>}>
 				<Tab panes={ panes }/>
 			</Suspense>
 		</Grid.Column>

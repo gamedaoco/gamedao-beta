@@ -61,6 +61,8 @@ export const Main = props => {
 			logoImage: fileURL,
 			name: formData.name,
 			description: formData.description,
+			website: formData.website,
+			repo: formData.repo,
 		}
 		setContent( contentJSON )
 	}
@@ -86,9 +88,11 @@ export const Main = props => {
 		try {
 
 			const added = await client.add(file)
-			const url = `https://ipfs.infura.io/ipfs/${added.path}`
-			updateFileURL(url)
 			setContentCID(added.path)
+
+			const url = `https://ipfs.infura.io/ipfs/${contentCID}`
+			updateFileURL(url)
+
 			updateContent()
 
 		} catch (error) {
@@ -135,6 +139,33 @@ export const Main = props => {
 							name='body'
 							options={data.dao_bodies}
 							value={formData.body}
+							onChange={handleOnChange}
+							/>
+					</Form.Group>
+
+					<Form.Group widths='equal'>
+						<Form.Input
+							type="file"
+							label='Logo'
+							onChange={onFileChange}
+							/>
+					</Form.Group>
+
+					<Form.Group widths='equal'>
+						<Form.Input
+							fluid
+							label='Website'
+							placeholder='https://your.website.xyz'
+							name='website'
+							value={formData.website}
+							onChange={handleOnChange}
+							/>
+						<Form.Input
+							fluid
+							label='Code Repository'
+							placeholder='repo'
+							name='repo'
+							value={formData.repo}
 							onChange={handleOnChange}
 							/>
 					</Form.Group>
