@@ -45,7 +45,7 @@ function Main (props) {
 
 		// console.log('data',data)
 		setTxData(data)
-	},[ nonce ])
+	},[ nonce, accountPair ])
 
 	useEffect(() => {
 		let unsubscribeAll = null
