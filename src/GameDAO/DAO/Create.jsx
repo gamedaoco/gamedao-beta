@@ -6,15 +6,14 @@ import {
 } from 'semantic-ui-react'
 
 import faker from 'faker'
-import { data, rnd } from '../lib/data'
+import { data } from '../lib/data'
 
 import { create } from 'ipfs-http-client'
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 export const Main = props => {
 
-	const { api } = useSubstrate()
-	const { accountPair, finalized } = props
+	const { accountPair } = props
 	const [ status, setStatus ] = useState('')
 	const [ loading, setLoading  ] = useState(false)
 
@@ -55,7 +54,7 @@ export const Main = props => {
 		}
 		updateFormData( _ )
 
-	},[accountPair])
+	},[accountPair, contentCID])
 
 	const updateContent = () => {
 		const contentJSON = {
@@ -73,7 +72,7 @@ export const Main = props => {
 	const handleSubmit = e => {
 
 		e.preventDefault()
-		console.log('submit')
+		console.log('submit', content)
 		setLoading(true)
 
 	}
@@ -112,7 +111,7 @@ export const Main = props => {
 			<p>Note: In case you want to create a DAO,
 			the controller must be the organization.</p>
 
-			{fileURL && <><img src={fileURL} width="128px" /><br/><br/></> }
+			{fileURL && <><img alt={formData.name} rc={fileURL} width="128px" /><br/><br/></> }
 
 			<Form loading={loading}>
 

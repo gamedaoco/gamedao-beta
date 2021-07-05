@@ -9,16 +9,10 @@
  © C O P Y R I O T   2 0 7 5   Z E R O . I O
 **/
 
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
-import {
-	Button, Rating, Container,
-	Grid, Card, Icon, Image,
-} from 'semantic-ui-react'
-
 import  CampaignGrid from './CampaignGrid'
-import  CampaignCard from './CampaignCard'
 
 //
 // campaigns component
@@ -31,7 +25,7 @@ import  CampaignCard from './CampaignCard'
 export const Campaigns = props => {
 
 	const { api } = useSubstrate()
-	const { accountPair } = props
+	// const { accountPair } = props
 
 	const [ nonce, updateNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
@@ -41,10 +35,10 @@ export const Campaigns = props => {
 
 	const [ content, setContent ] = useState()
 
-	const [ state, setState ] = useState({
-		owned: 0,
-		contributed: 0,
-	})
+	// const [ state, setState ] = useState({
+	// 	owned: 0,
+	// 	contributed: 0,
+	// })
 
 	useEffect(() => {
 
@@ -65,29 +59,29 @@ export const Campaigns = props => {
 
 	}, [api.query.gameDaoCrowdfunding])
 
-	useEffect(() => {
+	// useEffect(() => {
 
-		let unsubscribe = null
+	// 	let unsubscribe = null
 
-		const query = api.query.gameDaoCrowdfunding
-		let contributed, owned
+	// 	const query = api.query.gameDaoCrowdfunding
+	// 	let contributed, owned
 
-		api.queryMulti([
-			[query.campaignsContributedCount, accountPair.address],
-			[query.campaignsOwnedCount, accountPair.address],
-		],([contributed,owned]) => {
-			setState({
-				...state,
-				contributed: contributed.toNumber(),
-				owned: owned.toNumber(),
-			})
-		}).then(unsub => {
-			unsubscribe = unsub;
-		}).catch(console.error);
+	// 	api.queryMulti([
+	// 		[query.campaignsContributedCount, accountPair.address],
+	// 		[query.campaignsOwnedCount, accountPair.address],
+	// 	],([contributed,owned]) => {
+	// 		setState({
+	// 			...state,
+	// 			contributed: contributed.toNumber(),
+	// 			owned: owned.toNumber(),
+	// 		})
+	// 	}).then(unsub => {
+	// 		unsubscribe = unsub;
+	// 	}).catch(console.error);
 
-		return () => unsubscribe && unsubscribe()
+	// 	return () => unsubscribe && unsubscribe()
 
-	}, [nonce])
+	// }, [nonce, accountPair, api, state, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 
@@ -100,7 +94,7 @@ export const Campaigns = props => {
 		}
 		queryHashes()
 
-	}, [nonce])
+	}, [nonce, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 
@@ -119,7 +113,7 @@ export const Campaigns = props => {
 		}
 		queryCampaigns(hashes)
 
-	}, [hashes])
+	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 
@@ -138,7 +132,7 @@ export const Campaigns = props => {
 		}
 		queryContributions(hashes)
 
-	}, [hashes])
+	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 
@@ -157,7 +151,7 @@ export const Campaigns = props => {
 		}
 		queryStates(hashes)
 
-	}, [hashes])
+	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 

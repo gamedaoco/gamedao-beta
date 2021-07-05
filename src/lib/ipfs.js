@@ -1,13 +1,11 @@
 import axios from 'axios'
-import fs from 'fs'
-import FormData from 'form-data'
 import config from '../config'
 
 
 export const testAuthentication = () => {
 
 	return axios
-		.get(url, {
+		.get(config.PINATA_URL, {
 			headers: {
 				pinata_api_key: config.PINATA_KEY,
 				pinata_secret_api_key: config.PINATA_SECRET
@@ -24,8 +22,10 @@ export const testAuthentication = () => {
 
 export const pinFileToIPFS = ( file, name ) => {
 
+	let url = config.PINATA_URL
+
 	// we gather a local file for this example, but any valid readStream source will work here.
-	// let data = new FormData()
+	let data = '' //new FormData()
 	// data.append('file', fs.createReadStream('./yourfile.png'))
 
 	// You'll need to make sure that the metadata is in the form
@@ -62,8 +62,8 @@ export const pinFileToIPFS = ( file, name ) => {
 			maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
 			headers: {
 				'Content-Type': `multipart/form-data boundary=${data._boundary}`,
-				pinata_api_key: pinataApiKey,
-				pinata_secret_api_key: pinataSecretApiKey
+				pinata_api_key: config.PINATA_KEY,
+				pinata_secret_api_key: config.PINATA_SECRET
 			}
 		})
 		.then(function (response) {

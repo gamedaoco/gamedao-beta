@@ -3,14 +3,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
-import { TxButton } from '../../substrate-lib/components'
 
-import { Pagination, Table, Header, Button, Modal, Rating, Search, Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider, Icon, Image } from 'semantic-ui-react'
+import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 import { data as d } from '../lib/data'
 
 const ListItem = ({ data }) => {
 
-	const index = data.index
 	const imageURL = `https://ipfs.infura.io/ipfs/${data.cid}`
 	const name = data.name
 	const body = d.dao_bodies.filter( b => b.value === Number(data.body))[0].text
@@ -67,7 +65,6 @@ const ItemGrid = ({ data }) => {
 
 export const Items = props => {
 	const { api } = useSubstrate()
-	const { accountPair, accountAddress } = props
 
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
@@ -99,7 +96,7 @@ export const Items = props => {
 			setHashes(hashes)
 		}
 		queryHashes()
-	}, [nonce])
+	}, [nonce, api.query.gameDaoControl])
 
 	useEffect(() => {
 		if ( !hashes ) return
@@ -115,7 +112,7 @@ export const Items = props => {
 			}
 		}
 		getContent(hashes)
-	}, [hashes])
+	}, [hashes, api.query.gameDaoControl])
 
 	// useEffect(() => {
 	// 	if ( !hashes ) return

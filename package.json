@@ -65,10 +65,7 @@
       "only-warn"
     ],
     "rules": {
-      "semi": [
-        0,
-        "never"
-      ],
+      "semi": ["off", "never"],
       "no-extra-semi": 1
     }
   },

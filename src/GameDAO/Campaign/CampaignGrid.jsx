@@ -1,10 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { Container, Grid, Pagination } from 'semantic-ui-react'
+import React, {
+	// useState
+} from 'react'
+import { Container, Grid } from 'semantic-ui-react'
 import CampaignCard from './CampaignCard'
 
 const CampaignGrid = ({ content }) => {
 
-	const [ pageContent, setPageContent ] = useState([])
+	// const [ pageContent, setPageContent ] = useState([])
 
 	// const [ page, setPage ] = useState()
 	// const [ pageSize, setPageSize ] = useState()

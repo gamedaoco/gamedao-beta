@@ -1,28 +1,23 @@
-import React, { useState, createRef } from 'react'
+import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 
-import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
+import { useSubstrate } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
-import { Container, Grid, Sticky } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 
-import AccountSelector from './components/AccountSelector'
-import Balances from './components/Balances'
 import BlockNumber from './components/BlockNumber'
 import Events from './components/Events'
 import Interactor from './components/Interactor'
 import Metadata from './components/Metadata'
 import NodeInfo from './components/NodeInfo'
-import TemplateModule from './components/TemplateModule'
-import Transfer from './components/Transfer'
-import Upgrade from './components/Upgrade'
 
 import Loader from './components/Loader'
 import Message from './components/Message'
 
 export const Network = () => {
 
-	const [ accountAddress, setAccountAddress ] = useState(null)
+	const [ accountAddress ] = useState(null)
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
 	const accountPair =
 		accountAddress &&

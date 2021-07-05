@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react'
-import axios from 'axios'
+import React from 'react'
 
 import {
-	Button, Rating, Container, Grid, Card, Icon, Image
+	Button, Grid, Card, Icon, Image
 } from 'semantic-ui-react'
 
 const CampaignCard = ({ item, index }) => {
@@ -10,27 +9,28 @@ const CampaignCard = ({ item, index }) => {
 	if (!item) return null
 
 	// on chain
-	const { id, name, admin, cap, cid, created, deposit, expiry, governance, owner, protocol, state, balance } = item
+	const { id, name, cap, cid, created, expiry, governance, owner, balance } = item
 
 	// off chain
 	const image_url = 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 	const json_url = 'https://gateway.pinata.cloud/ipfs/'+ cid
+	console.log(json_url)
+
 	const blocksRemain = ( expiry )
 
 	// const remaining = blocksToTime(data.expiry) - new Date().now()
 	// console.log('update',Date.now())
 
 	const tags = ['game','2d','pixel','steam']
-	const views = 1//Math.floor(Math.random()*10000)
+	// const views = 1//Math.floor(Math.random()*10000)
 	const backers = 1//Math.floor(Math.random()*1000)
-
 	// icon type based on supporters
-	const icon = backers => {
-		if (backers > 10000) return 'fire'
-		if (backers > 1000) return 'heart'
-		if (backers > 100) return 'peace'
-		return 'plus circle'
-	}
+	// const icon = backers => {
+	// 	if (backers > 10000) return 'fire'
+	// 	if (backers > 1000) return 'heart'
+	// 	if (backers > 100) return 'peace'
+	// 	return 'plus circle'
+	// }
 	const epoch = created.replaceAll(',','')
 	const options = { year: 'numeric', month: 'long', day: 'numeric' };
 	const date = new Date( epoch * 1000 ).toLocaleDateString(undefined, options)

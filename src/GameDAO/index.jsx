@@ -9,15 +9,16 @@
 					 © C O P Y R I O T   2 0 7 5   Z E R O . I O
 **/
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../substrate-lib'
 
 import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
 
-import DAO from './DAO'
-import CreateDAO from './DAO/Create'
-import Campaign from './Campaign'
-import CreateCampaign from './Campaign/Create'
+const DAO = lazy( () => import ('./DAO') )
+const CreateDAO = lazy( () => import ('./DAO/Create') )
+const Campaign = lazy( () => import ('./Campaign') )
+const CreateCampaign = lazy( () => import ('./Campaign/Create') )
+
 // import Proposal from './Proposal'
 // import CreateProposal from './Proposal/Create'
 
@@ -57,6 +58,20 @@ const GameDAO = props => {
 		return () => unsubscribe && unsubscribe()
 
 	}, [api.query.gameDaoCrowdfunding])
+
+	useEffect(() => {
+
+		let unsubscribe = null
+
+		api.query.gameDaoGovernance.nonce(n => {
+			setProposals(n.toNumber())
+		}).then( unsub => {
+			unsubscribe = unsub
+		}).catch( console.error )
+
+		return () => unsubscribe && unsubscribe()
+
+	}, [api.query.gameDaoGovernance])
 
 	const panes = [
 
@@ -105,14 +120,14 @@ const GameDAO = props => {
 				</Tab.Pane>
 		},
 
-		// {
-		// 	menuItem:
-		// 		<Menu.Item key='proposals'>
-		// 			Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
-		// 		</Menu.Item>,
-		// 	render: () =>
-		// 		<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
-		// },
+		{
+			menuItem:
+				<Menu.Item key='proposals'>
+					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
+				</Menu.Item>,
+			render: () =>
+				<Tab.Pane key='proposals'><div>Proposals</div></Tab.Pane>
+		},
 		// {
 		// 	menuItem:
 		// 		<Menu.Item key='create_proposal'>
@@ -125,7 +140,9 @@ const GameDAO = props => {
 
 	return (
 		<Grid.Column width={16}>
-			<Tab panes={ panes }/>
+			<Suspense fallback={<div>Loading...</div>}>
+				<Tab panes={ panes }/>
+			</Suspense>
 		</Grid.Column>
 	)
 
