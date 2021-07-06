@@ -29,15 +29,14 @@ function Main () {
 
 	const contextRef = createRef()
 
-
 	return (
-		<React.Fragment>
+		<div context={contextRef}>
 
-			<Sticky id='top' context={contextRef}>
+			<Sticky id='top'>
 				<AccountSelector setAccountAddress={setAccountAddress} />
 			</Sticky>
 
-			<Segment ref={contextRef} vertical style={{ minHeight: '95vh', padding: '5em 0em' }}>
+			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em' }}>
 				<Container>
 
 					<Grid>
@@ -72,7 +71,7 @@ function Main () {
 
 			<Footer/>
 
-		</React.Fragment>
+		</div>
 	)
 }
 
