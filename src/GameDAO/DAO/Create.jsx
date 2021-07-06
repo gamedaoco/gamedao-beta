@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 import { TxButton } from '../../substrate-lib/components'
 import {
-	Container, Button, Form, Message,
+	Container, Form, Message, Divider, Segment, Image
 } from 'semantic-ui-react'
 
 import faker from 'faker'
 import { data } from '../lib/data'
 
-import { create } from 'ipfs-http-client'
-const client = create('https://ipfs.infura.io:5001/api/v0')
+import {
+	pinJSONToIPFS,
+	pinFileToIPFS,
+	gateway,
+} from '../lib/ipfs'
+
 
 export const Main = props => {
 
@@ -17,11 +21,13 @@ export const Main = props => {
 	const [ status, setStatus ] = useState('')
 	const [ loading, setLoading  ] = useState(false)
 
-	// content
+	// form
 	const [ formData, updateFormData ] = useState()
-	const [ fileURL, updateFileURL ] = useState(``)
-	const [ contentCID, setContentCID ] = useState('')
-	const [ content, setContent ] = useState({})
+	// files
+	const [ fileCID, updateFileCID ] = useState()
+	// json
+	const [ content, setContent ] = useState()
+	const [ contentCID, setContentCID ] = useState()
 
 	//
 	//
@@ -32,18 +38,22 @@ export const Main = props => {
 		if(!accountPair) return
 
 		const name = faker.commerce.productName()
-		const body = 0
+		const email = faker.internet.email()
+		const website = faker.internet.url()
+		const repo = faker.internet.url()
+		const description = faker.company.catchPhrase()
 
 		const creator = accountPair.address
 		const controller = accountPair.address
 		const treasury = accountPair.address
 
+		const body = 0
 		const access = 1
 		const member_limit = '100'
-		const fee_model = 2
+		const fee_model = 1
 		const fee = '10'
 
-		const cid = contentCID
+		const cid = ''
 		const gov_asset = 0
 		const pay_asset = 0
 
@@ -51,80 +61,99 @@ export const Main = props => {
 			name, body, creator, controller, treasury,
 			access, member_limit, fee_model, fee,
 			cid, gov_asset, pay_asset,
+			email, website, repo, description
 		}
 		updateFormData( _ )
 
 	},[accountPair, contentCID])
 
-	const updateContent = () => {
+	useEffect(()=>{
+
+		if (!content) return
+
+		const req = async () => {
+
+			try {
+				const cid = await pinJSONToIPFS( content )
+				console.log('cid', cid)
+				if ( cid ) {
+					setContentCID(cid)
+					console.log('json',`${gateway}${cid}`)
+				}
+			} catch ( err ) {
+				console.log('Error uploading file: ', err)
+			}
+
+		}
+		req()
+
+	}, [content, pinJSONToIPFS, setContentCID]);
+
+
+	useEffect(()=>{
+
+		if(!fileCID) return
+
 		const contentJSON = {
-			logoImage: fileURL,
 			name: formData.name,
 			description: formData.description,
 			website: formData.website,
+			email: formData.email,
+			logo: fileCID.logo,
+			header: fileCID.header,
 			repo: formData.repo,
 		}
 		setContent( contentJSON )
-	}
 
-	// handle form state
-	const handleOnChange = (e, { name, value }) =>
-	updateFormData({ ...formData, [name]: value })
+	}, [fileCID]);
 
-	const handleSubmit = e => {
-
-		e.preventDefault()
-		console.log('submit', content)
-		setLoading(true)
-
-	}
-
-	// upload files handler
-
-	async function onFileChange(e) {
+	async function onFileChange(e, { name }) {
 
 		const file = e.target.files[0]
 
 		try {
-
-			const added = await client.add(file)
-			setContentCID(added.path)
-
-			const url = `https://ipfs.infura.io/ipfs/${contentCID}`
-			updateFileURL(url)
-
-			updateContent()
-
+			const cid = await pinFileToIPFS( file )
+			updateFileCID({ ...fileCID, [name]: cid })
+			console.log('file',`${gateway}${cid}`)
 		} catch (error) {
-
 			console.log('Error uploading file: ', error)
-
 		}
 
 	}
 
-	//
+	// handle form state
+
+	const handleOnChange = (e, { name, value }) =>
+	updateFormData({ ...formData, [name]: value })
+
+	// filter state from tx button...lol
+
+	useEffect(()=>{
+
+		if ( !status ) return
+		if ( status.indexOf('Finalized') > -1 ) {
+			setLoading( false )
+			setStatus( null )
+		} else {
+			setLoading( true )
+		}
+
+	},[ status, setStatus, setLoading ])
 
 	if ( !formData ) return null
 
 	return (
-		<div>
+		<Segment vertical loading={loading}>
 
 			<h1>Create Organization</h1>
 
-			<p>Note: In case you want to create a DAO,
-			the controller must be the organization.</p>
-
-			{fileURL && <><img alt={formData.name} rc={fileURL} width="128px" /><br/><br/></> }
-
-			<Form loading={loading}>
+			<Form>
+					<br/>
+					<Divider clearing horizontal>General Information</Divider>
+					<br/>
 
 					<Form.Group widths='equal'>
-						<Form.Input
-							type="file"
-							label='Logo'
-							onChange={onFileChange}
-							/>
+
 						<Form.Input
 							fluid
 							label='Name'
@@ -132,7 +161,17 @@ export const Main = props => {
 							name='name'
 							value={formData.name}
 							onChange={handleOnChange}
+							required
 							/>
+						<Form.Input
+							fluid
+							label='Contact Email'
+							placeholder='email'
+							name='email'
+							value={formData.email}
+							onChange={handleOnChange}
+							/>
+
 						<Form.Select
 							fluid
 							label='Organizational Body'
@@ -143,13 +182,39 @@ export const Main = props => {
 							/>
 					</Form.Group>
 
+			{ fileCID &&
+				<Image.Group size='tiny'>
+					{fileCID.logo && <Image alt={formData.name} src={gateway+fileCID.logo} />}
+					{fileCID.header && <Image alt={formData.name} src={gateway+fileCID.header} />}
+				</Image.Group>
+			}
+
 					<Form.Group widths='equal'>
 						<Form.Input
 							type="file"
-							label='Logo'
+							label='Logo Graphic'
+							name='logo'
+							onChange={onFileChange}
+							required
+							/>
+						<Form.Input
+							type="file"
+							label='Header Graphic'
+							name='header'
 							onChange={onFileChange}
 							/>
 					</Form.Group>
+
+					<Form.Group widths='equal'>
+						<Form.TextArea
+							label='Short Description'
+							name='description'
+							value={formData.description}
+							placeholder='Tell us more'
+							onChange={handleOnChange}
+							/>
+					</Form.Group>
+
 
 					<Form.Group widths='equal'>
 						<Form.Input
@@ -170,22 +235,31 @@ export const Main = props => {
 							/>
 					</Form.Group>
 
+					<br/>
+					<Divider clearing horizontal>Controller Settings</Divider>
+					<br/>
+
+					<p>Note: In case you want to create a DAO,
+					the controller must be the organization.</p>
+
 					<Form.Group widths='equal'>
 						<Form.Input
 							fluid
-							label='Controller'
+							label='Controller Account'
 							placeholder='Controller'
 							name='controller'
 							value={formData.controller}
 							onChange={handleOnChange}
+							required
 							/>
 						<Form.Input
 							fluid
-							label='Treasury'
+							label='Treasury Account'
 							placeholder='Tresury'
 							name='treasury'
 							value={formData.treasury}
 							onChange={handleOnChange}
+							required
 							/>
 					</Form.Group>
 
@@ -197,6 +271,7 @@ export const Main = props => {
 							name='access'
 							value={formData.access}
 							onChange={handleOnChange}
+							required
 							/>
 						<Form.Input
 							fluid
@@ -205,6 +280,7 @@ export const Main = props => {
 							name='member_limit'
 							value={formData.member_limit}
 							onChange={handleOnChange}
+							required
 							/>
 					</Form.Group>
 
@@ -216,6 +292,7 @@ export const Main = props => {
 							name='fee_model'
 							value={formData.fee_model}
 							onChange={handleOnChange}
+							required
 							/>
 						<Form.Input
 							fluid
@@ -224,15 +301,22 @@ export const Main = props => {
 							name='fee'
 							value={formData.fee}
 							onChange={handleOnChange}
+							required
 							/>
 
 					</Form.Group>
 
 					<Container textAlign='right'>
+{/*
 						<Button onClick={handleSubmit}>Create DAO Manually</Button>
+*/}
+
+						{ !contentCID &&
+							<span><i>enabled when ipfs hashes are ready:</i>&nbsp;&nbsp;&nbsp;</span>
+						}
 						<TxButton
 							accountPair={accountPair}
-							label='Create DAO'
+							label='Create'
 							type='SIGNED-TX'
 							setStatus={setStatus}
 							attrs={{
@@ -265,7 +349,7 @@ export const Main = props => {
 
 			</Form>
 
-		</div>
+		</Segment>
 	)
 
 }

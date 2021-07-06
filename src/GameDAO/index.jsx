@@ -97,39 +97,39 @@ const GameDAO = props => {
 		},
 
 
-		{
-			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign
-						accountPair={accountPair}
-						/>
-				</Tab.Pane>
-			,
-		},
+		// {
+		// 	menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
+		// 	render: () =>
+		// 		<Tab.Pane key='create_campaign'>
+		// 			<CreateCampaign
+		// 				accountPair={accountPair}
+		// 				/>
+		// 		</Tab.Pane>
+		// 	,
+		// },
 
-		{
-			menuItem: (
-				<Menu.Item key='4'>
-					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
-				</Menu.Item>
-			),
-			render: () =>
-				<Tab.Pane key='campaigns'>
-					<Campaign accountPair={accountPair}/>
-				</Tab.Pane>
-		},
+		// {
+		// 	menuItem: (
+		// 		<Menu.Item key='4'>
+		// 			Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
+		// 		</Menu.Item>
+		// 	),
+		// 	render: () =>
+		// 		<Tab.Pane key='campaigns'>
+		// 			<Campaign accountPair={accountPair}/>
+		// 		</Tab.Pane>
+		// },
 
-		{
-			menuItem:
-				<Menu.Item key='proposals'>
-					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
-				</Menu.Item>,
-			render: () =>
-				<Tab.Pane key='proposals'>
-					<div>Proposals</div>
-				</Tab.Pane>
-		},
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='proposals'>
+		// 			Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 		<Tab.Pane key='proposals'>
+		// 			<div>Proposals</div>
+		// 		</Tab.Pane>
+		// },
 		// {
 		// 	menuItem:
 		// 		<Menu.Item key='create_proposal'>
