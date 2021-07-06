@@ -22,9 +22,8 @@ export const dao_member_governance = [
 // payment works well in for profit organizations
 
 export const dao_fee_model = [
-	{ key: '0', text: 'no fees', value: 0 }, // only tx fees
-	{ key: '1', text: 'reserve', value: 1 }, // fees are reserved in actor account
-	{ key: '2', text: 'pay', value: 2 }, // fees are paid to dao treasury
+	{ key: '0', text: 'reserve', value: 0 }, // fees are reserved in actor account
+	{ key: '1', text: 'transfer', value: 1 }, // fees are paid to treasury
 ]
 
 // anybody can join | only member can add | only controller can add
