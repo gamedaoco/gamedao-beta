@@ -87,7 +87,7 @@ export const Main = props => {
 		}
 		req()
 
-	}, [content, pinJSONToIPFS, setContentCID]);
+	}, [content, setContentCID]);
 
 
 	useEffect(()=>{
@@ -105,7 +105,7 @@ export const Main = props => {
 		}
 		setContent( contentJSON )
 
-	}, [fileCID]);
+	}, [fileCID, formData]);
 
 	async function onFileChange(e, { name }) {
 

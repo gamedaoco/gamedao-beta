@@ -9,15 +9,15 @@ import { data as d } from '../lib/data'
 import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 
 import {
-	ipfs,
-	getJSON,
+	// ipfs,
+	// getJSON,
 	gateway,
 } from '../lib/ipfs'
 
 const ListItem = ({ data }) => {
 
 	const [ config, setConfig ] = useState()
-	const [ imageURL, setImageURL ] = useState()
+	// const [ imageURL, setImageURL ] = useState()
 
 	useEffect(()=>{
 
@@ -96,8 +96,11 @@ export const Items = props => {
 
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
+// eslint-disable-next-line
 	const [ configs, setConfigs ] = useState([])
+// eslint-disable-next-line
 	const [ balances, setBalances ] = useState([])
+// eslint-disable-next-line
 	const [ members, setMembers ] = useState([])
 	const [ content, setContent ] = useState()
 
@@ -155,7 +158,7 @@ export const Items = props => {
 			}
 		}
 		getContent(hashes)
-	}, [hashes])
+	}, [hashes, api.query.gameDaoControl])
 
 	// useEffect(() => {
 	// 	if ( !hashes || !content ) return

@@ -3,8 +3,7 @@
 //
 
 import config from '../../config'
-
-import pinataSDK from '@pinata/sdk'
+import { create } from 'ipfs-http-client'
 
 const PINATA_KEY = config.PINATA_KEY
 const PINATA_SECRET = config.PINATA_SECRET
@@ -17,7 +16,6 @@ const GATEWAY_URL = config.GATEWAY_URL
 const GATEWAY_PROTOCOL = config.GATEWAY_PROTOCOL
 const GATEWAY_PORT = config.GATEWAY_PORT
 
-import { create } from 'ipfs-http-client'
 
 const dev = ( process.env.NODE_ENV==='production' ) ? false : true
 
