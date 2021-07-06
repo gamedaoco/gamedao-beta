@@ -1,4 +1,10 @@
 {
   "DEVELOPMENT_KEYRING": true,
-  "PROVIDER_SOCKET": "ws://localhost:9944"
+  "PROVIDER_SOCKET": "ws://localhost:9944",
+  "API_URL": "localhost",
+  "API_PROTOCOL": "http",
+  "API_PORT": 5001,
+  "GATEWAY_URL": "localhost",
+  "GATEWAY_PROTOCOL": "http",
+  "GATEWAY_PORT": 8080
 }
