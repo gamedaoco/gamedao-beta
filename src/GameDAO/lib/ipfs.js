@@ -16,8 +16,7 @@ const GATEWAY_URL = config.GATEWAY_URL
 const GATEWAY_PROTOCOL = config.GATEWAY_PROTOCOL
 const GATEWAY_PORT = config.GATEWAY_PORT
 
-
-const dev = ( process.env.NODE_ENV==='production' ) ? false : true
+const dev = config.dev
 
 export const pinataGateway = `https://gateway.pinata.cloud/ipfs/`
 export const infuraGateway = `https://ipfs.infura.io/ipfs/`

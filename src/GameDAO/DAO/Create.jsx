@@ -7,6 +7,7 @@ import {
 
 import faker from 'faker'
 import { data } from '../lib/data'
+import config from '../../config'
 
 import {
 	pinJSONToIPFS,
@@ -14,131 +15,115 @@ import {
 	gateway,
 } from '../lib/ipfs'
 
+const dev = config.dev
+if (dev) console.log('dev mode')
+
+const random_state = ( accountPair ) => {
+	const name = faker.commerce.productName()
+	const email = faker.internet.email()
+	const website = faker.internet.url()
+	const repo = faker.internet.url()
+	const description = faker.company.catchPhrase()
+
+	const creator = accountPair.address
+	const controller = accountPair.address
+	const treasury = accountPair.address
+
+	const body = 0
+	const access = 1
+	const member_limit = '100'
+	const fee_model = 1
+	const fee = '10'
+
+	const cid = ''
+	const gov_asset = 0
+	const pay_asset = 0
+
+	return {
+		name, body, creator, controller, treasury,
+		access, member_limit, fee_model, fee,
+		cid, gov_asset, pay_asset,
+		email, website, repo, description
+	}
+}
 
 export const Main = props => {
 
 	const { accountPair } = props
 	const [ status, setStatus ] = useState('')
 	const [ loading, setLoading  ] = useState(false)
-
-	// form
 	const [ formData, updateFormData ] = useState()
-	// files
 	const [ fileCID, updateFileCID ] = useState()
-	// json
 	const [ content, setContent ] = useState()
 	const [ contentCID, setContentCID ] = useState()
 
-	//
-	//
-	//
-
 	useEffect(()=>{
-
 		if(!accountPair) return
-
-		const name = faker.commerce.productName()
-		const email = faker.internet.email()
-		const website = faker.internet.url()
-		const repo = faker.internet.url()
-		const description = faker.company.catchPhrase()
-
-		const creator = accountPair.address
-		const controller = accountPair.address
-		const treasury = accountPair.address
-
-		const body = 0
-		const access = 1
-		const member_limit = '100'
-		const fee_model = 1
-		const fee = '10'
-
-		const cid = ''
-		const gov_asset = 0
-		const pay_asset = 0
-
-		const _ = {
-			name, body, creator, controller, treasury,
-			access, member_limit, fee_model, fee,
-			cid, gov_asset, pay_asset,
-			email, website, repo, description
-		}
-		updateFormData( _ )
-
-	},[accountPair, contentCID])
+		if (dev) console.log('generate form data')
+		const initial_state = random_state( accountPair )
+		updateFormData( initial_state )
+	},[accountPair])
 
 	useEffect(()=>{
-
-		if (!content) return
-
-		const req = async () => {
-
-			try {
-				const cid = await pinJSONToIPFS( content )
-				console.log('cid', cid)
-				if ( cid ) {
-					setContentCID(cid)
-					console.log('json',`${gateway}${cid}`)
-				}
-			} catch ( err ) {
-				console.log('Error uploading file: ', err)
-			}
-
-		}
-		req()
-
-	}, [content, setContentCID]);
-
-
-	useEffect(()=>{
-
-		if(!fileCID) return
-
+		if(!formData) return
+		if (dev) console.log('update content json')
 		const contentJSON = {
 			name: formData.name,
 			description: formData.description,
 			website: formData.website,
 			email: formData.email,
-			logo: fileCID.logo,
-			header: fileCID.header,
 			repo: formData.repo,
+			...fileCID
 		}
+		if (dev) console.log(contentJSON)
 		setContent( contentJSON )
-
 	}, [fileCID, formData]);
 
+	useEffect(()=>{
+		if (!content) return
+		if (dev) console.log('upload content json')
+		const req = async () => {
+			try {
+				const cid = await pinJSONToIPFS( content )
+				if ( cid ) {
+					setContentCID(cid)
+					if (dev) console.log('json cid',`${gateway}${cid}`)
+				}
+			} catch ( err ) {
+				console.log('Error uploading file: ', err)
+			}
+		}
+		req()
+	}, [content]);
+
 	async function onFileChange(e, { name }) {
-
 		const file = e.target.files[0]
-
+		if (dev) console.log('upload image')
 		try {
 			const cid = await pinFileToIPFS( file )
 			updateFileCID({ ...fileCID, [name]: cid })
-			console.log('file',`${gateway}${cid}`)
+			if (dev) console.log('file cid',`${gateway}${cid}`)
 		} catch (error) {
 			console.log('Error uploading file: ', error)
 		}
-
 	}
 
-	// handle form state
-
-	const handleOnChange = (e, { name, value }) =>
-	updateFormData({ ...formData, [name]: value })
-
-	// filter state from tx button...lol
-
 	useEffect(()=>{
-
+		console.log('filter tx state')
 		if ( !status ) return
 		if ( status.indexOf('Finalized') > -1 ) {
 			setLoading( false )
 			setStatus( null )
+			if (dev) console.log('reset form')
+			updateFileCID(null)
+			updateFormData( random_state( accountPair ) )
 		} else {
 			setLoading( true )
 		}
+	},[ status, setStatus, setLoading, accountPair ])
 
-	},[ status, setStatus, setLoading ])
+	const handleOnChange = (e, { name, value }) =>
+	updateFormData({ ...formData, [name]: value })
 
 	if ( !formData ) return null
 
