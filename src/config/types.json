@@ -26,7 +26,8 @@
     "fee": "Balance",
     "gov_asset": "u8",
     "pay_asset": "u8",
-    "member_limit": "u64"
+    "member_limit": "u64",
+    "access": "u8"
   },
   "Space": {
     "id": "H256",
