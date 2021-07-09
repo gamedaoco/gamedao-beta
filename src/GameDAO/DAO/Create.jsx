@@ -7,7 +7,7 @@ import {
 
 import faker from 'faker'
 import { data } from '../lib/data'
-import config from '../../config'
+// import config from '../../config'
 
 import {
 	pinJSONToIPFS,
@@ -15,7 +15,7 @@ import {
 	gateway,
 } from '../lib/ipfs'
 
-const dev = config.dev
+const dev = true // config.dev
 if (dev) console.log('dev mode')
 
 const random_state = ( accountPair ) => {
@@ -180,7 +180,6 @@ export const Main = props => {
 							label='Logo Graphic'
 							name='logo'
 							onChange={onFileChange}
-							required
 							/>
 						<Form.Input
 							type="file"

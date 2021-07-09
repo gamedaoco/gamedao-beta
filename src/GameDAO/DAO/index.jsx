@@ -17,7 +17,7 @@ import {
 const ListItem = ({ data }) => {
 
 	const [ config, setConfig ] = useState()
-	// const [ imageURL, setImageURL ] = useState()
+	const [ imageURL, setImageURL ] = useState(null)
 
 	useEffect(()=>{
 
@@ -30,12 +30,17 @@ const ListItem = ({ data }) => {
 
 	},[ data, setConfig ])
 
+	useEffect(()=>{
+
+		if ( !config ) return
+		setImageURL( ( config.logo ) ? gateway+config.logo : null )
+
+	},[ config ])
 
 
 	const name = data.name
 	const body = d.dao_bodies.filter( b => b.value === Number(data.body))[0].text
-
-	const members = 0
+	const members = data.members
 	const balance = 0
 	const motions = 0
 	const campaigns = 0
@@ -46,7 +51,7 @@ const ListItem = ({ data }) => {
 		<Table.Row>
 			<Table.Cell>
 				<Header as='h4' image>
-					<Image rounded src={gateway+config.logo} />
+					<Image rounded src={ imageURL } />
 					<Header.Content>
 						{name}
 						<Header.Subheader>{body}</Header.Subheader>
@@ -160,21 +165,49 @@ export const Items = props => {
 		getContent(hashes)
 	}, [hashes, api.query.gameDaoControl])
 
+	useEffect(() => {
+		if ( !hashes || !content ) return
+		const getContent = async args => {
+			let _req = []
+			try {
+				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyMembers(args[i]))
+				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
+					return { id: args[_i], members: _c.toHuman(), count: _c.toHuman().length }
+				}))
+				setMembers(res)
+				setContent(
+					content.map((c,i)=>{
+						const m = res.filter( t => t.id === c.id )[0]
+						return {
+							...c,
+							members_count: m.count,
+							members: m.members
+					}
+				}))
+			} catch ( err ) {
+				console.error( err )
+			}
+		}
+		getContent(hashes)
+	}, [nonce, hashes, content, api.query.gameDaoControl])
+
 	// useEffect(() => {
 	// 	if ( !hashes || !content ) return
 	// 	const getContent = async args => {
 	// 		let _req = []
 	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyMembers(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=> [ args[_i], _c.toHuman() ] ))
-	// 			// setMembers(res)
+	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyTreasury(args[i]))
+	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
+	// 				return { id: args[_i], account: _c.toHuman(), balance: 1 }
+	// 			}))
+	// 			setBalances(res)
 	// 			setContent(
 	// 				content.map((c,i)=>{
-	// 					const count = res.filter(t=>t[0]===c.id)[0][1] || 0
-	// 					console.log(count, i)
+	// 					const b = res.filter( t => t.id === c.id )[0]
 	// 					return {
 	// 						...c,
-	// 						member_count: count
+	// 						account: b.account,
+	// 						balance: b.balance
 	// 				}
 	// 			}))
 	// 		} catch ( err ) {
@@ -182,9 +215,7 @@ export const Items = props => {
 	// 		}
 	// 	}
 	// 	getContent(hashes)
-	// }, [hashes])
-
-	// TODO: get balances
+	// }, [nonce, hashes])
 
 	return ( !content || ( content.length === 0 ) )
 		?	<React.Fragment>
@@ -194,7 +225,7 @@ export const Items = props => {
 		:	<React.Fragment>
 				<h1>Organizations</h1>
 				<h3>Total organizations: { nonce }</h3>
-				<ItemGrid data={ { content } } />
+				<ItemGrid data={ { content,balances } } />
 			</React.Fragment>
 
 }

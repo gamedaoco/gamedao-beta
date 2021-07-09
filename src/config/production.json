@@ -1,8 +1,8 @@
 {
-  "PROVIDER_SOCKET": "ws://localhost:9944",
-  "API_URL": "localhost",
+  "PROVIDER_SOCKET": "wss://alphaville.zero.io",
+  "API_URL": "api.gamedao.co",
   "API_PROTOCOL": "https",
   "API_PORT": 5001,
-  "GATEWAY_URL": "gateway.pinata.cloud",
+  "GATEWAY_URL": "gateway.gamedao.co",
   "GATEWAY_PROTOCOL": "https"
 }

@@ -4,41 +4,38 @@
 
 import config from '../../config'
 import { create } from 'ipfs-http-client'
+const dev = config.dev
 
-const PINATA_KEY = config.PINATA_KEY
-const PINATA_SECRET = config.PINATA_SECRET
-
+// put
 const API_URL = config.API_URL
 const API_PROTOCOL = config.API_PROTOCOL
 const API_PORT = config.API_PORT
 
+// get
 const GATEWAY_URL = config.GATEWAY_URL
 const GATEWAY_PROTOCOL = config.GATEWAY_PROTOCOL
 const GATEWAY_PORT = config.GATEWAY_PORT
 
-const dev = config.dev
-
-export const pinataGateway = `https://gateway.pinata.cloud/ipfs/`
-export const infuraGateway = `https://ipfs.infura.io/ipfs/`
-export const localGateway = `http://localhost:8080/ipfs/`
-
-export const gateway = GATEWAY_PROTOCOL+"://"+GATEWAY_URL+(GATEWAY_PORT?':'+GATEWAY_PORT:'')+"/ipfs/" // localGateway
+export const gateway = GATEWAY_PROTOCOL+"://"+GATEWAY_URL+(GATEWAY_PORT?':'+GATEWAY_PORT:'')+"/ipfs/"
 
 //
 //	init ipfs client
 //
 
-const headers = (dev)
-	? {}
-	: {
-		pinata_api_key: PINATA_KEY,
-		pinata_secret_api_key: PINATA_SECRET
-	}
+// const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
+
+const headers = {
+	// Authorization: config.IPFS_JWT,
+	// 'Origin': (dev) ? 'http://localhost:8000' : 'https://gamedao.co',
+}
+
+// const pinataSDK = require('@pinata/sdk');
+// const pinata = pinataSDK('yourPinataApiKey', 'yourPinataSecretApiKey');
 
 export const ipfs = create({
+	protocol: API_PROTOCOL,
 	host: API_URL,
 	port: API_PORT,
-	protocol: API_PROTOCOL,
 	headers,
 	timeout: '2m'
 })
@@ -51,10 +48,19 @@ export const pinJSONToIPFS = async payload => {
 
 	try {
 		const cid = await ipfs.add( Buffer.from( JSON.stringify( payload ) ) )
+		console.log(cid)
 		return cid.path
 	} catch (error) {
 		console.log(error)
 	}
+
+	// pinata.pinFileToIPFS(payload).then((result) => {
+	// //handle results here
+	// console.log(result);
+	// }).catch((err) => {
+	// //handle error here
+	// console.log(err);
+	// });
 
 }
 
@@ -66,6 +72,7 @@ export const pinFileToIPFS = async payload => {
 
 	try {
 		const cid = await ipfs.add( payload )
+		console.log(cid)
 		return cid.path
 	} catch (error) {
 		console.log(error)
