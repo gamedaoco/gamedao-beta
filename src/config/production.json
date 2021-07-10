@@ -1,8 +1,8 @@
 {
   "PROVIDER_SOCKET": "wss://alphaville.zero.io",
-  "API_URL": "api.gamedao.co",
+  "API_URL": "ipfs.infura.io",
   "API_PROTOCOL": "https",
   "API_PORT": 5001,
-  "GATEWAY_URL": "gateway.gamedao.co",
+  "GATEWAY_URL": "ipfs.infura.io",
   "GATEWAY_PROTOCOL": "https"
 }

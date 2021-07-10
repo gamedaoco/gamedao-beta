@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: "ipfs"
+    restart: always
+    ports:
+    volumes:
+      - ./data/ipfs:/data
+    environment:
+      IPFS_PROFILE: server
+      IPFS_PATH: /data
+      VIRTUAL_PORT: ${IPFSPORT}
+      VIRTUAL_HOST: ${IPFSHOST}
+      LETSENCRYPT_HOST: ${LEHOST}
+      LETSENCRYPT_EMAIL: ${LEMAIL}
+
+  app:
+    image: gamedao/app:latest
+    container_name: "app"
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      IPFS_HOST: ipfs
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: app.gamedao.co
+      LETSENCRYPT_HOST: app.gamedao.co
+      LETSENCRYPT_EMAIL: hey@gamedao.co

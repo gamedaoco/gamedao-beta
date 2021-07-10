@@ -1,9 +1,10 @@
+
 import configCommon from './common.json'
+import types from './types.json'
 
-// const configEnv = require(`./${process.env.NODE_ENV}.json`)
 const configEnv = require('./production.json')
-
-const types = require('./types.json')
+// const configEnv = require(`./${process.env.NODE_ENV}.json`)
+const dockerEnv = (process.env.DOCKER===true) ? require('./docker.json') : {}
 
 const envVarNames = [
 	'REACT_APP_PROVIDER_SOCKET',
@@ -15,13 +16,15 @@ const envVars = envVarNames.reduce((mem, n) => {
 	return mem
 }, {})
 
-
 const config = {
 	...configCommon,
 	...configEnv,
+	...dockerEnv,
 	...envVars,
 	types,
 	dev: ( process.env.NODE_ENV==='production' ) ? false : true
 }
+
+console.log(config)
 
 export default config
