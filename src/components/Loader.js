@@ -1,11 +1,11 @@
 import React from 'react'
 import { Dimmer, Loader as SUILoader } from 'semantic-ui-react'
 
-export const Loader = text =>
+export const Loader = ({text}) =>
 	<React.Fragment>
-		<Dimmer active>
-			<SUILoader size='small'>
-				{text.text}
+		<Dimmer active page>
+			<SUILoader size='mini'>
+				{text}
 			</SUILoader>
 		</Dimmer>
 	</React.Fragment>

@@ -5,3 +5,4 @@ build
 .eslintcache
 *.local*
 *.secret*
+*-error.log

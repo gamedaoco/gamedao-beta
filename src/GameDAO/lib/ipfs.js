@@ -4,7 +4,7 @@
 
 import config from '../../config'
 import { create } from 'ipfs-http-client'
-const dev = config.dev
+// const dev = config.dev
 
 // put
 const API_URL = config.API_URL
@@ -24,19 +24,15 @@ export const gateway = GATEWAY_PROTOCOL+"://"+GATEWAY_URL+(GATEWAY_PORT?':'+GATE
 
 // const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
 
-const headers = {
-	// Authorization: config.IPFS_JWT,
-	// 'Origin': (dev) ? 'http://localhost:8000' : 'https://gamedao.co',
-}
-
-// const pinataSDK = require('@pinata/sdk');
-// const pinata = pinataSDK('yourPinataApiKey', 'yourPinataSecretApiKey');
+// const headers = {
+// 	authorization: auth,
+// }
 
 export const ipfs = create({
 	protocol: API_PROTOCOL,
 	host: API_URL,
 	port: API_PORT,
-	headers,
+	// headers,
 	timeout: '2m'
 })
 

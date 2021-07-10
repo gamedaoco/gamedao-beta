@@ -9,43 +9,46 @@ import { data as d } from '../lib/data'
 import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 
 import {
-	// ipfs,
-	// getJSON,
 	gateway,
 } from '../lib/ipfs'
 
-const ListItem = ({ data }) => {
+const ListItem = ({ data: { content, members } }) => {
 
 	const [ config, setConfig ] = useState()
+	const [ itemContent, setItemContent ] = useState()
 	const [ imageURL, setImageURL ] = useState(null)
 
 	useEffect(()=>{
-
-		if ( !data.cid || data.cid==='cid' ) return
-
-		fetch( gateway + data.cid )
+		if ( !content ) return
+		console.log('fetch config')
+		fetch( gateway + content.cid )
 			.then( res => res.text() )
 			.then( txt => { setConfig(JSON.parse(txt)) })
 			.catch( err => console.log( err ) )
-
-	},[ data, setConfig ])
+	},[ content ])
 
 	useEffect(()=>{
-
 		if ( !config ) return
-		setImageURL( ( config.logo ) ? gateway+config.logo : null )
-
+		setImageURL( ( config.logo ) ? gateway + config.logo : null )
 	},[ config ])
 
+	useEffect(()=>{
+		if ( !content || !members ) return
+		console.log('load')
+		console.log(members)
+		// merge module content with other metrics
+		// should move to storage/graph on refactor
+		setItemContent({
+			name: content.name,
+			body: d.dao_bodies.filter( b => b.value === Number(content.body))[0].text,
+			members: members.count,
+			balance: 0,
+			motions: 0,
+			campaigns: 0,
+		})
+	},[ content, members ])
 
-	const name = data.name
-	const body = d.dao_bodies.filter( b => b.value === Number(data.body))[0].text
-	const members = data.members
-	const balance = 0
-	const motions = 0
-	const campaigns = 0
-
-	if ( !config ) return null
+	if ( !itemContent ) return null
 
 	return (
 		<Table.Row>
@@ -53,27 +56,30 @@ const ListItem = ({ data }) => {
 				<Header as='h4' image>
 					<Image rounded src={ imageURL } />
 					<Header.Content>
-						{name}
-						<Header.Subheader>{body}</Header.Subheader>
+						{itemContent.name}
+						<Header.Subheader>{itemContent.body}</Header.Subheader>
 					</Header.Content>
 				</Header>
 			</Table.Cell>
-			<Table.Cell>{members}</Table.Cell>
-			<Table.Cell>{balance}</Table.Cell>
-			<Table.Cell>{motions}</Table.Cell>
-			<Table.Cell>{campaigns}</Table.Cell>
+			<Table.Cell>{itemContent.members}</Table.Cell>
+			<Table.Cell>{itemContent.balance}</Table.Cell>
+			<Table.Cell>{itemContent.motions}</Table.Cell>
+			<Table.Cell>{itemContent.campaigns}</Table.Cell>
 			<Table.Cell><Button size='mini'>Apply</Button></Table.Cell>
 		</Table.Row>
 	)
 
 }
 
-const ItemGrid = ({ data: { content } }) => {
+const ItemGrid = ({ data: { content, members } }) => {
 
 	// const [ content, setContent ] = useState([])
 	// if ( content !== data.content ) setContent(data.content)
 
 	if ( !content ) return null
+
+	console.log('grid')
+
 	return (
 		<Container>
 			<Table  striped singleLine>
@@ -88,7 +94,10 @@ const ItemGrid = ({ data: { content } }) => {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{ content.map((d,i)=><ListItem key={i} data={d} />) }
+					{ content.map((d,i)=><ListItem key={i} data={{
+						content: d,
+						members: members && members.filter( _ => _.id === d.id )[ 0 ]
+					}} />) }
 				</Table.Body>
 			</Table>
 		</Container>
@@ -175,47 +184,56 @@ export const Items = props => {
 					return { id: args[_i], members: _c.toHuman(), count: _c.toHuman().length }
 				}))
 				setMembers(res)
-				setContent(
-					content.map((c,i)=>{
-						const m = res.filter( t => t.id === c.id )[0]
-						return {
-							...c,
-							members_count: m.count,
-							members: m.members
-					}
-				}))
 			} catch ( err ) {
 				console.error( err )
 			}
 		}
 		getContent(hashes)
-	}, [nonce, hashes, content, api.query.gameDaoControl])
+	}, [nonce, content, hashes, api.query.gameDaoControl])
+
+	useEffect(() => {
+		if ( !hashes || !content ) return
+		const getContent = async args => {
+			let _req = []
+			try {
+				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyTreasury(args[i]))
+				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
+					return { id: args[_i], account: _c.toHuman(), balance: 1 }
+				}))
+				setBalances(res)
+			} catch ( err ) {
+				console.error( err )
+			}
+		}
+		getContent(hashes)
+	}, [nonce, content, hashes, api.query.gameDaoControl])
+
 
 	// useEffect(() => {
-	// 	if ( !hashes || !content ) return
-	// 	const getContent = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyTreasury(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				return { id: args[_i], account: _c.toHuman(), balance: 1 }
-	// 			}))
-	// 			setBalances(res)
-	// 			setContent(
-	// 				content.map((c,i)=>{
-	// 					const b = res.filter( t => t.id === c.id )[0]
-	// 					return {
-	// 						...c,
-	// 						account: b.account,
-	// 						balance: b.balance
-	// 				}
-	// 			}))
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getContent(hashes)
-	// }, [nonce, hashes])
+
+	// 	if ( !content || !balances || !members ) return
+
+	// 	const merged_content =
+	// 		content.map( ( c, i )=> {
+
+	// 				const m = members.filter( _ => _.id === c.id )[0]
+	// 				const b = balances.filter( _ => _.id === c.id )[0]
+
+	// 				return {
+	// 					...c,
+	// 					// treasury: {
+	// 					// 	account: b && b.account,
+	// 					// 	balance: b && b.balance
+	// 					// },
+	// 					// members: {
+	// 					// 	count: m && m.count
+	// 					// }
+	// 			}
+	// 		})
+
+	// 	setContent( merged_content )
+
+	// }, [content, balances, members])
 
 	return ( !content || ( content.length === 0 ) )
 		?	<React.Fragment>
@@ -225,7 +243,7 @@ export const Items = props => {
 		:	<React.Fragment>
 				<h1>Organizations</h1>
 				<h3>Total organizations: { nonce }</h3>
-				<ItemGrid data={ { content,balances } } />
+				<ItemGrid data={ { content, members, balances } } />
 			</React.Fragment>
 
 }
