@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
-  Menu,
   Button,
   Dropdown,
   Container,
   Icon,
-  Image,
   Label
 } from 'semantic-ui-react';
 
@@ -42,21 +40,7 @@ function Main (props) {
   };
 
   return (
-    <Menu
-      attached='top'
-      tabular
-      style={{
-        backgroundColor: '#fff',
-        borderColor: '#fff',
-        paddingTop: '2em',
-        paddingBottom: '2em'
-      }}
-    >
-      <Container>
-        <Menu.Menu>
-          <a href='#footer'><Image alt='GameDAO' src={`${process.env.PUBLIC_URL}/assets/gamedao.png`} size='mini' /></a>
-        </Menu.Menu>
-        <Menu.Menu position='right' style={{ alignItems: 'center' }}>
+      <>
           { !accountSelected
             ? <span>
               Add your account with the{' '}
@@ -79,6 +63,7 @@ function Main (props) {
             />
           </CopyToClipboard>
           <Dropdown
+            floating
             search
             selection
             clearable
@@ -90,13 +75,12 @@ function Main (props) {
             value={accountSelected}
           />
           <BalanceAnnotation accountSelected={accountSelected} />
-        </Menu.Menu>
-      </Container>
-    </Menu>
+      </>
   );
 }
 
 function BalanceAnnotation (props) {
+
   const { accountSelected } = props;
   const { api } = useSubstrate();
   const [accountBalance, setAccountBalance] = useState(0);
@@ -120,7 +104,7 @@ function BalanceAnnotation (props) {
 
   return accountSelected
     ? <Label pointing='left'>
-        <Icon name='money' color='green' />
+        <Icon name='money' color='white' />
         {accountBalance}
       </Label>
     : null;

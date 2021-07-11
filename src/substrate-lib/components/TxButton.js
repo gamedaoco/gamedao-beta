@@ -42,10 +42,12 @@ function TxButton ({
   useEffect(loadSudoKey, [api]);
 
   const getFromAcct = async () => {
+
     const {
       address,
       meta: { source, isInjected }
     } = accountPair;
+
     let fromAcct;
 
     // signer is from Polkadot-js browser extension
@@ -58,6 +60,7 @@ function TxButton ({
     }
 
     return fromAcct;
+
   };
 
   const txResHandler = ({ status }) =>

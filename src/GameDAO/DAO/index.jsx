@@ -23,7 +23,7 @@ const ListItem = ({ data: { content, members } }) => {
 		if (dev) console.log('fetch config', content.cid)
 		fetch( gateway + content.cid )
 			.then( res => res.text() )
-			.then( txt => { console.log(txt); setConfig(JSON.parse(txt)) })
+			.then( txt => { setConfig(JSON.parse(txt)) })
 			.catch( err => console.log( err ) )
 	},[ content ])
 

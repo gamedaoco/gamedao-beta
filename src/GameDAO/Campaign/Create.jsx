@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
-import { TxButton } from '../../substrate-lib/components'
+import { web3FromSource } from '@polkadot/extension-dapp';
+
 import {
 	Container,
 	Button,
@@ -34,6 +35,22 @@ export const Main = props => {
 	const [ nonce, updateNonce ] = useState(0)
 	const [ block, setBlock ] = useState(0)
 	const [ loading, setLoading  ] = useState(false)
+
+	const getFromAcct = async () => {
+		const {
+			address,
+			meta: { source, isInjected }
+		} = accountPair
+		let fromAcct
+		if (isInjected) {
+			const injected = await web3FromSource(source)
+			fromAcct = address
+			api.setSigner(injected.signer)
+		} else {
+			fromAcct = accountPair
+		}
+		return fromAcct
+	}
 
 	const bestBlock = finalized
 		? api.derive.chain.bestNumberFinalized
@@ -115,8 +132,11 @@ export const Main = props => {
 	}, [ nonce ] )
 
 	// handle form state
+
 	const handleOnChange = (e, { name, value }) =>
 	updateFormData({ ...formData, [name]: value })
+
+	// submit
 
 	const handleSubmit = e => {
 
@@ -142,7 +162,8 @@ export const Main = props => {
 		console.log('payload', payload)
 
 		async function send () {
-			const from = accountPair
+
+			const from = await fromAcct()
 			const tx = api.tx.gameDaoCrowdfunding.create(...payload)
 			const hash = await tx.signAndSend( from, ({ status, events }) => {
 
@@ -325,34 +346,34 @@ export const Main = props => {
 
 					<Container textAlign='right'>
 						<Button onClick={handleSubmit}>Create Campaign Manually</Button>
-							<TxButton
-								accountPair={accountPair}
-								label='Create Campaign'
-								type='SIGNED-TX'
-								setStatus={setStatus}
-								attrs={{
-									palletRpc: 'gameDaoCrowdfunding',
-									callable: 'create',
-									inputParams: [
-										accountPair.address,
-										formData.title,
-										formData.cap,
-										formData.deposit,
-										(( formData.duration * data.blockFactor ) + block),
-										formData.protocol,
-										( (formData.governance===false) ? 0 :  1),
-										formData.cid
-									],
-									paramFields: [true,true,true,true,true,true,true,true]
-								}}
-							/>
-							{ status &&
-								<Message
-									header='Transaction Status'
-									content={status}
-									/>
-							}
-							</Container>
+{/*						<TxButton
+							accountPair={accountPair}
+							label='Create Campaign'
+							type='SIGNED-TX'
+							setStatus={setStatus}
+							attrs={{
+								palletRpc: 'gameDaoCrowdfunding',
+								callable: 'create',
+								inputParams: [
+									accountPair.address,
+									formData.title,
+									formData.cap,
+									formData.deposit,
+									(( formData.duration * data.blockFactor ) + block),
+									formData.protocol,
+									( (formData.governance===false) ? 0 :  1),
+									formData.cid
+								],
+								paramFields: [true,true,true,true,true,true,true,true]
+							}}
+						/>
+						{ status &&
+							<Message
+								header='Transaction Status'
+								content={status}
+								/>
+						}*/}
+					</Container>
 
 			</Form>
 

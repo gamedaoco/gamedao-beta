@@ -1,10 +1,10 @@
 import React, { useState, createRef } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
-import { Container, Grid, Sticky, Segment } from 'semantic-ui-react'
+import { Container, Grid, Segment } from 'semantic-ui-react'
 import { Footer } from './components/Footer'
 
-import AccountSelector from './components/AccountSelector'
+import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 import Loader from './components/Loader'
@@ -32,11 +32,13 @@ function Main () {
 	return (
 		<div context={contextRef}>
 
-			<Sticky id='top'>
-				<AccountSelector setAccountAddress={setAccountAddress} />
-			</Sticky>
+			<Header
+				setAccountAddress={setAccountAddress}
+				accountPair={accountPair}
+				/>
 
-			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em' }}>
+
+			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#fcfcfc' }}>
 				<Container>
 
 					<Grid>
