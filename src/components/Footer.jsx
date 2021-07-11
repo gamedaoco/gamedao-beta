@@ -71,6 +71,11 @@ export const Footer = props =>
 							</p>
 						</Grid.Column>
 					</Grid.Row>
+					<Grid.Row>
+						<Grid.Column width={16}>
+				          	<>&copy; 2019-2021 GameDAO + ZERO.IO. </>
+						</Grid.Column>
+					</Grid.Row>
 				</Grid>
 			</Container>
 		</Segment>
