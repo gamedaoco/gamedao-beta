@@ -6,7 +6,7 @@ import {
 	Container,
 	Button,
 	Form,
-	Message,
+	// Message,
 } from 'semantic-ui-react'
 
 import faker from 'faker'
@@ -30,7 +30,7 @@ export const Main = props => {
 
 	const { api } = useSubstrate()
 	const { accountPair, finalized } = props
-	const [ status, setStatus ] = useState('')
+	// const [ status, setStatus ] = useState('')
 	const [ formData, updateFormData ] = useState()
 	const [ nonce, updateNonce ] = useState(0)
 	const [ block, setBlock ] = useState(0)
@@ -163,7 +163,7 @@ export const Main = props => {
 
 		async function send () {
 
-			const from = await fromAcct()
+			const from = await getFromAcct()
 			const tx = api.tx.gameDaoCrowdfunding.create(...payload)
 			const hash = await tx.signAndSend( from, ({ status, events }) => {
 

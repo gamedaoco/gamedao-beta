@@ -4,7 +4,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   Button,
   Dropdown,
-  Container,
   Icon,
   Label
 } from 'semantic-ui-react';
