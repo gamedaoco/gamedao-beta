@@ -19,7 +19,7 @@ const DAO = lazy( () => import ('./DAO') )
 const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
 const CreateCampaign = lazy( () => import ('./Campaign/Create') )
-// import Proposal from './Proposal'
+const Proposal = lazy( () => import ('./Proposal') )
 // import CreateProposal from './Proposal/Create'
 
 const GameDAO = props => {
@@ -78,7 +78,7 @@ const GameDAO = props => {
 		{
 			menuItem: (
 				<Menu.Item key='2'>
-					Organizations{ (bodies>0) && <Label>{ bodies }</Label> }
+					Organizations{ (bodies>0) && <Label circular color='pink'>{ bodies }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
@@ -101,9 +101,7 @@ const GameDAO = props => {
 			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
 			render: () =>
 				<Tab.Pane key='create_campaign'>
-					<CreateCampaign
-						accountPair={accountPair}
-						/>
+					<CreateCampaign accountPair={accountPair} />
 				</Tab.Pane>
 			,
 		},
@@ -111,7 +109,7 @@ const GameDAO = props => {
 		{
 			menuItem: (
 				<Menu.Item key='4'>
-					Campaigns{ (campaigns>0) && <Label>{ campaigns }</Label> }
+					Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
@@ -123,21 +121,21 @@ const GameDAO = props => {
 		{
 			menuItem:
 				<Menu.Item key='proposals'>
-					Proposals{ (proposals>0) && <Label>{ proposals }</Label> }
+					Proposals{ (proposals>0) && <Label circular color='teal'>{ proposals }</Label> }
 				</Menu.Item>,
 			render: () =>
 				<Tab.Pane key='proposals'>
-					<div>Proposals</div>
+					<Proposal accountPair={accountPair} />
 				</Tab.Pane>
 		},
-		// {
-		// 	menuItem:
-		// 		<Menu.Item key='create_proposal'>
-		// 			Create Proposal
-		// 		</Menu.Item>,
-		// 	render: () =>
-		// 	<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
-		// },
+		{
+			menuItem:
+				<Menu.Item key='create_proposal'>
+					Create Proposal
+				</Menu.Item>,
+			render: () =>
+			<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
+		},
 	]
 
 	return (

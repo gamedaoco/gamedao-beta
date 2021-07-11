@@ -1,359 +1,186 @@
-/**
- _______________________________ ________
- \____    /\_   _____/\______   \\_____  \
-	 /     /  |    __)_  |       _/ /   |   \
-	/     /_  |        \ |    |   \/    |    \
- /_______ \/_______  / |____|_  /\_______  /
-				 \/        \/         \/         \/
- Z  E  R  O  .  I  O     N  E  T  W  O  R  K
- © C O P Y R I O T   2 0 7 5   Z E R O . I O
-**/
+// control - a dao interface
+// invoke and manage organisations on chain
 
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
-import { TxButton } from '../../substrate-lib/components'
 
-import { Button, Modal, Rating, Search, Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider, Icon, Image } from 'semantic-ui-react'
+import { data as d } from '../lib/data'
 
-import { Pagination } from 'semantic-ui-react'
+import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 
-const CampaignProtocol = {
-	0 : 'GRANT',   // get money from donators and or gamedao treasury
-	1 : 'PREPAID', // raise money which will be released based on milestones or dao governance
-	2 : 'LOAN',    // get a loan from individuals and or gamedao treasury, interest applies.
-	3 : 'SHARE',   // raise money for n shares of your project
-	4 : 'DAO',     // raise money which resides in a treasury and is released based on requests
-}
+import { gateway } from '../lib/ipfs'
+import config from '../../config'
+const dev = config.dev
 
-const CampaignGovernance = {
-	0 : 'DEFAULT',
-	1 : 'DAO',
-}
+const ListItem = ({ data: { content, members } }) => {
 
-const blocksToTime = blocks => {
-	const ss = blocks * 6
-	const mm = blocks / 60
-	const hh = mm / 60
-	const dd = hh / 24
-	return `${dd}:${hh}:${mm}:${ss}`
-}
+	const [ config, setConfig ] = useState()
+	const [ itemContent, setItemContent ] = useState()
+	const [ imageURL, setImageURL ] = useState(null)
 
-//
-// modal component
-//
+	useEffect(()=>{
+		if ( !content || content.cid==='' ) return
+		if (dev) console.log('fetch config', content.cid)
+		fetch( gateway + content.cid )
+			.then( res => res.text() )
+			.then( txt => { setConfig(JSON.parse(txt)) })
+			.catch( err => console.log( err ) )
+	},[ content ])
 
-const TransactionModal = props => {
+	useEffect(()=>{
+		if ( !config ) return
+		setImageURL( ( config.logo ) ? gateway + config.logo : null )
+	},[ config ])
 
-	const {
-		campaign_name,
-		campaign_hash
-	} = props
+	useEffect(()=>{
+		if ( !content || !members ) return
+		if (dev) console.log('load')
+		if (dev) console.log(members)
+		// merge module content with other metrics
+		// should move to storage/graph on refactor
+		setItemContent({
+			name: content.name,
+			body: d.dao_bodies.filter( b => b.value === Number(content.body))[0].text,
+			members: members.count,
+			balance: 0,
+			motions: 0,
+			campaigns: 0,
+		})
+	},[ content, members ])
 
-	const modalReducer = ( state, action ) => {
-		switch ( action.type ) {
-			case 'OPEN_MODAL':
-				return { open: true, dimmer: action.dimmer }
-			case 'CLOSE_MODAL':
-				return { open: false }
-			default:
-				throw new Error()
-		}
-	}
-
-	const modalDimmer = () => {
-		const [state, dispatch] = React.useReducer(
-			exampleReducer,
-			{
-				open: false,
-				dimmer: undefined,
-			}
-		)
-	}
-
-	const [ visible, setVisible] = useState(false)
+	if ( !itemContent ) return null
 
 	return (
-		<Modal
-			open={visible}
-			onClose={() => dispatch({ type: 'CLOSE_MODAL' })}
-			>
-			<Modal.Header>
-				Support {campaign_name}
-			</Modal.Header>
-			<Modal.Content>
-				Let Google help apps determine location. This means sending anonymous
-				location data to Google, even when no apps are running.
-			</Modal.Content>
-			<Modal.Actions>
-				<Button negative onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
-					Disagree
-				</Button>
-				<Button positive onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
-					Agree
-				</Button>
-			</Modal.Actions>
-		</Modal>
-	)
-}
-
-//
-// card component
-// requires: data
-//
-
-const CampaignCard = props => {
-
-	const { data } = props
-
-	// blocktime to utc
-	// todo: move to utils
-
-	// const blocksRemain = ( data.expiry - data.created )
-	const protocol = CampaignProtocol[data.protocol]
-	const governance = data.governance
-
-	console.log(data)
-	// const remaining = blocksToTime(data.expiry) - new Date().now()
-	// console.log('update',Date.now())
-	//
-	//
-	const tags = ['game','2d','pixel','steam']
-	const views = Math.floor(Math.random()*10000)
-	const backers = Math.floor(Math.random()*1000)
-
-	// icon type based on supporters
-	const icon = backers => {
-		if (backers > 10000) return 'fire'
-		if (backers > 1000) return 'heart'
-		if (backers > 100) return 'peace'
-		return 'plus circle'
-	}
-
-	return (
-		<Grid.Column mobile={16} tablet={8} computer={4}>
-			<Card color={(governance==1)?'pink':'teal'}>
-				<Image src='https://react.semantic-ui.com/images/avatar/large/daniel.jpg' wrapped ui={true} />
-				<Card.Content>
-					<Card.Header><a href={`/campaigns/${data.id}`}>{data.name}</a></Card.Header>
-					<Card.Meta>
-						<Rating icon='star' defaultRating={3} maxRating={5} />
-					</Card.Meta>
-					<Card.Description>
-					</Card.Description>
-				</Card.Content>
-				<Card.Content extra>
-				<Button size='mini' positive>support</Button>
-				</Card.Content>
-				<Card.Content extra>
-					<a href={`/campaigns/admin/${data.admin}`}> <Icon name='eye' />{views} views.</a><br/>
-					<a href={`/campaigns/admin/${data.admin}`}> <Icon name={icon} />{backers} backers.</a><br/>
-					<a href={`/campaigns/filter/block/${data.expiry}`}> <Icon name='money bill alternate' />{data.cap} raised.</a><br/>
-					<a href={`/campaigns/filter/block/${data.expiry}`}> <Icon name='money bill alternate outline' />{data.cap} target.</a><br/>
-					<br/>
-					<a href={`/campaigns/filter/block/${data.created}`}> <Icon name='birthday' />{data.created}</a><br/>
-					<a href={`/campaigns/admin/${data.owner}`}> <Icon name='at' />Creator Name</a><br/>
-					<a href={`/campaigns/filter/block/${data.expiry}`}> <Icon name='tag' />{tags.join(', ')} </a><br/>
-				</Card.Content>
-			</Card>
-		</Grid.Column>
+		<Table.Row>
+			<Table.Cell>
+				<Header as='h4' image>
+					<Image rounded src={ imageURL } />
+					<Header.Content>
+						{itemContent.name}
+						<Header.Subheader>{itemContent.body}</Header.Subheader>
+					</Header.Content>
+				</Header>
+			</Table.Cell>
+			<Table.Cell>{itemContent.members}</Table.Cell>
+			<Table.Cell>{itemContent.balance}</Table.Cell>
+			<Table.Cell>{itemContent.motions}</Table.Cell>
+			<Table.Cell>{itemContent.campaigns}</Table.Cell>
+			<Table.Cell><Button size='mini'>Apply</Button></Table.Cell>
+		</Table.Row>
 	)
 
 }
 
-//
-// grid component
-// requires: campaigns
-//
+const ItemGrid = ({ data: { content, members } }) => {
 
-const CampaignGrid = props => {
+	// const [ content, setContent ] = useState([])
+	// if ( content !== data.content ) setContent(data.content)
 
-	const { campaigns } = props
-	const [ content, setContent ] = useState([])
+	if ( !content ) return null
 
-	if ( !campaigns ) return <div>No campaigns yet. Create one!</div>
-	if ( content !== campaigns ) setContent( campaigns )
-
-	const { gridOffset, setGridOffset } = useState(0)
-	const { gridItems, setGridItems } = useState(3)
-	const { page, setPage } = useState(0)
+	if (dev) console.log('grid')
 
 	return (
 		<Container>
-			<Grid stackable colums={5} >
-					{
-						content.map((data,index)=><CampaignCard key={index} data={data}/>)
-					}
-				<Grid.Column mobile={16} tablet={16} computer={16}>
-					<Pagination
-						defaultActivePage={0}
-						ellipsisItem={null}
-						firstItem={null}
-						lastItem={null}
-						siblingRange={1}
-						totalPages={10}
-						/>
-				</Grid.Column>
-			</Grid>
+			<Table  striped singleLine>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell/>
+						<Table.HeaderCell>Members</Table.HeaderCell>
+						<Table.HeaderCell>Balance</Table.HeaderCell>
+						<Table.HeaderCell>Motions</Table.HeaderCell>
+						<Table.HeaderCell>Campaigns</Table.HeaderCell>
+						<Table.HeaderCell/>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{ content.map((d,i)=><ListItem key={i} data={{
+						content: d,
+						members: members && members.filter( _ => _.id === d.id )[ 0 ]
+					}} />) }
+				</Table.Body>
+			</Table>
 		</Container>
 	)
 
 }
 
-//
-// campaigns component
-// requires: api, accountpair
-// queries / subscribes to chain
-// TODO: subscriptions to event maybe more efficient
-// than watching the state
-//
-
-export const Campaigns = props => {
-
+export const Items = props => {
 	const { api } = useSubstrate()
-	const { accountPair, accountAddress } = props
+
+	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
-	const [ campaigns, setCampaigns ] = useState()
-	const [ contributions, setContributions ] = useState()
-	const [ state, setState ] = useState({
-		nonce: 0,
-		all: 0,
-		owned: 0,
-		contributed: 0,
-		// time: 0,
-		// block: 0,
-	})
+	const [ proposals, setProposals ] = useState()
 
-	// get campaigns by index
-	//
-
-	const query = api.query.gameDaoCrowdfunding
+	// nonce
 
 	useEffect(() => {
-
-		if (!accountPair) return
-		let unsubscribe
-
-		const subscribe = async () => {
-
-			let nonce
-			query.campaignsCount( nonce => {
-
-				const _state = {
-					...state,
-					nonce: nonce.toNumber()
-				}
-				setState( _state )
-				// console.log('nonce',nonce.toNumber())
-
-			}).then(unsub => {
-				unsubscribe = unsub;
-			}).catch(console.error);
-
-		}
-		subscribe()
-
+		let unsubscribe = null
+		api.query.gameDaoGovernance.nonce(n => {
+			if (n.isNone) {
+				setNonce('<None>')
+			} else {
+				setNonce(n.toNumber())
+			}
+		}).then(unsub => {
+			unsubscribe = unsub
+		}).catch(console.error)
 		return () => unsubscribe && unsubscribe()
 
-	}, [query.nonce, accountPair])
+	}, [api.query.gameDaoGovernance])
+
+	// all hashes
 
 	useEffect(() => {
-
-		if (!accountPair) return
-
-		let unsubscribe;
-
-		const subscribe = async () => {
-
-			let all, contributed, owned
-
-			api.queryMulti([
-				query.campaignsCount,
-				[query.campaignsContributedCount, accountPair.address],
-				[query.campaignsOwnedCount, accountPair.address],
-				// api.query.timestamp.now,
-			],([all,contributed,owned,time]) => {
-
-				const _state = {
-					...state,
-					all: all.toNumber(),
-					contributed: contributed.toNumber(),
-					owned: owned.toNumber(),
-					// time: time.toNumber(),
-				}
-				setState( _state )
-
-			}).then(unsub => {
-				unsubscribe = unsub;
-			}).catch(console.error);
-
-		}
-		subscribe()
-
-		return () => unsubscribe && unsubscribe()
-
-	}, [accountPair])
-
-	useEffect(() => {
-
-		if ( state.nonce === 0 ) return
-
-		const nonce = state.nonce
+		if ( nonce === 0 ) return
 		const req = [...new Array(nonce)].map((a,i)=>i)
-
 		const queryHashes = async args => {
-			const hashes = await query.campaignsArray.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+			const hashes = await api.query.gameDaoGovernance.proposals.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
 			setHashes(hashes)
 		}
 		queryHashes()
+	}, [nonce, api.query.gameDaoGovernance])
 
-	}, [state])
+	// all proposals
 
 	useEffect(() => {
-
 		if ( !hashes ) return
-
-		// get campaign description
-		const queryCampaigns = async args => {
+		// const query = api.query.gameDaoControl.body_by_hash
+		const getContent = async args => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoCrowdfunding.campaigns(args[i]))
-				const _campaigns = await Promise.all(_req).then(_=>_.map(_c=>_c.toHuman()))
-				setCampaigns(_campaigns)
-				console.log(campaigns)
+				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoGovernance.proposals(args[i]))
+				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
+				// TODO: group proposals by hash
+				// { id: hash, proposals: [ proposal ] }
+				setProposals(res)
 			} catch ( err ) {
 				console.error( err )
 			}
 		}
+		getContent(hashes)
+	}, [hashes, api.query.gameDaoGovernance])
 
-		// get contributions
-		// const queryContributions = async args => {
-		// 	const query = api.query.gameDaoCrowdfunding.campaignBalance
-		// 	let req = []
-		// 	try {
-		// 		for ( var i = 0; i < args.length; i++ ) req.push( query(hashes[i]) )
-		// 		const res = ( await Promise.all( req ) )
-		// 		setContributions( res )
-		// 	} catch ( err ) {
-		// 		console.error( err )
-		// 	}
-		// }
+	// get organizations for hashes
+	// filter hashes where user is member
 
-		// kick it
-		queryCampaigns(hashes)
-		// queryContributions(hashes)
+	// group by organization
+	// dropdown to select organization
 
-	}, [hashes])
-
-	return (
-		<div>
-			<h3>Total Campaigns: { state.all }</h3>
-			<CampaignGrid campaigns={campaigns}/>
-		</div>
-	)
+	return ( !proposals || ( proposals.length === 0 ) )
+		?	<React.Fragment>
+				<h1>Proposals</h1>
+				<h3>No proposals yet. Create one!</h3>
+			</React.Fragment>
+		:	<React.Fragment>
+				<h1>Proposals</h1>
+				<h3>Total proposals: { nonce }</h3>
+				<ItemGrid data={ { proposals } } />
+			</React.Fragment>
 
 }
 
-export default Campaigns
+export default Items
 
 //
 //
