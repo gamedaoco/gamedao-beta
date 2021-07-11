@@ -8,9 +8,9 @@ import { data as d } from '../lib/data'
 
 import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 
-import {
-	gateway,
-} from '../lib/ipfs'
+import { gateway } from '../lib/ipfs'
+import config from '../../config'
+const dev = config.dev
 
 const ListItem = ({ data: { content, members } }) => {
 
@@ -19,11 +19,11 @@ const ListItem = ({ data: { content, members } }) => {
 	const [ imageURL, setImageURL ] = useState(null)
 
 	useEffect(()=>{
-		if ( !content ) return
-		console.log('fetch config')
+		if ( !content || content.cid==='' ) return
+		if (dev) console.log('fetch config', content.cid)
 		fetch( gateway + content.cid )
 			.then( res => res.text() )
-			.then( txt => { setConfig(JSON.parse(txt)) })
+			.then( txt => { console.log(txt); setConfig(JSON.parse(txt)) })
 			.catch( err => console.log( err ) )
 	},[ content ])
 
@@ -34,8 +34,8 @@ const ListItem = ({ data: { content, members } }) => {
 
 	useEffect(()=>{
 		if ( !content || !members ) return
-		console.log('load')
-		console.log(members)
+		if (dev) console.log('load')
+		if (dev) console.log(members)
 		// merge module content with other metrics
 		// should move to storage/graph on refactor
 		setItemContent({
@@ -78,7 +78,7 @@ const ItemGrid = ({ data: { content, members } }) => {
 
 	if ( !content ) return null
 
-	console.log('grid')
+	if (dev) console.log('grid')
 
 	return (
 		<Container>

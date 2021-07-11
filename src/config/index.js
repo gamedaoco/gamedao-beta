@@ -25,6 +25,4 @@ const config = {
 	dev: ( process.env.NODE_ENV==='production' ) ? false : true
 }
 
-console.log(config)
-
 export default config

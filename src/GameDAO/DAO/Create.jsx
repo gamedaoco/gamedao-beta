@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { TxButton } from '../../substrate-lib/components'
 
 import {
-	Container, Form, Message, Divider, Segment, Image, Button
+	Container, Form, Divider, Segment, Image, Button
 } from 'semantic-ui-react'
 
 import faker from 'faker'
 import { data } from '../lib/data'
-// import config from '../../config'
+import config from '../../config'
 
 import {
 	pinJSONToIPFS,
@@ -18,7 +17,7 @@ import {
 	gateway,
 } from '../lib/ipfs'
 
-const dev = true // config.dev
+const dev = config.dev
 if (dev) console.log('dev mode')
 
 const random_state = ( accountPair ) => {
@@ -55,14 +54,16 @@ export const Main = props => {
 	const { api } = useSubstrate()
 
 	const { accountPair } = props
-	const [ status, setStatus ] = useState('')
+	// const [ status, setStatus ] = useState('')
 	const [ loading, setLoading  ] = useState(false)
+	const [ refresh, setRefresh  ] = useState(true)
+
 	const [ formData, updateFormData ] = useState()
 	const [ fileCID, updateFileCID ] = useState()
 	const [ content, setContent ] = useState()
-	const [ contentCID, setContentCID ] = useState()
+	// const [ contentCID, setContentCID ] = useState()
 
-	const [ submitState, setSubmitState ] = useState(0)
+	// const [ submitState, setSubmitState ] = useState(0)
 
 	// this is taken from txbutton
 
@@ -71,16 +72,10 @@ export const Main = props => {
 			address,
 			meta: { source, isInjected }
 		} = accountPair
-
-		console.log(address, source, isInjected)
-
 		let fromAcct
-
-		// signer is from Polkadot-js browser extension
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			console.log(injected.signer)
 			api.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
@@ -114,25 +109,6 @@ export const Main = props => {
 		setContent( contentJSON )
 	}, [fileCID, formData]);
 
-	// upload temp json to ipfs (to be changed)
-
-	useEffect(()=>{
-		// if (!content) return
-		// if (dev) console.log('upload content json')
-		// const req = async () => {
-		// 	try {
-		// 		const cid = await pinJSONToIPFS( content )
-		// 		if ( cid ) {
-		// 			setContentCID(cid)
-		// 			if (dev) console.log('json cid',`${gateway}${cid}`)
-		// 		}
-		// 	} catch ( err ) {
-		// 		console.log('Error uploading file: ', err)
-		// 	}
-		// }
-		// req()
-	}, [content]);
-
 	// handle file uploads to ipfs
 
 	async function onFileChange(e, { name }) {
@@ -146,22 +122,6 @@ export const Main = props => {
 			console.log('Error uploading file: ', error)
 		}
 	}
-
-	// manual tx state for tx button...
-
-	useEffect(()=>{
-		console.log('filter tx state')
-		if ( !status ) return
-		if ( status.indexOf('Finalized') > -1 ) {
-			setLoading( false )
-			setStatus( null )
-			if (dev) console.log('reset form')
-			updateFileCID(null)
-			updateFormData( random_state( accountPair ) )
-		} else {
-			setLoading( true )
-		}
-	},[ status, setStatus, setLoading, accountPair ])
 
 	// form fields
 
@@ -180,17 +140,15 @@ export const Main = props => {
 
 		//
 
-
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
 			try {
+				// TODO: pin...
 				const cid = await pinJSONToIPFS( content )
 				if ( cid ) {
-					setContentCID(cid)
-					if (dev) {
-						console.log('json cid',`${gateway}${cid}`)
-						sendTX()
-					}
+					// setContentCID(cid)
+					if (dev) console.log('json cid',`${gateway}${cid}`)
+					sendTX(cid)
 				}
 			} catch ( err ) {
 				console.log('Error uploading file: ', err)
@@ -198,72 +156,55 @@ export const Main = props => {
 		}
 		getCID()
 
-		//
-
-		const payload = [
-			accountPair.address,
-			formData.controller,
-			formData.treasury,
-			formData.name,
-			contentCID,
-			formData.body,
-			formData.access,
-			formData.fee_model,
-			formData.fee,
-			0,
-			0,
-			formData.member_limit
-		]
-
-
 		// send it
 
-		const sendTX = async () => {
+		const sendTX = async cid => {
 
+			if (dev) console.log('2. send tx')
+
+			const payload = [
+				accountPair.address,
+				formData.controller,
+				formData.treasury,
+				formData.name,
+				cid,
+				formData.body,
+				formData.access,
+				formData.fee_model,
+				formData.fee,
+				0,
+				0,
+				formData.member_limit
+			]
 			const from = await getFromAcct()
-			if (dev) console.log('2. send tx', from)
 			const tx = api.tx.gameDaoControl.create(...payload)
 			const hash = await tx.signAndSend( from, ({ status, events }) => {
-
 				if(events.length) {
-					console.log(`\nReceived ${events.length} events:`)
 					events.forEach((record) => {
-						// Extract the phase, event and the event types
-						const { event, phase } = record
-						const types = event.typeDef
-
-						// Show what we are busy with
-						console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`)
-						console.log(`\t\t${event.meta.documentation.toString()}`)
-
-						// Loop through each of the parameters, displaying the type and data
-						event.data.forEach((data, index) => {
-							console.log(`\t\t\t${types[index].type}: ${data.toString()}`)
-						})
-					})
-				}
-
-				if (status.isInBlock || status.isFinalized) {
-					events
-					.filter(({ event }) => api.events.system.ExtrinsicFailed.is(event) )
-					.forEach(({ event: { data: [error, info] } }) => {
-						if (error.isModule) {
-							const decoded = api.registry.findMetaError(error.asModule)
-							const { documentation, method, section } = decoded
-							console.log(`${section}.${method}: ${documentation.join(' ')}`)
-						} else {
-							console.log(error.toString())
+						const { event } = record
+						// const types = event.typeDef
+						if (
+							event.section === 'gameDaoControl' &&
+							event.method === 'BodyCreated'
+						) {
+							console.log('body created:', hash)
+							setRefresh(true)
 						}
-						console.log(info)
 					})
 				}
-				setLoading(false)
-				console.log('completed!')
 			})
-			console.log(hash)
 		}
 
 	}
+
+	useEffect(()=> {
+		if(!refresh) return
+		if (dev) console.log('refresh signal')
+		updateFileCID(null)
+		updateFormData( random_state( accountPair ) )
+		setRefresh(false)
+		setLoading(false)
+	},[accountPair, refresh])
 
 	if ( !formData ) return null
 
@@ -434,40 +375,6 @@ export const Main = props => {
 
 						<Button onClick={handleSubmit}>Create Campaign</Button>
 
-						{
-							// <TxButton
-							// 	accountPair={accountPair}
-							// 	label='Create'
-							// 	type='SIGNED-TX'
-							// 	setStatus={setStatus}
-							// 	attrs={{
-							// 		palletRpc: 'gameDaoControl',
-							// 		callable: 'create',
-							// 		inputParams: [
-							// 			accountPair.address,
-							// 			formData.controller,
-							// 			formData.treasury,
-							// 			formData.name,
-							// 			contentCID,
-							// 			formData.body,
-							// 			formData.access,
-							// 			formData.fee_model,
-							// 			formData.fee,
-							// 			0,
-							// 			0,
-							// 			formData.member_limit
-							// 		],
-							// 		paramFields: [true,true,true,true,true,true,true,true,true,true,true,true]
-							// 	}}
-							// />
-						}
-
-						{ status &&
-							<Message
-								header='Transaction Status'
-								content={status}
-								/>
-						}
 					</Container>
 
 			</Form>
