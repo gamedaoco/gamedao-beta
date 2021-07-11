@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
+
 import { useSubstrate } from '../../substrate-lib'
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { TxButton } from '../../substrate-lib/components'
+
 import {
-	Container, Form, Message, Divider, Segment, Image
+	Container, Form, Message, Divider, Segment, Image, Button
 } from 'semantic-ui-react'
 
 import faker from 'faker'
@@ -49,6 +52,8 @@ const random_state = ( accountPair ) => {
 
 export const Main = props => {
 
+	const { api } = useSubstrate()
+
 	const { accountPair } = props
 	const [ status, setStatus ] = useState('')
 	const [ loading, setLoading  ] = useState(false)
@@ -57,12 +62,42 @@ export const Main = props => {
 	const [ content, setContent ] = useState()
 	const [ contentCID, setContentCID ] = useState()
 
+	const [ submitState, setSubmitState ] = useState(0)
+
+	// this is taken from txbutton
+
+	const getFromAcct = async () => {
+		const {
+			address,
+			meta: { source, isInjected }
+		} = accountPair
+
+		console.log(address, source, isInjected)
+
+		let fromAcct
+
+		// signer is from Polkadot-js browser extension
+		if (isInjected) {
+			const injected = await web3FromSource(source)
+			fromAcct = address
+			console.log(injected.signer)
+			api.setSigner(injected.signer)
+		} else {
+			fromAcct = accountPair
+		}
+		return fromAcct
+	}
+
+	// generator for the demo
+
 	useEffect(()=>{
 		if(!accountPair) return
 		if (dev) console.log('generate form data')
 		const initial_state = random_state( accountPair )
 		updateFormData( initial_state )
 	},[accountPair])
+
+	// update json payload from form data
 
 	useEffect(()=>{
 		if(!formData) return
@@ -75,26 +110,30 @@ export const Main = props => {
 			repo: formData.repo,
 			...fileCID
 		}
-		if (dev) console.log(contentJSON)
+		// if (dev) console.log(contentJSON)
 		setContent( contentJSON )
 	}, [fileCID, formData]);
 
+	// upload temp json to ipfs (to be changed)
+
 	useEffect(()=>{
-		if (!content) return
-		if (dev) console.log('upload content json')
-		const req = async () => {
-			try {
-				const cid = await pinJSONToIPFS( content )
-				if ( cid ) {
-					setContentCID(cid)
-					if (dev) console.log('json cid',`${gateway}${cid}`)
-				}
-			} catch ( err ) {
-				console.log('Error uploading file: ', err)
-			}
-		}
-		req()
+		// if (!content) return
+		// if (dev) console.log('upload content json')
+		// const req = async () => {
+		// 	try {
+		// 		const cid = await pinJSONToIPFS( content )
+		// 		if ( cid ) {
+		// 			setContentCID(cid)
+		// 			if (dev) console.log('json cid',`${gateway}${cid}`)
+		// 		}
+		// 	} catch ( err ) {
+		// 		console.log('Error uploading file: ', err)
+		// 	}
+		// }
+		// req()
 	}, [content]);
+
+	// handle file uploads to ipfs
 
 	async function onFileChange(e, { name }) {
 		const file = e.target.files[0]
@@ -107,6 +146,8 @@ export const Main = props => {
 			console.log('Error uploading file: ', error)
 		}
 	}
+
+	// manual tx state for tx button...
 
 	useEffect(()=>{
 		console.log('filter tx state')
@@ -122,8 +163,107 @@ export const Main = props => {
 		}
 	},[ status, setStatus, setLoading, accountPair ])
 
+	// form fields
+
 	const handleOnChange = (e, { name, value }) =>
 	updateFormData({ ...formData, [name]: value })
+
+	//
+	// submit function
+	//
+
+	const handleSubmit = e => {
+
+		e.preventDefault()
+		console.log('submit')
+		setLoading(true)
+
+		//
+
+
+		const getCID = async () => {
+			if (dev) console.log('1. upload content json')
+			try {
+				const cid = await pinJSONToIPFS( content )
+				if ( cid ) {
+					setContentCID(cid)
+					if (dev) {
+						console.log('json cid',`${gateway}${cid}`)
+						sendTX()
+					}
+				}
+			} catch ( err ) {
+				console.log('Error uploading file: ', err)
+			}
+		}
+		getCID()
+
+		//
+
+		const payload = [
+			accountPair.address,
+			formData.controller,
+			formData.treasury,
+			formData.name,
+			contentCID,
+			formData.body,
+			formData.access,
+			formData.fee_model,
+			formData.fee,
+			0,
+			0,
+			formData.member_limit
+		]
+
+
+		// send it
+
+		const sendTX = async () => {
+
+			const from = await getFromAcct()
+			if (dev) console.log('2. send tx', from)
+			const tx = api.tx.gameDaoControl.create(...payload)
+			const hash = await tx.signAndSend( from, ({ status, events }) => {
+
+				if(events.length) {
+					console.log(`\nReceived ${events.length} events:`)
+					events.forEach((record) => {
+						// Extract the phase, event and the event types
+						const { event, phase } = record
+						const types = event.typeDef
+
+						// Show what we are busy with
+						console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`)
+						console.log(`\t\t${event.meta.documentation.toString()}`)
+
+						// Loop through each of the parameters, displaying the type and data
+						event.data.forEach((data, index) => {
+							console.log(`\t\t\t${types[index].type}: ${data.toString()}`)
+						})
+					})
+				}
+
+				if (status.isInBlock || status.isFinalized) {
+					events
+					.filter(({ event }) => api.events.system.ExtrinsicFailed.is(event) )
+					.forEach(({ event: { data: [error, info] } }) => {
+						if (error.isModule) {
+							const decoded = api.registry.findMetaError(error.asModule)
+							const { documentation, method, section } = decoded
+							console.log(`${section}.${method}: ${documentation.join(' ')}`)
+						} else {
+							console.log(error.toString())
+						}
+						console.log(info)
+					})
+				}
+				setLoading(false)
+				console.log('completed!')
+			})
+			console.log(hash)
+		}
+
+	}
 
 	if ( !formData ) return null
 
@@ -291,38 +431,37 @@ export const Main = props => {
 					</Form.Group>
 
 					<Container textAlign='right'>
-{/*
-						<Button onClick={handleSubmit}>Create DAO Manually</Button>
-*/}
 
-						{ !contentCID &&
-							<span><i>enabled when ipfs hashes are ready:</i>&nbsp;&nbsp;&nbsp;</span>
+						<Button onClick={handleSubmit}>Create Campaign</Button>
+
+						{
+							// <TxButton
+							// 	accountPair={accountPair}
+							// 	label='Create'
+							// 	type='SIGNED-TX'
+							// 	setStatus={setStatus}
+							// 	attrs={{
+							// 		palletRpc: 'gameDaoControl',
+							// 		callable: 'create',
+							// 		inputParams: [
+							// 			accountPair.address,
+							// 			formData.controller,
+							// 			formData.treasury,
+							// 			formData.name,
+							// 			contentCID,
+							// 			formData.body,
+							// 			formData.access,
+							// 			formData.fee_model,
+							// 			formData.fee,
+							// 			0,
+							// 			0,
+							// 			formData.member_limit
+							// 		],
+							// 		paramFields: [true,true,true,true,true,true,true,true,true,true,true,true]
+							// 	}}
+							// />
 						}
-						<TxButton
-							accountPair={accountPair}
-							label='Create'
-							type='SIGNED-TX'
-							setStatus={setStatus}
-							attrs={{
-								palletRpc: 'gameDaoControl',
-								callable: 'create',
-								inputParams: [
-									accountPair.address,
-									formData.controller,
-									formData.treasury,
-									formData.name,
-									contentCID,
-									formData.body,
-									formData.access,
-									formData.fee_model,
-									formData.fee,
-									0,
-									0,
-									formData.member_limit
-								],
-								paramFields: [true,true,true,true,true,true,true,true,true,true,true,true]
-							}}
-						/>
+
 						{ status &&
 							<Message
 								header='Transaction Status'

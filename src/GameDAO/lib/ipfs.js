@@ -4,7 +4,7 @@
 
 import config from '../../config'
 import { create } from 'ipfs-http-client'
-// const dev = config.dev
+const dev = config.dev
 
 // put
 const API_URL = config.API_URL
@@ -22,17 +22,17 @@ export const gateway = GATEWAY_PROTOCOL+"://"+GATEWAY_URL+(GATEWAY_PORT?':'+GATE
 //	init ipfs client
 //
 
-// const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
+const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
 
-// const headers = {
-// 	authorization: auth,
-// }
+const headers = {
+	authorization: auth,
+}
 
 export const ipfs = create({
 	protocol: API_PROTOCOL,
 	host: API_URL,
 	port: API_PORT,
-	// headers,
+	headers: (dev) ? null : headers,
 	timeout: '2m'
 })
 
