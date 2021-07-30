@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react'
 
 import faker from 'faker'
-import { data } from '../lib/data'
+import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import {
@@ -32,20 +32,32 @@ const random_state = ( accountPair ) => {
 	const treasury = accountPair.address
 
 	const body = 0
-	const access = 1
-	const member_limit = '100'
-	const fee_model = 1
+	const access = 0
+	const member_limit = '10'
+	const fee_model = 0
 	const fee = '10'
 
 	const cid = ''
 	const gov_asset = 0
 	const pay_asset = 0
 
+	// collect curve settings
+	// tbd storage
+
+	const token_buy_fn  = 1 // 1:1 price over t, vol
+	const token_sell_fn = 1 // 1:1 price over t, vol
+	const reward_fn     = 1 // reward token to token volume per cycle
+	const reward_cycle  = 1 //
+
+	const entity = data.project_entities[ rnd(data.project_entities.length) ].value
+	const country = data.countries[ rnd(data.countries.length) ].value
+
 	return {
 		name, body, creator, controller, treasury,
 		access, member_limit, fee_model, fee,
 		cid, gov_asset, pay_asset,
-		email, website, repo, description
+		email, website, repo, description,
+		country, entity
 	}
 }
 
@@ -154,7 +166,6 @@ export const Main = props => {
 				console.log('Error uploading file: ', err)
 			}
 		}
-		getCID()
 
 		// send it
 
@@ -194,6 +205,8 @@ export const Main = props => {
 				}
 			})
 		}
+
+		getCID()
 
 	}
 
@@ -246,6 +259,17 @@ export const Main = props => {
 							value={formData.body}
 							onChange={handleOnChange}
 							/>
+
+						<Form.Select
+							fluid
+							label='Country'
+							name='country'
+							placeholder='Country'
+							options={data.countries}
+							value={formData.country}
+							onChange={handleOnChange}
+							/>
+
 					</Form.Group>
 
 			{ fileCID &&
@@ -373,7 +397,7 @@ export const Main = props => {
 
 					<Container textAlign='right'>
 
-						<Button onClick={handleSubmit}>Create Campaign</Button>
+						<Button onClick={handleSubmit}>Create Organization</Button>
 
 					</Container>
 
@@ -389,7 +413,7 @@ export default function Module (props) {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoCrowdfunding && accountPair
+	return api && api.query.gameDaoControl && accountPair
 		? <Main {...props} />
 		: null
 
