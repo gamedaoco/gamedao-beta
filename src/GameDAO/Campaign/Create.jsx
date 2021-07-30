@@ -3,38 +3,63 @@ import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp';
 
 import {
-	Container,
-	Button,
-	Form,
-	// Message,
+	Container, Button, Form, Segment, Divider, Image
 } from 'semantic-ui-react'
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
+import config from '../../config'
 
-// const generateIPFSBlob = () => {
+import {
+	pinJSONToIPFS,
+	pinFileToIPFS,
+	gateway,
+} from '../lib/ipfs'
 
-// 	return {
-// 		nonce: nonce,
-// 		campaign_hash: null,
-// 		creator_hash: accountPair.address,
-// 		payload: formData,
-// 		images: [
-// 		// cids to images
-// 		],
-// 	}
+const dev = config.dev
 
-// }
+const random_state = ( ) => {
+
+		const name = faker.name.findName()
+		const email = faker.internet.email()
+		const title = faker.commerce.productName()
+		const description = faker.company.catchPhrase()
+		const country = data.countries[ rnd(data.countries.length) ].value
+		const entity = data.project_entities[ rnd(data.project_entities.length) ].value
+		const usage = data.project_types[ rnd(data.project_types.length) ].value
+		const accept = false
+		const cap = rnd(100000)
+		const deposit = rnd(10)
+		const duration = data.project_durations[ rnd(data.project_durations.length) ].value
+		const protocol = data.protocol_types[ rnd(data.protocol_types.length) ].value
+		const governance = ( rnd(2) === 0 ) ? false : true
+		const cid = ''
+		const tags = ['dao','game']
+		const org = null
+
+		return {
+			name, email, title, description, country, entity, usage, accept,
+			cap, deposit, duration, protocol, governance,
+			cid, tags, org,
+		}
+
+}
 
 export const Main = props => {
 
 	const { api } = useSubstrate()
 	const { accountPair, finalized } = props
-	// const [ status, setStatus ] = useState('')
-	const [ formData, updateFormData ] = useState()
-	const [ nonce, updateNonce ] = useState(0)
 	const [ block, setBlock ] = useState(0)
+	const [ nonce, updateNonce ] = useState(0)
+	const [ orgHashes, updateOrgHashes ] = useState([])
+	const [ orgs, updateOrgs ] = useState([])
+
+	const [ formData, updateFormData ] = useState()
+	const [ fileCID, updateFileCID ] = useState()
+	const [ content, setContent ] = useState()
+
 	const [ loading, setLoading  ] = useState(false)
+	const [ refresh, setRefresh  ] = useState(true)
 
 	const getFromAcct = async () => {
 		const {
@@ -57,28 +82,10 @@ export const Main = props => {
 		: api.derive.chain.bestNumber
 
 	useEffect(() => {
-
 		let unsubscribe = null
-
-		bestBlock(number => {
-			setBlock(number.toNumber())
-		})
-		.then(unsub => {
-			unsubscribe = unsub
-		})
-		.catch(console.error)
-
-		return () => unsubscribe && unsubscribe()
-
-	}, [bestBlock])
-
-	useEffect(() => {
-
-		let unsubscribe = null
-
 		api.query.gameDaoCrowdfunding.nonce(n => {
 			if (n.isNone) {
-				updateNonce('<None>')
+				updateNonce(0)
 			} else {
 				updateNonce(n.toNumber())
 			}
@@ -86,137 +93,194 @@ export const Main = props => {
 			unsubscribe = unsub
 		})
 		.catch(console.error)
-
 		return () => unsubscribe && unsubscribe()
-
 	}, [api.query.gameDaoCrowdfunding])
 
-	useEffect(()=>{
+	useEffect(() => {
+		let unsubscribe = null
+		bestBlock(number => {
+			setBlock(number.toNumber())
+		})
+		.then(unsub => {
+			unsubscribe = unsub
+		})
+		.catch(console.error)
+		return () => unsubscribe && unsubscribe()
+	}, [bestBlock])
 
-		const name = faker.name.findName()
-		const email = faker.internet.email()
-		const title = faker.commerce.productName()
-		const description = faker.company.catchPhrase()
-		const country = data.countries[ rnd(data.countries.length) ].value
-		const entity = data.project_entities[ rnd(data.project_entities.length) ].value
-		const usage = data.project_types[ rnd(data.project_types.length) ].value
-		const accept = false
-		const cap = rnd(100000)
-		const deposit = rnd(10)
-		const duration = data.project_durations[ rnd(data.project_durations.length) ].value
-		const protocol = data.protocol_types[ rnd(data.protocol_types.length) ].value
-		const governance = ( rnd(2) === 0 ) ? false : true
-		const cid = 'cid'
-		const tags = ['dao','game']
+//
 
-		const _ = {
-			name,
-			email,
-			title,
-			description,
-			country,
-			entity,
-			usage,
-			accept,
-			cap,
-			deposit,
-			duration,
-			protocol,
-			governance,
-			cid,
-			tags,
+	useEffect(() => {
+		let unsubscribe = null
+		api.query.gameDaoControl.controlledBodies(accountPair.address, b => {
+			if ( b.isNone || b.length === 0 ) return
+			const hashes = [ ...new Set( b.toHuman().map(_=>_) )]
+			updateOrgHashes(hashes)
+			console.log(hashes)
+		}).then(unsub => {
+			unsubscribe = unsub
+		})
+		.catch(console.error)
+		return () => unsubscribe && unsubscribe()
+	}, [accountPair,api.query.gameDaoControl])
+
+//
+
+	useEffect(() => {
+		if ( orgHashes.length === 0 ) return
+		const req = [ ...orgHashes ]
+		const query = async args => {
+			const res = await api.query.gameDaoControl.bodies.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+			const _ = res.map( ( body, i ) => {
+				const org = {
+					key: i,
+					value: body.id,
+					text: body.name
+				}
+				return org
+			})
+			updateOrgs(_)
 		}
-		console.log( _ )
-		updateFormData( _ )
+		query()
+	}, [orgHashes,accountPair,api.query.gameDaoControl])
 
-	}, [ nonce ] )
+	useEffect(()=>{
+		if (orgs.length===0) return
+		const initial_state = random_state()
+		updateFormData( initial_state )
+	}, [ orgs ] )
 
 	// handle form state
 
 	const handleOnChange = (e, { name, value }) =>
 	updateFormData({ ...formData, [name]: value })
 
+	useEffect(()=>{
+		if(!formData) return
+		if (dev) console.log('update content json')
+		const contentJSON = {
+			name: formData.name,
+			email: formData.email,
+			title: formData.title,
+			description: formData.description,
+			...fileCID
+		}
+		// if (dev) console.log(contentJSON)
+		setContent( contentJSON )
+	}, [fileCID, formData]);
+
+	async function onFileChange(e, { name }) {
+		const file = e.target.files[0]
+		if (dev) console.log('upload image')
+		try {
+			const cid = await pinFileToIPFS( file )
+			updateFileCID({ ...fileCID, [name]: cid })
+			if (dev) console.log('file cid',`${gateway}${cid}`)
+		} catch (error) {
+			console.log('Error uploading file: ', error)
+		}
+	}
+
 	// submit
 
 	const handleSubmit = e => {
 
 		e.preventDefault()
-
 		console.log('submit')
 		setLoading(true)
 
-		const campaign_end = ( formData.duration * data.blockFactor ) + block // take current block as offset
-		console.log('campaign_end', campaign_end)
+		//
 
-		const payload = [
-			accountPair.address,
-			formData.title,
-			formData.cap,
-			formData.deposit,
-			campaign_end,
-			formData.protocol,
-			formData.governance,
-			formData.cid
-		]
+		const getCID = async () => {
+			if (dev) console.log('1. upload content json')
+			try {
+				// TODO: pin...
+				const cid = await pinJSONToIPFS( content )
+				if ( cid ) {
+					// setContentCID(cid)
+					if (dev) console.log('json cid',`${gateway}${cid}`)
+					sendTX(cid)
+				}
+			} catch ( err ) {
+				console.log('Error uploading file: ', err)
+			}
+		}
 
-		console.log('payload', payload)
+		//
 
-		async function send () {
+		const sendTX = async cid => {
+
+			const campaign_end = ( formData.duration * data.blockFactor ) + block // take current block as offset
+			console.log('campaign_end', campaign_end)
+
+			const payload = [
+				accountPair.address,
+				formData.org,
+				formData.title,
+				formData.cap,
+				formData.deposit,
+				campaign_end,
+				formData.protocol,
+				formData.governance,
+				cid
+			]
+			console.log('payload', payload)
 
 			const from = await getFromAcct()
 			const tx = api.tx.gameDaoCrowdfunding.create(...payload)
 			const hash = await tx.signAndSend( from, ({ status, events }) => {
-
 				if(events.length) {
-					console.log(`\nReceived ${events.length} events:`)
 					events.forEach((record) => {
-						// Extract the phase, event and the event types
-						const { event, phase } = record
-						const types = event.typeDef
-
-						// Show what we are busy with
-						console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`)
-						console.log(`\t\t${event.meta.documentation.toString()}`)
-
-						// Loop through each of the parameters, displaying the type and data
-						event.data.forEach((data, index) => {
-							console.log(`\t\t\t${types[index].type}: ${data.toString()}`)
-						})
-					})
-				}
-
-				if (status.isInBlock || status.isFinalized) {
-					events
-					.filter(({ event }) => api.events.system.ExtrinsicFailed.is(event) )
-					.forEach(({ event: { data: [error, info] } }) => {
-						if (error.isModule) {
-							const decoded = api.registry.findMetaError(error.asModule)
-							const { documentation, method, section } = decoded
-							console.log(`${section}.${method}: ${documentation.join(' ')}`)
-						} else {
-							console.log(error.toString())
+						const { event } = record
+						// const types = event.typeDef
+						if (
+							event.section === 'gameDaoCrowdfunding' &&
+							event.method === 'CampaignCreated'
+						) {
+							console.log('campaign created:', hash)
+							setRefresh(true)
 						}
-						console.log(info)
 					})
 				}
-				setLoading(false)
 			})
-			console.log(hash)
 		}
-		send()
+
+		getCID()
 
 	}
+
+	useEffect(()=> {
+		if(!refresh) return
+		if (dev) console.log('refresh signal')
+		updateFileCID(null)
+		updateFormData( random_state( accountPair ) )
+		setRefresh(false)
+		setLoading(false)
+	},[accountPair, refresh])
 
 	if ( !formData ) return null
 
 	return (
-		<div>
+		<Segment vertical loading={loading}>
 
 			<h1>Create Campaign</h1>
 
-			<Form loading={loading}>
+			<Form>
 
-					{/* campaign name to be listed as */}
+					<br/>
+					<Divider clearing horizontal>General</Divider>
+					<br/>
+
+					<Form.Select
+						fluid
+						required
+						label='Organization'
+						placeholder='Organization'
+						name='org'
+						options={orgs}
+						value={formData.org}
+						onChange={handleOnChange}
+						/>
 
 					<Form.Input
 						fluid required
@@ -227,7 +291,46 @@ export const Main = props => {
 						onChange={handleOnChange}
 						/>
 
+					<Form.TextArea
+						label='Campaign Description'
+						placeholder='Tell us more about your idea...'
+						name='description'
+						value={formData.description}
+						onChange={handleOnChange}
+						/>
+
+					<br/>
+					<Divider clearing horizontal>Content</Divider>
+					<br/>
+
+			{ fileCID &&
+				<Image.Group size='tiny'>
+					{fileCID.logo && <Image alt={formData.title} src={gateway+fileCID.logo} />}
+					{fileCID.header && <Image alt={formData.title} src={gateway+fileCID.header} />}
+				</Image.Group>
+			}
+
+					<Form.Group widths='equal'>
+						<Form.Input
+							type="file"
+							label='Logo Graphic'
+							name='logo'
+							onChange={onFileChange}
+							/>
+						<Form.Input
+							type="file"
+							label='Header Graphic'
+							name='header'
+							onChange={onFileChange}
+							/>
+					</Form.Group>
+
+
 					{/* legal body applying for the funding */}
+
+					<br/>
+					<Divider clearing horizontal>Public Representative</Divider>
+					<br/>
 
 					<Form.Group widths='equal'>
 						<Form.Input
@@ -247,6 +350,15 @@ export const Main = props => {
 							onChange={handleOnChange}
 							/>
 					</Form.Group>
+
+					<br/>
+					<Divider clearing horizontal>Campaign Settings</Divider>
+					<br/>
+
+					<Container>
+						This section is already covered during org creation,
+						currently only a placeholder / reminder.
+					</Container>
 
 					<Form.Group widths='equal'>
 						<Form.Select
@@ -271,6 +383,7 @@ export const Main = props => {
 
 					{/* usage of funding and protocol to initiate after successfully raising */}
 
+
 					<Form.Group widths='equal'>
 						<Form.Select
 							fluid
@@ -293,12 +406,6 @@ export const Main = props => {
 							/>
 					</Form.Group>
 
-					<Form.Checkbox
-						label='DAO Governance'
-						name='governance'
-						checked={formData.governance}
-						onChange={handleOnChange}
-						/>
 
 					<Form.Group widths='equal'>
 
@@ -316,7 +423,7 @@ export const Main = props => {
 							fluid
 							label='Funding Target (PLAY)'
 							placeholder='Cap'
-							name='target'
+							name='cap'
 							value={formData.cap}
 							onChange={handleOnChange}
 
@@ -333,51 +440,26 @@ export const Main = props => {
 							/>
 					</Form.Group>
 
-{/*					<Form.TextArea label='Campaign Description' placeholder='Tell us more about your idea...' name='description' value={formData.description} onChange={handleOnChange} />
-*/}
-
+					<Form.Checkbox
+						label='DAO Governance'
+						name='governance'
+						checked={formData.governance}
+						onChange={handleOnChange}
+						/>
 					<Form.Checkbox
 						label='I agree to the Terms and Conditions'
 						name='accept'
-						checked={formData.accept.value}
+						checked={formData.accept}
 						onChange={handleOnChange}
 						/>
 
-
 					<Container textAlign='right'>
-						<Button onClick={handleSubmit}>Create Campaign Manually</Button>
-{/*						<TxButton
-							accountPair={accountPair}
-							label='Create Campaign'
-							type='SIGNED-TX'
-							setStatus={setStatus}
-							attrs={{
-								palletRpc: 'gameDaoCrowdfunding',
-								callable: 'create',
-								inputParams: [
-									accountPair.address,
-									formData.title,
-									formData.cap,
-									formData.deposit,
-									(( formData.duration * data.blockFactor ) + block),
-									formData.protocol,
-									( (formData.governance===false) ? 0 :  1),
-									formData.cid
-								],
-								paramFields: [true,true,true,true,true,true,true,true]
-							}}
-						/>
-						{ status &&
-							<Message
-								header='Transaction Status'
-								content={status}
-								/>
-						}*/}
+						<Button onClick={handleSubmit}>Create Campaign</Button>
 					</Container>
 
 			</Form>
 
-		</div>
+		</Segment>
 	)
 
 }

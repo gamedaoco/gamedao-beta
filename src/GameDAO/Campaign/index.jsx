@@ -187,7 +187,7 @@ export const Campaigns = props => {
 
 	console.log('update')
 
-	return ( !content || content.length === 0 )
+	return ( !content || nonce === 0 )
 		?	<React.Fragment>
 				<h1>Campaigns</h1>
 				<h3>No campaigns yet. Create one!</h3>
