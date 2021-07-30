@@ -13,6 +13,9 @@ const parsedQuery = queryString.parse(window.location.search);
 const connectedSocket = parsedQuery.rpc || config.PROVIDER_SOCKET;
 console.log(`Connected socket: ${connectedSocket}`);
 
+// mainnet 24, testnet 25
+const ss58Format = 25
+
 ///
 // Initial state for `useReducer`
 
@@ -93,7 +96,10 @@ const loadAccounts = (state, dispatch) => {
       let allAccounts = await web3Accounts();
       allAccounts = allAccounts.map(({ address, meta }) =>
         ({ address, meta: { ...meta, name: `${meta.name} (${meta.source})` } }));
-      keyring.loadAll({ isDevelopment: config.DEVELOPMENT_KEYRING }, allAccounts);
+      keyring.loadAll({
+        isDevelopment: config.DEVELOPMENT_KEYRING,
+        ss58Format
+      }, allAccounts);
       dispatch({ type: 'SET_KEYRING', payload: keyring });
     } catch (e) {
       console.error(e);

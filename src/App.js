@@ -24,7 +24,7 @@ function Main () {
 		keyring.getPair(accountAddress)
 
 	if (apiState === 'ERROR') return (<Message err={apiError} />)
-	else if (apiState !== 'READY') return (<Loader text='Connecting to ZERO.IO' />)
+	else if (apiState !== 'READY') return (<Loader text='Connecting Network' />)
 	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
 
 	const contextRef = createRef()

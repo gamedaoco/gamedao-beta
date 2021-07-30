@@ -103,7 +103,7 @@ function BalanceAnnotation (props) {
 
   return accountSelected
     ? <Label pointing='left'>
-        <Icon name='money' color='white' />
+        <Icon name='money' color='black' />
         {accountBalance}
       </Label>
     : null;
