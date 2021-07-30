@@ -19,8 +19,9 @@ const DAO = lazy( () => import ('./DAO') )
 const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
 const CreateCampaign = lazy( () => import ('./Campaign/Create') )
+
 const Proposal = lazy( () => import ('./Proposal') )
-// import CreateProposal from './Proposal/Create'
+import CreateProposal from './Proposal/Create'
 
 const GameDAO = props => {
 
@@ -31,47 +32,25 @@ const GameDAO = props => {
 	const [campaigns, setCampaigns] = useState(null)
 	const [proposals, setProposals] = useState(null)
 
-	useEffect(() => {
+	useEffect(()=>{
 
 		let unsubscribe = null
 
-		api.query.gameDaoControl.nonce(n => {
-			setBodies(n.toNumber())
+		api.queryMulti([
+			api.query.gameDaoControl.nonce,
+			api.query.gameDaoCrowdfunding.nonce,
+			api.query.gameDaoGovernance.nonce
+		],([ bodies, campaigns, proposals ]) => {
+			setBodies(bodies.toNumber())
+			setCampaigns(campaigns.toNumber())
+			setProposals(proposals.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
 
 		return () => unsubscribe && unsubscribe()
 
-	}, [api.query.gameDaoControl])
-
-	useEffect(() => {
-
-		let unsubscribe = null
-
-		api.query.gameDaoCrowdfunding.nonce(n => {
-			setCampaigns(n.toNumber())
-		}).then( unsub => {
-			unsubscribe = unsub
-		}).catch( console.error )
-
-		return () => unsubscribe && unsubscribe()
-
-	}, [api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-
-		let unsubscribe = null
-
-		api.query.gameDaoGovernance.nonce(n => {
-			setProposals(n.toNumber())
-		}).then( unsub => {
-			unsubscribe = unsub
-		}).catch( console.error )
-
-		return () => unsubscribe && unsubscribe()
-
-	}, [api.query.gameDaoGovernance])
+	},[api])
 
 	const panes = [
 
@@ -96,27 +75,7 @@ const GameDAO = props => {
 			,
 		},
 
-
-		{
-			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign accountPair={accountPair} />
-				</Tab.Pane>
-			,
-		},
-
-		{
-			menuItem: (
-				<Menu.Item key='4'>
-					Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
-				</Menu.Item>
-			),
-			render: () =>
-				<Tab.Pane key='campaigns'>
-					<Campaign accountPair={accountPair}/>
-				</Tab.Pane>
-		},
+//
 
 		{
 			menuItem:
@@ -134,8 +93,31 @@ const GameDAO = props => {
 					Create Proposal
 				</Menu.Item>,
 			render: () =>
-			<Tab.Pane key='create_proposal'><div>Create Proposal</div></Tab.Pane>
+			<Tab.Pane key='create_proposal'><CreateProposal accountPair={accountPair} /></Tab.Pane>
 		},
+
+//
+
+		{
+			menuItem: (
+				<Menu.Item key='4'>
+					Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
+				</Menu.Item>
+			),
+			render: () =>
+				<Tab.Pane key='campaigns'>
+					<Campaign accountPair={accountPair}/>
+				</Tab.Pane>
+		},
+		{
+			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
+			render: () =>
+				<Tab.Pane key='create_campaign'>
+					<CreateCampaign accountPair={accountPair} />
+				</Tab.Pane>
+			,
+		},
+
 	]
 
 	return (
