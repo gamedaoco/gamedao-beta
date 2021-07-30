@@ -12,43 +12,48 @@ import { gateway } from '../lib/ipfs'
 import config from '../../config'
 const dev = config.dev
 
-const ListItem = ({ data: { content, members } }) => {
+// ui list item
 
-	const [ config, setConfig ] = useState()
-	const [ itemContent, setItemContent ] = useState()
+const Item = ({ content }) => {
+
+	// should be the image of the associated org
 	const [ imageURL, setImageURL ] = useState(null)
 
-	useEffect(()=>{
-		if ( !content || content.cid==='' ) return
-		if (dev) console.log('fetch config', content.cid)
-		fetch( gateway + content.cid )
-			.then( res => res.text() )
-			.then( txt => { setConfig(JSON.parse(txt)) })
-			.catch( err => console.log( err ) )
-	},[ content ])
+	// const [ config, setConfig ] = useState()
+	// const [ itemContent, setItemContent ] = useState()
 
-	useEffect(()=>{
-		if ( !config ) return
-		setImageURL( ( config.logo ) ? gateway + config.logo : null )
-	},[ config ])
+	// useEffect(()=>{
+	// 	if ( !content || content.cid==='' ) return
+	// 	if (dev) console.log('fetch config', content.cid)
+	// 	fetch( gateway + content.cid )
+	// 		.then( res => res.text() )
+	// 		.then( txt => { setConfig(JSON.parse(txt)) })
+	// 		.catch( err => console.log( err ) )
+	// },[ content ])
 
-	useEffect(()=>{
-		if ( !content || !members ) return
-		if (dev) console.log('load')
-		if (dev) console.log(members)
-		// merge module content with other metrics
-		// should move to storage/graph on refactor
-		setItemContent({
-			name: content.name,
-			body: d.dao_bodies.filter( b => b.value === Number(content.body))[0].text,
-			members: members.count,
-			balance: 0,
-			motions: 0,
-			campaigns: 0,
-		})
-	},[ content, members ])
+	// useEffect(()=>{
+	// 	if ( !config ) return
+	// 	setImageURL( ( config.logo ) ? gateway + config.logo : null )
+	// },[ config ])
 
-	if ( !itemContent ) return null
+	// useEffect(()=>{
+	// 	if ( !content ) return
+	// 	if (dev) console.log('load')
+	// 	if (dev) console.log(members)
+	// 	// merge module content with other metrics
+	// 	// should move to storage/graph on refactor
+	// 	setItemContent({
+	// 		name: content.name,
+	// 		body: d.dao_bodies.filter( b => b.value === Number(content.body))[0].text,
+	// 		members: members.count,
+	// 		balance: 0,
+	// 		motions: 0,
+	// 		campaigns: 0,
+	// 	})
+	// },[ content, members ])
+
+	if ( !content ) return null
+		console.log(content)
 
 	return (
 		<Table.Row>
@@ -56,48 +61,44 @@ const ListItem = ({ data: { content, members } }) => {
 				<Header as='h4' image>
 					<Image rounded src={ imageURL } />
 					<Header.Content>
-						{itemContent.name}
-						<Header.Subheader>{itemContent.body}</Header.Subheader>
+						{content.name}
+						<Header.Subheader>{content.body}</Header.Subheader>
 					</Header.Content>
 				</Header>
 			</Table.Cell>
-			<Table.Cell>{itemContent.members}</Table.Cell>
-			<Table.Cell>{itemContent.balance}</Table.Cell>
-			<Table.Cell>{itemContent.motions}</Table.Cell>
-			<Table.Cell>{itemContent.campaigns}</Table.Cell>
-			<Table.Cell><Button size='mini'>Apply</Button></Table.Cell>
+			<Table.Cell>{content.purpose}</Table.Cell>
+			<Table.Cell>{content.amount}</Table.Cell>
+			<Table.Cell>{content.expiry}</Table.Cell>
+			<Table.Cell>{content.status}</Table.Cell>
+			<Table.Cell>0/0</Table.Cell>
+			<Table.Cell><Button color='green' size='mini'>Ack</Button><Button size='mini' color='red'>Nack</Button></Table.Cell>
 		</Table.Row>
 	)
 
 }
 
-const ItemGrid = ({ data: { content, members } }) => {
+// ui list
 
-	// const [ content, setContent ] = useState([])
-	// if ( content !== data.content ) setContent(data.content)
+const ItemList = ({ data: { content } }) => {
 
 	if ( !content ) return null
-
-	if (dev) console.log('grid')
 
 	return (
 		<Container>
 			<Table  striped singleLine>
 				<Table.Header>
 					<Table.Row>
-						<Table.HeaderCell/>
-						<Table.HeaderCell>Members</Table.HeaderCell>
-						<Table.HeaderCell>Balance</Table.HeaderCell>
-						<Table.HeaderCell>Motions</Table.HeaderCell>
-						<Table.HeaderCell>Campaigns</Table.HeaderCell>
-						<Table.HeaderCell/>
+						<Table.HeaderCell>Entity</Table.HeaderCell>
+						<Table.HeaderCell>Purpose</Table.HeaderCell>
+						<Table.HeaderCell>Amount</Table.HeaderCell>
+						<Table.HeaderCell>Expiry</Table.HeaderCell>
+						<Table.HeaderCell>Status</Table.HeaderCell>
+						<Table.HeaderCell>Votes</Table.HeaderCell>
+						<Table.HeaderCell>Actions</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{ content.map((d,i)=><ListItem key={i} data={{
-						content: d,
-						members: members && members.filter( _ => _.id === d.id )[ 0 ]
-					}} />) }
+					{ content.map((item,i)=><Item key={i} content={item} />) }
 				</Table.Body>
 			</Table>
 		</Container>
@@ -106,57 +107,51 @@ const ItemGrid = ({ data: { content, members } }) => {
 }
 
 export const Items = props => {
+
 	const { api } = useSubstrate()
 
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
-	const [ proposals, setProposals ] = useState()
+	const [ content, setContent ] = useState()
 
 	// nonce
 
 	useEffect(() => {
+
 		let unsubscribe = null
+
 		api.query.gameDaoGovernance.nonce(n => {
-			if (n.isNone) {
-				setNonce('<None>')
-			} else {
-				setNonce(n.toNumber())
-			}
-		}).then(unsub => {
+			setNonce(n.toNumber())
+		}).then( unsub => {
 			unsubscribe = unsub
-		}).catch(console.error)
+		}).catch( console.error )
+
 		return () => unsubscribe && unsubscribe()
 
 	}, [api.query.gameDaoGovernance])
 
-	// all hashes
+	// hashes
 
 	useEffect(() => {
-		if ( nonce === 0 ) return
+		if ( !nonce ) return
 		const req = [...new Array(nonce)].map((a,i)=>i)
 		const queryHashes = async args => {
-			const hashes = await api.query.gameDaoGovernance.proposals.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+			const hashes = await api.query.gameDaoGovernance.proposalsArray
+				.multi( args ).then( _ => _.map( _h => _h.toHuman() ))
 			setHashes(hashes)
 		}
-		queryHashes()
+		queryHashes(req)
 	}, [nonce, api.query.gameDaoGovernance])
 
-	// all proposals
+	// proposals
 
 	useEffect(() => {
 		if ( !hashes ) return
-		// const query = api.query.gameDaoControl.body_by_hash
+		const query = api.query.gameDaoGovernance.proposals
 		const getContent = async args => {
-			let _req = []
-			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoGovernance.proposals(args[i]))
-				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
-				// TODO: group proposals by hash
-				// { id: hash, proposals: [ proposal ] }
-				setProposals(res)
-			} catch ( err ) {
-				console.error( err )
-			}
+			const content = await api.query.gameDaoGovernance.proposals
+				.multi( args ).then( _ => _.map( _h => _h.toHuman() ))
+			setContent(content)
 		}
 		getContent(hashes)
 	}, [hashes, api.query.gameDaoGovernance])
@@ -167,7 +162,7 @@ export const Items = props => {
 	// group by organization
 	// dropdown to select organization
 
-	return ( !proposals || ( proposals.length === 0 ) )
+	return ( !content || ( content.length === 0 ) )
 		?	<React.Fragment>
 				<h1>Proposals</h1>
 				<h3>No proposals yet. Create one!</h3>
@@ -175,12 +170,21 @@ export const Items = props => {
 		:	<React.Fragment>
 				<h1>Proposals</h1>
 				<h3>Total proposals: { nonce }</h3>
-				<ItemGrid data={ { proposals } } />
+				<ItemList data={ { content } } />
 			</React.Fragment>
 
 }
 
-export default Items
+export default function Module (props) {
+
+	const { accountPair } = props
+	const { api } = useSubstrate()
+
+	return api && api.query.gameDaoGovernance && accountPair
+		? <Items {...props} />
+		: null
+
+}
 
 //
 //
