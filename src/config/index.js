@@ -2,8 +2,8 @@
 import configCommon from './common.json'
 import types from './types.json'
 
-const configEnv = require('./production.json')
-// const configEnv = require(`./${process.env.NODE_ENV}.json`)
+// const configEnv = require('./production.json')
+const configEnv = require(`./${process.env.NODE_ENV}.json`)
 const dockerEnv = (process.env.DOCKER===true) ? require('./docker.json') : {}
 
 const envVarNames = [

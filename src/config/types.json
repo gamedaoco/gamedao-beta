@@ -54,6 +54,7 @@
 
   "Campaign": {
     "id": "Hash",
+    "org": "Hash",
     "owner": "AccountId",
     "admin": "AccountId",
     "deposit": "Balance",
@@ -71,7 +72,7 @@
   "EventMessage": "Vec<u8>",
   "Nonce": "u64",
 
-  "Governance": {
+  "Proposal": {
     "proposal_id": "Hash",
     "campaign_id": "Hash",
     "purpose": "Vec<u8>",
