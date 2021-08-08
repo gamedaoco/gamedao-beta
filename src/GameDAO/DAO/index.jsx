@@ -229,7 +229,7 @@ const Item = ({ content, accountPair }) => {
 				</Header>
 				</a>
 			</Table.Cell>
-			<Table.Cell>{metadata.description}</Table.Cell>
+			<Table.Cell style={{maxWidth:'500px'}}>{metadata.description}</Table.Cell>
 			<Table.Cell>
 					{ metadata.website && <a href={metadata.website} target="_blank">{metadata.website}</a>}
 			</Table.Cell>
@@ -283,7 +283,7 @@ const ItemList = props => {
 					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
 				</Button.Group>
 			</Container>
-			<Table  striped singleLine fixed>
+			<Table striped singleLine>
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell>Name</Table.HeaderCell>
