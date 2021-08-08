@@ -12,7 +12,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
-import  CampaignGrid from './CampaignGrid'
+import CampaignGrid from './CampaignGrid'
 
 //
 // campaigns component
@@ -24,21 +24,15 @@ import  CampaignGrid from './CampaignGrid'
 
 export const Campaigns = props => {
 
+	const { accountPair } = props
 	const { api } = useSubstrate()
-	// const { accountPair } = props
-
 	const [ nonce, updateNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
+
 	const [ campaigns, setCampaigns ] = useState()
 	const [ balances, setBalances ] = useState()
 	const [ states, setStates ] = useState()
-
 	const [ content, setContent ] = useState()
-
-	// const [ state, setState ] = useState({
-	// 	owned: 0,
-	// 	contributed: 0,
-	// })
 
 	useEffect(() => {
 
@@ -86,6 +80,7 @@ export const Campaigns = props => {
 	useEffect(() => {
 
 		if ( nonce === 0 ) return
+
 		const query = api.query.gameDaoCrowdfunding.campaignsArray
 		const req = [...new Array(nonce)].map((a,i)=>i)
 		const queryHashes = async args => {
@@ -195,7 +190,10 @@ export const Campaigns = props => {
 		:	<React.Fragment>
 				<h1>Campaigns</h1>
 				<h3>Total Campaigns: { nonce }</h3>
-				<CampaignGrid content={content} />
+				<CampaignGrid
+					content={content}
+					accountPair={accountPair}
+					/>
 			</React.Fragment>
 
 }

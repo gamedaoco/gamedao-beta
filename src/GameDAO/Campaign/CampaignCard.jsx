@@ -8,20 +8,34 @@ import config from '../../config'
 const dev = config.dev
 
 import {
-	Button, Grid, Card, Icon, Image
+	Button, Grid, Card, Icon, Image, Segment
 } from 'semantic-ui-react'
+import { Header, Modal, Form } from 'semantic-ui-react'
 
-const CampaignCard = ({ item, index }) => {
+const CampaignCard = ({ item, index, accountPair }) => {
 
-	console.log(item)
-	const { id, protocol, name, cap, cid, created, expiry, governance, owner, balance } = item
+	// console.log(item)
+	const { api } = useSubstrate()
+
+	const { id, protocol, name, cap, cid, created, expiry, governance, owner, balance, state } = item
+
+	console.log(state)
 
 	const [ metadata, setMetadata ] = useState({})
 	const [ imageURL, setImageURL ] = useState(null)
+	const [ content, setContent ] = useState()
+
+	const [ open, setOpen ] = useState(false)
+	const [ loading, setLoading ] = useState(true)
+
+	const [ formData, updateFormData ] = useState({amount:0})
+
+	const handleOnChange = (e, { name, value }) =>
+		updateFormData({ ...formData, [name]: value })
 
 	useEffect(()=>{
 		if ( !cid || cid.length<4 ) return
-			console.log('cid',cid)
+			// console.log('cid',cid)
 		fetch( gateway + cid )
 			.then( res => res.text() )
 			.then( txt => setMetadata(JSON.parse(txt)) )
@@ -30,13 +44,35 @@ const CampaignCard = ({ item, index }) => {
 
 	useEffect(()=>{
 		if ( !metadata ) return
-			console.log('metadata',metadata)
+			// console.log('metadata',metadata)
 		setImageURL(
 			( metadata.logo )
 			? gateway + metadata.logo
 			: 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 		)
 	},[ metadata ])
+
+	useEffect(() => {
+
+		if (!id) return
+
+		const query = async () => {
+			try {
+				const [
+					backers,
+				] = await Promise.all([
+					api.query.gameDaoCrowdfunding.campaignContributorsCount(id),
+				])
+				setContent({
+					backers: backers.toHuman(),
+				})
+				setLoading(false)
+			} catch ( err ) {
+				console.error( err )
+			}
+		}
+		query()
+	}, [api, id])
 
 	//
 
@@ -57,7 +93,6 @@ const CampaignCard = ({ item, index }) => {
 	const tags = ['game','2d','pixel','steam']
 	// const views = 1//Math.floor(Math.random()*10000)
 
-	const backers = 1//Math.floor(Math.random()*1000)
 	// icon type based on supporters
 	// const icon = backers => {
 	// 	if (backers > 10000) return 'fire'
@@ -68,27 +103,202 @@ const CampaignCard = ({ item, index }) => {
 
 	const epoch = created.replaceAll(',','')
 	const options = { year: 'numeric', month: 'long', day: 'numeric' };
-	const date = new Date( epoch * 1000 ).toLocaleDateString(undefined, options)
+	const date = new Date( epoch * 1 ).toLocaleDateString(undefined, options)
+
+	const handleContribute = () => setOpen(true)
+
+	const getFromAcct = async () => {
+		const {
+			address,
+			meta: { source, isInjected }
+		} = accountPair
+		let fromAcct
+		if (isInjected) {
+			const injected = await web3FromSource(source)
+			fromAcct = address
+			api.setSigner(injected.signer)
+		} else {
+			fromAcct = accountPair
+		}
+		return fromAcct
+	}
+
+	const sendTx = async amount => {
+
+		if (!amount) return
+		setLoading(true)
+
+		const payload = [ id, amount ]
+		console.log('payload', payload)
+		const from = await getFromAcct()
+		const tx = api.tx.gameDaoCrowdfunding.contribute(...payload)
+
+		const hash = await tx.signAndSend( from, ({ status, events }) => {
+
+			console.log(status, events)
+			if(events.length) {
+				events.forEach((record) => {
+					const { event } = record
+					if (
+						event.section === 'gameDaoCrowdfunding' &&
+						event.method === 'CampaignContributed'
+					) {
+						console.log('campaign contributed:', hash)
+						setLoading(false)
+					}
+				})
+			}
+		})
+	}
+
+	// sendTx(id,1000000000000)
+
+	const handleSubmit = () => {
+		console.log('submit', formData.amount * 1000000000000 )
+		if (!formData.amount>0) return
+		setLoading(true)
+		sendTx( formData.amount * 1000000000000 )
+	}
+
+	// const Buy = ({
+	// 	open,
+	// 	imageURL,
+	// 	handleOnChange,
+	// 	handlesubmit,
+	// 	formData
+	// }) => {
+
+	// 	return (
+	// 		<Modal
+	// 			onClose={() => setOpen(false)}
+	// 			onOpen={() => setOpen(true)}
+	// 			open={open}
+	// 			trigger={<Button color='green' fluid>Support Campaign</Button>}
+	// 		>
+	// 			<Modal.Header>Contribute to Campaign</Modal.Header>
+	// 			<Modal.Content image>
+	// 				<Image size='medium' src={imageURL} wrapped />
+	// 				<Modal.Description>
+	// 					<Header>Contribute to Campaign</Header>
+	// 					<p>{metadata.description}</p>
+	// 					<p>Disclaimer</p>
+	// 					<Form.Group widths='equal'>
+	// 						<Form.Input
+	// 							type='amount'
+	// 							label='amount'
+	// 							name='amount'
+	// 							value={formData.amount}
+	// 							onChange={handleOnChange}
+	// 							/>
+	// 					</Form.Group>
+	// 				</Modal.Description>
+	// 			</Modal.Content>
+	// 			<Modal.Actions>
+	// 				<Button color='black' onClick={() => setOpen(false)}>
+	// 					Cancel
+	// 				</Button>
+	// 				<Button
+	// 					content="Contribute Now"
+	// 					labelPosition='right'
+	// 					icon='checkmark'
+	// 					onClick={handleSubmit}
+	// 					positive
+	// 				/>
+	// 			</Modal.Actions>
+	// 		</Modal>
+	// 	)
+	// }
+
+	if(!content) return null
 
 	return (
+
 		<Grid.Column mobile={16} tablet={8} computer={4}>
-			<Card color={ ( governance === '1' ) ? 'pink' : 'teal' }>
-				<Image src={imageURL} wrapped ui={true} />
+			<Segment vertical loading={loading}>
+
+			<Card href='' color={ ( governance === '1' ) ? 'pink': 'teal'}>
+				<Image src={imageURL} wrapped ui={true}/>
 				<Card.Content>
-					<Card.Header><a href={`/campaigns/${id}`}>{name}</a></Card.Header>
+					<Card.Header color='black'><a href={`/campaign/${id}`}>{name}</a></Card.Header>
 {/*					<Card.Meta>
 						<Rating icon='star' defaultRating={3} maxRating={5} />
 					</Card.Meta>
-*/}{/*					<Card.Description>
+*/}
+{/*					<Card.Description>
 					</Card.Description>*/}
 				</Card.Content>
 				<Card.Content extra>
-				<Button size='mini'>contribute</Button>
+
+				{ (state==='1') &&
+					<>
+						Contribute to this campaign
+							<Form.Input
+								action={{
+									color: 'blue',
+									icon: 'check',
+									onClick: handleSubmit
+								}}
+								placeholder='amount'
+								size='mini'
+								name='amount'
+								value={formData.amount}
+								onChange={handleOnChange}
+								fluid
+								type='number'
+							/>
+					</>
+				}
+
+				{ (state==='3') &&
+					<>
+						Campaign Successful
+						<Button color='green' size='small'>Project Page</Button>
+					</>
+				}
+				{ (state==='4') &&
+					<>
+						Campaign Failed
+						<Button color='orange' size='small'>Project Page</Button>
+					</>
+				}
+
+{/*
+						<Form.Group widths='equal'>
+							<Form.Input
+								type='amount'
+								label='amount'
+								name='amount'
+								value={formData.amount}
+								onChange={handleOnChange}
+								size='small'
+								/>
+							<Button
+								content="Contribute Now"
+								labelPosition='right'
+								icon='checkmark'
+								onClick={handleSubmit}
+								positive
+								size = 'small'
+							/>
+						</Form.Group>
+				{ accountPair &&
+					<Buy
+						open={open}
+						imageURL={imageURL}
+						handleOnChange={handleOnChange}
+						handleSubmit={handleSubmit}
+						formData={formData}
+					/>
+				}
+*/}
 				</Card.Content>
 				<Card.Content extra>
-{/*					<Icon name='eye' />{views} views.<br/>
+{/*
+					<Icon name='eye' />{views} views.<br/>
 */}					<Icon name='money bill alternate' />
-					{backers} backers contributed {balance} / {cap}.<br/>
+					{content.backers} backer{(content.backers>1)?'s':''} /  {balance}.<br/>
+					 / {cap}.
+
 					<br/>
 					<Icon name='rocket' />{date}<br/>
 					<Icon name='target' />{blocksRemain}<br/>
@@ -96,6 +306,8 @@ const CampaignCard = ({ item, index }) => {
 					<Icon name='tag' />{tags.join(', ')} <br/>
 				</Card.Content>
 			</Card>
+
+			</Segment>
 		</Grid.Column>
 	)
 

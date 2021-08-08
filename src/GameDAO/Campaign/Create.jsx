@@ -3,7 +3,7 @@ import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp';
 
 import {
-	Container, Button, Form, Segment, Divider, Image
+	Container, Button, Form, Segment, Divider, Image, Dimmer
 } from 'semantic-ui-react'
 
 import faker from 'faker'
@@ -18,7 +18,7 @@ import {
 
 const dev = config.dev
 
-const random_state = ( ) => {
+const random_state = ( accountPair ) => {
 
 		const name = faker.name.findName()
 		const email = faker.internet.email()
@@ -28,8 +28,8 @@ const random_state = ( ) => {
 		const entity = data.project_entities[ rnd(data.project_entities.length) ].value
 		const usage = data.project_types[ rnd(data.project_types.length) ].value
 		const accept = false
-		const cap = rnd(100000)
-		const deposit = rnd(10)
+		const cap = rnd(1000000)
+		const deposit = rnd(1000)
 		const duration = data.project_durations[ rnd(data.project_durations.length) ].value
 		const protocol = data.protocol_types[ rnd(data.protocol_types.length) ].value
 		const governance = ( rnd(2) === 0 ) ? false : true
@@ -37,10 +37,12 @@ const random_state = ( ) => {
 		const tags = ['dao','game']
 		const org = null
 
+		const admin = accountPair.address
+
 		return {
 			name, email, title, description, country, entity, usage, accept,
 			cap, deposit, duration, protocol, governance,
-			cid, tags, org,
+			cid, tags, org, admin,
 		}
 
 }
@@ -146,7 +148,7 @@ export const Main = props => {
 
 	useEffect(()=>{
 		if (orgs.length===0) return
-		const initial_state = random_state()
+		const initial_state = random_state( accountPair )
 		updateFormData( initial_state )
 	}, [ orgs ] )
 
@@ -213,16 +215,23 @@ export const Main = props => {
 			const campaign_end = ( formData.duration * data.blockFactor ) + block // take current block as offset
 			console.log('campaign_end', campaign_end)
 
+			console.log()
+			const target = formData.cap * 1000000000000
+			const deposit = formData.deposit * 1000000000000
+
 			const payload = [
-				accountPair.address,
+				// accountPair.address,
 				formData.org,
+				formData.admin,
 				formData.title,
-				formData.cap,
-				formData.deposit,
+				target,
+				deposit,
 				campaign_end,
 				formData.protocol,
-				formData.governance,
-				cid
+				( formData.governance === true ) ? 1 : 0,
+				cid,
+				'PLAY',
+				'Play Coin',
 			]
 			console.log('payload', payload)
 
@@ -381,8 +390,22 @@ export const Main = props => {
 							/>
 					</Form.Group>
 
+					<br/>
+					<Divider clearing horizontal></Divider>
+					<br/>
 					{/* usage of funding and protocol to initiate after successfully raising */}
 
+					<Form.Group widths='equal'>
+						<Form.Input
+							fluid
+							label='Admin Account'
+							placeholder='Admin'
+							name='admin'
+							value={formData.admin}
+							onChange={handleOnChange}
+							required
+							/>
+					</Form.Group>
 
 					<Form.Group widths='equal'>
 						<Form.Select

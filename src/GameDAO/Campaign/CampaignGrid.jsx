@@ -4,7 +4,7 @@ import React, {
 import { Container, Grid } from 'semantic-ui-react'
 import CampaignCard from './CampaignCard'
 
-const CampaignGrid = ({ content }) => {
+const CampaignGrid = ({ content, accountPair}) => {
 
 	// const [ pageContent, setPageContent ] = useState([])
 
@@ -27,7 +27,7 @@ const CampaignGrid = ({ content }) => {
 			<Grid stackable colums={5} >
 				{
 					content && content.map( ( item, index ) => {
-						return <CampaignCard key={index} item={item} index={index} />
+						return <CampaignCard key={index} item={item} index={index} accountPair={accountPair} />
 					})
 				}
 
