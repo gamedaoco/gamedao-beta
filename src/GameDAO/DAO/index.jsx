@@ -283,10 +283,10 @@ const ItemList = props => {
 					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
 				</Button.Group>
 			</Container>
-			<Table  striped singleLine>
+			<Table  striped singleLine fixed>
 				<Table.Header>
 					<Table.Row>
-						<Table.HeaderCell/>
+						<Table.HeaderCell>Name</Table.HeaderCell>
 						<Table.HeaderCell>Description</Table.HeaderCell>
 						<Table.HeaderCell>Contact</Table.HeaderCell>
 						<Table.HeaderCell>Access</Table.HeaderCell>

@@ -17,6 +17,7 @@ import {
 } from '../lib/ipfs'
 
 const dev = config.dev
+console.log(dev)
 
 const random_state = ( accountPair ) => {
 
@@ -28,8 +29,8 @@ const random_state = ( accountPair ) => {
 		const entity = data.project_entities[ rnd(data.project_entities.length) ].value
 		const usage = data.project_types[ rnd(data.project_types.length) ].value
 		const accept = false
-		const cap = rnd(1000000)
-		const deposit = rnd(1000)
+		const cap = rnd(100000)
+		const deposit = rnd(100)
 		const duration = data.project_durations[ rnd(data.project_durations.length) ].value
 		const protocol = data.protocol_types[ rnd(data.protocol_types.length) ].value
 		const governance = ( rnd(2) === 0 ) ? false : true
