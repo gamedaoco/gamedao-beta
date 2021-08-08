@@ -2665,6 +2665,11 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+"@zeroio/type-definitions@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@zeroio/type-definitions/-/type-definitions-0.0.6.tgz#d8d77c4193d12010867d3386d9350fcbc95a81ba"
+  integrity sha512-D76iej4MZSix2eYo7LyWeyvl4Nd2OyWIgEktt02pAPKb91aM+KhAm9fFGRxJmTUzTtB5Vw9SN8w28ZlZzt5chA==
+
 "@zondax/ledger-polkadot@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@zondax/ledger-polkadot/-/ledger-polkadot-0.14.0.tgz#e7638d476ae2e2fd50598d01abbe58654915fdd2"

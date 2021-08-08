@@ -2,8 +2,7 @@ import React, { useState, createRef } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 import { Container, Grid, Segment } from 'semantic-ui-react'
-import { Footer } from './components/Footer'
-
+import Footer from './components/Footer'
 import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
@@ -38,7 +37,7 @@ function Main () {
 				/>
 
 
-			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#fcfcfc' }}>
+			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
 				<Container>
 
 					<Grid>

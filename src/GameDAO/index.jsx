@@ -19,18 +19,19 @@ const DAO = lazy( () => import ('./DAO') )
 const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
 const CreateCampaign = lazy( () => import ('./Campaign/Create') )
-
 const Proposal = lazy( () => import ('./Proposal') )
-import CreateProposal from './Proposal/Create'
+const CreateProposal = lazy( () => import ( './Proposal/Create' ) )
+const Tangram = lazy( () => import ('./Tangram') )
 
 const GameDAO = props => {
 
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	const [bodies, setBodies] = useState(null)
-	const [campaigns, setCampaigns] = useState(null)
-	const [proposals, setProposals] = useState(null)
+	const [ bodies, setBodies ] = useState(0)
+	const [ campaigns, setCampaigns ] = useState(0)
+	const [ proposals, setProposals ] = useState(0)
+	const [ tangram, setTangram ] = useState(0)
 
 	useEffect(()=>{
 
@@ -39,11 +40,13 @@ const GameDAO = props => {
 		api.queryMulti([
 			api.query.gameDaoControl.nonce,
 			api.query.gameDaoCrowdfunding.nonce,
-			api.query.gameDaoGovernance.nonce
-		],([ bodies, campaigns, proposals ]) => {
+			api.query.gameDaoGovernance.nonce,
+			// api.query.gameDaoTangram.nextTangramId
+		],([ bodies, campaigns, proposals, creatures]) => {
 			setBodies(bodies.toNumber())
 			setCampaigns(campaigns.toNumber())
 			setProposals(proposals.toNumber())
+			// setTangram(tangram.toNumber())
 		}).then( unsub => {
 			unsubscribe = unsub
 		}).catch( console.error )
@@ -56,7 +59,7 @@ const GameDAO = props => {
 
 		{
 			menuItem: (
-				<Menu.Item key='2'>
+				<Menu.Item key='0'>
 					Organizations{ (bodies>0) && <Label circular color='pink'>{ bodies }</Label> }
 				</Menu.Item>
 			),
@@ -79,7 +82,7 @@ const GameDAO = props => {
 
 		{
 			menuItem:
-				<Menu.Item key='proposals'>
+				<Menu.Item key='2'>
 					Proposals{ (proposals>0) && <Label circular color='teal'>{ proposals }</Label> }
 				</Menu.Item>,
 			render: () =>
@@ -100,7 +103,7 @@ const GameDAO = props => {
 
 		{
 			menuItem: (
-				<Menu.Item key='4'>
+				<Menu.Item key='3'>
 					Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
 				</Menu.Item>
 			),
@@ -110,14 +113,20 @@ const GameDAO = props => {
 				</Tab.Pane>
 		},
 		{
-			menuItem: (<Menu.Item key='3'> Create Campaign </Menu.Item>),
+			menuItem: (<Menu.Item key='4'> Create Campaign </Menu.Item>),
 			render: () =>
 				<Tab.Pane key='create_campaign'>
 					<CreateCampaign accountPair={accountPair} />
 				</Tab.Pane>
-			,
 		},
 
+		{
+			menuItem: (<Menu.Item key='5'> Tangram </Menu.Item>),
+			render: () =>
+				<Tab.Pane key='tangram'>
+					<Tangram accountPair={accountPair} />
+				</Tab.Pane>
+		},
 	]
 
 	return (

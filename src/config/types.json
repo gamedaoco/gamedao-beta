@@ -29,13 +29,13 @@
     "member_limit": "u64",
     "access": "u8"
   },
+
   "Space": {
     "id": "H256",
     "dna": "H256",
     "price": "Balance",
     "gen": "u64"
   },
-
   "SpaceId": "Hash",
   "HypaspaceId": "Hash",
   "HypaspaceMetadata": {
@@ -43,8 +43,8 @@
   },
 
   "Item": {
-    "CommodityId": "CommodityId",
-    "CommodityInfo": "CommodityInfo"
+    "ItemId": "ItemId",
+    "ItemInfo": "ItemInfo"
   },
   "ItemId": "Hash",
   "ItemInfo": {
@@ -55,17 +55,22 @@
   "Campaign": {
     "id": "Hash",
     "org": "Hash",
+    "name": "Vec<u8>",
     "owner": "AccountId",
     "admin": "AccountId",
     "deposit": "Balance",
     "expiry": "BlockNumber",
     "cap": "Balance",
-    "name": "Vec<u8>",
     "protocol": "u8",
     "governance": "u8",
     "cid": "Vec<u8>",
+    "token_symbol": "Vec<u8>",
+    "token_name": "Vec<u8>",
     "created": "Timestamp"
   },
+
+  "campaign_id":"Hash",
+  "contribution":"Balance",
 
   "Timestamp": "Moment",
 

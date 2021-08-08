@@ -26,6 +26,7 @@
     "@polkadot/ui-settings": "~0.79.1",
     "@polkadot/util": "~6.7.1",
     "@polkadot/util-crypto": "~6.7.1",
+    "@zeroio/type-definitions": "^0.0.6",
     "faker": "^5.5.3",
     "ipfs-http-client": "^50.1.2",
     "moment": "^2.29.1",

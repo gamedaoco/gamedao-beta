@@ -42,18 +42,24 @@ export const project_entities = [
 ]
 
 export const project_types = [
-	{ key: '0', text: 'Game', value: 'game' },
-	{ key: '1', text: 'Content', value: 'content' },
-	{ key: '2', text: 'Team', value: 'team' },
-	{ key: '3', text: 'Other', value: 'other' },
+	{ key: '0', text: 'Game', value: '0' },
+	{ key: '1', text: 'Content Pack / DLC', value: '1' },
+	{ key: '2', text: 'Concept', value: '2' },
+	{ key: '3', text: 'Audio / Music / SFX', value: '3' },
+	{ key: '4', text: 'Video / Motion Graphics', value: '4' },
+	{ key: '5', text: '2D / 3D / GFX / Artwork', value: '5' },
+	{ key: '6', text: 'Team', value: '6' },
+	{ key: '7', text: 'Merch', value: '7' },
+	{ key: '8', text: 'Hardware', value: '8' },
+	{ key: '9', text: 'Other', value: '9' },
 ]
 
 export const protocol_types = [
-	{ key: '0', text: 'Grant', value: '0' },
-	{ key: '1', text: 'Prepaid', value: '1' },
-	{ key: '2', text: 'Loan', value: '2' },
-	{ key: '3', text: 'Shares', value: '3' },
-	{ key: '4', text: 'Shares', value: '4' },
+	{ key: '0', text: 'Grant', value: '0' },   // direct pay
+	{ key: '1', text: 'Prepaid', value: '1' }, // perk based / dao
+	{ key: '2', text: 'Loan', value: '2' },    // defi / loan
+	{ key: '3', text: 'Shares', value: '3' },  // shares
+	{ key: '4', text: 'DAO', value: '4' },
 ]
 
 export const countries = [
@@ -66,6 +72,7 @@ export const countries = [
 export const curve_function = [
 	{ key: '0', text: 'linear', value: 'x=y' },
 	{ key: '1', text: 'progressive', value: '1' },
+	{ key: '2', text: 'degressive', value: '2' },
 ]
 
 //
@@ -75,7 +82,7 @@ export const CampaignProtocol = {
 	1 : 'PREPAID', // raise money which will be released based on milestones or dao governance
 	2 : 'LOAN',    // get a loan from individuals and or gamedao treasury, interest applies.
 	3 : 'SHARE',   // raise money for n shares of your project
-	4 : 'DAO',     // raise money which resides in a treasury and is released based on requests
+	4 : 'DAO',     // raise money which resides in a treasury and is released based on requests to anyone
 }
 
 export const CampaignGovernance = {
