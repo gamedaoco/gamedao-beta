@@ -82,16 +82,54 @@ function BalanceAnnotation (props) {
 
   const { accountSelected } = props;
   const { api } = useSubstrate();
-  const [accountBalance, setAccountBalance] = useState(0);
 
-  // When account address changes, update subscriptions
+  // const [ accountBalance, setAccountBalance ] = useState(0);
+
+  const [ zero, setZERO ] = useState(0)
+  const [ play, setPLAY ] = useState(0)
+  const [ game, setGAME ] = useState(0)
+  const [ zeur, setZEUR ] = useState(0)
+
   useEffect(() => {
-    let unsubscribe;
 
-    // If the user has selected an address, create a new subscription
+    if(!accountSelected) return
+
+    const query = async () => {
+
+      let unsubscribe
+      const context = api.query.assets.account
+
+      api.queryMulti(
+        [
+          [ context, [ Number(0), accountSelected ] ],
+          [ context, [ Number(1), accountSelected ] ],
+          [ context, [ Number(2), accountSelected ] ],
+        ],
+        ([_play, _game, _zeur]) => {
+
+          setPLAY(_play.toHuman().balance)
+          setGAME(_game.toHuman().balance)
+          setZEUR(_zeur.toHuman().balance)
+
+        }
+      )
+      .then((unsub) => {
+        unsubscribe = unsub
+      })
+      .catch(console.error)
+      return () => unsubscribe && unsubscribe()
+    }
+    query()
+
+  }, [api, accountSelected])
+
+
+  useEffect(() => {
+
+    let unsubscribe
     accountSelected &&
       api.query.system.account(accountSelected, balance => {
-        setAccountBalance(balance.data.free.toHuman());
+        setZERO(balance.data.free.toHuman())
       })
         .then(unsub => {
           unsubscribe = unsub;
@@ -102,10 +140,12 @@ function BalanceAnnotation (props) {
   }, [api, accountSelected]);
 
   return accountSelected
-    ? <Label pointing='left'>
-        <Icon name='money' color='black' />
-        {accountBalance}
-      </Label>
+    ? <div style={{ fontSize: '10px', lineHeight: '10px', marginLeft: '10px' }}>
+        {zero}<br/>
+        {play} PLAY<br/>
+        {game} GAME<br/>
+        {zeur} ZEUR
+      </div>
     : null;
 }
 

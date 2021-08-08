@@ -1,24 +1,10 @@
-import React, {
-	// useState
-} from 'react'
-import { Segment, Image, Menu } from 'semantic-ui-react'
+import React, { useState, useEffect } from 'react'
+import { Segment, Image, Menu, Message } from 'semantic-ui-react'
 import AccountSelector from './AccountSelector'
 
 const imageURL=`${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
 
-// const MessageBox = () => (
-//   <Message
-//     icon='hook'
-//     size='massive'
-//     header='Have you heard about our mailing list?'
-//     content='Get the best news in your e-mail every day.'
-//   />
-// )
-
 function Main ({ accountPair, setAccountAddress }) {
-
-	// const [ activeState,setActiveState] = useState ('')
-	// const handleItemClick = (e, { name }) => setActiveState(name)
 
 	return (
 			<Segment inverted vertical color='black'>
