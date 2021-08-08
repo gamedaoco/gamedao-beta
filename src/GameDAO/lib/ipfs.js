@@ -32,7 +32,7 @@ export const ipfs = create({
 	protocol: API_PROTOCOL,
 	host: API_URL,
 	port: API_PORT,
-	headers: (dev) ? null : headers,
+	// headers: (dev) ? null : headers,
 	timeout: '2m'
 })
 
