@@ -4,7 +4,7 @@ import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp';
 
 import {
-	Container, Form, Divider, Segment, Image, Button
+	Container, Form, Divider, Segment, Image, Button, Radio
 } from 'semantic-ui-react'
 
 import faker from 'faker'
@@ -33,8 +33,10 @@ const random_state = ( accountPair, campaigns = [] ) => {
 	const id = campaigns[campaigns.length]
 	const purpose = faker.company.catchPhrase()
 	const cid = ''
-	const amount = rnd(10000000000000000)
-	const expiry = data.project_durations[ rnd(data.project_durations.length) ].value
+	const amount = rnd( 10 ) * 100
+	const duration = data.project_durations[ rnd(data.project_durations.length) ].value
+	const proposer = accountPair.address
+	const beneficiary = accountPair.address
 
 	// TODO:
 	// version > 0.2
@@ -42,7 +44,10 @@ const random_state = ( accountPair, campaigns = [] ) => {
 	// for proofs, extra info
 	// select asset for withdrawal
 
-	return { id, purpose, cid, amount, expiry }
+	return {
+		id, purpose, cid, amount, duration,
+		proposer, beneficiary
+	}
 }
 
 // proposal (flow)
@@ -64,11 +69,42 @@ export const Main = props => {
 	const [ content, setContent ] = useState()
 
 	// campaign or organisation?
-	// actually you should selecte an organisation,
+	// actually you should select an organisation,
 	// then an eventual campaign belonging to it.
+	const [ entities, setEnttities ] = useState([])
 
-	const [ orgIds, setOrgIds ] = useState()
-	const [ campaignIds, setCampaignIds ] = useState()
+	useEffect(() => {
+
+		if (!accountPair) return
+
+		const query = async () => {
+			try {
+				const [
+					memberships,
+					contributions,
+					successful,
+				] = await Promise.all([
+					api.query.gameDaoControl.memberships(accountPair.address),
+					api.query.gameDaoCrowdfunding.campaignsContributed(accountPair.address),
+					api.query.gameDaoCrowdfunding.campaignsByState(3),
+				])
+				const content = {
+					memberships: memberships.toHuman(),
+					contributions: contributions.toHuman(),
+					successful: successful.toHuman(),
+				}
+				setContent(content)
+				console.log({
+					...memberships.toHuman(),
+					...contributions.toHuman(),
+					...successful.toHuman()
+				})
+			} catch ( err ) {
+				console.error( err )
+			}
+		}
+		query()
+	}, [api, accountPair])
 
 	//
 	//
@@ -124,10 +160,9 @@ export const Main = props => {
 
 			if (dev) console.log('2. send tx')
 
-			const campaign_end = ( formData.duration * data.blockFactor ) + block // take current block as offset
+			const expiry = ( formData.duration * data.blockFactor ) + block // take current block as offset
 
 			const payload = [
-				accountPair.address,
 				id,
 				purpose,
 				cid,
@@ -185,6 +220,11 @@ export const Main = props => {
 		setLoading(false)
 	},[accountPair, refresh])
 
+	// const campaigns = availableCampaigns.map((c,i)=>{
+	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
+	// })
+	// const entities = { ...data.orgs, ...campaigns }
+
 	if ( !formData ) return null
 
 	return (
@@ -196,6 +236,17 @@ export const Main = props => {
 					<br/>
 					<Divider clearing horizontal>General Information</Divider>
 					<br/>
+
+					<Form.Select
+						fluid
+						required
+						label='Organization / Campaign'
+						placeholder='Please select'
+						name='entity'
+						options={entities}
+						value={formData.entity}
+						onChange={handleOnChange}
+						/>
 
 					<Form.Group widths='equal'>
 						<Form.Input
@@ -212,9 +263,9 @@ export const Main = props => {
 						<Form.Input
 							fluid
 							label='Amount to transfer on success'
-							placeholder='email'
-							name='email'
-							value={formData.email}
+							placeholder='amount'
+							name='amount'
+							value={formData.amount}
 							onChange={handleOnChange}
 							/>
 						<Form.Select
@@ -250,40 +301,18 @@ export const Main = props => {
 							/>
 						<Form.Input
 							fluid
-							label='Benificiary Account'
-							placeholder='Benificiary'
-							name='benificiary'
-							value={formData.benificiary}
+							label='Beneficiary Account'
+							placeholder='Beneficiary'
+							name='beneficiary'
+							value={formData.beneficiary}
 							onChange={handleOnChange}
 							required
 							/>
-					</Form.Group>
-
-					<Form.Group widths='equal'>
-						<Form.Select
-							fluid
-							label='Fee Model'
-							options={data.dao_fee_model}
-							name='fee_model'
-							value={formData.fee_model}
-							onChange={handleOnChange}
-							required
-							/>
-						<Form.Input
-							fluid
-							label='Membership Fee'
-							placeholder='10'
-							name='fee'
-							value={formData.fee}
-							onChange={handleOnChange}
-							required
-							/>
-
 					</Form.Group>
 
 					<Container textAlign='right'>
 
-						<Button onClick={handleSubmit}>Create Campaign</Button>
+						<Button onClick={handleSubmit}>Send Proposal</Button>
 
 					</Container>
 
