@@ -12,7 +12,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../substrate-lib'
 
-import { Menu, Label, Tab, Grid } from 'semantic-ui-react'
+import { Menu, Label, Tab, Grid, Message, Modal, Button, Icon, Image } from 'semantic-ui-react'
 import Loader from '../components/Loader'
 
 const DAO = lazy( () => import ('./DAO') )
@@ -28,6 +28,7 @@ const GameDAO = props => {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
+	const [ open, setOpen ] = useState(true)
 	const [ bodies, setBodies ] = useState(0)
 	const [ campaigns, setCampaigns ] = useState(0)
 	const [ proposals, setProposals ] = useState(0)
@@ -134,9 +135,62 @@ const GameDAO = props => {
 			<Suspense fallback={<Loader text="Loading..."></Loader>}>
 				<Tab panes={ panes }/>
 			</Suspense>
+{/*			<Disclaimer open={open} setOpen={setOpen}/>*/}
+			<Message
+				success
+				icon='game'
+				content={<>GameDAO is built on zero network powered by <a href="substrate.dev" target="_blank">substrate</a>.
+							To use it, you will need a running PolkadotJS Extension in your
+							browser: <a href="https://polkadot.js.org/extension/" target="_blank">https://polkadot.js.org/extension/</a> as
+							well as an address created inside of it.
+							Furthermore you will need test token to do any transactions. We are running a faucet on
+							our <a href="https://discord.gg/UJS4N85ukS" target="_blank">Discord Server</a>. Please join and say hello!
+							</>}>
+			</Message>
+			<Message
+				info
+				icon='attention'
+				content={<>GameDAO is running on ZERO Networks testnet, therefore Network upgrades or a reset
+					rendering accumulated token of any kind void or null can happen any time. Any token represented have no value,
+					usage of the system is sometimes saved through a snapshot to eventually reward early participants.
+					Thank you for your support!
+					</>}>
+			</Message>
 		</Grid.Column>
+
 	)
 
+}
+
+const Disclaimer = ({open,setOpen}) =>
+	<Modal
+		basic
+		onClose={() => setOpen(false)}
+		open={open}
+		size='small'
+		closeOnEscape={true}
+		closeOnDimmerClick={false}
+		>
+		<Modal.Content>
+			GameDAO is built on zero network powered by <a href="substrate.dev" target="_blank">substrate</a>.
+			To use it, you will need a running PolkadotJS Extension in your
+			browser: <a href="https://polkadot.js.org/extension/" target="_blank">https://polkadot.js.org/extension/</a> as
+			well as an address created inside of it.
+			Furthermore you will need test token to do any transactions. We are running a faucet on
+			our <a href="https://discord.gg/UJS4N85ukS" target="_blank">Discord Server</a>. Please join and say hello!
+		</Modal.Content>
+		<Modal.Actions>
+			<Button color='green' inverted onClick={() => setOpen(false)}>
+			<Icon name='checkmark' /> I understand
+			</Button>
+		</Modal.Actions>
+	</Modal>
+
+const Intro = props => {
+	const [ open, setOpen ] = useState(true)
+	return(
+		<Disclaimer open={open} setOpen={setOpen}/>
+	)
 }
 
 export default function Dapp (props) {
@@ -146,7 +200,7 @@ export default function Dapp (props) {
 
 	return api && api.query.gameDaoCrowdfunding && accountPair
 		? <GameDAO {...props} />
-		: null;
+		: <Intro />;
 
 }
 

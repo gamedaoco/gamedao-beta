@@ -6,6 +6,9 @@ const imageURL=`${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
 
 function Main ({ accountPair, setAccountAddress }) {
 
+	const [ activeState, setActiveState ] = useState('home')
+	const handleItemClick = e => {}
+
 	return (
 			<Segment inverted vertical color='black'>
 
@@ -22,18 +25,14 @@ function Main ({ accountPair, setAccountAddress }) {
 						<a href='/'><Image alt='GameDAO' src={imageURL} height={32} /></a>
 					</Menu.Menu>
 
-					<Menu.Menu style={{ alignItems: 'center' }}>
-				{/*
+					<Menu.Menu style={{ alignItems: 'left' }}>
 						<Menu.Item
-							name='home'
-							active={activeState === 'home'}
-							onClick={handleItemClick}
+							name='explorer'
+							active={activeState === 'explorer'}
+							href='https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer'
+							target='_blank'
 							/>
-						<Menu.Item
-							name='messages'
-							active={activeState === 'messages'}
-							onClick={handleItemClick}
-							/>
+					{/*
 						<Menu.Item
 							name='friends'
 							active={activeState === 'friends'}
