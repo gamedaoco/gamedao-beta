@@ -13,7 +13,9 @@ function Main ({ accountPair, setAccountAddress }) {
 			<Segment inverted vertical color='black'>
 
 				<Menu
-					inverted secondary
+					stackable
+					inverted
+					secondary
 					color='black'
 					style={{
 						padding: '1em 3em',

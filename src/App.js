@@ -2,16 +2,24 @@ import React, { useState, createRef } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 import { Container, Grid, Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
+import { IconContext } from "react-icons"
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 import Loader from './components/Loader'
 import Message from './components/Message'
-
 import GameDAO from './GameDAO'
 
 const DEV = (process.env.NODE_ENV!=='production')
+
+const Wrapper = styled.div`
+	.icon {
+		vertical-align: bottom;
+		margin-right: 1em;
+	}
+`
 
 function Main () {
 
@@ -29,8 +37,11 @@ function Main () {
 	const contextRef = createRef()
 
 	return (
-		<div context={contextRef}>
-
+		<Wrapper context={contextRef}>
+			<IconContext.Provider value={{
+				color: "black",
+				className: "icon"
+			}}>
 			<Header
 				setAccountAddress={setAccountAddress}
 				accountPair={accountPair}
@@ -72,7 +83,8 @@ function Main () {
 
 			<Footer/>
 
-		</div>
+		</IconContext.Provider>
+		</Wrapper>
 	)
 }
 

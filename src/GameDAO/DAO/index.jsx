@@ -10,6 +10,23 @@ import { encodeAddress } from '@polkadot/util-crypto'
 import { data as d } from '../lib/data'
 
 import { Icon, Pagination, Table, Header, Button, Container, Image } from 'semantic-ui-react'
+import {
+	BiJoystick,
+	BiHomeCircle,
+	BiListCheck,
+	BiListPlus,
+	BiCoinStack,
+	BiCoin,
+	BiPyramid,
+	BiGame,
+	BiPlus,
+	BiDiamond,
+	BiKey,
+	BiLockAlt,
+	BiLockOpenAlt,
+	BiGlobe,
+	BiGroup
+} from "react-icons/bi";
 
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
@@ -229,15 +246,17 @@ const Item = ({ content, accountPair }) => {
 				</Header>
 				</a>
 			</Table.Cell>
-			<Table.Cell style={{maxWidth:'500px'}}>{metadata.description}</Table.Cell>
+			<Table.Cell ><Container text>{metadata.description}</Container></Table.Cell>
 			<Table.Cell>
-					{ metadata.website && <a href={metadata.website} target="_blank">{metadata.website}</a>}
+					{ metadata.website && <a href={metadata.website} target="_blank"><BiGlobe/></a>}
 			</Table.Cell>
-			<Table.Cell>{ (itemContent.access==='0') ? 'open' : 'closed' }</Table.Cell>
+			<Table.Cell textAlign='center'>{ (itemContent.access==='0') ? 'open' : <BiLockAlt/> }</Table.Cell>
 			<Table.Cell>{itemContent.memberCount||0}</Table.Cell>
+{/*
 			<Table.Cell>{itemContent.treasuryBalance||0}</Table.Cell>
-{/*			<Table.Cell>{itemContent.motions||0}</Table.Cell>
-			<Table.Cell>{itemContent.campaigns||0}</Table.Cell>*/}
+			<Table.Cell>{itemContent.motions||0}</Table.Cell>
+			<Table.Cell>{itemContent.campaigns||0}</Table.Cell>
+*/}
 			<Table.Cell><Interactions/></Table.Cell>
 		</Table.Row>
 	)
@@ -283,17 +302,19 @@ const ItemList = props => {
 					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
 				</Button.Group>
 			</Container>
-			<Table striped singleLine>
+			<Table striped singleLine fixed>
 				<Table.Header>
 					<Table.Row>
-						<Table.HeaderCell>Name</Table.HeaderCell>
-						<Table.HeaderCell>Description</Table.HeaderCell>
-						<Table.HeaderCell>Contact</Table.HeaderCell>
-						<Table.HeaderCell>Access</Table.HeaderCell>
-						<Table.HeaderCell>Members</Table.HeaderCell>
-						<Table.HeaderCell>Balance</Table.HeaderCell>
-{/*						<Table.HeaderCell>Motions</Table.HeaderCell>
-						<Table.HeaderCell>Campaigns</Table.HeaderCell>*/}
+						<Table.HeaderCell width='4'></Table.HeaderCell>
+						<Table.HeaderCell width='6'>Description</Table.HeaderCell>
+						<Table.HeaderCell width='1'><BiGlobe/></Table.HeaderCell>
+						<Table.HeaderCell width='1'><BiLockAlt/></Table.HeaderCell>
+						<Table.HeaderCell width='1'><BiGroup/></Table.HeaderCell>
+{/*
+						<Table.HeaderCell width='two'>Balance</Table.HeaderCell>
+						<Table.HeaderCell>Motions</Table.HeaderCell>
+						<Table.HeaderCell>Campaigns</Table.HeaderCell>
+*/}
 						<Table.HeaderCell/>
 					</Table.Row>
 				</Table.Header>

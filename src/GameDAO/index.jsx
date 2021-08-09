@@ -15,6 +15,19 @@ import { useSubstrate } from '../substrate-lib'
 import { Menu, Label, Tab, Grid, Message, Modal, Button, Icon, Image } from 'semantic-ui-react'
 import Loader from '../components/Loader'
 
+import {
+	BiJoystick,
+	BiHomeCircle,
+	BiListCheck,
+	BiListPlus,
+	BiCoinStack,
+	BiCoin,
+	BiPyramid,
+	BiGame,
+	BiPlus,
+	BiDiamond,
+} from "react-icons/bi";
+
 const DAO = lazy( () => import ('./DAO') )
 const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
@@ -61,7 +74,7 @@ const GameDAO = props => {
 		{
 			menuItem: (
 				<Menu.Item key='0'>
-					Organizations{ (bodies>0) && <Label circular color='pink'>{ bodies }</Label> }
+					<BiHomeCircle/> {' '}Organizations{ (bodies>0) && <Label circular color='pink'>{ bodies }</Label> }
 				</Menu.Item>
 			),
 			render: () =>
@@ -71,7 +84,7 @@ const GameDAO = props => {
 			,
 		},
 		{
-			menuItem: (<Menu.Item key='1'> Create Organization </Menu.Item>),
+			menuItem: (<Menu.Item key='1'><BiPlus/> New Org </Menu.Item>),
 			render: () =>
 				<Tab.Pane key='create_dao'>
 					<CreateDAO accountPair={accountPair} />
@@ -79,12 +92,34 @@ const GameDAO = props => {
 			,
 		},
 
+
+//
+
+		{
+			menuItem: (
+				<Menu.Item key='3'>
+					<BiCoinStack />Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
+				</Menu.Item>
+			),
+			render: () =>
+				<Tab.Pane key='campaigns'>
+					<Campaign accountPair={accountPair}/>
+				</Tab.Pane>
+		},
+		{
+			menuItem: (<Menu.Item key='4'> <BiPlus/> New Campaign </Menu.Item>),
+			render: () =>
+				<Tab.Pane key='create_campaign'>
+					<CreateCampaign accountPair={accountPair} />
+				</Tab.Pane>
+		},
+
 //
 
 		{
 			menuItem:
 				<Menu.Item key='2'>
-					Proposals{ (proposals>0) && <Label circular color='teal'>{ proposals }</Label> }
+					<BiListCheck/> Proposals{ (proposals>0) && <Label circular color='teal'>{ proposals }</Label> }
 				</Menu.Item>,
 			render: () =>
 				<Tab.Pane key='proposals'>
@@ -94,7 +129,7 @@ const GameDAO = props => {
 		{
 			menuItem:
 				<Menu.Item key='create_proposal'>
-					Create Proposal
+					<BiListPlus/> New Proposal
 				</Menu.Item>,
 			render: () =>
 			<Tab.Pane key='create_proposal'><CreateProposal accountPair={accountPair} /></Tab.Pane>
@@ -103,26 +138,7 @@ const GameDAO = props => {
 //
 
 		{
-			menuItem: (
-				<Menu.Item key='3'>
-					Campaigns{ (campaigns>0) && <Label circular color='blue'>{ campaigns }</Label> }
-				</Menu.Item>
-			),
-			render: () =>
-				<Tab.Pane key='campaigns'>
-					<Campaign accountPair={accountPair}/>
-				</Tab.Pane>
-		},
-		{
-			menuItem: (<Menu.Item key='4'> Create Campaign </Menu.Item>),
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign accountPair={accountPair} />
-				</Tab.Pane>
-		},
-
-		{
-			menuItem: (<Menu.Item key='5'> Tangram </Menu.Item>),
+			menuItem: (<Menu.Item key='5'> <BiDiamond/> Tangram </Menu.Item>),
 			render: () =>
 				<Tab.Pane key='tangram'>
 					<Tangram accountPair={accountPair} />
@@ -135,18 +151,21 @@ const GameDAO = props => {
 			<Suspense fallback={<Loader text="Loading..."></Loader>}>
 				<Tab panes={ panes }/>
 			</Suspense>
+
 {/*			<Disclaimer open={open} setOpen={setOpen}/>*/}
+
 			<Message
 				success
 				icon='game'
 				content={<>GameDAO is built on zero network powered by <a href="substrate.dev" target="_blank">substrate</a>.
-							To use it, you will need a running PolkadotJS Extension in your
-							browser: <a href="https://polkadot.js.org/extension/" target="_blank">https://polkadot.js.org/extension/</a> as
-							well as an address created inside of it.
-							Furthermore you will need test token to do any transactions. We are running a faucet on
-							our <a href="https://discord.gg/UJS4N85ukS" target="_blank">Discord Server</a>. Please join and say hello!
-							</>}>
+					To use it, you will need a running PolkadotJS Extension in your
+					browser: <a href="https://polkadot.js.org/extension/" target="_blank">https://polkadot.js.org/extension/</a> as
+					well as an address created inside of it.
+					Furthermore you will need test token to do any transactions. We are running a faucet on
+					our <a href="https://discord.gg/UJS4N85ukS" target="_blank">Discord Server</a>. Please join and say hello!
+				</>}>
 			</Message>
+
 			<Message
 				info
 				icon='attention'
@@ -154,7 +173,7 @@ const GameDAO = props => {
 					rendering accumulated token of any kind void or null can happen any time. Any token represented have no value,
 					usage of the system is sometimes saved through a snapshot to eventually reward early participants.
 					Thank you for your support!
-					</>}>
+				</>}>
 			</Message>
 		</Grid.Column>
 
