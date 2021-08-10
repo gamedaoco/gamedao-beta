@@ -1,6 +1,16 @@
 # GameDAO POC
 
-GameDAO is a EU based community owned and governed cooperative providing crowdfunding and governance protocols for the videogames, creative content and eSports community.
+GameDAO is a EU based community owned and governed cooperative providing community centric protocols:
+
+- building unstoppable organizations
+- community shared ownership
+- fundraising and project curation
+- coordination to organize and prioritize and coordinate use of funds
+- nft based governance gamification
+- amm / defi / lending
+protocols.
+
+These enable crowdfunding and governance protocols and aim at videogame creators and players, creators and eSports communities.
 
 GameDAO as a dApp is running on [ZERO.IO](https://zero.io), a substrate based multichain network for the Metaverse featuring unique, decentralised protocols for the videogames industry.
 
