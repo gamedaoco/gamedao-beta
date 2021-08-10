@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
-import { Grid, Segment, Card, Button, Icon, Image } from 'semantic-ui-react'
+import { Grid, Segment, Card, Button, Icon, Image, Transition } from 'semantic-ui-react'
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
@@ -60,15 +60,15 @@ const ItemGrid = ({ hashes, accountPair }) => {
 	if ( !hashes ) return null
 
 	return (
-		<Container>
-			<Grid stackable colums={8} >
-				{
-					hashes && hashes.map( ( itemHash, index ) => {
-						return <CampaignCard hash={itemHash} accountPair={accountPair} />
-					})
-				}
-			</Grid>
-		</Container>
+			<Container>
+				<Grid stackable colums={8} >
+					{
+						hashes && hashes.map( ( itemHash, index ) => {
+							return <CampaignCard hash={itemHash} accountPair={accountPair} />
+						})
+					}
+				</Grid>
+			</Container>
 	)
 
 }

@@ -213,12 +213,14 @@ export const Main = props => {
 
 		const sendTX = async cid => {
 
-			const campaign_end = ( formData.duration * data.blockFactor ) + block // take current block as offset
+			const campaign_end = (dev)
+			? block + 100 // 100 blocks = 300 seconds = 5 mins
+			: ( formData.duration * data.blockFactor ) + block // take current block as offset
 			console.log('campaign_end', campaign_end)
 
 			console.log()
-			const target = formData.cap * 1000000000000
-			const deposit = formData.deposit * 1000000000000
+			const target = formData.cap + 1000000000000
+			const deposit = formData.deposit + 1000000000000
 
 			const payload = [
 				// accountPair.address,

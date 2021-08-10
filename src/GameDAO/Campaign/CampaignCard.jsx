@@ -296,12 +296,12 @@ const CampaignCard = ({ item, index, accountPair }) => {
 {/*
 					<Icon name='eye' />{views} views.<br/>
 */}					<Icon name='money bill alternate' />
-					{content.backers} backer{(content.backers>1)?'s':''} /  {balance}.<br/>
-					 / {cap}.
+					{content.backers} backer{(content.backers!==1)?'s':''}.<br/>
+					{balance} / {cap}.
 
 					<br/>
 					<Icon name='rocket' />{date}<br/>
-					<Icon name='target' />{blocksRemain}<br/>
+					<Icon name='target' />~{Math.floor((blocksRemain * 3) / 60)} min<br/>
 					<a href={`/campaigns/admin/${owner}`}> <Icon name='at' />Creator</a><br/>
 					<Icon name='tag' />{tags.join(', ')} <br/>
 				</Card.Content>

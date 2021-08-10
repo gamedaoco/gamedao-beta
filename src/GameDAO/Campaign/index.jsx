@@ -183,9 +183,9 @@ export const Campaigns = props => {
 
 	}, [campaigns, balances, states])
 
-	const [ showCreateMode, setCreateMode ] = useState( false );
-	const handleCreateBtn = e => setCreateMode(true);
-	const handleCloseBtn = e => setCreateMode(false);
+	const [ showCreateMode, setCreateMode ] = useState( false )
+	const handleCreateBtn = e => setCreateMode( true )
+	const handleCloseBtn = e => setCreateMode( false )
 
 	return (
 		<React.Fragment>
@@ -200,7 +200,7 @@ export const Campaigns = props => {
 				<Grid.Column floated='right' width={6} verticalAlign='middle'>
 					<Container textAlign='right'>
 						{
-							(showCreateMode)
+							( showCreateMode)
 							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
 							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New Campaign</Button>
 						}
@@ -211,7 +211,7 @@ export const Campaigns = props => {
 			{ showCreateMode &&
 				<CreateCampaign accountPair={accountPair} />
 			}
-			{ ( !showCreateMode && content ) &&
+			{ ( !showCreateMode && content && nonce !== 0) &&
 				<CampaignGrid
 					content={content}
 					accountPair={accountPair}

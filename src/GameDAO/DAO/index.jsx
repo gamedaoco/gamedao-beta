@@ -535,7 +535,7 @@ export const Main = props => {
 			{ showCreateMode &&
 				<CreateDAO accountPair={accountPair} />
 			}
-			{ ( !showCreateMode && content ) &&
+			{ ( !showCreateMode && content && nonce !== 0 ) &&
 				<ItemList
 					content={content}
 					configs={configs}
