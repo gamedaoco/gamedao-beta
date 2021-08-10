@@ -13,7 +13,6 @@ function Main ({ accountPair, setAccountAddress }) {
 			<Segment inverted vertical color='black'>
 
 				<Menu
-					stackable
 					inverted
 					secondary
 					color='black'

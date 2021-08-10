@@ -190,6 +190,9 @@ const Disclaimer = ({open,setOpen}) =>
 		closeOnEscape={true}
 		closeOnDimmerClick={false}
 		>
+		<Modal.Header>
+			How it works
+		</Modal.Header>
 		<Modal.Content>
 			GameDAO is built on zero network powered by <a href="substrate.dev" target="_blank">substrate</a>.
 			To use it, you will need a running PolkadotJS Extension in your
