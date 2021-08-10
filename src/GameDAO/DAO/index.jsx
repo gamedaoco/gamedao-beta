@@ -1,15 +1,18 @@
 // control - a dao interface
 // invoke and manage organisations on chain
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
 
 import { data as d } from '../lib/data'
+import { gateway } from '../lib/ipfs'
+import config from '../../config'
+const dev = config.dev
 
-import { Icon, Pagination, Table, Header, Button, Container, Image } from 'semantic-ui-react'
+import { Icon, Pagination, Table, Header, Button, Container, Image, Grid } from 'semantic-ui-react'
 import {
 	BiJoystick,
 	BiHomeCircle,
@@ -28,9 +31,8 @@ import {
 	BiGroup
 } from "react-icons/bi";
 
-import { gateway } from '../lib/ipfs'
-import config from '../../config'
-const dev = config.dev
+const CreateDAO = lazy( () => import ('./Create') )
+
 
 //
 //
@@ -505,22 +507,44 @@ export const Main = props => {
 	// 	getContent(hashes)
 	// }, [hashes, api.query.gameDaoControl])
 
-	return ( !content || nonce === 0 )
-		?	<React.Fragment>
-				<h1>Organizations</h1>
-				<h3>No organizations yet. Create one!</h3>
-			</React.Fragment>
-		:	<React.Fragment>
-				<h1>Organizations</h1>
-				<h3>Total organizations: { nonce }</h3>
+	const [ showCreateMode, setCreateMode ] = useState( false );
+	const handleCreateBtn = e => setCreateMode(true);
+	const handleCloseBtn = e => setCreateMode(false);
+
+	return (
+		<React.Fragment>
+			<Grid>
+				<Grid.Column floated='left' width={6} verticalAlign='middle'>
+					{
+						(!content || nonce === 0)
+						? (<h4>No organizations yet. Create one!</h4>)
+						: (<h4>Total organizations: { nonce }</h4>)
+					}
+				</Grid.Column>
+				<Grid.Column floated='right' width={6} verticalAlign='middle'>
+					<Container textAlign='right'>
+						{
+							(showCreateMode)
+							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
+							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New DAO</Button>
+						}
+					</Container>
+				</Grid.Column>
+			</Grid>
+			<br/>
+			{ showCreateMode &&
+				<CreateDAO accountPair={accountPair} />
+			}
+			{ ( !showCreateMode && content ) &&
 				<ItemList
 					content={content}
 					configs={configs}
 					members={members}
-
 					accountPair={accountPair}
-				/>
-			</React.Fragment>
+					/>
+			}
+		</React.Fragment>
+	)
 
 }
 
@@ -529,7 +553,7 @@ export default function Module (props) {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoControl && accountPair
+	return api && api.query.gameDaoControl// && accountPair
 		? <Main {...props} />
 		: null
 

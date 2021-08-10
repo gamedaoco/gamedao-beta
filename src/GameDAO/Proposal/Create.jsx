@@ -230,7 +230,7 @@ export const Main = props => {
 	return (
 		<Segment vertical loading={loading}>
 
-			<h1>Create Proposal</h1>
+			<h3>New Proposal</h3>
 
 			<Form>
 					<br/>

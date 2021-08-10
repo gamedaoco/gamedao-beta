@@ -224,7 +224,7 @@ export const Main = props => {
 	return (
 		<Segment vertical loading={loading}>
 
-			<h1>Create Organization</h1>
+			<h3>Create Organization</h3>
 
 			<Form>
 					<br/>

@@ -1,16 +1,17 @@
 // control - a dao interface
 // invoke and manage organisations on chain
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
 import { data as d } from '../lib/data'
-
-import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
-
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
 const dev = config.dev
+
+import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
+import { Grid, Segment, Icon } from 'semantic-ui-react'
+const CreateProposal = lazy( () => import ( './Create' ) )
 
 // ui list item
 
@@ -109,7 +110,7 @@ const ItemList = ({ data: { content } }) => {
 export const Items = props => {
 
 	const { api } = useSubstrate()
-
+	const { accountPair } = props
 	const [ nonce, setNonce ] = useState()
 	const [ hashes, setHashes ] = useState()
 	const [ content, setContent ] = useState()
@@ -162,10 +163,27 @@ export const Items = props => {
 	// group by organization
 	// dropdown to select organization
 
+	const [ showCreateMode, setCreateMode ] = useState( false );
+	const handleCreatBtnClick = e => setCreateMode(true);
+
 	return ( !content || ( content.length === 0 ) )
 		?	<React.Fragment>
 				<h1>Proposals</h1>
-				<h3>No proposals yet. Create one!</h3>
+				{ !showCreateMode &&
+					<Grid>
+						<Grid.Column floated='left' width={5} verticalAlign='middle'>
+							<h3>No proposals yet. Create one!</h3>
+						</Grid.Column>
+						<Grid.Column floated='right' width={5} verticalAlign='middle'>
+							<Container textAlign='right'>
+								<Button onClick={handleCreatBtnClick}><Icon name='plus'/>New Proposal</Button>
+							</Container>
+						</Grid.Column>
+					</Grid>
+				}
+				{ showCreateMode &&
+					<CreateProposal accountPair={accountPair} />
+				}
 			</React.Fragment>
 		:	<React.Fragment>
 				<h1>Proposals</h1>

@@ -30,6 +30,7 @@
     "access": "u8"
   },
 
+  "TangramId": "Hash",
   "Space": {
     "id": "H256",
     "dna": "H256",
@@ -41,7 +42,6 @@
   "HypaspaceMetadata": {
     "name": "Vec<u8>"
   },
-
   "Item": {
     "ItemId": "ItemId",
     "ItemInfo": "ItemInfo"

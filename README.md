@@ -16,7 +16,8 @@ GameDAO as a dApp is running on [ZERO.IO](https://zero.io), a substrate based mu
 
 This is a proof of concept dApp featuring fundraising, governance and other functionality based on [Substrate Frontend Template](https://github.com/substrate-developer-hub/substrate-front-end-template).
 
-## Using The Template
+Expect things to break and sub par production quality code, if you are checking it out.
+Also, check out https://github.com/gamedaoco/subzero for rust based modules running on zero network.
 
 ### Installation
 

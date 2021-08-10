@@ -29,11 +29,11 @@ import {
 } from "react-icons/bi";
 
 const DAO = lazy( () => import ('./DAO') )
-const CreateDAO = lazy( () => import ('./DAO/Create') )
+// const CreateDAO = lazy( () => import ('./DAO/Create') )
 const Campaign = lazy( () => import ('./Campaign') )
 const CreateCampaign = lazy( () => import ('./Campaign/Create') )
 const Proposal = lazy( () => import ('./Proposal') )
-const CreateProposal = lazy( () => import ( './Proposal/Create' ) )
+// const CreateProposal = lazy( () => import ( './Proposal/Create' ) )
 const Tangram = lazy( () => import ('./Tangram') )
 
 const GameDAO = props => {
@@ -83,14 +83,14 @@ const GameDAO = props => {
 				</Tab.Pane>
 			,
 		},
-		{
-			menuItem: (<Menu.Item key='1'><BiPlus/> New Org </Menu.Item>),
-			render: () =>
-				<Tab.Pane key='create_dao'>
-					<CreateDAO accountPair={accountPair} />
-				</Tab.Pane>
-			,
-		},
+		// {
+		// 	menuItem: (<Menu.Item key='1'><BiPlus/> New Org </Menu.Item>),
+		// 	render: () =>
+		// 		<Tab.Pane key='create_dao'>
+		// 			<CreateDAO accountPair={accountPair} />
+		// 		</Tab.Pane>
+		// 	,
+		// },
 
 
 //
@@ -106,13 +106,13 @@ const GameDAO = props => {
 					<Campaign accountPair={accountPair}/>
 				</Tab.Pane>
 		},
-		{
-			menuItem: (<Menu.Item key='4'> <BiPlus/> New Campaign </Menu.Item>),
-			render: () =>
-				<Tab.Pane key='create_campaign'>
-					<CreateCampaign accountPair={accountPair} />
-				</Tab.Pane>
-		},
+		// {
+		// 	menuItem: (<Menu.Item key='4'> <BiPlus/> New Campaign </Menu.Item>),
+		// 	render: () =>
+		// 		<Tab.Pane key='create_campaign'>
+		// 			<CreateCampaign accountPair={accountPair} />
+		// 		</Tab.Pane>
+		// },
 
 //
 
@@ -126,14 +126,14 @@ const GameDAO = props => {
 					<Proposal accountPair={accountPair} />
 				</Tab.Pane>
 		},
-		{
-			menuItem:
-				<Menu.Item key='create_proposal'>
-					<BiListPlus/> New Proposal
-				</Menu.Item>,
-			render: () =>
-			<Tab.Pane key='create_proposal'><CreateProposal accountPair={accountPair} /></Tab.Pane>
-		},
+		// {
+		// 	menuItem:
+		// 		<Menu.Item key='create_proposal'>
+		// 			<BiListPlus/> New Proposal
+		// 		</Menu.Item>,
+		// 	render: () =>
+		// 	<Tab.Pane key='create_proposal'><CreateProposal accountPair={accountPair} /></Tab.Pane>
+		// },
 
 //
 
@@ -220,7 +220,7 @@ export default function Dapp (props) {
 	const { accountPair } = props;
 	const { api } = useSubstrate();
 
-	return api && api.query.gameDaoCrowdfunding && accountPair
+	return api && api.query.gameDaoCrowdfunding // && accountPair
 		? <GameDAO {...props} />
 		: <Intro />;
 

@@ -9,15 +9,15 @@ import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 import Loader from './components/Loader'
-import Message from './components/Message'
+import ErrorMessage from './components/Message'
 import GameDAO from './GameDAO'
 
 const DEV = (process.env.NODE_ENV!=='production')
 
 const Wrapper = styled.div`
-	.icon {
-		vertical-align: bottom;
+	.react-icon {
 		margin-right: 1em;
+		margin-top:2px;
 	}
 `
 
@@ -30,7 +30,7 @@ function Main () {
 		keyringState === 'READY' &&
 		keyring.getPair(accountAddress)
 
-	if (apiState === 'ERROR') return (<Message err={apiError} />)
+	if (apiState === 'ERROR') return (<ErrorMessage err={apiError} />)
 	else if (apiState !== 'READY') return (<Loader text='Connecting Network' />)
 	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
 
@@ -40,7 +40,7 @@ function Main () {
 		<Wrapper context={contextRef}>
 			<IconContext.Provider value={{
 				color: "black",
-				className: "icon"
+				className: "react-icon"
 			}}>
 			<Header
 				setAccountAddress={setAccountAddress}
@@ -48,9 +48,8 @@ function Main () {
 				/>
 
 
-			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
+			<Segment vertical style={{ padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
 				<Container>
-
 					<Grid>
 						<Grid.Row stretched>
 							<GameDAO
@@ -60,27 +59,34 @@ function Main () {
 								/>
 						</Grid.Row>
 					</Grid>
-
-					{ DEV &&
-						<Grid>
-							<Grid.Row stretched>
-								<Transfer
-									accountPair={accountPair}
-									accountAddress={accountAddress}
-									setAccountAddress={setAccountAddress}
-									/>
-								<Template
-									accountPair={accountPair}
-									accountAddress={accountAddress}
-									setAccountAddress={setAccountAddress}
-									/>
-							</Grid.Row>
-						</Grid>
-					}
-
 				</Container>
 			</Segment>
+			{ DEV &&
+				<Segment vertical style={{ padding: '5em 1em', backgroundColor:'#999' }}>
+					<Container>
+							<Grid>
+								<Grid.Row stretched>
+									<Transfer
+										accountPair={accountPair}
+										accountAddress={accountAddress}
+										setAccountAddress={setAccountAddress}
+										/>
+									<Template
+										accountPair={accountPair}
+										accountAddress={accountAddress}
+										setAccountAddress={setAccountAddress}
+										/>
+								</Grid.Row>
+							</Grid>
+					</Container>
+				</Segment>
+			}
 
+{/*
+			<Segment inverted vertical style={{ minHeight: '10vh', padding: '3em', backgroundColor:'#2b2c2d' }}>
+
+			</Segment>
+*/}
 			<Footer/>
 
 		</IconContext.Provider>

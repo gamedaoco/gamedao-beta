@@ -9,10 +9,13 @@
  © C O P Y R I O T   2 0 7 5   Z E R O . I O
 **/
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
-import CampaignGrid from './CampaignGrid'
+import { Icon, Container, Grid, Button } from 'semantic-ui-react'
+
+const CampaignGrid = lazy( () => import ('./CampaignGrid') )
+const CreateCampaign = lazy( () => import ('./Create') )
 
 //
 // campaigns component
@@ -180,22 +183,44 @@ export const Campaigns = props => {
 
 	}, [campaigns, balances, states])
 
-	console.log('update')
+	const [ showCreateMode, setCreateMode ] = useState( false );
+	const handleCreateBtn = e => setCreateMode(true);
+	const handleCloseBtn = e => setCreateMode(false);
 
-	return ( !content || nonce === 0 )
-		?	<React.Fragment>
-				<h1>Campaigns</h1>
-				<h3>No campaigns yet. Create one!</h3>
-			</React.Fragment>
-		:	<React.Fragment>
-				<h1>Campaigns</h1>
-				<h3>Total Campaigns: { nonce }</h3>
+	return (
+		<React.Fragment>
+			<Grid>
+				<Grid.Column floated='left' width={6} verticalAlign='middle'>
+					{
+						(!content || nonce === 0)
+						? (<h4>No campaigns yet. Create one!</h4>)
+						: (<h4>Total campaigns: { nonce }</h4>)
+					}
+				</Grid.Column>
+				<Grid.Column floated='right' width={6} verticalAlign='middle'>
+					<Container textAlign='right'>
+						{
+							(showCreateMode)
+							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
+							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New Campaign</Button>
+						}
+					</Container>
+				</Grid.Column>
+			</Grid>
+			<br/>
+			{ showCreateMode &&
+				<CreateCampaign accountPair={accountPair} />
+			}
+			{ ( !showCreateMode && content ) &&
 				<CampaignGrid
 					content={content}
 					accountPair={accountPair}
 					/>
-			</React.Fragment>
+			}
+		</React.Fragment>
+	)
 
 }
+
 
 export default Campaigns
