@@ -164,32 +164,38 @@ export const Items = props => {
 	// dropdown to select organization
 
 	const [ showCreateMode, setCreateMode ] = useState( false );
-	const handleCreatBtnClick = e => setCreateMode(true);
+	const handleCreateBtn = e => setCreateMode(true);
+	const handleCloseBtn = e => setCreateMode(false);
 
-	return ( !content || ( content.length === 0 ) )
-		?	<React.Fragment>
-				<h1>Proposals</h1>
-				{ !showCreateMode &&
-					<Grid>
-						<Grid.Column floated='left' width={5} verticalAlign='middle'>
-							<h3>No proposals yet. Create one!</h3>
-						</Grid.Column>
-						<Grid.Column floated='right' width={5} verticalAlign='middle'>
-							<Container textAlign='right'>
-								<Button onClick={handleCreatBtnClick}><Icon name='plus'/>New Proposal</Button>
-							</Container>
-						</Grid.Column>
-					</Grid>
-				}
-				{ showCreateMode &&
-					<CreateProposal accountPair={accountPair} />
-				}
-			</React.Fragment>
-		:	<React.Fragment>
-				<h1>Proposals</h1>
-				<h3>Total proposals: { nonce }</h3>
+	return (
+		<React.Fragment>
+			<Grid>
+				<Grid.Column floated='left' width={6} verticalAlign='middle'>
+					{
+						(!content || nonce === 0)
+						? (<h4>No proposals yet. Create one!</h4>)
+						: (<h4>Total proposals: { nonce }</h4>)
+					}
+				</Grid.Column>
+				<Grid.Column floated='right' width={6} verticalAlign='middle'>
+					<Container textAlign='right'>
+						{
+							(showCreateMode)
+							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
+							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New Proposal</Button>
+						}
+					</Container>
+				</Grid.Column>
+			</Grid>
+			<br/>
+			{ showCreateMode &&
+				<CreateProposal accountPair={accountPair} />
+			}
+			{ ( !showCreateMode && content && nonce !== 0 ) &&
 				<ItemList data={ { content } } />
-			</React.Fragment>
+			}
+		</React.Fragment>
+	)
 
 }
 

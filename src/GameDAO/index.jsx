@@ -154,27 +154,6 @@ const GameDAO = props => {
 
 {/*			<Disclaimer open={open} setOpen={setOpen}/>*/}
 
-			<Message
-				success
-				icon='game'
-				content={<>GameDAO is built on zero network powered by <a href="substrate.dev" target="_blank">substrate</a>.
-					To use it, you will need a running PolkadotJS Extension in your
-					browser: <a href="https://polkadot.js.org/extension/" target="_blank">https://polkadot.js.org/extension/</a> as
-					well as an address created inside of it.
-					Furthermore you will need test token to do any transactions. We are running a faucet on
-					our <a href="https://discord.gg/UJS4N85ukS" target="_blank">Discord Server</a>. Please join and say hello!
-				</>}>
-			</Message>
-
-			<Message
-				info
-				icon='attention'
-				content={<>GameDAO is running on ZERO Networks testnet, therefore Network upgrades or a reset
-					rendering accumulated token of any kind void or null can happen any time. Any token represented have no value,
-					usage of the system is sometimes saved through a snapshot to eventually reward early participants.
-					Thank you for your support!
-				</>}>
-			</Message>
 		</Grid.Column>
 
 	)

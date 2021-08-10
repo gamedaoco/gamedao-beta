@@ -27,6 +27,14 @@ function Main ({ accountPair, setAccountAddress }) {
 					</Menu.Menu>
 
 					<Menu.Menu style={{ alignItems: 'left' }}>
+
+						<Menu.Item
+							name='gamedao'
+							active={activeState === 'gamedao'}
+							href='https://gamedao.co'
+							target='_blank'
+							>GameDAO</Menu.Item>
+
 						<Menu.Item
 							name='explorer'
 							active={activeState === 'explorer'}

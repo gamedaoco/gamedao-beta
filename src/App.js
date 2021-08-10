@@ -48,7 +48,7 @@ function Main () {
 				/>
 
 
-			<Segment vertical style={{ padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
+			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
 				<Container>
 					<Grid>
 						<Grid.Row stretched>

@@ -4,6 +4,16 @@ export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
 // dropdown content
 
+//
+
+export const voting_types = [
+	{ key: '0', text: 'Single Choice', value: 0 },
+	{ key: '1', text: 'Approval', value: 1},
+	{ key: '2', text: 'Quadratic', value: 2 },
+	{ key: '3', text: 'Ranked Choice', value: 3 },
+	{ key: '4', text: 'Weighted', value: 4 }
+]
+
 // dao
 
 export const dao_bodies = [
@@ -127,6 +137,7 @@ export const data = {
 	dao_bodies,
 	dao_member_governance,
 	dao_fee_model,
+	voting_types
 }
 
 export default data

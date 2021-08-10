@@ -32,12 +32,13 @@ const random_state = ( accountPair, campaigns = [] ) => {
 
 	const id = campaigns[campaigns.length]
 	const purpose = faker.company.catchPhrase()
+	const description = faker.company.catchPhrase()
 	const cid = ''
 	const amount = rnd( 10 ) * 100
 	const duration = data.project_durations[ rnd(data.project_durations.length) ].value
 	const proposer = accountPair.address
 	const beneficiary = accountPair.address
-
+	const voting_types = data.voting_types[ rnd(data.voting_types.length) ].value
 	// TODO:
 	// version > 0.2
 	// create random additional data for ipfs
@@ -45,8 +46,8 @@ const random_state = ( accountPair, campaigns = [] ) => {
 	// select asset for withdrawal
 
 	return {
-		id, purpose, cid, amount, duration,
-		proposer, beneficiary
+		id, purpose, description, cid, amount, duration,
+		proposer, beneficiary, voting_types
 	}
 }
 
@@ -71,7 +72,7 @@ export const Main = props => {
 	// campaign or organisation?
 	// actually you should select an organisation,
 	// then an eventual campaign belonging to it.
-	const [ entities, setEnttities ] = useState([])
+	const [ entities, setEntities ] = useState([])
 
 	useEffect(() => {
 
@@ -88,17 +89,14 @@ export const Main = props => {
 					api.query.gameDaoCrowdfunding.campaignsContributed(accountPair.address),
 					api.query.gameDaoCrowdfunding.campaignsByState(3),
 				])
-				const content = {
-					memberships: memberships.toHuman(),
-					contributions: contributions.toHuman(),
-					successful: successful.toHuman(),
-				}
-				setContent(content)
-				console.log({
-					...memberships.toHuman(),
-					...contributions.toHuman(),
-					...successful.toHuman()
-				})
+				const new_entities = new Array()
+					// .concat(...memberships.toHuman())
+					.concat(...contributions.toHuman())
+					.concat(...successful.toHuman())
+					.map((h,i)=>{
+						return { key: i, text: h, value: h }
+					})
+				setEntities(new_entities)
 			} catch ( err ) {
 				console.error( err )
 			}
@@ -134,7 +132,12 @@ export const Main = props => {
 
 		e.preventDefault()
 		console.log('submit')
+
 		setLoading(true)
+		const content = {
+			id: formData.id,
+			description: formData.description
+		}
 
 		//
 
@@ -161,7 +164,7 @@ export const Main = props => {
 			if (dev) console.log('2. send tx')
 
 			const expiry = ( formData.duration * data.blockFactor ) + block // take current block as offset
-
+			const { id, purpose, cid, amount } = formData
 			const payload = [
 				id,
 				purpose,
@@ -229,9 +232,6 @@ export const Main = props => {
 
 	return (
 		<Segment vertical loading={loading}>
-
-			<h3>New Proposal</h3>
-
 			<Form>
 					<br/>
 					<Divider clearing horizontal>General Information</Divider>
@@ -253,29 +253,10 @@ export const Main = props => {
 							fluid
 							label='Proposal Title'
 							placeholder='Title'
-							name='title'
-							value={formData.title}
+							name='purpose'
+							value={formData.purpose}
 							onChange={handleOnChange}
 							required
-							/>
-					</Form.Group>
-					<Form.Group widths='equal'>
-						<Form.Input
-							fluid
-							label='Amount to transfer on success'
-							placeholder='amount'
-							name='amount'
-							value={formData.amount}
-							onChange={handleOnChange}
-							/>
-						<Form.Select
-							fluid
-							label='Proposal Duration'
-							options={data.project_durations}
-							placeholder='Duration'
-							name='duration'
-							value={formData.duration}
-							onChange={handleOnChange}
 							/>
 					</Form.Group>
 
@@ -290,14 +271,32 @@ export const Main = props => {
 					</Form.Group>
 
 					<Form.Group widths='equal'>
+						<Form.Select
+							fluid
+							label='Voting Type'
+							options={data.voting_types}
+							name='voting_types'
+							value={formData.voting_types}
+							onChange={handleOnChange}
+							/>
+						<Form.Select
+							fluid
+							label='Proposal Duration'
+							options={data.project_durations}
+							placeholder='Duration'
+							name='duration'
+							value={formData.duration}
+							onChange={handleOnChange}
+							/>
+					</Form.Group>
+					<Form.Group widths='equal'>
 						<Form.Input
 							fluid
-							label='Proposer Account'
-							placeholder='Proposer'
-							name='proposer'
-							value={formData.proposer}
+							label='Amount to transfer on success'
+							placeholder='amount'
+							name='amount'
+							value={formData.amount}
 							onChange={handleOnChange}
-							required
 							/>
 						<Form.Input
 							fluid
@@ -312,12 +311,10 @@ export const Main = props => {
 
 					<Container textAlign='right'>
 
-						<Button onClick={handleSubmit}>Send Proposal</Button>
+						<Button onClick={handleSubmit}>Publish Proposal</Button>
 
 					</Container>
-
 			</Form>
-
 		</Segment>
 	)
 
