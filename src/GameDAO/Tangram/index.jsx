@@ -76,18 +76,28 @@ const ItemGrid = ({ hashes, accountPair }) => {
 export const Content = props => {
 
 	const { api } = useSubstrate()
-	const [ nonce, setNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
 
-	// useEffect(() => {
-	// 	let unsubscribe = null
-	// 	api.query.gameDaoTangram.nonce(n => {
-	// 		setNonce(n.toNumber())
-	// 	}).then( unsub => {
-	// 		unsubscribe = unsub
-	// 	}).catch( console.error )
-	// 	return () => unsubscribe && unsubscribe()
-	// }, [api.query.gameDaoTangram])
+	// every org runs on its own realm
+	// classes exist in realms, where
+	// class 0 is by default the tangram class
+	// items live in classes and can possess
+	// various attributes
+
+	const [ realms, setRealms ] = useState()
+	const [ classes, setClasses ] = useState()
+	const [ items, setItems ] = useState()
+
+	const [ total, setTotal ] = useState()
+
+	useEffect(() => {
+		let unsubscribe = null
+		api.query.gameDaoTangram.total(n => {
+			setTotal(n.toNumber())
+		}).then( unsub => {
+			unsubscribe = unsub
+		}).catch( console.error )
+		return () => unsubscribe && unsubscribe()
+	}, [api.query.gameDaoTangram])
 
 	// useEffect(() => {
 	// 	if ( !nonce ) return
@@ -100,15 +110,15 @@ export const Content = props => {
 	// 	queryHashes(req)
 	// }, [nonce, api.query.gameDaoTangram])
 
-	return ( !hashes || ( hashes.length === 0 ) )
+	return ( !total || ( total === 0 ) )
 		?	<React.Fragment>
 				<h1>Tangram</h1>
 				<h3>No Tangram has spawned yet.</h3>
 			</React.Fragment>
 		:	<React.Fragment>
 				<h1>Tangram</h1>
-				<h3>Spawned: { nonce }</h3>
-				<ItemGrid hashes={hashes} accountPair={accountPair} />
+				<h3>Spawned: { total }</h3>
+				{/*<ItemGrid hashes={hashes} accountPair={accountPair} />*/}
 			</React.Fragment>
 
 }

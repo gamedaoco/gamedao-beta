@@ -4,8 +4,8 @@ import types from './types.json'
 // import { typeBundleForPolkadot } from '@zeroio/type-definitions'
 // const types = typeBundleForPolkadot.types.pop().types
 
-// const configEnv = require('./production.json')
-const configEnv = require(`./${process.env.NODE_ENV}.json`)
+const configEnv = require('./production.json')
+// const configEnv = require(`./${process.env.NODE_ENV}.json`)
 const dockerEnv = (process.env.DOCKER===true) ? require('./docker.json') : {}
 
 const envVarNames = [
