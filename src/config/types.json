@@ -33,6 +33,8 @@
   "ClassIndex": "u64",
   "ItemIndex": "u64",
   "TotalIndex": "u128",
+  "BurnedIndex": "u128",
+
   "TangramRealm": {
     "id": "Hash",
     "org": "Hash",
@@ -68,8 +70,9 @@
     "owner": "AccountId",
     "cid": "Vec<u8>"
   },
-
   "TangramId": "Hash",
+  "TangramItemOf": "Tangram",
+
   "Space": {
     "id": "H256",
     "dna": "H256",

@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
-import { encodeAddress } from '@polkadot/util-crypto'
-import { data } from '../lib/data'
+// import { encodeAddress } from '@polkadot/util-crypto'
+// import { data } from '../lib/data'
 import { gateway } from '../lib/ipfs'
-import config from '../../config'
-const dev = config.dev
+// import config from '../../config'
+// const dev = config.dev
 
 import {
 	Button, Grid, Card, Icon, Image, Segment
 } from 'semantic-ui-react'
-import { Header, Modal, Form } from 'semantic-ui-react'
+import { Modal, Form } from 'semantic-ui-react'
 
 const CampaignCard = ({ item, index, accountPair }) => {
 
 	// console.log(item)
 	const { api } = useSubstrate()
 
-	const { id, protocol, name, cap, cid, created, expiry, governance, owner, balance, state } = item
+	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
 
 	console.log(state)
 

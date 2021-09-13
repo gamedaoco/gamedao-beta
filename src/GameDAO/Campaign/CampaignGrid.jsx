@@ -1,7 +1,7 @@
 import React, {
 	// useState
 } from 'react'
-import { Container, Grid, Transition } from 'semantic-ui-react'
+import { Container, Grid, /*Transition*/ } from 'semantic-ui-react'
 import CampaignCard from './CampaignCard'
 
 const CampaignGrid = ({ content, accountPair}) => {

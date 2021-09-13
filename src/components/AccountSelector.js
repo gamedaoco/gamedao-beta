@@ -144,7 +144,7 @@ function BalanceAnnotation (props) {
         {zero}<br/>
         {play} PLAY<br/>
         {game} GAME<br/>
-        {zeur} ZEUR
+        {zeur} zDOT
       </div>
     : null;
 }
