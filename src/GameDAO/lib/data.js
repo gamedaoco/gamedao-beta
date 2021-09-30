@@ -122,9 +122,21 @@ export const blocksToTime = blocks => {
 	return `${dd}:${hh}:${mm}:${ss}`
 }
 
+		// 0 init, 1 active, 2 paused, 3 complete success, 4 complete failed, 5 authority lock
+
+export const campaign_states = [
+	{ key: '0', text: 'initialized', value: '0' },
+	{ key: '1', text: 'active', value: '1' },
+	{ key: '2', text: 'paused', value: '2' },
+	{ key: '3', text: 'completed', value: '3' },
+	{ key: '4', text: 'failed', value: '4' },
+	{ key: '5', text: 'locked', value: '5' },
+]
+
 //
 
 export const data = {
+	campaign_states,
 	jsonEndpoint,
 	project_entities,
 	project_types,

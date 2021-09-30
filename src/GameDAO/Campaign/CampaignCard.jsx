@@ -10,7 +10,7 @@ import { gateway } from '../lib/ipfs'
 import {
 	Button, Grid, Card, Icon, Image, Segment
 } from 'semantic-ui-react'
-import { Modal, Form } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 
 const CampaignCard = ({ item, index, accountPair }) => {
 
@@ -19,7 +19,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 
 	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
 
-	console.log(state)
+	// console.log(state)
 
 	const [ metadata, setMetadata ] = useState({})
 	const [ imageURL, setImageURL ] = useState(null)
