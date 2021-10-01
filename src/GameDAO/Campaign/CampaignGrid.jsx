@@ -1,7 +1,7 @@
 import React, {
 	useState, useEffect
 } from 'react'
-import { Container, Grid, Form, Radio, Pagination } from 'semantic-ui-react'
+import { Container, Grid, Form, Radio, Pagination, Button, Icon, Menu } from 'semantic-ui-react'
 import CampaignCard from './CampaignCard'
 import { data, rnd } from '../lib/data'
 
@@ -14,7 +14,7 @@ const FilterBar = ({filter,setFilter}) => {
 	return (
 		<Form>
 			<Form.Select
-				label='Filter'
+				floating
 				placeholder='Filter'
 				name='filter'
 				options={options}
@@ -29,9 +29,14 @@ const CampaignGrid = ({ content, accountPair }) => {
 
 	const [ pageContent, setPageContent ] = useState([])
 	const [ page, setPage ] = useState(0)
-	const [ pageSize, setPageSize ] = useState(2)
+	const [ pageSize, setPageSize ] = useState(12)
 	const [ totalPages, setTotalPages ] = useState(0)
-	const [ filter, setFilter ] = useState('-1')
+	const [ filter, setFilter ] = useState('1')
+
+	const iPP = [3,5,9,18,36,72]
+	const handleShowMoreItems = () => setPageSize( ( pageSize < ( iPP.length - 1 ) ) ? pageSize + 1 : pageSize )
+	const handleShowLessItems = () => setPageSize( ( pageSize > 0 ) ? pageSize - 1 : 0 )
+
 
 	const handlePaginationChange = (e, { activePage }) => setPage( activePage - 1)
 
@@ -50,7 +55,17 @@ const CampaignGrid = ({ content, accountPair }) => {
 
 	return (
 		<Container>
-			<FilterBar filter={filter} setFilter={setFilter}/>
+			<Menu secondary>
+				<Button.Group color='teal'>
+					<FilterBar filter={filter} setFilter={setFilter}/>
+				</Button.Group>
+			<Menu.Menu position='right'>
+				<Button.Group>
+					<Button icon onClick={handleShowLessItems}><Icon name='block layout' /></Button>
+					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
+				</Button.Group>
+			</Menu.Menu>
+			</Menu>
 			<Grid stackable colums={5} >
 
 				{
