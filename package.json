@@ -16,6 +16,23 @@
     "deploy": "gh-pages -d build -m '[ci skip] Updates'"
   },
   "dependencies": {
+    "@emotion/cache": "^11.4.0",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@emotion/server": "^11.4.0",
+
+    "@iconify/icons-ant-design": "^1.1.0",
+    "@iconify/icons-eva": "^1.1.0",
+    "@iconify/icons-ic": "^1.1.10",
+    "@iconify/react": "^3.0.1",
+    "@mui/icons-material": "^5.0.0",
+    "@mui/lab": "^5.0.0-alpha.47",
+    "@mui/material": "^5.0.0",
+    "@mui/styles": "^5.0.0",
+    "@mui/system": "^5.0.0",
+    "@mui/utils": "^5.0.0",
+    "@mui/x-data-grid": "^5.0.0-beta.1",
+
     "@pinata/sdk": "^1.1.23",
     "@polkadot/api": "^4.13.1",
     "@polkadot/api-contract": "^4.13.1",
@@ -32,14 +49,31 @@
     "moment": "^2.29.1",
     "prop-types": "~15.7.2",
     "query-string": "~7.0.0",
+
+    "big.js": "^6.1.1",
+    "faker": "^5.5.3",
+
     "react": "~17.0.2",
     "react-copy-to-clipboard": "~5.0.2",
     "react-dom": "~17.0.2",
     "react-icons": "^4.2.0",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "~4.0.3",
+
+    "react-scroll": "^1.8.4",
+    "react-slick": "^0.28.0",
+    "react-spring": "^9.2.4",
+
+    "redux": "^4.1.1",
+    "redux-persist": "^6.0.0",
+
     "semantic-ui-css": "~2.4.1",
     "semantic-ui-react": "^2.0.0",
-    "styled-components": "^5.3.0"
+    "styled-components": "^5.3.0",
+    "uuid": "^8.3.2",
+    "toformat": "^2.0.0"
+
+
   },
   "devDependencies": {
     "@types/node": "^15.12.4",

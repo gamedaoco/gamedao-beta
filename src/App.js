@@ -1,16 +1,30 @@
-import React, { useState, createRef } from 'react'
-import 'semantic-ui-css/semantic.min.css'
+import React, { useState, createRef, Suspense } from 'react'
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+} from "react-router-dom";
+
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
+
+import 'semantic-ui-css/semantic.min.css'
 import { Container, Grid, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { IconContext } from "react-icons"
-import Footer from './components/Footer'
-import Header from './components/Header'
-import Transfer from './components/Transfer'
-import Template from './components/TemplateModule'
+
 import Loader from './components/Loader'
 import ErrorMessage from './components/Message'
-import GameDAO from './GameDAO'
+import Footer from './components/Footer'
+import Header from './components/Header'
+
+import Transfer from './components/Transfer'
+import Template from './components/TemplateModule'
+
+import Dashboard from './apps'
+import Campaigns from './apps/Campaigns'
+import Organisations from './apps/Organisations'
+import Governance from './apps/Governance'
+import Tangram from './apps/Tangram'
 
 const DEV = (process.env.NODE_ENV!=='production')
 
@@ -20,6 +34,18 @@ const Wrapper = styled.div`
 		margin-top:2px;
 	}
 `
+
+const RouteWithSubRoutes = (route) => {
+  return (
+    <Route
+      path={route.path}
+      render={props => (
+        // pass the sub-routes down to keep nesting
+        <route.component {...props} routes={route.routes} />
+      )}
+    />
+  );
+}
 
 function Main () {
 
@@ -36,31 +62,81 @@ function Main () {
 
 	const contextRef = createRef()
 
+	// const routes = [{
+	// 	path: "/",
+	// 	component: Dashboard
+	// },{
+	// 	path: "/app",
+	// 	component: Dashboard,
+	// 	routes: [{
+	// 		path: "/app/organisations",
+	// 		component: Organisations
+	// 	},{
+	// 		path: "/app/governance",
+	// 		component: Governance
+	// 	},{
+	// 		path: "/app/campaigns",
+	// 		component: Campaigns
+	// 	},{
+	// 		path: "/app/tangram",
+	// 		component: Tangram
+	// 	}]
+	// }];
+
 	return (
 		<Wrapper context={contextRef}>
 			<IconContext.Provider value={{
 				color: "black",
 				className: "react-icon"
 			}}>
-			<Header
-				setAccountAddress={setAccountAddress}
-				accountPair={accountPair}
-				/>
 
+				<Router>
+					<Header
+						setAccountAddress={setAccountAddress}
+						accountPair={accountPair}
+						/>
+					<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
+						<Container>
+							<Grid>
+								<Grid.Row stretched>
+									<Switch>
+{/*										{routes.map((route, i) => (
+											<Suspense key={i} fallback={<Loader text="Loading..."></Loader>}>
+												<RouteWithSubRoutes accountPair={accountPair} {...route} />
+											</Suspense>
+										))}*/}
+										<Route exact path="/app">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Dashboard accountPair={accountPair} />
+											</Suspense>
+										</Route>
+										<Route exact path="/app/organisations">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Organisations accountPair={accountPair} />
+											</Suspense>
+										</Route>
+										<Route exact path="/app/governance">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Governance accountPair={accountPair} />
+											</Suspense>
+										</Route>
+										<Route exact path="/app/campaigns">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Campaigns accountPair={accountPair} />
+											</Suspense>
+										</Route>
+										<Route exact path="/app/tangram">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Tangram accountPair={accountPair} />
+											</Suspense>
+										</Route>
+									</Switch>
+								</Grid.Row>
+							</Grid>
+						</Container>
+					</Segment>
+			</Router>
 
-			<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
-				<Container>
-					<Grid>
-						<Grid.Row stretched>
-							<GameDAO
-								accountPair={accountPair}
-								accountAddress={accountAddress}
-								setAccountAddress={setAccountAddress}
-								/>
-						</Grid.Row>
-					</Grid>
-				</Container>
-			</Segment>
 			{ DEV &&
 				<Segment vertical style={{ padding: '5em 1em', backgroundColor:'#999' }}>
 					<Container>
@@ -82,11 +158,6 @@ function Main () {
 				</Segment>
 			}
 
-{/*
-			<Segment inverted vertical style={{ minHeight: '10vh', padding: '3em', backgroundColor:'#2b2c2d' }}>
-
-			</Segment>
-*/}
 			<Footer/>
 
 		</IconContext.Provider>
