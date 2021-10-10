@@ -28,12 +28,12 @@ import {
 	BiDiamond,
 } from "react-icons/bi";
 
-const DAO = lazy( () => import ('./DAO') )
-// const CreateDAO = lazy( () => import ('./DAO/Create') )
-const Campaign = lazy( () => import ('./Campaign') )
-const CreateCampaign = lazy( () => import ('./Campaign/Create') )
-const Proposal = lazy( () => import ('./Proposal') )
-// const CreateProposal = lazy( () => import ( './Proposal/Create' ) )
+const DAO = lazy( () => import ('./Organisations') )
+// const CreateDAO = lazy( () => import ('./Organisations/Create') )
+const Campaign = lazy( () => import ('./Campaigns') )
+const CreateCampaign = lazy( () => import ('./Campaigns/Create') )
+const Proposal = lazy( () => import ('./Governance') )
+// const CreateProposal = lazy( () => import ( './Governance/Create' ) )
 const Tangram = lazy( () => import ('./Tangram') )
 
 const GameDAO = props => {

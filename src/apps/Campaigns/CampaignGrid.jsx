@@ -15,8 +15,28 @@ const FilterBar = ({filter,setFilter}) => {
 		<Form>
 			<Form.Select
 				floating
-				placeholder='Filter'
-				name='filter'
+				placeholder='State'
+				name='state'
+				options={options}
+				value={filter}
+				onChange={handleOnChange}
+				/>
+		</Form>
+	)
+}
+
+const ScopeBar = ({filter,setFilter}) => {
+
+	const handleOnChange = (e, { value }) => setFilter(value)
+
+	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.protocol_types)
+
+	return (
+		<Form>
+			<Form.Select
+				floating
+				placeholder='Type'
+				name='type'
 				options={options}
 				value={filter}
 				onChange={handleOnChange}
@@ -82,7 +102,7 @@ const CampaignGrid = ({ content, accountPair }) => {
 			<Menu secondary>
 				<Button.Group color='teal'>
 					<FilterBar filter={filter} setFilter={setFilter}/>
-					<ScopeBar filter={filter} setFilter={setFilter}/>
+					<ScopeBar filter={scope} setFilter={setScope}/>
 				</Button.Group>
 			<Menu.Menu position='right'>
 				<Button.Group>
