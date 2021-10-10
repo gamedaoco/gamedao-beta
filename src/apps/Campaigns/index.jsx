@@ -14,8 +14,8 @@ import { useSubstrate } from '../../substrate-lib'
 
 import { Icon, Container, Grid, Button } from 'semantic-ui-react'
 
-const CampaignGrid = lazy( () => import ('./CampaignGrid') )
-const CreateCampaign = lazy( () => import ('./Create') )
+const CampaignGrid = lazy(() => import('./CampaignGrid'))
+const CreateCampaign = lazy(() => import('./Create'))
 
 //
 // campaigns component
@@ -25,35 +25,34 @@ const CreateCampaign = lazy( () => import ('./Create') )
 // than watching the state
 //
 
-export const Campaigns = props => {
-
+export const Campaigns = (props) => {
 	const { accountPair } = props
 	const { api } = useSubstrate()
-	const [ nonce, updateNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
+	const [nonce, updateNonce] = useState()
+	const [hashes, setHashes] = useState()
 
-	const [ campaigns, setCampaigns ] = useState()
-	const [ balances, setBalances ] = useState()
-	const [ states, setStates ] = useState()
-	const [ content, setContent ] = useState()
+	const [campaigns, setCampaigns] = useState()
+	const [balances, setBalances] = useState()
+	const [states, setStates] = useState()
+	const [content, setContent] = useState()
 
 	useEffect(() => {
-
 		let unsubscribe = null
 
-		api.query.gameDaoCrowdfunding.nonce(n => {
-			if (n.isNone) {
-				updateNonce('<None>')
-			} else {
-				updateNonce(n.toNumber())
-			}
-		}).then(unsub => {
-			unsubscribe = unsub
-		})
-		.catch(console.error)
+		api.query.gameDaoCrowdfunding
+			.nonce((n) => {
+				if (n.isNone) {
+					updateNonce('<None>')
+				} else {
+					updateNonce(n.toNumber())
+				}
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-
 	}, [api.query.gameDaoCrowdfunding])
 
 	// useEffect(() => {
@@ -81,146 +80,129 @@ export const Campaigns = props => {
 	// }, [nonce, accountPair, api, state, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
-
-		if ( nonce === 0 ) return
+		if (nonce === 0) return
 
 		const query = api.query.gameDaoCrowdfunding.campaignsArray
-		const req = [...new Array(nonce)].map((a,i)=>i)
-		const queryHashes = async args => {
-			const res = await query.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+		const req = [...new Array(nonce)].map((a, i) => i)
+		const queryHashes = async (args) => {
+			const res = await query.multi(req).then((_) => _.map((_h) => _h.toHuman()))
 			setHashes(res)
 		}
 		queryHashes()
-
 	}, [nonce, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
-
-		if ( !hashes ) return
+		if (!hashes) return
 
 		const query = api.query.gameDaoCrowdfunding.campaigns
-		const queryCampaigns = async args => {
+		const queryCampaigns = async (args) => {
 			let _req = []
 			try {
 				for (var i = 0; i < args.length; i++) _req.push(query(args[i]))
-				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
+				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
 				setCampaigns(res)
-			} catch ( err ) {
-				console.error( err )
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		queryCampaigns(hashes)
-
 	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
-
-		if ( !hashes ) return
+		if (!hashes) return
 
 		const query = api.query.gameDaoCrowdfunding.campaignBalance
-		const queryContributions = async args => {
+		const queryContributions = async (args) => {
 			let req = []
 			try {
-				for ( var i = 0; i < args.length; i++ ) req.push( query(args[i]) )
-				const res = await Promise.all( req ).then(_=>_.map((_c,_i)=>[args[_i],_c.toHuman()]))
-				setBalances( res )
-			} catch ( err ) {
-				console.error( err )
+				for (var i = 0; i < args.length; i++) req.push(query(args[i]))
+				const res = await Promise.all(req).then((_) => _.map((_c, _i) => [args[_i], _c.toHuman()]))
+				setBalances(res)
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		queryContributions(hashes)
-
 	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
-
-		if ( !hashes ) return
+		if (!hashes) return
 
 		const query = api.query.gameDaoCrowdfunding.campaignState
-		const queryStates = async args => {
+		const queryStates = async (args) => {
 			let req = []
 			try {
-				for ( var i = 0; i < args.length; i++ ) req.push( query(args[i]) )
-				const res = await Promise.all( req ).then(_=>_.map((_c,_i)=>[args[_i],_c.toHuman()]))
-				setStates( res )
-			} catch ( err ) {
-				console.error( err )
+				for (var i = 0; i < args.length; i++) req.push(query(args[i]))
+				const res = await Promise.all(req).then((_) => _.map((_c, _i) => [args[_i], _c.toHuman()]))
+				setStates(res)
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		queryStates(hashes)
-
 	}, [hashes, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
+		if (!campaigns || !balances || !states) return
 
-		if ( !campaigns || !balances || !states ) return
+		const content = campaigns.map((item, index) => {
+			let state,
+				balance = 0,
+				id = item.id
 
-		const content = campaigns.map( ( item, index ) => {
-
-			let state, balance = 0, id = item.id
-
-			if ( states.length > 0 ) {
-				const filter = states.filter( s => s[0] === id )
-				state = ( filter.length === 0 ) ? 0 : filter[0][1]
+			if (states.length > 0) {
+				const filter = states.filter((s) => s[0] === id)
+				state = filter.length === 0 ? 0 : filter[0][1]
 			}
 
-			if ( balances.length > 0 ) {
-				const filter = balances.filter( s => s[0] === id )
-				balance = ( filter.length === 0 ) ? 0 : filter[0][1]
+			if (balances.length > 0) {
+				const filter = balances.filter((s) => s[0] === id)
+				balance = filter.length === 0 ? 0 : filter[0][1]
 			}
 
 			const _item = {
 				...item,
 				state,
-				balance
+				balance,
 			}
 
 			return _item
-
 		})
 
-		setContent( content )
-
+		setContent(content)
 	}, [campaigns, balances, states])
 
-	const [ showCreateMode, setCreateMode ] = useState( false )
-	const handleCreateBtn = e => setCreateMode( true )
-	const handleCloseBtn = e => setCreateMode( false )
+	const [showCreateMode, setCreateMode] = useState(false)
+	const handleCreateBtn = (e) => setCreateMode(true)
+	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
 		<React.Fragment>
 			<Grid>
-				<Grid.Column floated='left' width={6} verticalAlign='middle'>
-					{
-						(!content || nonce === 0)
-						? (<h4>No campaigns yet. Create one!</h4>)
-						: (<h4>Total campaigns: { nonce }</h4>)
-					}
+				<Grid.Column floated="left" width={6} verticalAlign="middle">
+					{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}
 				</Grid.Column>
-				<Grid.Column floated='right' width={6} verticalAlign='middle'>
-					<Container textAlign='right'>
-						{
-							( showCreateMode)
-							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
-							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New Campaign</Button>
-						}
+				<Grid.Column floated="right" width={6} verticalAlign="middle">
+					<Container textAlign="right">
+						{showCreateMode ? (
+							<Button onClick={handleCloseBtn}>
+								<Icon name="cancel" />
+								Close
+							</Button>
+						) : (
+							<Button onClick={handleCreateBtn}>
+								<Icon name="plus" />
+								New Campaign
+							</Button>
+						)}
 					</Container>
 				</Grid.Column>
 			</Grid>
-			<br/>
-			{ showCreateMode &&
-				<CreateCampaign accountPair={accountPair} />
-			}
-			{ ( !showCreateMode && content && nonce !== 0) &&
-				<CampaignGrid
-					content={content}
-					accountPair={accountPair}
-					/>
-			}
+			<br />
+			{showCreateMode && <CreateCampaign accountPair={accountPair} />}
+			{!showCreateMode && content && nonce !== 0 && <CampaignGrid content={content} accountPair={accountPair} />}
 		</React.Fragment>
 	)
-
 }
-
 
 export default Campaigns

@@ -16,7 +16,7 @@ const GATEWAY_URL = config.GATEWAY_URL
 const GATEWAY_PROTOCOL = config.GATEWAY_PROTOCOL
 const GATEWAY_PORT = config.GATEWAY_PORT
 
-export const gateway = GATEWAY_PROTOCOL+"://"+GATEWAY_URL+(GATEWAY_PORT?':'+GATEWAY_PORT:'')+"/ipfs/"
+export const gateway = GATEWAY_PROTOCOL + '://' + GATEWAY_URL + (GATEWAY_PORT ? ':' + GATEWAY_PORT : '') + '/ipfs/'
 
 //
 //	init ipfs client
@@ -33,17 +33,16 @@ export const ipfs = create({
 	host: API_URL,
 	port: API_PORT,
 	// headers: (dev) ? null : headers,
-	timeout: '2m'
+	timeout: '2m',
 })
 
 //
 //	pin json to ipfs and return cid
 //
 
-export const pinJSONToIPFS = async payload => {
-
+export const pinJSONToIPFS = async (payload) => {
 	try {
-		const cid = await ipfs.add( Buffer.from( JSON.stringify( payload ) ) )
+		const cid = await ipfs.add(Buffer.from(JSON.stringify(payload)))
 		console.log(cid)
 		return cid.path
 	} catch (error) {
@@ -57,37 +56,32 @@ export const pinJSONToIPFS = async payload => {
 	// //handle error here
 	// console.log(err);
 	// });
-
 }
 
 //
 //	pin file to ipfs and return cid
 //
 
-export const pinFileToIPFS = async payload => {
-
+export const pinFileToIPFS = async (payload) => {
 	try {
-		const cid = await ipfs.add( payload )
+		const cid = await ipfs.add(payload)
 		console.log(cid)
 		return cid.path
 	} catch (error) {
 		console.log(error)
 	}
-
 }
 
 //
 //	get json from ipfs by cid
 //
 
-export const getJSON = async cid => {
-
+export const getJSON = async (cid) => {
 	try {
-		const payload = await ipfs.cat( cid )
+		const payload = await ipfs.cat(cid)
 		console.log(payload)
 		return payload
 	} catch (error) {
 		console.log(error)
 	}
-
 }

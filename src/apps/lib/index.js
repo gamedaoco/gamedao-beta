@@ -1,16 +1,14 @@
-import { web3FromSource } from '@polkadot/extension-dapp';
+import { web3FromSource } from '@polkadot/extension-dapp'
 import { useSubstrate } from '../../substrate-lib'
 
 export * from 'data'
 
-export const getFromAcct = async ({
-	accountPair
-}) => {
+export const getFromAcct = async ({ accountPair }) => {
 	const { api } = useSubstrate()
 
 	const {
 		address,
-		meta: { source, isInjected }
+		meta: { source, isInjected },
 	} = accountPair
 	let fromAcct
 	if (isInjected) {

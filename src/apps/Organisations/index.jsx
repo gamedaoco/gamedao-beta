@@ -27,12 +27,12 @@ import {
 	BiLockAlt,
 	BiLockOpenAlt,
 	BiGlobe,
-	BiGroup
-} from "react-icons/bi";
+	BiGroup,
+} from 'react-icons/bi'
 
 import styled from 'styled-components'
 
-const CreateDAO = lazy( () => import ('./Create') )
+const CreateDAO = lazy(() => import('./Create'))
 
 const dev = config.dev
 
@@ -47,9 +47,11 @@ const SmallText = styled.div`
 //
 //
 
-const getFromAcct = async ( api, accountPair ) => {
-
-	const { address, meta: { source, isInjected } } = accountPair
+const getFromAcct = async (api, accountPair) => {
+	const {
+		address,
+		meta: { source, isInjected },
+	} = accountPair
 	let fromAcct
 	if (isInjected) {
 		const injected = await web3FromSource(source)
@@ -59,88 +61,80 @@ const getFromAcct = async ( api, accountPair ) => {
 		fromAcct = accountPair
 	}
 	return fromAcct
-
 }
 
-const addMember = async ( api, accountPair, id, target ) => {
+const addMember = async (api, accountPair, id, target) => {
+	console.log(accountPair.address, id)
 
-	console.log( accountPair.address, id )
+	target.disabled = true
 
-	target.disabled=true
+	const payload = [id, accountPair.address]
 
-	const payload = [ id, accountPair.address ]
-
-	const from = await getFromAcct( api, accountPair )
+	const from = await getFromAcct(api, accountPair)
 	const tx = api.tx.gameDaoControl.addMember(...payload)
-	const hash = await tx.signAndSend( from, ({ status, events }) => {
-		console.log('Transaction status:', status.type);
-		if(events.length) {
+	const hash = await tx.signAndSend(from, ({ status, events }) => {
+		console.log('Transaction status:', status.type)
+		if (events.length) {
 			events.forEach((record) => {
-				const { event, phase } = record;
-				const types = event.typeDef;
+				const { event, phase } = record
+				const types = event.typeDef
 
 				// Show what we are busy with
-				console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
-				console.log(`\t\t${event.meta.documentation.toString()}`);
+				console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`)
+				console.log(`\t\t${event.meta.documentation.toString()}`)
 
 				// Loop through each of the parameters, displaying the type and data
 				event.data.forEach((data, index) => {
-					console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-				});
-
+					console.log(`\t\t\t${types[index].type}: ${data.toString()}`)
+				})
 			})
 			if (status.isFinalized) {
-				console.log('Finalized block hash', status.asFinalized.toHex());
+				console.log('Finalized block hash', status.asFinalized.toHex())
 			}
-
 		}
 	})
-	target.disabled=false
+	target.disabled = false
 }
 
 //
 //
 //
 
-const defaultContent = {
-
-}
+const defaultContent = {}
 
 const Item = ({ content, accountPair }) => {
-
 	const { api } = useSubstrate()
-	const [ itemContent, setItemContent ] = useState({})
-	const [ metadata, setMetadata ] = useState({})
-	const [ imageURL, setImageURL ] = useState(null)
+	const [itemContent, setItemContent] = useState({})
+	const [metadata, setMetadata] = useState({})
+	const [imageURL, setImageURL] = useState(null)
 
-	const updateContent = ( newContent ) => setItemContent({ ...itemContent, ...newContent })
+	const updateContent = (newContent) => setItemContent({ ...itemContent, ...newContent })
 
-	useEffect(()=>{
-		if ( !content ) return
+	useEffect(() => {
+		if (!content) return
 		updateContent(content)
-	},[ content ])
+	}, [content])
 
 	// get offchain data
 
-	useEffect(()=>{
-		if ( !itemContent.cid || itemContent.cid.length<3 ) return
-		fetch( gateway + itemContent.cid )
-			.then( res => res.text() )
-			.then( txt => setMetadata(JSON.parse(txt)) )
-			.catch( err => console.log( err ) )
-	},[ itemContent ])
+	useEffect(() => {
+		if (!itemContent.cid || itemContent.cid.length < 3) return
+		fetch(gateway + itemContent.cid)
+			.then((res) => res.text())
+			.then((txt) => setMetadata(JSON.parse(txt)))
+			.catch((err) => console.log(err))
+	}, [itemContent])
 
 	// get project image
 
-	useEffect(()=>{
-		if ( !metadata ) return
-		setImageURL( ( metadata.logo ) ? gateway + metadata.logo : null )
-	},[ metadata ])
+	useEffect(() => {
+		if (!metadata) return
+		setImageURL(metadata.logo ? gateway + metadata.logo : null)
+	}, [metadata])
 
 	// get onchain data
 
 	useEffect(() => {
-
 		if (!content) return
 		const query = async () => {
 			try {
@@ -167,8 +161,8 @@ const Item = ({ content, accountPair }) => {
 					memberCount: memberCount.toHuman(),
 					treasury: treasury.toHuman(),
 				})
-			} catch ( err ) {
-				console.error( err )
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		query()
@@ -198,204 +192,210 @@ const Item = ({ content, accountPair }) => {
 	//
 
 	const handleMembership = async (e) => {
-
 		const op = e.target.value
 
 		switch (op) {
 			case '0':
 				console.log('join')
-				await addMember( api, accountPair, itemContent.id, e.target )
+				await addMember(api, accountPair, itemContent.id, e.target)
 				// join
-			return;
-			case '1': console.log('apply')
+				return
+			case '1':
+				console.log('apply')
 				// apply for membership
-			return;
-			case '2': console.log('leave')
+				return
+			case '2':
+				console.log('leave')
 				// remove member
-			return;
+				return
 			default:
-			return;
+				return
 		}
-
 	}
 
 	const handleAdmin = () => console.log('open admin')
 	const handleDashboard = () => console.log('open dashboard')
 
-	const buttonText = ['join','apply','leave']
+	const buttonText = ['join', 'apply', 'leave']
 
-	const isAdmin = () => ( accountPair.address === itemContent.controller ) ? true : false
-	const isMember = () => ( itemContent.memberState > 0 ) ? true : false
+	const isAdmin = () => (accountPair.address === itemContent.controller ? true : false)
+	const isMember = () => (itemContent.memberState > 0 ? true : false)
 
 	const Interactions = () => {
-
-		const text = buttonText[ itemContent.access ]
+		const text = buttonText[itemContent.access]
 		return (
 			<>
-				{ ( isMember() || isAdmin() ) && <Button basic onClick={handleDashboard} value={itemContent.access} size='mini'>{`Dashboard`}</Button>}
-				{ ( isMember() && !isAdmin() ) && <Button basic onClick={handleMembership} value={itemContent.access} size='mini'>{`leave`}</Button>}
-				{ !isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size='mini'>{`${text}`}</Button>}
-				{ isAdmin() && <Button basic onClick={handleAdmin} size='mini'>Admin</Button>}
+				{(isMember() || isAdmin()) && <Button basic onClick={handleDashboard} value={itemContent.access} size="mini">{`Dashboard`}</Button>}
+				{isMember() && !isAdmin() && <Button basic onClick={handleMembership} value={itemContent.access} size="mini">{`leave`}</Button>}
+				{!isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size="mini">{`${text}`}</Button>}
+				{isAdmin() && (
+					<Button basic onClick={handleAdmin} size="mini">
+						Admin
+					</Button>
+				)}
 			</>
 		)
 	}
 
-	const bodyToText = () => d.dao_bodies.filter( b => b.value === Number(content.body))[0].text
+	const bodyToText = () => d.dao_bodies.filter((b) => b.value === Number(content.body))[0].text
 
-	if ( !itemContent ) return null
+	if (!itemContent) return null
 
 	return (
 		<Table.Row>
 			<Table.Cell>
-				<a onClick={()=>console.log(itemContent, metadata)}>
-				<Header as='h4' image>
-					<Image rounded src={ imageURL } />
-					<Header.Content>
-						{itemContent.name}
-					<Header.Subheader>
-						{bodyToText()}
-					</Header.Subheader>
-					</Header.Content>
-				</Header>
+				<a onClick={() => console.log(itemContent, metadata)}>
+					<Header as="h4" image>
+						<Image rounded src={imageURL} />
+						<Header.Content>
+							{itemContent.name}
+							<Header.Subheader>{bodyToText()}</Header.Subheader>
+						</Header.Content>
+					</Header>
 				</a>
 			</Table.Cell>
-			<Table.Cell ><Container><SmallText>{metadata.description}</SmallText></Container></Table.Cell>
 			<Table.Cell>
-					{ metadata.website && <a href={metadata.website} target="_blank"><BiGlobe/></a>}
+				<Container>
+					<SmallText>{metadata.description}</SmallText>
+				</Container>
 			</Table.Cell>
-			<Table.Cell textAlign='center'>{ (itemContent.access==='0') ? 'open' : <BiLockAlt/> }</Table.Cell>
-			<Table.Cell>{itemContent.memberCount||0}</Table.Cell>
-{/*
+			<Table.Cell>
+				{metadata.website && (
+					<a href={metadata.website} target="_blank">
+						<BiGlobe />
+					</a>
+				)}
+			</Table.Cell>
+			<Table.Cell textAlign="center">{itemContent.access === '0' ? 'open' : <BiLockAlt />}</Table.Cell>
+			<Table.Cell>{itemContent.memberCount || 0}</Table.Cell>
+			{/*
 			<Table.Cell>{itemContent.treasuryBalance||0}</Table.Cell>
 			<Table.Cell>{itemContent.motions||0}</Table.Cell>
 			<Table.Cell>{itemContent.campaigns||0}</Table.Cell>
 */}
-			<Table.Cell><Interactions/></Table.Cell>
+			<Table.Cell>
+				<Interactions />
+			</Table.Cell>
 		</Table.Row>
 	)
-
 }
 
-const ItemList = props => {
+const ItemList = (props) => {
+	const { content, accountPair } = props
 
-	const {
-		content,
-		accountPair
-	} = props
+	const [activePage, setActivePage] = useState(1)
+	const [totalPages, setTotalPages] = useState(0)
+	const [offset, setOffset] = useState(0)
+	const [itemsPerPage, setItemsPerPage] = useState(3)
 
-	const [ activePage, setActivePage ] = useState(1)
-	const [ totalPages, setTotalPages ] = useState(0)
-	const [ offset, setOffset ] = useState(0)
-	const [ itemsPerPage, setItemsPerPage ] = useState(3)
+	const iPP = [3, 5, 9, 18, 36, 72]
+	const handleShowMoreItems = () => setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
+	const handleShowLessItems = () => setItemsPerPage(itemsPerPage > 0 ? itemsPerPage - 1 : 0)
 
-	const iPP = [3,5,9,18,36,72]
-	const handleShowMoreItems = () => setItemsPerPage( ( itemsPerPage < ( iPP.length - 1 ) ) ? itemsPerPage + 1 : itemsPerPage )
-	const handleShowLessItems = () => setItemsPerPage( ( itemsPerPage > 0 ) ? itemsPerPage - 1 : 0 )
-
-	useEffect(()=>{
-		const _totalPages = Math.ceil( content.length / iPP[itemsPerPage] )
-		setTotalPages( _totalPages )
-		if ( activePage > _totalPages ) setActivePage( _totalPages )
+	useEffect(() => {
+		const _totalPages = Math.ceil(content.length / iPP[itemsPerPage])
+		setTotalPages(_totalPages)
+		if (activePage > _totalPages) setActivePage(_totalPages)
 	}, [content, itemsPerPage, activePage])
 
 	const handlePaginationChange = (e, { activePage }) => {
 		setActivePage(activePage)
-		setOffset( ( activePage - 1 ) * iPP[itemsPerPage] )
+		setOffset((activePage - 1) * iPP[itemsPerPage])
 	}
 
-	if ( !content ) return null
+	if (!content) return null
 
-		// console.log(activePage,totalPages,offset,itemsPerPage)
+	// console.log(activePage,totalPages,offset,itemsPerPage)
 
 	return (
 		<Container>
-			<Container align='right'>
+			<Container align="right">
 				<Button.Group>
-					<Button icon onClick={handleShowLessItems}><Icon name='block layout' /></Button>
-					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
+					<Button icon onClick={handleShowLessItems}>
+						<Icon name="block layout" />
+					</Button>
+					<Button icon onClick={handleShowMoreItems}>
+						<Icon name="grid layout" />
+					</Button>
 				</Button.Group>
 			</Container>
 			<Table striped fixed>
 				<Table.Header>
 					<Table.Row>
-						<Table.HeaderCell width='4'></Table.HeaderCell>
-						<Table.HeaderCell width='6'>Description</Table.HeaderCell>
-						<Table.HeaderCell width='1'><BiGlobe/></Table.HeaderCell>
-						<Table.HeaderCell width='1'><BiLockAlt/></Table.HeaderCell>
-						<Table.HeaderCell width='1'><BiGroup/></Table.HeaderCell>
-{/*
+						<Table.HeaderCell width="4"></Table.HeaderCell>
+						<Table.HeaderCell width="6">Description</Table.HeaderCell>
+						<Table.HeaderCell width="1">
+							<BiGlobe />
+						</Table.HeaderCell>
+						<Table.HeaderCell width="1">
+							<BiLockAlt />
+						</Table.HeaderCell>
+						<Table.HeaderCell width="1">
+							<BiGroup />
+						</Table.HeaderCell>
+						{/*
 						<Table.HeaderCell width='two'>Balance</Table.HeaderCell>
 						<Table.HeaderCell>Motions</Table.HeaderCell>
 						<Table.HeaderCell>Campaigns</Table.HeaderCell>
 */}
-						<Table.HeaderCell/>
+						<Table.HeaderCell />
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-				{	content.slice( offset, offset + iPP[itemsPerPage] - 1 )
-					.map((d,i)=>{
+					{content.slice(offset, offset + iPP[itemsPerPage] - 1).map((d, i) => {
 						const _content = {
-								...d,
-							}
-						return <Item key={offset + i}
-							content={_content}
-							accountPair={accountPair}
-						/>
-					})
-				}
+							...d,
+						}
+						return <Item key={offset + i} content={_content} accountPair={accountPair} />
+					})}
 				</Table.Body>
 			</Table>
-			{ (totalPages >= 2) &&
-				<Pagination
-					onPageChange={handlePaginationChange}
-					activePage={activePage}
-					totalPages={totalPages}
-					/>
-			}
+			{totalPages >= 2 && <Pagination onPageChange={handlePaginationChange} activePage={activePage} totalPages={totalPages} />}
 		</Container>
 	)
-
 }
 
-export const Main = props => {
+export const Main = (props) => {
 	const { api } = useSubstrate()
 	const { accountPair } = props
 
-	const [ nonce, setNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
-// eslint-disable-next-line
-	const [ configs, setConfigs ] = useState([])
-// eslint-disable-next-line
-	const [ balances, setBalances ] = useState([])
-// eslint-disable-next-line
-	const [ members, setMembers ] = useState([])
-	const [ content, setContent ] = useState()
-	const [ access, setAccess ] = useState([])
+	const [nonce, setNonce] = useState()
+	const [hashes, setHashes] = useState()
+	// eslint-disable-next-line
+	const [configs, setConfigs] = useState([])
+	// eslint-disable-next-line
+	const [balances, setBalances] = useState([])
+	// eslint-disable-next-line
+	const [members, setMembers] = useState([])
+	const [content, setContent] = useState()
+	const [access, setAccess] = useState([])
 
 	// nonce
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoControl.nonce(n => {
-			if (n.isNone) {
-				setNonce('<None>')
-			} else {
-				setNonce(n.toNumber())
-			}
-		}).then(unsub => {
-			unsubscribe = unsub
-		}).catch(console.error)
+		api.query.gameDaoControl
+			.nonce((n) => {
+				if (n.isNone) {
+					setNonce('<None>')
+				} else {
+					setNonce(n.toNumber())
+				}
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-
 	}, [api.query.gameDaoControl])
 
 	// on nonce change get hashes
 
 	useEffect(() => {
-		if ( nonce === 0 ) return
-		const req = [...new Array(nonce)].map((a,i)=>i)
-		const queryHashes = async args => {
-			const hashes = await api.query.gameDaoControl.bodyByNonce.multi( req ).then(_=>_.map(_h=>_h.toHuman()))
+		if (nonce === 0) return
+		const req = [...new Array(nonce)].map((a, i) => i)
+		const queryHashes = async (args) => {
+			const hashes = await api.query.gameDaoControl.bodyByNonce.multi(req).then((_) => _.map((_h) => _h.toHuman()))
 			setHashes(hashes)
 		}
 		queryHashes()
@@ -404,15 +404,15 @@ export const Main = props => {
 	// on hashes get content
 
 	useEffect(() => {
-		if ( !hashes ) return
-		const getContent = async args => {
+		if (!hashes) return
+		const getContent = async (args) => {
 			let _req = []
 			try {
 				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodies(args[i]))
-				const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>_c.toHuman()))
+				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
 				setContent(res)
-			} catch ( err ) {
-				console.error( err )
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		getContent(hashes)
@@ -421,19 +421,21 @@ export const Main = props => {
 	// on hashes get config
 
 	useEffect(() => {
-		if ( !hashes ) return
-		const getContent = async args => {
+		if (!hashes) return
+		const getContent = async (args) => {
 			let _req = []
 			try {
 				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyConfig(args[i]))
-				const res = await Promise.all(_req).then(_=>_.map((_c,_i) => {
-					const _res = { id:args[_i], ..._c.toHuman() }
-					return _res
-				}))
+				const res = await Promise.all(_req).then((_) =>
+					_.map((_c, _i) => {
+						const _res = { id: args[_i], ..._c.toHuman() }
+						return _res
+					})
+				)
 				setConfigs(res)
 				// console.log('configs', res)
-			} catch ( err ) {
-				console.error( err )
+			} catch (err) {
+				console.error(err)
 			}
 		}
 		getContent(hashes)
@@ -518,56 +520,46 @@ export const Main = props => {
 	// 	getContent(hashes)
 	// }, [hashes, api.query.gameDaoControl])
 
-	const [ showCreateMode, setCreateMode ] = useState( false );
-	const handleCreateBtn = e => setCreateMode(true);
-	const handleCloseBtn = e => setCreateMode(false);
+	const [showCreateMode, setCreateMode] = useState(false)
+	const handleCreateBtn = (e) => setCreateMode(true)
+	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
 		<React.Fragment>
 			<Grid>
-				<Grid.Column floated='left' width={6} verticalAlign='middle'>
-					{
-						(!content || nonce === 0)
-						? (<h4>No organizations yet. Create one!</h4>)
-						: (<h4>Total organizations: { nonce }</h4>)
-					}
+				<Grid.Column floated="left" width={6} verticalAlign="middle">
+					{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}
 				</Grid.Column>
-				<Grid.Column floated='right' width={6} verticalAlign='middle'>
-					<Container textAlign='right'>
-						{
-							(showCreateMode)
-							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
-							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New DAO</Button>
-						}
+				<Grid.Column floated="right" width={6} verticalAlign="middle">
+					<Container textAlign="right">
+						{showCreateMode ? (
+							<Button onClick={handleCloseBtn}>
+								<Icon name="cancel" />
+								Close
+							</Button>
+						) : (
+							<Button onClick={handleCreateBtn}>
+								<Icon name="plus" />
+								New DAO
+							</Button>
+						)}
 					</Container>
 				</Grid.Column>
 			</Grid>
-			<br/>
-			{ showCreateMode &&
-				<CreateDAO accountPair={accountPair} />
-			}
-			{ ( !showCreateMode && content && nonce !== 0 ) &&
-				<ItemList
-					content={content}
-					configs={configs}
-					members={members}
-					accountPair={accountPair}
-					/>
-			}
+			<br />
+			{showCreateMode && <CreateDAO accountPair={accountPair} />}
+			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} accountPair={accountPair} />}
 		</React.Fragment>
 	)
-
 }
 
-export default function Module (props) {
-
+export default function Module(props) {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoControl// && accountPair
-		? <Main {...props} />
-		: null
-
+	return api && api.query.gameDaoControl ? ( // && accountPair
+		<Main {...props} />
+	) : null
 }
 //
 //

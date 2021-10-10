@@ -1,4 +1,4 @@
 {
-  "DEVELOPMENT_KEYRING": true,
-  "PROVIDER_SOCKET": "wss://test.alphaville.zero.io"
+	"DEVELOPMENT_KEYRING": true,
+	"PROVIDER_SOCKET": "wss://test.alphaville.zero.io"
 }

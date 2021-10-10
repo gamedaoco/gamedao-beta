@@ -1,4 +1,4 @@
-export const rnd = top => Math.round( Math.random() * ( top - 1 ) )
+export const rnd = (top) => Math.round(Math.random() * (top - 1))
 
 export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
@@ -8,19 +8,19 @@ export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
 export const voting_types = [
 	{ key: '0', text: 'Single Choice', value: 0 },
-	{ key: '1', text: 'Approval', value: 1},
+	{ key: '1', text: 'Approval', value: 1 },
 	{ key: '2', text: 'Quadratic', value: 2 },
 	{ key: '3', text: 'Ranked Choice', value: 3 },
-	{ key: '4', text: 'Weighted', value: 4 }
+	{ key: '4', text: 'Weighted', value: 4 },
 ]
 
 // dao
 
 export const dao_bodies = [
 	{ key: '0', text: 'Individual', value: 0 },
-	{ key: '1', text: 'Off Chain Organization', value: 1},
+	{ key: '1', text: 'Off Chain Organization', value: 1 },
 	{ key: '2', text: 'On Chain / DAO', value: 2 },
-	{ key: '3', text: 'Hybrid DAO', value: 3 }
+	{ key: '3', text: 'Hybrid DAO', value: 3 },
 ]
 export const dao_member_governance = [
 	{ key: '0', text: 'Open', value: 0 },
@@ -65,10 +65,10 @@ export const project_types = [
 ]
 
 export const protocol_types = [
-	{ key: '0', text: 'Grant', value: '0' },   // direct pay
+	{ key: '0', text: 'Grant', value: '0' }, // direct pay
 	{ key: '1', text: 'Prepaid', value: '1' }, // perk based / dao
-	{ key: '2', text: 'Loan', value: '2' },    // defi / loan
-	{ key: '3', text: 'Shares', value: '3' },  // shares
+	{ key: '2', text: 'Loan', value: '2' }, // defi / loan
+	{ key: '3', text: 'Shares', value: '3' }, // shares
 	{ key: '4', text: 'DAO', value: '4' },
 ]
 
@@ -88,23 +88,23 @@ export const curve_function = [
 //
 
 export const CampaignProtocol = {
-	0 : 'GRANT',   // get money from donators and or gamedao treasury
-	1 : 'PREPAID', // raise money which will be released based on milestones or dao governance
-	2 : 'LOAN',    // get a loan from individuals and or gamedao treasury, interest applies.
-	3 : 'SHARE',   // raise money for n shares of your project
-	4 : 'DAO',     // raise money which resides in a treasury and is released based on requests to anyone
+	0: 'GRANT', // get money from donators and or gamedao treasury
+	1: 'PREPAID', // raise money which will be released based on milestones or dao governance
+	2: 'LOAN', // get a loan from individuals and or gamedao treasury, interest applies.
+	3: 'SHARE', // raise money for n shares of your project
+	4: 'DAO', // raise money which resides in a treasury and is released based on requests to anyone
 }
 
 export const CampaignGovernance = {
-	0 : 'DEFAULT',
-	1 : 'DAO',
+	0: 'DEFAULT',
+	1: 'DAO',
 }
 
 // durations will be converted to blocks
 // where 1 day == 3sec blocktime * 20 * 60 * 24 == 86400 blocks
 export const blockTime = 3
 
-export const blockFactor = blockTime * ( 60 / blockTime) * 60 * 24
+export const blockFactor = blockTime * (60 / blockTime) * 60 * 24
 
 export const project_durations = [
 	{ key: '0', text: '1 day', value: '1' },
@@ -114,7 +114,7 @@ export const project_durations = [
 	{ key: '4', text: '1 year', value: '365' },
 ]
 
-export const blocksToTime = blocks => {
+export const blocksToTime = (blocks) => {
 	const ss = blocks * blockTime
 	const mm = blocks / 60
 	const hh = mm / 60
@@ -122,7 +122,7 @@ export const blocksToTime = blocks => {
 	return `${dd}:${hh}:${mm}:${ss}`
 }
 
-		// 0 init, 1 active, 2 paused, 3 complete success, 4 complete failed, 5 authority lock
+// 0 init, 1 active, 2 paused, 3 complete success, 4 complete failed, 5 authority lock
 
 export const campaign_states = [
 	{ key: '0', text: 'initialized', value: '0' },
@@ -149,7 +149,7 @@ export const data = {
 	dao_bodies,
 	dao_member_governance,
 	dao_fee_model,
-	voting_types
+	voting_types,
 }
 
 export default data

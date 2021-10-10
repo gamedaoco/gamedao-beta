@@ -11,14 +11,13 @@ const dev = config.dev
 
 import { Table, Header, Button, Container, Image } from 'semantic-ui-react'
 import { Grid, Segment, Icon } from 'semantic-ui-react'
-const CreateProposal = lazy( () => import ( './Create' ) )
+const CreateProposal = lazy(() => import('./Create'))
 
 // ui list item
 
 const Item = ({ content }) => {
-
 	// should be the image of the associated org
-	const [ imageURL, setImageURL ] = useState(null)
+	const [imageURL, setImageURL] = useState(null)
 
 	// const [ config, setConfig ] = useState()
 	// const [ itemContent, setItemContent ] = useState()
@@ -53,14 +52,14 @@ const Item = ({ content }) => {
 	// 	})
 	// },[ content, members ])
 
-	if ( !content ) return null
-		console.log(content)
+	if (!content) return null
+	console.log(content)
 
 	return (
 		<Table.Row>
 			<Table.Cell>
-				<Header as='h4' image>
-					<Image rounded src={ imageURL } />
+				<Header as="h4" image>
+					<Image rounded src={imageURL} />
 					<Header.Content>
 						{content.name}
 						<Header.Subheader>{content.body}</Header.Subheader>
@@ -72,21 +71,26 @@ const Item = ({ content }) => {
 			<Table.Cell>{content.expiry}</Table.Cell>
 			<Table.Cell>{content.status}</Table.Cell>
 			<Table.Cell>0/0</Table.Cell>
-			<Table.Cell><Button color='green' size='mini'>Ack</Button><Button size='mini' color='red'>Nack</Button></Table.Cell>
+			<Table.Cell>
+				<Button color="green" size="mini">
+					Ack
+				</Button>
+				<Button size="mini" color="red">
+					Nack
+				</Button>
+			</Table.Cell>
 		</Table.Row>
 	)
-
 }
 
 // ui list
 
 const ItemList = ({ data: { content } }) => {
-
-	if ( !content ) return null
+	if (!content) return null
 
 	return (
 		<Container>
-			<Table  striped singleLine>
+			<Table striped singleLine>
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell>Entity</Table.HeaderCell>
@@ -99,46 +103,46 @@ const ItemList = ({ data: { content } }) => {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{ content.map((item,i)=><Item key={i} content={item} />) }
+					{content.map((item, i) => (
+						<Item key={i} content={item} />
+					))}
 				</Table.Body>
 			</Table>
 		</Container>
 	)
-
 }
 
-export const Items = props => {
-
+export const Items = (props) => {
 	const { api } = useSubstrate()
 	const { accountPair } = props
-	const [ nonce, setNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
-	const [ content, setContent ] = useState()
+	const [nonce, setNonce] = useState()
+	const [hashes, setHashes] = useState()
+	const [content, setContent] = useState()
 
 	// nonce
 
 	useEffect(() => {
-
 		let unsubscribe = null
 
-		api.query.gameDaoGovernance.nonce(n => {
-			setNonce(n.toNumber())
-		}).then( unsub => {
-			unsubscribe = unsub
-		}).catch( console.error )
+		api.query.gameDaoGovernance
+			.nonce((n) => {
+				setNonce(n.toNumber())
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-
 	}, [api.query.gameDaoGovernance])
 
 	// hashes
 
 	useEffect(() => {
-		if ( !nonce ) return
-		const req = [...new Array(nonce)].map((a,i)=>i)
-		const queryHashes = async args => {
-			const hashes = await api.query.gameDaoGovernance.proposalsArray
-				.multi( args ).then( _ => _.map( _h => _h.toHuman() ))
+		if (!nonce) return
+		const req = [...new Array(nonce)].map((a, i) => i)
+		const queryHashes = async (args) => {
+			const hashes = await api.query.gameDaoGovernance.proposalsArray.multi(args).then((_) => _.map((_h) => _h.toHuman()))
 			setHashes(hashes)
 		}
 		queryHashes(req)
@@ -147,11 +151,10 @@ export const Items = props => {
 	// proposals
 
 	useEffect(() => {
-		if ( !hashes ) return
+		if (!hashes) return
 		const query = api.query.gameDaoGovernance.proposals
-		const getContent = async args => {
-			const content = await api.query.gameDaoGovernance.proposals
-				.multi( args ).then( _ => _.map( _h => _h.toHuman() ))
+		const getContent = async (args) => {
+			const content = await api.query.gameDaoGovernance.proposals.multi(args).then((_) => _.map((_h) => _h.toHuman()))
 			setContent(content)
 		}
 		getContent(hashes)
@@ -163,51 +166,44 @@ export const Items = props => {
 	// group by organization
 	// dropdown to select organization
 
-	const [ showCreateMode, setCreateMode ] = useState( false );
-	const handleCreateBtn = e => setCreateMode(true);
-	const handleCloseBtn = e => setCreateMode(false);
+	const [showCreateMode, setCreateMode] = useState(false)
+	const handleCreateBtn = (e) => setCreateMode(true)
+	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
 		<React.Fragment>
 			<Grid>
-				<Grid.Column floated='left' width={6} verticalAlign='middle'>
-					{
-						(!content || nonce === 0)
-						? (<h4>No proposals yet. Create one!</h4>)
-						: (<h4>Total proposals: { nonce }</h4>)
-					}
+				<Grid.Column floated="left" width={6} verticalAlign="middle">
+					{!content || nonce === 0 ? <h4>No proposals yet. Create one!</h4> : <h4>Total proposals: {nonce}</h4>}
 				</Grid.Column>
-				<Grid.Column floated='right' width={6} verticalAlign='middle'>
-					<Container textAlign='right'>
-						{
-							(showCreateMode)
-							? <Button onClick={handleCloseBtn}><Icon name='cancel'/>Close</Button>
-							: <Button onClick={handleCreateBtn}><Icon name='plus'/>New Proposal</Button>
-						}
+				<Grid.Column floated="right" width={6} verticalAlign="middle">
+					<Container textAlign="right">
+						{showCreateMode ? (
+							<Button onClick={handleCloseBtn}>
+								<Icon name="cancel" />
+								Close
+							</Button>
+						) : (
+							<Button onClick={handleCreateBtn}>
+								<Icon name="plus" />
+								New Proposal
+							</Button>
+						)}
 					</Container>
 				</Grid.Column>
 			</Grid>
-			<br/>
-			{ showCreateMode &&
-				<CreateProposal accountPair={accountPair} />
-			}
-			{ ( !showCreateMode && content && nonce !== 0 ) &&
-				<ItemList data={ { content } } />
-			}
+			<br />
+			{showCreateMode && <CreateProposal accountPair={accountPair} />}
+			{!showCreateMode && content && nonce !== 0 && <ItemList data={{ content }} />}
 		</React.Fragment>
 	)
-
 }
 
-export default function Module (props) {
-
+export default function Module(props) {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoGovernance && accountPair
-		? <Items {...props} />
-		: null
-
+	return api && api.query.gameDaoGovernance && accountPair ? <Items {...props} /> : null
 }
 
 //

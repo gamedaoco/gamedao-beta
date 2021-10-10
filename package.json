@@ -13,14 +13,15 @@
     "lint:ci": "eslint src/**/*.js --max-warnings=0",
     "lint:fix": "eslint --fix src/**/*.js",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build -m '[ci skip] Updates'"
+    "deploy": "gh-pages -d build -m '[ci skip] Updates'",
+    "format": "prettier --write --check 'src/**/*.{js,json,jsx,ts,tsx}'",
+    "format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
   },
   "dependencies": {
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
     "@emotion/server": "^11.4.0",
-
+    "@emotion/styled": "^11.3.0",
     "@iconify/icons-ant-design": "^1.1.0",
     "@iconify/icons-eva": "^1.1.0",
     "@iconify/icons-ic": "^1.1.10",
@@ -32,7 +33,6 @@
     "@mui/system": "^5.0.0",
     "@mui/utils": "^5.0.0",
     "@mui/x-data-grid": "^5.0.0-beta.1",
-
     "@pinata/sdk": "^1.1.23",
     "@polkadot/api": "^4.13.1",
     "@polkadot/api-contract": "^4.13.1",
@@ -44,35 +44,29 @@
     "@polkadot/util": "~6.7.1",
     "@polkadot/util-crypto": "~6.7.1",
     "@zeroio/type-definitions": "^0.0.6",
+    "big.js": "^6.1.1",
     "faker": "^5.5.3",
     "ipfs-http-client": "^50.1.2",
     "moment": "^2.29.1",
+    "prettier": "^2.4.1",
     "prop-types": "~15.7.2",
     "query-string": "~7.0.0",
-
-    "big.js": "^6.1.1",
-    "faker": "^5.5.3",
-
     "react": "~17.0.2",
     "react-copy-to-clipboard": "~5.0.2",
     "react-dom": "~17.0.2",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "~4.0.3",
-
     "react-scroll": "^1.8.4",
     "react-slick": "^0.28.0",
     "react-spring": "^9.2.4",
-
     "redux": "^4.1.1",
     "redux-persist": "^6.0.0",
-
     "semantic-ui-css": "~2.4.1",
     "semantic-ui-react": "^2.0.0",
     "styled-components": "^5.3.0",
-    "uuid": "^8.3.2",
-    "toformat": "^2.0.0"
-
+    "toformat": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "^15.12.4",
@@ -88,7 +82,25 @@
     "gh-pages": "~3.2.0",
     "react-app-rewired": "~2.1.8",
     "semistandard": "~16.0.0",
-    "typescript": "^4.3.4"
+    "babel-plugin-styled-components": "^1.10.7",
+    "chalk": "^4.1.2",
+    "commitizen": "^4.2.3",
+    "concurrently": "^6.0.0",
+    "conventional-changelog": "^3.1.24",
+    "cz-customizable": "^6.2.0",
+    "dotenv": "^10.0.0",
+    "husky": "^7.0.2",
+    "jest": "^27.2.4",
+    "jest-cli": "^27.2.4",
+    "lint-staged": "^11.1.2",
+    "loglevel": "^1.7.1",
+    "loglevel-plugin-prefix": "^0.8.4",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
   },
   "eslintConfig": {
     "extends": [
@@ -126,5 +138,69 @@
     "subzero",
     "playzero",
     "gamedao"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./node_modules/@picgo/bump-version/.cz-config.js"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/*.(test|spec).(ts|tsx)"
+    ],
+    "globals": {
+      "ts-jest": {
+        "babelConfig": true,
+        "tsConfig": "jest.tsconfig.json"
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "enzyme.js"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/enzyme.js",
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/mocks.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/mocks.js"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn format:verify"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "useTabs": true,
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 160,
+    "bracketSpacing": true
+  }
+
 }

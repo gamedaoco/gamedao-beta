@@ -1,16 +1,12 @@
 import React, { useState, createRef, lazy, Suspense } from 'react'
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 
 import 'semantic-ui-css/semantic.min.css'
 import { Container, Grid, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { IconContext } from "react-icons"
+import { IconContext } from 'react-icons'
 
 import Loader from './components/Loader'
 import ErrorMessage from './components/Message'
@@ -20,19 +16,19 @@ import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 
-const Dashboard = lazy( () => import ('./apps') )
-const Campaigns = lazy( () => import ('./apps/Campaigns') )
-const Organisations = lazy( () => import ('./apps/Organisations') )
-const Governance = lazy( () => import ('./apps/Governance') )
-const Tangram = lazy( () => import ('./apps/Tangram') )
-const Wallet = lazy( () => import ('./apps/Wallet') )
+const Dashboard = lazy(() => import('./apps'))
+const Campaigns = lazy(() => import('./apps/Campaigns'))
+const Organisations = lazy(() => import('./apps/Organisations'))
+const Governance = lazy(() => import('./apps/Governance'))
+const Tangram = lazy(() => import('./apps/Tangram'))
+const Wallet = lazy(() => import('./apps/Wallet'))
 
-const DEV = (process.env.NODE_ENV!=='production')
+const DEV = process.env.NODE_ENV !== 'production'
 
 const Wrapper = styled.div`
 	.react-icon {
 		margin-right: 1em;
-		margin-top:2px;
+		margin-top: 2px;
 	}
 `
 
@@ -48,18 +44,14 @@ const Wrapper = styled.div`
 //   );
 // }
 
-function Main () {
-
+function Main() {
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
-	const [ accountAddress, setAccountAddress ] = useState(null)
-	const accountPair =
-		accountAddress &&
-		keyringState === 'READY' &&
-		keyring.getPair(accountAddress)
+	const [accountAddress, setAccountAddress] = useState(null)
+	const accountPair = accountAddress && keyringState === 'READY' && keyring.getPair(accountAddress)
 
-	if (apiState === 'ERROR') return (<ErrorMessage err={apiError} />)
-	else if (apiState !== 'READY') return (<Loader text='Connecting Network' />)
-	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
+	if (apiState === 'ERROR') return <ErrorMessage err={apiError} />
+	else if (apiState !== 'READY') return <Loader text="Connecting Network" />
+	if (keyringState !== 'READY') return <Loader text="Loading accounts" />
 
 	const contextRef = createRef()
 
@@ -86,22 +78,20 @@ function Main () {
 
 	return (
 		<Wrapper context={contextRef}>
-			<IconContext.Provider value={{
-				color: "black",
-				className: "react-icon"
-			}}>
-
+			<IconContext.Provider
+				value={{
+					color: 'black',
+					className: 'react-icon',
+				}}
+			>
 				<Router>
-					<Header
-						setAccountAddress={setAccountAddress}
-						accountPair={accountPair}
-						/>
-					<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor:'#f0f0f0' }}>
+					<Header setAccountAddress={setAccountAddress} accountPair={accountPair} />
+					<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor: '#f0f0f0' }}>
 						<Container>
 							<Grid>
 								<Grid.Row stretched>
 									<Switch>
-{/*										{routes.map((route, i) => (
+										{/*										{routes.map((route, i) => (
 											<Suspense key={i} fallback={<Loader text="Loading..."></Loader>}>
 												<RouteWithSubRoutes accountPair={accountPair} {...route} />
 											</Suspense>
@@ -141,37 +131,28 @@ function Main () {
 							</Grid>
 						</Container>
 					</Segment>
-			</Router>
+				</Router>
 
-			{ DEV &&
-				<Segment vertical style={{ padding: '5em 1em', backgroundColor:'#999' }}>
-					<Container>
+				{DEV && (
+					<Segment vertical style={{ padding: '5em 1em', backgroundColor: '#999' }}>
+						<Container>
 							<Grid>
 								<Grid.Row stretched>
-									<Transfer
-										accountPair={accountPair}
-										accountAddress={accountAddress}
-										setAccountAddress={setAccountAddress}
-										/>
-									<Template
-										accountPair={accountPair}
-										accountAddress={accountAddress}
-										setAccountAddress={setAccountAddress}
-										/>
+									<Transfer accountPair={accountPair} accountAddress={accountAddress} setAccountAddress={setAccountAddress} />
+									<Template accountPair={accountPair} accountAddress={accountAddress} setAccountAddress={setAccountAddress} />
 								</Grid.Row>
 							</Grid>
-					</Container>
-				</Segment>
-			}
+						</Container>
+					</Segment>
+				)}
 
-			<Footer/>
-
-		</IconContext.Provider>
+				<Footer />
+			</IconContext.Provider>
 		</Wrapper>
 	)
 }
 
-export default function App () {
+export default function App() {
 	return (
 		<SubstrateContextProvider>
 			<Main />

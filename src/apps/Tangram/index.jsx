@@ -8,10 +8,9 @@ import config from '../../config'
 const dev = config.dev
 
 const Item = ({ hash }) => {
-
 	const { api } = useSubstrate()
 
-	const [ content, setContent ] = useState(null)
+	const [content, setContent] = useState(null)
 
 	// useEffect(() => {
 	// 	if (!hash) return
@@ -32,49 +31,47 @@ const Item = ({ hash }) => {
 	// 	query()
 	// }, [api, hash])
 
-	if ( !content ) return null
+	if (!content) return null
 
 	return (
 		<Grid.Column mobile={16} tablet={8} computer={2}>
 			<Segment vertical loading={isLoading}>
-				<Card href={`https://ryse.exchange/${content.id}`} color={ ( content.owned === true ) ? 'pink': 'white'}>
+				<Card href={`https://ryse.exchange/${content.id}`} color={content.owned === true ? 'pink' : 'white'}>
 					<Image src={content.imageURL} wrapped ui={false} />
 					<Card.Content>
 						<Card.Header>{content.name}</Card.Header>
 						<Card.Meta>
-							<span className='date'>{content.dob}</span>
+							<span className="date">{content.dob}</span>
 						</Card.Meta>
 					</Card.Content>
 					<Card.Content extra>
-						<a><Icon name='love' />{content.love}</a>
+						<a>
+							<Icon name="love" />
+							{content.love}
+						</a>
 					</Card.Content>
 				</Card>
 			</Segment>
 		</Grid.Column>
 	)
-
 }
 
 const ItemGrid = ({ hashes, accountPair }) => {
-
-	if ( !hashes ) return null
+	if (!hashes) return null
 
 	return (
-			<Container>
-				<Grid stackable colums={8} >
-					{
-						hashes && hashes.map( ( itemHash, index ) => {
-							return <CampaignCard hash={itemHash} accountPair={accountPair} />
-						})
-					}
-				</Grid>
-			</Container>
+		<Container>
+			<Grid stackable colums={8}>
+				{hashes &&
+					hashes.map((itemHash, index) => {
+						return <CampaignCard hash={itemHash} accountPair={accountPair} />
+					})}
+			</Grid>
+		</Container>
 	)
-
 }
 
-export const Content = props => {
-
+export const Content = (props) => {
 	const { api } = useSubstrate()
 
 	// every org runs on its own realm
@@ -83,19 +80,22 @@ export const Content = props => {
 	// items live in classes and can possess
 	// various attributes
 
-	const [ realms, setRealms ] = useState()
-	const [ classes, setClasses ] = useState()
-	const [ items, setItems ] = useState()
+	const [realms, setRealms] = useState()
+	const [classes, setClasses] = useState()
+	const [items, setItems] = useState()
 
-	const [ total, setTotal ] = useState()
+	const [total, setTotal] = useState()
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoTangram.total(n => {
-			setTotal(n.toNumber())
-		}).then( unsub => {
-			unsubscribe = unsub
-		}).catch( console.error )
+		api.query.gameDaoTangram
+			.total((n) => {
+				setTotal(n.toNumber())
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
 	}, [api.query.gameDaoTangram])
 
@@ -110,26 +110,23 @@ export const Content = props => {
 	// 	queryHashes(req)
 	// }, [nonce, api.query.gameDaoTangram])
 
-	return ( !total || ( total === 0 ) )
-		?	<React.Fragment>
-				<h1>Tangram</h1>
-				<h3>No Tangram has spawned yet.</h3>
-			</React.Fragment>
-		:	<React.Fragment>
-				<h1>Tangram</h1>
-				<h3>Spawned: { total }</h3>
-				{/*<ItemGrid hashes={hashes} accountPair={accountPair} />*/}
-			</React.Fragment>
-
+	return !total || total === 0 ? (
+		<React.Fragment>
+			<h1>Tangram</h1>
+			<h3>No Tangram has spawned yet.</h3>
+		</React.Fragment>
+	) : (
+		<React.Fragment>
+			<h1>Tangram</h1>
+			<h3>Spawned: {total}</h3>
+			{/*<ItemGrid hashes={hashes} accountPair={accountPair} />*/}
+		</React.Fragment>
+	)
 }
 
-export default function Module (props) {
-
+export default function Module(props) {
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoTangram && accountPair
-		? <Content {...props} />
-		: null
-
+	return api && api.query.gameDaoTangram && accountPair ? <Content {...props} /> : null
 }
