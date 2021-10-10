@@ -143,8 +143,8 @@ function BalanceAnnotation (props) {
     ? <div style={{ fontSize: '10px', lineHeight: '10px', marginLeft: '10px' }}>
         {zero}<br/>
         {play} PLAY<br/>
-        {game} GAME<br/>
-        {zeur} zDOT
+        {game} GAME
+{/*<br/>{zeur} zDOT*/}
       </div>
     : null;
 }

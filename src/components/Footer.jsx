@@ -44,6 +44,7 @@ export const Footer = props =>
 								<List.Item as='a' href='https://kilt.io' target='_blank'>kilt protocol</List.Item>
 								<br/>
 								<List.Item as='a' href='https://github.com/gamedaoco' target='_blank'>github</List.Item>
+								<List.Item as='a' href='https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer' target='_blank'>Explorer</List.Item>
 							</List>
 						</Grid.Column>
 						<Grid.Column width={7}>
