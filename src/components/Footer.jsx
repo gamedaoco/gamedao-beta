@@ -87,7 +87,7 @@ export const Footer = (props) => (
 					</Grid.Row>
 					<Grid.Row>
 						<Grid.Column width={16}>
-							<>&copy; 2019-2021 GameDAO + ZERO.IO. </>
+							<>&copy; 2019-2021 GAMEDAO CO. Running on ZERO.IO </>
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
