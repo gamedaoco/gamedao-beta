@@ -16,6 +16,9 @@
     "deploy": "gh-pages -d build -m '[ci skip] Updates'"
   },
   "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.0.3",
     "@pinata/sdk": "^1.1.23",
     "@polkadot/api": "^4.13.1",
     "@polkadot/api-contract": "^4.13.1",
