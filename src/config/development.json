@@ -5,5 +5,6 @@
 	"API_PROTOCOL": "https",
 	"API_PORT": 5001,
 	"GATEWAY_URL": "ipfs.infura.io",
-	"GATEWAY_PROTOCOL": "https"
+	"GATEWAY_PROTOCOL": "https",
+	"GATEWAY_PORT": ""
 }

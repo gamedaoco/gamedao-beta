@@ -1,4 +1,4 @@
-export const rnd = (top) => Math.round(Math.random() * (top - 1))
+export const rnd = (top: number) => Math.round(Math.random() * (top - 1))
 
 export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
@@ -114,7 +114,7 @@ export const project_durations = [
 	{ key: '4', text: '1 year', value: '365' },
 ]
 
-export const blocksToTime = (blocks) => {
+export const blocksToTime = (blocks: number) => {
 	const ss = blocks * blockTime
 	const mm = blocks / 60
 	const hh = mm / 60

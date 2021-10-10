@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
@@ -21,6 +21,28 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-  ]
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+    "paths": {
+      "public": ["./public/**"],
+      "src": ["./src/**"],
+      "lib": ["./src/lib/**"],
+      "context": ["./src/context/**"],
+      "config": ["./src/config/**"],
+      "components": ["./src/components/**"],
+      "containers": ["./src/containers/**"],
+      "interfaces": ["./src/interfaces/**"],
+      "storage": ["./src/storage/**"],
+      "layouts": ["./src/layouts/**"],
+      "themes": ["./src/themes/**"],
+      "data": ["./src/data/**"],
+      "queries": ["./src/queries/**"],
+      "sample-polkadotjs-typegen/*": ["src/*"],
+      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"]
+    }
 }

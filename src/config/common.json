@@ -1,4 +1,7 @@
 {
 	"APP_NAME": "GameDAO",
-	"RPC": {}
+	"RPC": {},
+	"GATEWAY_URL": "ipfs.infura.io",
+	"GATEWAY_PROTOCOL": "https",
+	"GATEWAY_PORT": ""
 }

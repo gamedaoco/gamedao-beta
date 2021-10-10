@@ -96,6 +96,12 @@ function Main() {
 												<RouteWithSubRoutes accountPair={accountPair} {...route} />
 											</Suspense>
 										))}*/}
+
+										<Route exact path="/">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<h1> Welcome. </h1>
+											</Suspense>
+										</Route>
 										<Route exact path="/app">
 											<Suspense fallback={<Loader text="Loading..."></Loader>}>
 												<Dashboard accountPair={accountPair} />

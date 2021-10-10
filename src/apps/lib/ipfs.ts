@@ -22,11 +22,11 @@ export const gateway = GATEWAY_PROTOCOL + '://' + GATEWAY_URL + (GATEWAY_PORT ? 
 //	init ipfs client
 //
 
-const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
+// const auth = 'Basic ' + Buffer.from(config.IPFS_KEY + ':' + config.IPFS_SECRET).toString('base64')
 
-const headers = {
-	authorization: auth,
-}
+// const headers = {
+// 	authorization: auth,
+// }
 
 export const ipfs = create({
 	protocol: API_PROTOCOL,
