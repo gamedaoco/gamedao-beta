@@ -8,7 +8,7 @@ import { gateway } from '../lib/ipfs'
 // const dev = config.dev
 
 import {
-	Button, Grid, Card, Icon, Image, Segment
+	Button, Grid, Card, Icon, Image, Segment, Label
 } from 'semantic-ui-react'
 import { Form } from 'semantic-ui-react'
 
@@ -60,13 +60,17 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			try {
 				const [
 					backers,
+					identity
 				] = await Promise.all([
 					api.query.gameDaoCrowdfunding.campaignContributorsCount(id),
+					api.query.identity.identityOf(owner),
 				])
 				setContent({
 					backers: backers.toHuman(),
+					identity: identity.toHuman().info.display.Raw||null,
 				})
 				setLoading(false)
+				// console.log('identity',identity.toHuman().info.display.Raw)
 			} catch ( err ) {
 				console.error( err )
 			}
@@ -217,13 +221,18 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			<Segment vertical loading={loading}>
 
 			<Card href='' color={ ( governance === '1' ) ? 'pink': 'teal'}>
-				<Image src={imageURL} wrapped ui={true}/>
+				<Image
+					label={( governance === '1' )&&{ as: 'a', corner: 'right', icon: 'heart', color: 'pink' }}
+					src={imageURL}
+					wrapped
+					ui={true}
+					/>
 				<Card.Content>
 					<Card.Header color='black'><a href={`/campaign/${id}`}>{name}</a></Card.Header>
-{/*					<Card.Meta>
-						<Rating icon='star' defaultRating={3} maxRating={5} />
+					<Card.Meta>
+						{content.backers} backer{(content.backers===1)?'':'s'}.<br/>
+						{balance}/{cap} contributed.
 					</Card.Meta>
-*/}
 {/*					<Card.Description>
 					</Card.Description>*/}
 				</Card.Content>
@@ -234,7 +243,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 						Contribute to this campaign
 							<Form.Input
 								action={{
-									color: 'blue',
+									color: 'green',
 									icon: 'check',
 									onClick: handleSubmit
 								}}
@@ -255,10 +264,11 @@ const CampaignCard = ({ item, index, accountPair }) => {
 						<Button color='green' size='small'>Project Page</Button>
 					</>
 				}
+
 				{ (state==='4') &&
 					<>
 						Campaign Failed
-						<Button color='orange' size='small'>Project Page</Button>
+						<Button color='orange' size='tiny'>Project Page</Button>
 					</>
 				}
 
@@ -295,14 +305,19 @@ const CampaignCard = ({ item, index, accountPair }) => {
 				<Card.Content extra>
 {/*
 					<Icon name='eye' />{views} views.<br/>
-*/}					<Icon name='money bill alternate' />
-					{content.backers} backer{(content.backers!==1)?'s':''}.<br/>
-					{balance} / {cap}.
-
 					<br/>
+*/}
 					<Icon name='rocket' />{date}<br/>
-					<Icon name='target' />~{Math.floor((blocksRemain * 3) / 60)} min<br/>
-					<a href={`/campaigns/admin/${owner}`}> <Icon name='at' />Creator</a><br/>
+					{
+						(state === '1') &&
+						<><Icon name='time' />{ Math.floor((parseInt(blocksRemain) * 3) / 60) } min remaining<br/></>
+					}
+					{
+						(content.identity)
+						? <><a href={`/id/${owner}`}><Icon color='green' name='certificate' />{content.identity}</a><br/></>
+						: <><a href='/faq#unknown_entity'><Icon color='orange' name='warning' />unknown entity</a><br/></>
+
+					}
 					<Icon name='tag' />{tags.join(', ')} <br/>
 				</Card.Content>
 			</Card>

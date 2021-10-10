@@ -31,7 +31,9 @@ const CampaignGrid = ({ content, accountPair }) => {
 	const [ page, setPage ] = useState(0)
 	const [ pageSize, setPageSize ] = useState(12)
 	const [ totalPages, setTotalPages ] = useState(0)
+
 	const [ filter, setFilter ] = useState('1')
+	const [ scope, setScope ] = useState(0) // 0 any 1 owned 2 contributed
 
 	const iPP = [3,5,9,18,36,72]
 	const handleShowMoreItems = () => setPageSize( ( pageSize < ( iPP.length - 1 ) ) ? pageSize + 1 : pageSize )
@@ -50,14 +52,37 @@ const CampaignGrid = ({ content, accountPair }) => {
 	}, [content, page, pageSize])
 
 	useEffect(()=>{
+
+		if(!content) return
+
+		// filter by campaign state
+		const filterByState = (filter==='-1')
+			? content
+			: content.filter( item => ( item.state === filter ) ? item : null )
+
+		// filter by protocol
+
+		// filter by scope
+		const scopedContent = (scope==='0')
+			? filterByState
+			: filterByState.filter( item => {
+				// owned / admin / controller
+				if ( scope === 1 ) return ( accountPair.address === owner) ? item : null
+				if ( scope === 2 ) return ( accountPair.address === admin) ? item : null
+			})
+
+		// reset page
 		setPage(0)
-	},[filter])
+
+	},[content, filter, scope])
+
 
 	return (
 		<Container>
 			<Menu secondary>
 				<Button.Group color='teal'>
 					<FilterBar filter={filter} setFilter={setFilter}/>
+					<ScopeBar filter={filter} setFilter={setFilter}/>
 				</Button.Group>
 			<Menu.Menu position='right'>
 				<Button.Group>

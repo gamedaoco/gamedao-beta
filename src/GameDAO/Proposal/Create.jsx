@@ -39,6 +39,7 @@ const random_state = ( accountPair, campaigns = [] ) => {
 	const proposer = accountPair.address
 	const beneficiary = accountPair.address
 	const voting_types = data.voting_types[ rnd(data.voting_types.length) ].value
+
 	// TODO:
 	// version > 0.2
 	// create random additional data for ipfs
@@ -102,6 +103,7 @@ export const Main = props => {
 			}
 		}
 		query()
+
 	}, [api, accountPair])
 
 	//
@@ -289,6 +291,31 @@ export const Main = props => {
 							onChange={handleOnChange}
 							/>
 					</Form.Group>
+
+					<Form.Group widths='equal'>
+						<Form.Select
+							fluid
+							disabled
+							label='Collateral Type'
+							options={data.collateral_types}
+							name='collateral_types'
+							value={formData.collateral_types}
+							onChange={handleOnChange}
+							/>
+						<Form.Input
+							fluid
+							type='number'
+							label='Collateral Amount'
+							placeholder='amount'
+							name='collateral_amount'
+							value={formData.collateral_amount}
+							onChange={handleOnChange}
+							required
+							/>
+					</Form.Group>
+
+					<Divider clearing horizontal>For Withdrawals and Grants</Divider>
+
 					<Form.Group widths='equal'>
 						<Form.Input
 							fluid

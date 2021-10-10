@@ -10,7 +10,6 @@ import { encodeAddress } from '@polkadot/util-crypto'
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
-const dev = config.dev
 
 import { Icon, Pagination, Table, Header, Button, Container, Image, Grid } from 'semantic-ui-react'
 import {
@@ -31,9 +30,19 @@ import {
 	BiGroup
 } from "react-icons/bi";
 
+import styled from 'styled-components'
+
 const CreateDAO = lazy( () => import ('./Create') )
 
+const dev = config.dev
 
+//
+//
+//
+
+const SmallText = styled.div`
+	font-size: 12px;
+`
 //
 //
 //
@@ -210,7 +219,8 @@ const Item = ({ content, accountPair }) => {
 
 	}
 
-	const handleAdmin = () => console.log('admin')
+	const handleAdmin = () => console.log('open admin')
+	const handleDashboard = () => console.log('open dashboard')
 
 	const buttonText = ['join','apply','leave']
 
@@ -222,9 +232,10 @@ const Item = ({ content, accountPair }) => {
 		const text = buttonText[ itemContent.access ]
 		return (
 			<>
+				{ ( isMember() || isAdmin() ) && <Button basic onClick={handleDashboard} value={itemContent.access} size='mini'>{`Dashboard`}</Button>}
 				{ ( isMember() && !isAdmin() ) && <Button basic onClick={handleMembership} value={itemContent.access} size='mini'>{`leave`}</Button>}
 				{ !isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size='mini'>{`${text}`}</Button>}
-				{ isAdmin() && <Button basic onClick={handleAdmin} size='mini'>settings</Button>}
+				{ isAdmin() && <Button basic onClick={handleAdmin} size='mini'>Admin</Button>}
 			</>
 		)
 	}
@@ -248,7 +259,7 @@ const Item = ({ content, accountPair }) => {
 				</Header>
 				</a>
 			</Table.Cell>
-			<Table.Cell ><Container text>{metadata.description}</Container></Table.Cell>
+			<Table.Cell ><Container><SmallText>{metadata.description}</SmallText></Container></Table.Cell>
 			<Table.Cell>
 					{ metadata.website && <a href={metadata.website} target="_blank"><BiGlobe/></a>}
 			</Table.Cell>
@@ -304,7 +315,7 @@ const ItemList = props => {
 					<Button icon onClick={handleShowMoreItems}><Icon name='grid layout' /></Button>
 				</Button.Group>
 			</Container>
-			<Table striped singleLine fixed>
+			<Table striped fixed>
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell width='4'></Table.HeaderCell>
