@@ -1,4 +1,4 @@
-import React, { useState, createRef, Suspense } from 'react'
+import React, { useState, createRef, lazy, Suspense } from 'react'
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -20,11 +20,12 @@ import Header from './components/Header'
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 
-import Dashboard from './apps'
-import Campaigns from './apps/Campaigns'
-import Organisations from './apps/Organisations'
-import Governance from './apps/Governance'
-import Tangram from './apps/Tangram'
+const Dashboard = lazy( () => import ('./apps') )
+const Campaigns = lazy( () => import ('./apps/Campaigns') )
+const Organisations = lazy( () => import ('./apps/Organisations') )
+const Governance = lazy( () => import ('./apps/Governance') )
+const Tangram = lazy( () => import ('./apps/Tangram') )
+const Wallet = lazy( () => import ('./apps/Wallet') )
 
 const DEV = (process.env.NODE_ENV!=='production')
 
@@ -35,17 +36,17 @@ const Wrapper = styled.div`
 	}
 `
 
-const RouteWithSubRoutes = (route) => {
-  return (
-    <Route
-      path={route.path}
-      render={props => (
-        // pass the sub-routes down to keep nesting
-        <route.component {...props} routes={route.routes} />
-      )}
-    />
-  );
-}
+// const RouteWithSubRoutes = (route) => {
+//   return (
+//     <Route
+//       path={route.path}
+//       render={props => (
+//         // pass the sub-routes down to keep nesting
+//         <route.component {...props} routes={route.routes} />
+//       )}
+//     />
+//   );
+// }
 
 function Main () {
 
@@ -128,6 +129,11 @@ function Main () {
 										<Route exact path="/app/tangram">
 											<Suspense fallback={<Loader text="Loading..."></Loader>}>
 												<Tangram accountPair={accountPair} />
+											</Suspense>
+										</Route>
+										<Route exact path="/app/wallet">
+											<Suspense fallback={<Loader text="Loading..."></Loader>}>
+												<Wallet accountPair={accountPair} />
 											</Suspense>
 										</Route>
 									</Switch>

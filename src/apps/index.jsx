@@ -15,28 +15,14 @@ import { useSubstrate } from '../substrate-lib'
 import { Menu, Label, Tab, Grid, Message, Modal, Button, Icon, Image } from 'semantic-ui-react'
 import Loader from '../components/Loader'
 
-import {
-	BiJoystick,
-	BiHomeCircle,
-	BiListCheck,
-	BiListPlus,
-	BiCoinStack,
-	BiCoin,
-	BiPyramid,
-	BiGame,
-	BiPlus,
-	BiDiamond,
-} from "react-icons/bi";
+import {BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
 
 const DAO = lazy( () => import ('./Organisations') )
-// const CreateDAO = lazy( () => import ('./Organisations/Create') )
 const Campaign = lazy( () => import ('./Campaigns') )
-const CreateCampaign = lazy( () => import ('./Campaigns/Create') )
 const Proposal = lazy( () => import ('./Governance') )
-// const CreateProposal = lazy( () => import ( './Governance/Create' ) )
 const Tangram = lazy( () => import ('./Tangram') )
 
-const GameDAO = props => {
+const Dashboard = props => {
 
 	const { accountPair } = props
 	const { api } = useSubstrate()
@@ -83,18 +69,6 @@ const GameDAO = props => {
 				</Tab.Pane>
 			,
 		},
-		// {
-		// 	menuItem: (<Menu.Item key='1'><BiPlus/> New Org </Menu.Item>),
-		// 	render: () =>
-		// 		<Tab.Pane key='create_dao'>
-		// 			<CreateDAO accountPair={accountPair} />
-		// 		</Tab.Pane>
-		// 	,
-		// },
-
-
-//
-
 		{
 			menuItem: (
 				<Menu.Item key='3'>
@@ -106,16 +80,6 @@ const GameDAO = props => {
 					<Campaign accountPair={accountPair}/>
 				</Tab.Pane>
 		},
-		// {
-		// 	menuItem: (<Menu.Item key='4'> <BiPlus/> New Campaign </Menu.Item>),
-		// 	render: () =>
-		// 		<Tab.Pane key='create_campaign'>
-		// 			<CreateCampaign accountPair={accountPair} />
-		// 		</Tab.Pane>
-		// },
-
-//
-
 		{
 			menuItem:
 				<Menu.Item key='2'>
@@ -126,17 +90,6 @@ const GameDAO = props => {
 					<Proposal accountPair={accountPair} />
 				</Tab.Pane>
 		},
-		// {
-		// 	menuItem:
-		// 		<Menu.Item key='create_proposal'>
-		// 			<BiListPlus/> New Proposal
-		// 		</Menu.Item>,
-		// 	render: () =>
-		// 	<Tab.Pane key='create_proposal'><CreateProposal accountPair={accountPair} /></Tab.Pane>
-		// },
-
-//
-
 		{
 			menuItem: (<Menu.Item key='5'> <BiDiamond/> Tangram </Menu.Item>),
 			render: () =>
@@ -151,9 +104,6 @@ const GameDAO = props => {
 			<Suspense fallback={<Loader text="Loading..."></Loader>}>
 				<Tab panes={ panes }/>
 			</Suspense>
-
-{/*			<Disclaimer open={open} setOpen={setOpen}/>*/}
-
 		</Grid.Column>
 
 	)
@@ -200,11 +150,7 @@ export default function Dapp (props) {
 	const { api } = useSubstrate();
 
 	return api && api.query.gameDaoCrowdfunding // && accountPair
-		? <GameDAO {...props} />
+		? <Dashboard {...props} />
 		: <Intro />;
 
 }
-
-//
-//
-//
