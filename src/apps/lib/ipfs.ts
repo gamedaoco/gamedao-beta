@@ -4,7 +4,7 @@
 
 import config from '../../config'
 import { create } from 'ipfs-http-client'
-const dev = config.dev
+// const dev = config.dev
 
 // put
 const API_URL = config.API_URL

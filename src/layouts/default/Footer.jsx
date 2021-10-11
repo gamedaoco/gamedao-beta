@@ -22,7 +22,7 @@ export const Footer = (props) => (
 					px: '1em',
 					mt: 'auto',
 
-					fontSize: '1em',
+					fontSize: '.8em',
 
 					color: (theme) =>
 						theme.palette.mode === 'light'
