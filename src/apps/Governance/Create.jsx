@@ -159,8 +159,9 @@ export const Main = (props) => {
 			if (dev) console.log('2. send tx')
 
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
-			const { id, purpose, cid, amount } = formData
-			const payload = [id, purpose, cid, amount, expiry]
+			const { voting_type, id, purpose, cid, amount } = formData
+
+			const payload = [voting_type, id, purpose, cid, amount, expiry]
 			const from = await getFromAcct()
 			// TODO: refactor to have unified method name on module...
 			const tx = api.tx.gameDaoGovernance.createProposal(...payload)
