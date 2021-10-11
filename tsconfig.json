@@ -18,7 +18,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "."
   },
   "include": [
     "**/*.ts",
@@ -26,23 +27,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-    "paths": {
-      "public": ["./public/**"],
-      "src": ["./src/**"],
-      "lib": ["./src/lib/**"],
-      "context": ["./src/context/**"],
-      "config": ["./src/config/**"],
-      "components": ["./src/components/**"],
-      "containers": ["./src/containers/**"],
-      "interfaces": ["./src/interfaces/**"],
-      "storage": ["./src/storage/**"],
-      "layouts": ["./src/layouts/**"],
-      "themes": ["./src/themes/**"],
-      "data": ["./src/data/**"],
-      "queries": ["./src/queries/**"],
-      "sample-polkadotjs-typegen/*": ["src/*"],
-      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
-      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"]
-    }
+  ]
 }

@@ -3,25 +3,36 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 
+// TODO: remove when all semantic deps are gone
 import 'semantic-ui-css/semantic.min.css'
-import { Container, Grid, Segment } from 'semantic-ui-react'
+
+import { Container, Grid } from '@mui/material';
 import styled from 'styled-components'
 import { IconContext } from 'react-icons'
 
+//
+
+// TODO: refactor to mui
 import Loader from './components/Loader'
+// TODO: refactor to mui
 import ErrorMessage from './components/Message'
-import Footer from './components/Footer'
-import Header from './components/Header'
+
+import Layout from './layouts/default'
 
 import Transfer from './components/Transfer'
 import Template from './components/TemplateModule'
 
+// pages
+
+const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Organisations = lazy(() => import('./apps/Organisations'))
 const Governance = lazy(() => import('./apps/Governance'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
+
+//
 
 const DEV = process.env.NODE_ENV !== 'production'
 
@@ -32,19 +43,8 @@ const Wrapper = styled.div`
 	}
 `
 
-// const RouteWithSubRoutes = (route) => {
-//   return (
-//     <Route
-//       path={route.path}
-//       render={props => (
-//         // pass the sub-routes down to keep nesting
-//         <route.component {...props} routes={route.routes} />
-//       )}
-//     />
-//   );
-// }
-
 function Main() {
+
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
 	const [accountAddress, setAccountAddress] = useState(null)
 	const accountPair = accountAddress && keyringState === 'READY' && keyring.getPair(accountAddress)
@@ -55,51 +55,25 @@ function Main() {
 
 	const contextRef = createRef()
 
-	// const routes = [{
-	// 	path: "/",
-	// 	component: Dashboard
-	// },{
-	// 	path: "/app",
-	// 	component: Dashboard,
-	// 	routes: [{
-	// 		path: "/app/organisations",
-	// 		component: Organisations
-	// 	},{
-	// 		path: "/app/governance",
-	// 		component: Governance
-	// 	},{
-	// 		path: "/app/campaigns",
-	// 		component: Campaigns
-	// 	},{
-	// 		path: "/app/tangram",
-	// 		component: Tangram
-	// 	}]
-	// }];
-
 	return (
 		<Wrapper context={contextRef}>
+
 			<IconContext.Provider
 				value={{
 					color: 'black',
 					className: 'react-icon',
 				}}
 			>
-				<Router>
-					<Header setAccountAddress={setAccountAddress} accountPair={accountPair} />
-					<Segment vertical style={{ minHeight: '95vh', padding: '5em 0em', backgroundColor: '#f0f0f0' }}>
-						<Container>
-							<Grid>
-								<Grid.Row stretched>
+			<Router>
+				<Layout setAccountAddress={setAccountAddress} accountPair={accountPair}>
+						<Grid container spacing={1} columns={16}>
+								<Grid direction="row" stretched>
+
 									<Switch>
-										{/*										{routes.map((route, i) => (
-											<Suspense key={i} fallback={<Loader text="Loading..."></Loader>}>
-												<RouteWithSubRoutes accountPair={accountPair} {...route} />
-											</Suspense>
-										))}*/}
 
 										<Route exact path="/">
 											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<h1> Welcome. </h1>
+												<Home/>
 											</Suspense>
 										</Route>
 										<Route exact path="/app">
@@ -132,27 +106,13 @@ function Main() {
 												<Wallet accountPair={accountPair} />
 											</Suspense>
 										</Route>
+
 									</Switch>
-								</Grid.Row>
+
+								</Grid>
 							</Grid>
-						</Container>
-					</Segment>
+					</Layout>
 				</Router>
-
-				{DEV && (
-					<Segment vertical style={{ padding: '5em 1em', backgroundColor: '#999' }}>
-						<Container>
-							<Grid>
-								<Grid.Row stretched>
-									<Transfer accountPair={accountPair} accountAddress={accountAddress} setAccountAddress={setAccountAddress} />
-									<Template accountPair={accountPair} accountAddress={accountAddress} setAccountAddress={setAccountAddress} />
-								</Grid.Row>
-							</Grid>
-						</Container>
-					</Segment>
-				)}
-
-				<Footer />
 			</IconContext.Provider>
 		</Wrapper>
 	)
