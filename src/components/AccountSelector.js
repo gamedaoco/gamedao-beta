@@ -71,7 +71,7 @@ function BalanceAnnotation(props) {
 	const [zero, setZERO] = useState(0)
 	const [play, setPLAY] = useState(0)
 	const [game, setGAME] = useState(0)
-	const [zeur, setZEUR] = useState(0)
+	// const [zeur, setZEUR] = useState(0)
 
 	useEffect(() => {
 		if (!accountSelected) return
@@ -84,12 +84,12 @@ function BalanceAnnotation(props) {
 				[
 					[context, [Number(0), accountSelected]],
 					[context, [Number(1), accountSelected]],
-					[context, [Number(2), accountSelected]],
+					// [context, [Number(2), accountSelected]],
 				],
 				([_play, _game, _zeur]) => {
 					setPLAY(_play.toHuman().balance)
 					setGAME(_game.toHuman().balance)
-					setZEUR(_zeur.toHuman().balance)
+					// setZEUR(_zeur.toHuman().balance)
 				}
 			)
 				.then((unsub) => {
