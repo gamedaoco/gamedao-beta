@@ -10,10 +10,6 @@ const imageURL = `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
 
 function Main({ accountPair, setAccountAddress }) {
 	const [activeState, setActiveState] = useState('/')
-	const handleItemClick = (e) => {
-		setActiveState(e.value)
-		console.log(e)
-	}
 
 	return (
 		<Segment inverted vertical color="black">

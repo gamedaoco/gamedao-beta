@@ -6,7 +6,7 @@ import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
 // TODO: remove when all semantic deps are gone
 import 'semantic-ui-css/semantic.min.css'
 
-import { Container, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import styled from 'styled-components'
 import { IconContext } from 'react-icons'
 
@@ -18,12 +18,6 @@ import Loader from './components/Loader'
 import ErrorMessage from './components/Message'
 
 import Layout from './layouts/default'
-
-import Transfer from './components/Transfer'
-import Template from './components/TemplateModule'
-
-// pages
-
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
@@ -31,10 +25,6 @@ const Organisations = lazy(() => import('./apps/Organisations'))
 const Governance = lazy(() => import('./apps/Governance'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
-
-//
-
-const DEV = process.env.NODE_ENV !== 'production'
 
 const Wrapper = styled.div`
 	.react-icon {
