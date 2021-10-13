@@ -1,6 +1,6 @@
 import React, { useState, createRef } from 'react'
 import { useSubstrate } from './substrate-lib'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 // TODO: refactor to mui
 // comment: full page dimmers are an anti pattern
@@ -35,13 +35,9 @@ export function App() {
 
 	return (
 		<Wrapper context={contextRef}>
-				<Layout setAccountAddress={setAccountAddress} accountPair={accountPair}>
-						<Grid container spacing={1} columns={16}>
-								<Grid direction="row" stretched>
-									<Router accountPair={accountPair}/>
-								</Grid>
-							</Grid>
-					</Layout>
+			<Layout setAccountAddress={setAccountAddress} accountPair={accountPair}>
+				<Router accountPair={accountPair}/>
+			</Layout>
 		</Wrapper>
 	)
 }
