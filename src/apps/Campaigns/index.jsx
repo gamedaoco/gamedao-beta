@@ -12,7 +12,10 @@
 import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
-import { Icon, Container, Grid, Button } from 'semantic-ui-react'
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+
+import { Button, Typography, Box, Stack } from '../../components'
 
 const CampaignGrid = lazy(() => import('./CampaignGrid'))
 const CreateCampaign = lazy(() => import('./Create'))
@@ -177,31 +180,32 @@ export const Campaigns = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<React.Fragment>
-			<Grid>
-				<Grid.Column floated="left" width={6} verticalAlign="middle">
+		<>
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				alignItems="center"
+				spacing={12}
+			>
+				<Typography>
 					{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}
-				</Grid.Column>
-				<Grid.Column floated="right" width={6} verticalAlign="middle">
-					<Container textAlign="right">
+				</Typography>
+				<Box>
 						{showCreateMode ? (
-							<Button onClick={handleCloseBtn}>
-								<Icon name="cancel" />
-								Close
+							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+								<Typography>Close</Typography>
 							</Button>
 						) : (
-							<Button onClick={handleCreateBtn}>
-								<Icon name="plus" />
-								New Campaign
+							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+								<Typography>New Campaign</Typography>
 							</Button>
 						)}
-					</Container>
-				</Grid.Column>
-			</Grid>
+				</Box>
+			</Stack>
 			<br />
 			{showCreateMode && <CreateCampaign accountPair={accountPair} />}
 			{!showCreateMode && content && nonce !== 0 && <CampaignGrid content={content} accountPair={accountPair} />}
-		</React.Fragment>
+		</>
 	)
 }
 

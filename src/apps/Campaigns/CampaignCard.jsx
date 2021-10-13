@@ -7,8 +7,10 @@ import { gateway } from '../lib/ipfs'
 // import config from '../../config'
 // const dev = config.dev
 
-import { Button, Grid, Card, Icon, Image, Segment, Label } from 'semantic-ui-react'
+import { Grid, Card, Icon, Image, Segment, Label } from 'semantic-ui-react'
 import { Form } from 'semantic-ui-react'
+
+import { Button } from '../../components'
 
 const CampaignCard = ({ item, index, accountPair }) => {
 	// console.log(item)
