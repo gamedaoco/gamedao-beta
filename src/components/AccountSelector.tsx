@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
 
 const AccountComponent = (props) => {
-	const [open, setOpen] = React.useState(true)
+	const [open, setOpen] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(0)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
@@ -60,7 +60,7 @@ const AccountComponent = (props) => {
 		setOpen(false)
 	}
 
-	const handleDisconnect = (e: Event) => {
+	const handleDisconnect = () => {
 		console.log('disconnect')
 	}
 
@@ -82,9 +82,11 @@ const AccountComponent = (props) => {
 		*/}
 
 			<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
+
 				<CopyToClipboard text={accountSelected}>
 					<Button color={accountSelected ? 'success' : 'error'}>{`${keyringOptions[selectedIndex].value.slice(0, 8)}...`}</Button>
 				</CopyToClipboard>
+
 
 				<IconButton
 					size="small"
@@ -94,12 +96,13 @@ const AccountComponent = (props) => {
 					aria-haspopup="menu"
 					onClick={handleToggle}
 				>
-					<KeyboardArrowDownIcon />
+					<KeyboardArrowDownIcon fontSize="inherit"/>
 				</IconButton>
 
-				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
-					<LogoutIcon />
+				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
+					<LogoutIcon fontSize="inherit"/>
 				</IconButton>
+
 			</ButtonGroup>
 			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
 				{({ TransitionProps, placement }) => (
