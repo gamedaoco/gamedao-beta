@@ -1,30 +1,18 @@
-import React, { useState, createRef, lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
-import { SubstrateContextProvider, useSubstrate } from './substrate-lib'
-
-// TODO: remove when all semantic deps are gone
-import 'semantic-ui-css/semantic.min.css'
-
-import { Grid } from '@mui/material';
+import React, { useState, createRef } from 'react'
+import { useSubstrate } from './substrate-lib'
 import styled from 'styled-components'
-import { IconContext } from 'react-icons'
-
-//
 
 // TODO: refactor to mui
+// comment: full page dimmers are an anti pattern
 import Loader from './components/Loader'
 // TODO: refactor to mui
 import ErrorMessage from './components/Message'
 
+
+import { Grid } from './components';
 import Layout from './layouts/default'
-const Home = lazy(() => import('./apps/Home'))
-const Dashboard = lazy(() => import('./apps'))
-const Campaigns = lazy(() => import('./apps/Campaigns'))
-const Organisations = lazy(() => import('./apps/Organisations'))
-const Governance = lazy(() => import('./apps/Governance'))
-const Tangram = lazy(() => import('./apps/Tangram'))
-const Wallet = lazy(() => import('./apps/Wallet'))
+import { Router } from './Router'
+
 
 const Wrapper = styled.div`
 	.react-icon {
@@ -33,7 +21,7 @@ const Wrapper = styled.div`
 	}
 `
 
-function Main() {
+export function App() {
 
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
 	const [accountAddress, setAccountAddress] = useState(null)
@@ -47,71 +35,13 @@ function Main() {
 
 	return (
 		<Wrapper context={contextRef}>
-
-			<IconContext.Provider
-				value={{
-					color: 'black',
-					className: 'react-icon',
-				}}
-			>
-			<Router>
 				<Layout setAccountAddress={setAccountAddress} accountPair={accountPair}>
 						<Grid container spacing={1} columns={16}>
 								<Grid direction="row" stretched>
-
-									<Switch>
-
-										<Route exact path="/">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Home/>
-											</Suspense>
-										</Route>
-										<Route exact path="/app">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Dashboard accountPair={accountPair} />
-											</Suspense>
-										</Route>
-										<Route exact path="/app/organisations">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Organisations accountPair={accountPair} />
-											</Suspense>
-										</Route>
-										<Route exact path="/app/governance">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Governance accountPair={accountPair} />
-											</Suspense>
-										</Route>
-										<Route exact path="/app/campaigns">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Campaigns accountPair={accountPair} />
-											</Suspense>
-										</Route>
-										<Route exact path="/app/tangram">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Tangram accountPair={accountPair} />
-											</Suspense>
-										</Route>
-										<Route exact path="/app/wallet">
-											<Suspense fallback={<Loader text="Loading..."></Loader>}>
-												<Wallet accountPair={accountPair} />
-											</Suspense>
-										</Route>
-
-									</Switch>
-
+									<Router accountPair={accountPair}/>
 								</Grid>
 							</Grid>
 					</Layout>
-				</Router>
-			</IconContext.Provider>
 		</Wrapper>
-	)
-}
-
-export default function App() {
-	return (
-		<SubstrateContextProvider>
-			<Main />
-		</SubstrateContextProvider>
 	)
 }
