@@ -1,4 +1,4 @@
-const Content =
+const Content = (
 	<p>
 		Fundraising is generally split into two phases:
 		<br />
@@ -23,5 +23,6 @@ const Content =
 		(D Shares will immediately release, but imply further regulatory requirements.)
 		<br />
 	</p>
+)
 
 export default Content

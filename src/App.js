@@ -8,11 +8,9 @@ import Loader from './components/Loader'
 // TODO: refactor to mui
 import ErrorMessage from './components/Message'
 
-
-import { Grid } from './components';
+import { Grid } from './components'
 import Layout from './layouts/default'
 import { Router } from './Router'
-
 
 const Wrapper = styled.div`
 	.react-icon {
@@ -22,7 +20,6 @@ const Wrapper = styled.div`
 `
 
 export function App() {
-
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
 	const [accountAddress, setAccountAddress] = useState(null)
 	const accountPair = accountAddress && keyringState === 'READY' && keyring.getPair(accountAddress)
@@ -36,7 +33,7 @@ export function App() {
 	return (
 		<Wrapper context={contextRef}>
 			<Layout setAccountAddress={setAccountAddress} accountPair={accountPair}>
-				<Router accountPair={accountPair}/>
+				<Router accountPair={accountPair} />
 			</Layout>
 		</Wrapper>
 	)

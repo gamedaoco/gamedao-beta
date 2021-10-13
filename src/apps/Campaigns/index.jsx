@@ -12,8 +12,8 @@
 import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add'
+import ClearIcon from '@mui/icons-material/Clear'
 
 import { Button, Typography, Box, Stack } from '../../components'
 
@@ -181,25 +181,18 @@ export const Campaigns = (props) => {
 
 	return (
 		<>
-			<Stack
-				direction="row"
-				justifyContent="space-between"
-				alignItems="center"
-				spacing={12}
-			>
-				<Typography>
-					{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}
-				</Typography>
+			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
+				<Typography>{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}</Typography>
 				<Box>
-						{showCreateMode ? (
-							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
-								<Typography>Close</Typography>
-							</Button>
-						) : (
-							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
-								<Typography>New Campaign</Typography>
-							</Button>
-						)}
+					{showCreateMode ? (
+						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+							<Typography>Close</Typography>
+						</Button>
+					) : (
+						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+							<Typography>New Campaign</Typography>
+						</Button>
+					)}
 				</Box>
 			</Stack>
 			<br />

@@ -18,7 +18,6 @@ const envVars = envVarNames.reduce((mem, n) => {
 export const DEV = process.env.NODE_ENV === 'production' ? false : true
 export const ENV = process.env.NODE_ENV
 
-
 const config = {
 	...configCommon,
 	...configEnv,
