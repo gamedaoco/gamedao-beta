@@ -7,7 +7,6 @@ import { useSubstrate } from '../substrate-lib'
 import { Loader } from '../components/Loader'
 
 const Dashboard = (props) => {
-
 	const { accountPair } = props
 	const { api } = useSubstrate()
 
@@ -54,7 +53,5 @@ export default function Dapp(props) {
 
 	return api && api.query.gameDaoCrowdfunding ? ( // && accountPair
 		<Dashboard {...props} />
-	) : (
-		null
-	)
+	) : null
 }
