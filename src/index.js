@@ -1,6 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import App from './App'
+import { App } from './App'
+import { Providers } from './Providers'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+// TODO: remove when all semantic deps are gone
+import 'semantic-ui-css/semantic.min.css'
+
+const Root = () => 
+<Providers>
+    <App/>
+</Providers>
+
+ReactDOM.render(<Root />, document.getElementById('root'))
