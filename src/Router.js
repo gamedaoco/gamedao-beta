@@ -1,10 +1,10 @@
-import React, { useState, createRef, lazy, Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Switch, Route } from "react-router-dom";
 
-// TODO: refactor to mui
 import Loader from './components/Loader'
+
 // TODO: refactor to mui
-import ErrorMessage from './components/Message'
+// import ErrorMessage from './components/Message'
 
 
 const Home = lazy(() => import('./apps/Home'))
@@ -14,6 +14,7 @@ const Organisations = lazy(() => import('./apps/Organisations'))
 const Governance = lazy(() => import('./apps/Governance'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
+const Designsystem = lazy(() => import('./apps/Designsystem'))
 
 
 export function Router({accountPair}) {
@@ -57,6 +58,12 @@ export function Router({accountPair}) {
         <Route exact path="/app/wallet">
           <Suspense fallback={<Loader text="Loading..."></Loader>}>
             <Wallet accountPair={accountPair} />
+          </Suspense>
+        </Route>
+
+        <Route exact path="/designsystem">
+          <Suspense fallback={<Loader text="Loading..."></Loader>}>
+            <Designsystem />
           </Suspense>
         </Route>
 
