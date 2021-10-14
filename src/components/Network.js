@@ -16,22 +16,17 @@ import Loader from './components/Loader'
 import Message from './components/Message'
 
 export const Network = () => {
-
-	const [ accountAddress ] = useState(null)
+	const [accountAddress] = useState(null)
 	const { apiState, keyring, keyringState, apiError } = useSubstrate()
-	const accountPair =
-		accountAddress &&
-		keyringState === 'READY' &&
-		keyring.getPair(accountAddress)
+	const accountPair = accountAddress && keyringState === 'READY' && keyring.getPair(accountAddress)
 
-	if (apiState === 'ERROR') return (<Message err={apiError} />)
-	else if (apiState !== 'READY') return (<Loader text='Connecting to ZERO.IO' />)
-	if (keyringState !== 'READY') return (<Loader text='Loading accounts' />)
+	if (apiState === 'ERROR') return <Message err={apiError} />
+	else if (apiState !== 'READY') return <Loader text="Connecting to ZERO.IO" />
+	if (keyringState !== 'READY') return <Loader text="Loading accounts" />
 
 	return (
 		<React.Fragment>
-			<Grid stackable columns='equal'>
-
+			<Grid stackable columns="equal">
 				<Grid.Row stretched>
 					<NodeInfo />
 					<Metadata />
@@ -39,9 +34,7 @@ export const Network = () => {
 					<BlockNumber finalized />
 				</Grid.Row>
 
-				<Grid.Row stretched>
-					{/*<Balances />*/}
-				</Grid.Row>
+				<Grid.Row stretched>{/*<Balances />*/}</Grid.Row>
 
 				<Grid.Row stretched>
 					<Interactor accountPair={accountPair} />
@@ -50,7 +43,6 @@ export const Network = () => {
 				<Grid.Row stretched>
 					<Events />
 				</Grid.Row>
-
 			</Grid>
 			<DeveloperConsole />
 		</React.Fragment>
