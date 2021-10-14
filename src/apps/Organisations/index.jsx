@@ -30,7 +30,7 @@ import {
 	BiGroup,
 } from 'react-icons/bi'
 
-import { styled } from '@mui/material/styles'
+ import styled from '@emotion/styled'
 
 const CreateDAO = lazy(() => import('./Create'))
 
