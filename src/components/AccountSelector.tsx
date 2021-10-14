@@ -84,7 +84,9 @@ const AccountComponent = (props) => {
 			<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
 
 				<CopyToClipboard text={accountSelected}>
-					<Button color={accountSelected ? 'success' : 'error'}>{`${keyringOptions[selectedIndex].value.slice(0, 8)}...`}</Button>
+					<Button color={accountSelected ? 'success' : 'error'}>
+						{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
+					</Button>
 				</CopyToClipboard>
 
 
@@ -99,17 +101,23 @@ const AccountComponent = (props) => {
 					<KeyboardArrowDownIcon fontSize="inherit"/>
 				</IconButton>
 
+						<BalanceAnnotation accountSelected={accountSelected} />
+
 				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
 					<LogoutIcon fontSize="inherit"/>
 				</IconButton>
 
 			</ButtonGroup>
-			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+
+{/*
+	TODO: needs to be bottom end, currently refuses to take the button as anchor ref
+*/}
+			<Popper open={open} anchorEl={anchorRef.current} placement={'bottom-start'} role={undefined} transition disablePortal>
 				{({ TransitionProps, placement }) => (
 					<Grow
 						{...TransitionProps}
 						style={{
-							transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+							transformOrigin: placement === 'bottom-end' ? 'end top' : 'end bottom',
 						}}
 					>
 						<Paper>
@@ -132,77 +140,77 @@ const AccountComponent = (props) => {
 				)}
 			</Popper>
 
-			{/*			<BalanceAnnotation accountSelected={accountSelected} />
+			{/*
 			 */}
 		</>
 	)
 }
 
-// function BalanceAnnotation(props) {
-// 	const { accountSelected } = props
-// 	const { api } = useSubstrate()
+function BalanceAnnotation(props) {
+	const { accountSelected } = props
+	const { api } = useSubstrate()
 
-// 	// const [ accountBalance, setAccountBalance ] = useState(0);
+	// const [ accountBalance, setAccountBalance ] = useState(0);
 
-// 	const [zero, setZERO] = useState(0)
-// 	const [play, setPLAY] = useState(0)
-// 	const [game, setGAME] = useState(0)
-// 	// const [zeur, setZEUR] = useState(0)
+	const [zero, setZERO] = useState(0)
+	const [play, setPLAY] = useState(0)
+	const [game, setGAME] = useState(0)
+	// const [zeur, setZEUR] = useState(0)
 
-// 	useEffect(() => {
-// 		if (!accountSelected) return
+	useEffect(() => {
+		if (!accountSelected) return
 
-// 		const query = async () => {
-// 			let unsubscribe
-// 			const context = api.query.assets.account
+		const query = async () => {
+			let unsubscribe
+			const context = api.query.assets.account
 
-// 			api.queryMulti(
-// 				[
-// 					[context, [Number(0), accountSelected]],
-// 					[context, [Number(1), accountSelected]],
-// 					// [context, [Number(2), accountSelected]],
-// 				],
-// 				([_play, _game, _zeur]) => {
-// 					setPLAY(_play.toHuman().balance)
-// 					setGAME(_game.toHuman().balance)
-// 					// setZEUR(_zeur.toHuman().balance)
-// 				}
-// 			)
-// 				.then((unsub) => {
-// 					unsubscribe = unsub
-// 				})
-// 				.catch(console.error)
-// 			return () => unsubscribe && unsubscribe()
-// 		}
-// 		query()
-// 	}, [api, accountSelected])
+			api.queryMulti(
+				[
+					[context, [Number(0), accountSelected]],
+					[context, [Number(1), accountSelected]],
+					// [context, [Number(2), accountSelected]],
+				],
+				([_play, _game, _zeur]) => {
+					setPLAY(_play.toHuman().balance)
+					setGAME(_game.toHuman().balance)
+					// setZEUR(_zeur.toHuman().balance)
+				}
+			)
+				.then((unsub) => {
+					unsubscribe = unsub
+				})
+				.catch(console.error)
+			return () => unsubscribe && unsubscribe()
+		}
+		query()
+	}, [api, accountSelected])
 
-// 	useEffect(() => {
-// 		let unsubscribe
-// 		accountSelected &&
-// 			api.query.system
-// 				.account(accountSelected, (balance) => {
-// 					setZERO(balance.data.free.toHuman())
-// 				})
-// 				.then((unsub) => {
-// 					unsubscribe = unsub
-// 				})
-// 				.catch(console.error)
+	useEffect(() => {
+		let unsubscribe
+		accountSelected &&
+			api.query.system
+				.account(accountSelected, (balance) => {
+					setZERO(balance.data.free.toHuman())
+				})
+				.then((unsub) => {
+					unsubscribe = unsub
+				})
+				.catch(console.error)
 
-// 		return () => unsubscribe && unsubscribe()
-// 	}, [api, accountSelected])
+		return () => unsubscribe && unsubscribe()
+	}, [api, accountSelected])
 
-// 	return accountSelected ? (
-// 		<div style={{ fontSize: '10px', lineHeight: '10px', marginLeft: '10px' }}>
-// 			{zero}
-// 			<br />
-// 			{play} PLAY
-// 			<br />
-// 			{game} GAME
-// 			{/*<br/>{zeur} zDOT*/}
-// 		</div>
-// 	) : null
-// }
+	return accountSelected ? (
+		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
+			{zero}
+			<br />
+			{play} PLAY
+			<br />
+			{game} GAME
+			{/*<br/>{zeur} zDOT*/}
+		</div>
+	) : null
+}
 
 const AccountSelector = (props) => {
 	const { api, keyring } = useSubstrate()
