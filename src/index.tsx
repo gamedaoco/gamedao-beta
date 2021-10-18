@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { App } from './App'
-import { Providers } from './Providers'
+import App from './App'
+import Providers from './Providers'
 
 // TODO: remove when all semantic deps are gone
 import 'semantic-ui-css/semantic.min.css'

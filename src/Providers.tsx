@@ -6,14 +6,15 @@ import { ThemeProvider } from '@mui/material/styles'
 import { BrowserRouter, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { IconContext } from 'react-icons'
+
 import { SubstrateContextProvider } from './substrate-lib'
 
 import { darkTheme, lightTheme } from './themes/theme'
 
 import { Box } from './components'
 
-export const Providers = (props) => {
-	const [isDarkMode, setDarkMode] = React.useState(true)
+const Providers = (props) => {
+	const [isDarkMode, setDarkMode] = React.useState(false)
 
 	function toggleColorMode() {
 		setDarkMode(!isDarkMode)
@@ -25,10 +26,10 @@ export const Providers = (props) => {
 				<CssBaseline />
 				{/*<ReduxProvider store={store}>*/}
 				<SubstrateContextProvider>
-					<BrowserRouter>
-						<ScrollToTop />
-						<IconContext.Provider value={{ color: 'black', className: 'react-icon' }}>{props.children}</IconContext.Provider>
-					</BrowserRouter>
+						<BrowserRouter>
+							<ScrollToTop />
+							<IconContext.Provider value={{ color: 'black', className: 'react-icon' }}>{props.children}</IconContext.Provider>
+						</BrowserRouter>
 				</SubstrateContextProvider>
 				{/*</ReduxProvider>*/}
 			</ThemeProvider>
@@ -53,7 +54,7 @@ function DarkModeSwitch({ isDarkMode, onClick }) {
 	)
 }
 
-export default function ScrollToTop() {
+export function ScrollToTop() {
 	const { pathname } = useLocation()
 
 	useEffect(() => {
@@ -62,3 +63,5 @@ export default function ScrollToTop() {
 
 	return null
 }
+
+export default Providers
