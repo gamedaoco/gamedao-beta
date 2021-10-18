@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box, Typography, Container, List, Link as MUILink, Grid, ListItem, ListItemText } from '@mui/material'
+import { Box, Typography, Container, List, Link as MUILink, Grid } from '@mui/material'
 
 const Link = ({ href, children }) => (
-	<Typography variant="body" sx={{ fontSize: '1.25em' }}>
+	<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
 		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
 			{children}
 		</MUILink>
@@ -26,8 +26,8 @@ export const Footer = (props) => (
 		}}
 	>
 		<Container>
-			<Grid spacing={1} columns={16}>
-				<Grid container direction="Row" mb={4}>
+{/*			<Grid spacing={1} columns={16}>
+				<Grid container direction="row" mb={4}>
 					<Grid width={16}>
 						<a href="#top">
 							<img alt="GameDAO" src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`} width={48} />
@@ -35,7 +35,7 @@ export const Footer = (props) => (
 					</Grid>
 				</Grid>
 
-				<Grid container direction="Row" mb={4}>
+				<Grid container direction="row" mb={4}>
 					<Grid xs={16} md={4} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							About
@@ -72,7 +72,7 @@ export const Footer = (props) => (
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							GameDAO. For the Creator and Player Economy.
 						</Typography>
-						<Typography variant="body" sx={{ fontSize: '1.25em' }}>
+						<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
 							<p>
 								Community driven ownership and creation will be a vital part of how we see video games in the near future. The transition to
 								token driven economies is already in progress but is still in its early stages, only treating the symptoms of a broken,
@@ -91,10 +91,10 @@ export const Footer = (props) => (
 					</Grid>
 				</Grid>
 
-				<Grid container direction="Row">
+				<Grid container direction="row">
 					<Grid xs={16}>
 						<Typography
-							component="body"
+							component="body1"
 							sx={{
 								backgroundColor: 'transparent',
 								fontSize: '0.75em',
@@ -105,7 +105,7 @@ export const Footer = (props) => (
 						</Typography>
 					</Grid>
 				</Grid>
-			</Grid>
+			</Grid>*/}
 		</Container>
 	</Box>
 )
