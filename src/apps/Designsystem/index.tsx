@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { Card, Button, Divider, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Stack } from '../../components'
+import { ModelCar } from '../webgl/ModelCar'
 
 export const Designsystem = (props: any) => (
 	<Stack>
 		<Typography variant="h1">Designsystem</Typography>
 		<Typography variant="h3">Buttons</Typography>
+		<ModelCar/>
 		<Divider />
 		<Buttons />
 
