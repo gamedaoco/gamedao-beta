@@ -3,7 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSubstrate } from '../substrate-lib'
 
 // import { Button, Dropdown } from 'semantic-ui-react'
-import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
+import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -81,14 +81,21 @@ const AccountComponent = (props) => {
 			</CopyToClipboard>
 		*/}
 
-			<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
+			<ButtonGroup sx={{ flexDirection: "column" }} variant="contained" ref={anchorRef} aria-label="account-selector">
 
-				<CopyToClipboard text={accountSelected}>
-					<Button color={accountSelected ? 'success' : 'error'}>
-						{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
-					</Button>
-				</CopyToClipboard>
+				<BalanceAnnotation accountSelected={accountSelected} />
 
+				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
+					<LogoutIcon fontSize="inherit"/>
+				</IconButton>
+
+				<Typography variant="subtitle1">
+					<CopyToClipboard text={accountSelected}>
+						<Button color={accountSelected ? 'success' : 'error'}>
+							{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
+						</Button>
+					</CopyToClipboard>
+				</Typography>
 
 				<IconButton
 					size="small"
@@ -99,12 +106,6 @@ const AccountComponent = (props) => {
 					onClick={handleToggle}
 				>
 					<KeyboardArrowDownIcon fontSize="inherit"/>
-				</IconButton>
-
-						<BalanceAnnotation accountSelected={accountSelected} />
-
-				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
-					<LogoutIcon fontSize="inherit"/>
 				</IconButton>
 
 			</ButtonGroup>
@@ -130,7 +131,7 @@ const AccountComponent = (props) => {
 											selected={index === selectedIndex}
 											onClick={(event) => handleMenuItemClick(event, index)}
 										>
-											{option.text}
+											<Typography variant="subtitle1">{option.text}</Typography>
 										</MenuItem>
 									))}
 								</MenuList>
