@@ -50,7 +50,7 @@ function Main({ accountPair, setAccountAddress }) {
 			>
 				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/">
-						<img alt="GameDAO" src={imageURL} height={32} />
+						<img style={{ height: '2rem' }} alt="GameDAO" src={imageURL} height={32} />
 					</StyledLink>
 					<AccountSelector setAccountAddress={setAccountAddress} />
 					<StyledLink to="/app"> 
