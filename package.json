@@ -47,6 +47,7 @@
     "@zeroio/type-definitions": "^0.0.6",
     "big.js": "^6.1.1",
     "faker": "^5.5.3",
+    "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "ipfs-http-client": "^50.1.2",
     "material-ui-image": "^3.3.2",
@@ -73,8 +74,7 @@
     "simplebar-react": "^2.3.6",
     "stylis-plugin-rtl": "^2.1.0",
     "toformat": "^2.0.0",
-    "uuid": "^8.3.2",
-    "formik": "2.2.9"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "^15.12.4",
