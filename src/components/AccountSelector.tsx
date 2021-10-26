@@ -85,7 +85,7 @@ const AccountComponent = (props) => {
 
 				<CopyToClipboard text={accountSelected}>
 					<Button color={accountSelected ? 'success' : 'error'}>
-						{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
+						{keyringOptions[selectedIndex] && `${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
 					</Button>
 				</CopyToClipboard>
 

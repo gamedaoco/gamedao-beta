@@ -6,7 +6,7 @@ import Loader from './components/Loader'
 // TODO: refactor to mui
 // import ErrorMessage from './components/Message'
 
-const Home = lazy(() => import('./apps/Home'))
+const Home = lazy(() => import('./apps/Landing/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Organisations = lazy(() => import('./apps/Organisations'))
