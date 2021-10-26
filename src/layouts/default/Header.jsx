@@ -1,59 +1,88 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import AccountSelector from 'src/components/AccountSelector'
+import { styled } from '@mui/material/styles'
 // import { BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
 
+import HomeIcon from '@mui/icons-material/Home'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import { useTheme } from '@mui/styles';
 
-import { Stack } from '../../components'
+import { Stack, Box, Typography } from '../../components'
+import AccountSelector from 'src/components/AccountSelector'
 
-import { styled } from '@mui/material/styles'
 
 const StyledLink = styled(NavLink)(({ theme }) => ({
+	display: 'flex',
+	alignItems: 'center',
 	color: 'white',
+	'& > p': {
+		paddingLeft: '2rem'
+	}
 }))
 
 const imageURL = `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
 
 function Main({ accountPair, setAccountAddress }) {
+	const theme = useTheme();
+	const linkActiveColor = theme.palette.secondary.main
+	const [isSidebarOpen, setSidebarOpen] = React.useState(false)
+
+	function toggleSidebar(){
+		setSidebarOpen(!isSidebarOpen)
+	}
+
 	return (
 		<AppBar color="secondary" position="sticky">
 			<Toolbar
+				onMouseEnter={toggleSidebar}
+				onMouseLeave={toggleSidebar}
 				sx={{
-					justifyContent: 'space-between',
-					px: '3rem !important',
-					py: '1rem !important',
+					justifyContent: 'start',
+					alignItems: 'start',
+					py: '2rem',
+					px: '2rem !important',
+					height: '100vh',
+					width: isSidebarOpen ? "18rem" : '6rem',
+					overflow: 'hidden',
+					transition: 'all 0.5s ease;'
 				}}
 			>
-				<Stack direction="row" justifyContent="center" alignItems="center" spacing={4}>
-					<StyledLink activeStyle={{ color: 'red' }} to="/">
-						<img alt="GameDAO" src={imageURL} height={32} />
+				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/">
+						<img style={{ height: '2rem' }} alt="GameDAO" src={imageURL} height={32} />
 					</StyledLink>
-					<StyledLink to="/app"> Dashboard </StyledLink>
-					<StyledLink activeStyle={{ color: 'red' }} to="/app/organisations">
-						{' '}
-						Organisations{' '}
-					</StyledLink>
-					<StyledLink activeStyle={{ color: 'red' }} to="/app/governance">
-						{' '}
-						Governance{' '}
-					</StyledLink>
-					<StyledLink activeStyle={{ color: 'red' }} to="/app/campaigns">
-						{' '}
-						Campaigns{' '}
-					</StyledLink>
-					<StyledLink activeStyle={{ color: 'red' }} to="/app/tangram">
-						{' '}
-						Tangram{' '}
-					</StyledLink>
-					<StyledLink activeStyle={{ color: 'red' }} to="/app/wallet">
-						{' '}
-						Wallet{' '}
-					</StyledLink>
-				</Stack>
-				<Stack direction="row" justifyContent="center" alignItems="center">
 					<AccountSelector setAccountAddress={setAccountAddress} />
+					<StyledLink to="/app"> 
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Dashboard</Typography>
+					</StyledLink>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/organisations">
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Organisations</Typography>
+					</StyledLink>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/governance">
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Governance</Typography>
+					</StyledLink>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/campaigns">
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Campaigns</Typography>
+					</StyledLink>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/tangram">
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Tangram</Typography>
+					</StyledLink>
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/wallet">
+						<HomeIcon fontSize="large" />
+						{' '}
+						<Typography>Wallet</Typography>
+					</StyledLink>
 				</Stack>
 			</Toolbar>
 		</AppBar>
