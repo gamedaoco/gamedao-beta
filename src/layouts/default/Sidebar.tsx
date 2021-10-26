@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
-// import { useTheme } from '@mui/styles'
+import { useTheme } from '@mui/material/styles'
 
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -27,8 +27,8 @@ interface ComponentProps {
 }
 
 function Main({ showNavigation }: ComponentProps) {
-	// const theme = useTheme()
-	// const linkActiveColor = theme.palette.secondary.main
+	const theme = useTheme()
+	const linkActiveColor = theme.palette.secondary.main
 
 	const [ isSidebarOpen, setSidebarOpen ] = useState(false)
 	const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
@@ -57,19 +57,19 @@ function Main({ showNavigation }: ComponentProps) {
 					<StyledLink to="/app">
 						<BiGame color="white" /> <Typography>Dashboard</Typography>
 					</StyledLink>
-					<StyledLink activeStyle={{ color: 'white' }} to="/app/organisations">
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/organisations">
 						<BiPyramid color="white" /> <Typography>Organisations</Typography>
 					</StyledLink>
-					<StyledLink activeStyle={{ color: 'white' }} to="/app/governance">
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/governance">
 						<BiListCheck color="white" /> <Typography>Governance</Typography>
 					</StyledLink>
-					<StyledLink activeStyle={{ color: 'white' }} to="/app/campaigns">
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/campaigns">
 						<BiCoin color="white" /> <Typography>Campaigns</Typography>
 					</StyledLink>
-					<StyledLink activeStyle={{ color: 'white' }} to="/app/tangram">
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/tangram">
 						<BiDiamond color="white" /> <Typography>Tangram</Typography>
 					</StyledLink>
-					<StyledLink activeStyle={{ color: 'white' }} to="/app/wallet">
+					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/wallet">
 						<BiWallet color="white" /> <Typography>Wallet</Typography>
 					</StyledLink>
 
