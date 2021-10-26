@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
-import { Loader } from '../components/Loader'
 
 const Dashboard = (props) => {
 
@@ -12,7 +11,6 @@ const Dashboard = (props) => {
 	const [ bodies, setBodies ] = useState(0)
 	const [ campaigns, setCampaigns ] = useState(0)
 	const [ proposals, setProposals ] = useState(0)
-	const [ tangram, setTangram ] = useState(0)
 
 	useEffect(() => {
 
