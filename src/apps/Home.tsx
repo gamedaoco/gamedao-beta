@@ -1,6 +1,5 @@
 import * as React from 'react'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-
 import { Avatar, Button, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '../components'
 
 function Copyright(props: any) {
@@ -8,7 +7,7 @@ function Copyright(props: any) {
 		<Typography variant="body2" color="text.secondary" align="center" {...props}>
 			{'Copyright © '}
 			<Link color="inherit" href="https://material-ui.com/">
-				Your Website
+				GameDAO
 			</Link>{' '}
 			{new Date().getFullYear()}
 			{'.'}

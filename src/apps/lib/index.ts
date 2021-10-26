@@ -1,11 +1,13 @@
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 
 export * from './data'
 
 export const getFromAcct = async ({ accountPair }) => {
 	const { api } = useSubstrate()
-
+	// TODO:
+	// const { accountPair } = useWallet()
 	const {
 		address,
 		meta: { source, isInjected },

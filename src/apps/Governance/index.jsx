@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'

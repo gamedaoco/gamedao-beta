@@ -46,6 +46,7 @@
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
     "@zeroio/type-definitions": "^0.0.6",
     "big.js": "^6.1.1",
+    "change-case": "^4.1.2",
     "faker": "^5.5.3",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",

@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
-import { BiWallet, BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
-
-import HomeIcon from '@mui/icons-material/Home'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { useTheme } from '@mui/styles'
+import { Stack, Typography } from 'src/components'
+import { BiWallet, BiListCheck, BiCoin, BiPyramid, BiGame, BiDiamond } from "react-icons/bi";
 
-import { Stack, Box, Typography } from '../../components'
-import AccountSelector from 'src/components/AccountSelector'
+// import AccountSelector from 'src/components/AccountSelector'
 
 const StyledLink = styled(NavLink)(({ theme }) => ({
 	display: 'flex',
@@ -24,14 +22,16 @@ const StyledLink = styled(NavLink)(({ theme }) => ({
 
 const imageURL = `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
 
-function Main({ accountPair, setAccountAddress }) {
+interface ComponentProps {
+	showNavigation?: boolean
+}
+
+function Main({ showNavigation }: ComponentProps) {
 	const theme = useTheme()
 	const linkActiveColor = theme.palette.secondary.main
-	const [isSidebarOpen, setSidebarOpen] = React.useState(false)
 
-	function toggleSidebar() {
-		setSidebarOpen(!isSidebarOpen)
-	}
+	const [ isSidebarOpen, setSidebarOpen ] = useState(false)
+	const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
 
 	return (
 		<AppBar color="secondary" position="sticky">
@@ -50,10 +50,10 @@ function Main({ accountPair, setAccountAddress }) {
 				}}
 			>
 				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
-					<StyledLink activeStyle={{ color: linkActiveColor }} to="/">
+					<StyledLink activeStyle={{ color: 'white' }} to="/">
 						<img style={{ height: '2rem' }} alt="GameDAO" src={imageURL} height={32} />
 					</StyledLink>
-					<AccountSelector setAccountAddress={setAccountAddress} />
+
 					<StyledLink to="/app">
 						<BiGame color="white" /> <Typography>Dashboard</Typography>
 					</StyledLink>
@@ -72,6 +72,7 @@ function Main({ accountPair, setAccountAddress }) {
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/wallet">
 						<BiWallet color="white" /> <Typography>Wallet</Typography>
 					</StyledLink>
+
 				</Stack>
 			</Toolbar>
 		</AppBar>

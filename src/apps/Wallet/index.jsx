@@ -1,10 +1,12 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 
-import { Grid, Button, Modal } from 'semantic-ui-react'
+import { Button, Typography, Box, Stack } from 'src/components'
 
 const Component = (props) => {
-	const { accountPair } = props
+
+	const { address, accountPair } = useWallet()
 	const { api } = useSubstrate()
 
 	const [bodies, setBodies] = useState(0)
@@ -20,13 +22,13 @@ const Component = (props) => {
 				api.query.gameDaoControl.nonce,
 				api.query.gameDaoCrowdfunding.nonce,
 				api.query.gameDaoGovernance.nonce,
-				// api.query.gameDaoTangram.nextTangramId
+				api.query.gameDaoTangram.nextTangramId
 			],
 			([bodies, campaigns, proposals, creatures]) => {
 				setBodies(bodies.toNumber())
 				setCampaigns(campaigns.toNumber())
 				setProposals(proposals.toNumber())
-				// setTangram(tangram.toNumber())
+				setTangram(tangram.toNumber())
 			}
 		)
 			.then((unsub) => {
@@ -38,9 +40,13 @@ const Component = (props) => {
 	}, [api])
 
 	return (
-		<Grid.Column width={16}>
-			<h1>Wallet</h1>
-		</Grid.Column>
+		<>
+			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
+				<Typography component="h1" variant="h3">Wallet</Typography>
+				<Box>
+				</Box>
+			</Stack>
+		</>
 	)
 }
 
@@ -64,7 +70,7 @@ const Disclaimer = ({ open, setOpen }) => (
 		</Modal.Content>
 		<Modal.Actions>
 			<Button color="green" inverted onClick={() => setOpen(false)}>
-				<Icon name="checkmark" /> I understand
+				I understand
 			</Button>
 		</Modal.Actions>
 	</Modal>
@@ -76,10 +82,10 @@ const Intro = (props) => {
 }
 
 export default function Dapp(props) {
-	const { accountPair } = props
+	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
-	return api && accountPair ? <Component /> : <Intro />
+	return api ? <Component /> : null
 }
 
 //

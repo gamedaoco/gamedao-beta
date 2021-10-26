@@ -158,7 +158,7 @@ export const Main = (props) => {
 		if (orgs.length === 0) return
 		const initial_state = random_state(accountPair)
 		updateFormData(initial_state)
-	}, [orgs])
+	}, [orgs, accountPair])
 
 	// handle form state
 
@@ -274,7 +274,7 @@ export const Main = (props) => {
 
 	return (
 		<Segment vertical loading={loading}>
-			<h1>Create Campaign</h1>
+			<h1>Create Campaign {nonce}</h1>
 
 			<Form>
 				<br />

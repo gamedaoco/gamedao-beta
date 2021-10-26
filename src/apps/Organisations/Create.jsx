@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
 import { Container, Form, Divider, Segment, Image, Button } from 'semantic-ui-react'
@@ -71,7 +72,7 @@ const random_state = (accountPair) => {
 export const Main = (props) => {
 	const { api } = useSubstrate()
 
-	const { accountPair } = props
+	const { accountPair } = useWallet()
 	// const [ status, setStatus ] = useState('')
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -354,7 +355,7 @@ export const Main = (props) => {
 }
 
 export default function Module(props) {
-	const { accountPair } = props
+	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null

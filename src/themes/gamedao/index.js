@@ -4,13 +4,7 @@ const globalTheme = {
 	shape: {
 		borderRadius: 1,
 	},
-	components: {
-		MuiButtonBase: {
-			defaultProps: {
-				disableRipple: true, // No more ripple, on the whole application 💣!
-			},
-		},
-	},
+	shadows: 0
 }
 
 export const darkTheme = createTheme({

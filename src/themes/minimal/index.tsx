@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { createTheme } from '@mui/material/styles'
 // hooks
 // import useSettings from '../hooks/useSettings';

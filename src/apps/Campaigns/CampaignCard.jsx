@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+
 import { web3FromSource } from '@polkadot/extension-dapp'
 // import { encodeAddress } from '@polkadot/util-crypto'
 // import { data } from '../lib/data'
@@ -7,7 +8,7 @@ import { gateway } from '../lib/ipfs'
 // import config from '../../config'
 // const dev = config.dev
 
-import { Grid, Card, Icon, Image, Segment, Label } from 'semantic-ui-react'
+import { Grid, Card, Icon, Image, Segment } from 'semantic-ui-react'
 import { Form } from 'semantic-ui-react'
 
 import { Button } from '../../components'
@@ -24,7 +25,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
 
-	const [open, setOpen] = useState(false)
+	// const [open, setOpen] = useState(false)
 	const [loading, setLoading] = useState(true)
 
 	const [formData, updateFormData] = useState({ amount: 0 })
@@ -66,7 +67,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			}
 		}
 		query()
-	}, [api, id])
+	}, [api, id,owner])
 
 	//
 
@@ -99,7 +100,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
 	const date = new Date(epoch * 1).toLocaleDateString(undefined, options)
 
-	const handleContribute = () => setOpen(true)
+	// const handleContribute = () => setOpen(true)
 
 	const getFromAcct = async () => {
 		const {
