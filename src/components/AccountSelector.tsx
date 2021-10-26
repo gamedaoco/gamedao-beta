@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import { useSubstrate } from '../substrate-lib'
-import { useWallet } from '../contexts/Wallet'
+import { useWallet } from '../context/Wallet'
 
 import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'

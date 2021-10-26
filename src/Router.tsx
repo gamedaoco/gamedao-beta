@@ -49,7 +49,7 @@ const Router = (props) => {
 					<Dashboard accountPair={accountPair} />
 				</LayoutRoute>
 
-				<Layout showHeader={false} showFooter={true} >
+				<Layout showHeader={true} showFooter={true} >
 
 
 					<Route exact path="/app/organisations">

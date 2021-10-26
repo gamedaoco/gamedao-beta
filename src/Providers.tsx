@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { IconContext } from 'react-icons'
 
 import { SubstrateContextProvider } from './substrate-lib'
-import { WalletProvider } from './contexts/Wallet'
+import { WalletProvider } from './context/Wallet'
 
 import { darkTheme, lightTheme } from './themes/theme'
 
