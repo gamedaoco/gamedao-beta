@@ -10,7 +10,7 @@ interface ComponentProps {
 function Main({ showWallet }: ComponentProps) {
 
 	return (
-		<AppBar color="transparent" position="sticky">
+		<AppBar color="transparent" position="sticky" elevation={0}>
 			<Toolbar
 				sx={{
 					zIndex: '9000',

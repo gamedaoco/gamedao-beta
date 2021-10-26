@@ -23,7 +23,7 @@ export const Footer = (props) => (
 		}}
 	>
 		<Container>
-			<Grid spacing={1} columns={16}>
+			<Grid columns={16}>
 				<Grid container direction="row" mb={4}>
 					<Grid width={16}>
 						<a href="#top">
@@ -33,7 +33,7 @@ export const Footer = (props) => (
 				</Grid>
 
 				<Grid container direction="row" mb={4}>
-					<Grid md={4} mb={4}>
+					<Grid item md={4} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							About
 						</Typography>
@@ -44,7 +44,7 @@ export const Footer = (props) => (
 						<br />
 						<Link href="https://gamedao.co">gamedao.co</Link>
 					</Grid>
-					<Grid md={4} mb={4}>
+					<Grid item md={4} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							How we build
 						</Typography>
@@ -65,7 +65,7 @@ export const Footer = (props) => (
 							Polkadot Explorer
 						</Link>
 					</Grid>
-					<Grid md={8} mb={4}>
+					<Grid item md={8} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							GameDAO. For the Creator and Player Economy.
 						</Typography>
@@ -88,8 +88,7 @@ export const Footer = (props) => (
 					</Grid>
 				</Grid>
 
-				<Grid container direction="row">
-					<Grid>
+				<Grid direction="row">
 						<Typography
 							variant="body1"
 							sx={{
@@ -100,7 +99,6 @@ export const Footer = (props) => (
 						>
 							{`© 2019-${new Date().getFullYear()} `}GAMEDAO CO. Powered by ZERO.IO
 						</Typography>
-					</Grid>
 				</Grid>
 			</Grid>
 		</Container>
