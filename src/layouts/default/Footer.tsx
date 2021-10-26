@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Typography, Container, List, Link as MUILink, Grid } from '@mui/material'
+import { Box, Typography, Container, Link as MUILink, Grid } from '@mui/material'
 
 const Link = ({ href, children }) => (
 	<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
