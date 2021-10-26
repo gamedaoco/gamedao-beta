@@ -27,17 +27,26 @@ const useWallet = () => useContext(WalletContext)
 const WalletProvider = ({ children }) => {
 
 	const { api, keyring } = useSubstrate()
-	const [ state, setState ] = useState<WalletState>(INITIAL_STATE)
+	const [ state, setState ] = useState<WalletState>()
 	const [ accountAddress, setAccountAddress ] = useState('')
 	const [ allowConnect, toggleAllowConnect ] = useState(false)
 	const [ accountPair, setAccountPair ] = useState(null)
 
 	useEffect(()=>{
+		setState(INITIAL_STATE)
+	},[setState])
+
+	useEffect(()=>{
 		if(!api) return
 		if(!allowConnect) return
 		if(!keyring) return
-		console.log('api')
+		console.log('connect wallet')
 	},[api, allowConnect, keyring])
+
+	useEffect(()=>{
+		if(!accountAddress) return
+		console.log(accountAddress)
+	},[accountAddress])
 
 	const handleSetAccountPair = accountPair => setAccountPair(accountPair)
 	const handleSetAccountAddress = address => setAccountAddress(address)
