@@ -12,12 +12,12 @@ import LogoutIcon from '@mui/icons-material/Logout'
 
 const AccountComponent = (props) => {
 
-	const [open, setOpen] = React.useState(false)
-	const [selectedIndex, setSelectedIndex] = useState(0)
+	const [ open, setOpen ] = React.useState(false)
+	const [ selectedIndex, setSelectedIndex ] = useState(0)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
 	const { keyring } = useSubstrate()
-	const { toggleAllowConnect, setAccountAddress } = useWallet()
+	const { allowConnect, toggleAllowConnect, setAccountAddress } = useWallet()
 	const [ accountSelected, setAccountSelected ] = useState(null)
 
 	// Get the list of accounts we possess the private key for
@@ -36,21 +36,21 @@ const AccountComponent = (props) => {
 		setAccountSelected(initialAddress)
 	}, [setAccountAddress, initialAddress])
 
-	const onChange = (address='') => {
-		setAccountAddress(address)
-		setAccountSelected(address)
-	}
+	// const onChange = (address='') => {
+	// 	setAccountAddress(address)
+	// 	setAccountSelected(address)
+	// }
 
 	const handleToggleAllowConnect = (event) => {
 		console.log('toggle a')
 		toggleAllowConnect()
 	}
 
-	const handleClick = () => {
-		console.info(`You clicked ${keyringOptions[selectedIndex].value}`)
-		setAccountAddress(keyringOptions[selectedIndex].value)
-		setAccountSelected(keyringOptions[selectedIndex].value)
-	}
+	// const handleClick = () => {
+	// 	console.info(`You clicked ${keyringOptions[selectedIndex].value}`)
+	// 	setAccountAddress(keyringOptions[selectedIndex].value)
+	// 	setAccountSelected(keyringOptions[selectedIndex].value)
+	// }
 
 	const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
 		setSelectedIndex(index)
@@ -76,8 +76,8 @@ const AccountComponent = (props) => {
 
 	return (
 		<>
-			{ !accountSelected ? (
-				<Button onClick={handleToggleAllowConnect}>{`connect`}</Button>
+			{ !allowConnect ? (
+				<Button variant="outlined" onClick={handleToggleAllowConnect}>{`connect wallet`}</Button>
 			) : (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
 					<CopyToClipboard text={accountSelected}>
@@ -93,9 +93,8 @@ const AccountComponent = (props) => {
 					>
 						<KeyboardArrowDownIcon fontSize="inherit" />
 					</IconButton>
-{/*
-					<BalanceAnnotation accountSelected={accountSelected} />
-*/}					<IconButton size="small" aria-label="disconnect" onClick={handleToggleAllowConnect}>
+					<BalanceAnnotation />
+					<IconButton size="small" aria-label="disconnect" onClick={handleToggleAllowConnect}>
 						<LogoutIcon fontSize="inherit" />
 					</IconButton>
 				</ButtonGroup>
@@ -133,28 +132,26 @@ const AccountComponent = (props) => {
 	)
 }
 
-const BalanceAnnotation = ({ accountSelected }) => {
+const BalanceAnnotation = () => {
 
 	const { api } = useSubstrate()
-	// const [ accountBalance, setAccountBalance ] = useState(0);
+	const { address } = useWallet()
 
 	const [zero, setZERO] = useState(0)
 	const [play, setPLAY] = useState(0)
 	const [game, setGAME] = useState(0)
-	// const [zeur, setZEUR] = useState(0)
 
 	useEffect(() => {
-		if (!accountSelected || !api) return
 
+		if (!address || !api) return
+		let unsubscribe
 		const query = async () => {
-			let unsubscribe
 			const context = api.query.assets.account
-
 			api.queryMulti(
 				[
-					[api.query.system.account, accountSelected],
-					[context, [Number(0), accountSelected]],
-					[context, [Number(1), accountSelected]],
+					[api.query.system.account, address],
+					[context, [Number(0), address]],
+					[context, [Number(1), address]],
 				],
 				([_zero,_play, _game]) => {
 					setZERO(_zero.data.free.toHuman())
@@ -166,44 +163,29 @@ const BalanceAnnotation = ({ accountSelected }) => {
 					unsubscribe = unsub
 				})
 				.catch(console.error)
-			return () => unsubscribe && unsubscribe()
 		}
 		query()
-	}, [api, accountSelected])
+		return () => unsubscribe && unsubscribe()
 
-	// useEffect(() => {
-	// 	if (!accountSelected || !api) return
+	}, [api, address])
 
-	// 	let unsubscribe
-	// 	accountSelected &&
-	// 		api.query.system
-	// 			.account(accountSelected, (balance) => {
-	// 				setZERO(balance.data.free.toHuman())
-	// 			})
-	// 			.then((unsub) => {
-	// 				unsubscribe = unsub
-	// 			})
-	// 			.catch(console.error)
-
-	// 	return () => unsubscribe && unsubscribe()
-
-	// }, [api, accountSelected])
-
-	return accountSelected ? (
-		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
+	return address ? (
+		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '8px' }}>
 			{zero}
 			<br />
 			{play} PLAY
 			<br />
 			{game} GAME
-			{/*<br/>{zeur} zDOT*/}
 		</div>
 	) : null
+
 }
 
 const AccountSelector = (props) => {
-	const { api, keyring } = useSubstrate()
 
+	const { api, keyring } = useSubstrate()
 	return api && keyring && keyring.getPairs && api.query ? <AccountComponent {...props} /> : null
+
 }
+
 export default AccountSelector

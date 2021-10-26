@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Stack, Typography, Backdrop } from './index'
+import { Typography, Backdrop } from './index'
 
 export const Message = ({ err }) => (
 	<Backdrop

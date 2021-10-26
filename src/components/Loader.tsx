@@ -1,5 +1,5 @@
 import React from 'react'
-import { CircularProgress, Box, Stack, Typography, Backdrop } from './index'
+import { CircularProgress, Typography, Backdrop } from './index'
 
 export const Loader = ({ text }) => (
 	<Backdrop
