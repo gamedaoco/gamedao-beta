@@ -31,17 +31,36 @@ import {
 	TableContainer, 
 	TableHead, 
 	TablePagination, 
-	TableRow 
+	TableRow,
+	styled
 } from '../../components'
-
-
-import { Icon } from 'semantic-ui-react'
-
 
 
 const CreateDAO = lazy(() => import('./Create'))
 
 const dev = config.dev
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.MuiTableCell-head`]: {
+	  backgroundColor: theme.palette.common.black,
+	  color: theme.palette.common.white,
+	},
+	[`&.MuiTableCell-body`]: {
+	  fontSize: 14,
+	},
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	'&:nth-of-type(odd)': {
+	  backgroundColor: theme.palette.action.hover,
+	},
+	// hide last border
+	'&:last-child td, &:last-child th': {
+	  border: 0,
+	},
+  }));
+
 
 
 const getFromAcct = async (api, accountPair) => {
@@ -239,8 +258,8 @@ const Item = ({ content, accountPair }) => {
 	if (!itemContent) return null
 
 	return (
-		<TableRow hover>
-			<TableCell>
+		<StyledTableRow hover>
+			<StyledTableCell>
 				<a onClick={() => console.log(itemContent, metadata)}>
 					<Stack spacing={2} direction='row'>
 						<img style={{ maxHeight: '3rem' }} src={imageURL} />
@@ -250,55 +269,30 @@ const Item = ({ content, accountPair }) => {
 						</Box>
 					</Stack>
 				</a>
-			</TableCell>
-			<TableCell>
+			</StyledTableCell>
+			<StyledTableCell>
 				<Typography>{metadata.description}</Typography>
-			</TableCell>
-			<TableCell>
+			</StyledTableCell>
+			<StyledTableCell>
 				{metadata.website && (
 					<a href={metadata.website} target="_blank">
 						<LanguageIcon/>
 					</a>
 				)}
-			</TableCell>
-			<TableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon/>}</TableCell>
-			<TableCell>{itemContent.memberCount || 0}</TableCell>
+			</StyledTableCell>
+			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon/>}</StyledTableCell>
+			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
 			{/*
-			<TableCell>{itemContent.treasuryBalance||0}</TableCell>
-			<TableCell>{itemContent.motions||0}</TableCell>
-			<TableCell>{itemContent.campaigns||0}</TableCell>
+			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.motions||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.campaigns||0}</StyledTableCell>
 			*/}
-			<TableCell>
+			<StyledTableCell>
 				<Interactions />
-			</TableCell>
-		</TableRow>
+			</StyledTableCell>
+		</StyledTableRow>
 	)
 }
-
-
-  function createData(name, code, population, size) {
-	const density = population / size;
-	return { name, code, population, size, density };
-  }
-  
-  const rows = [
-	createData('India', 'IN', 1324171354, 3287263),
-	createData('China', 'CN', 1403500365, 9596961),
-	createData('Italy', 'IT', 60483973, 301340),
-	createData('United States', 'US', 327167434, 9833520),
-	createData('Canada', 'CA', 37602103, 9984670),
-	createData('Australia', 'AU', 25475400, 7692024),
-	createData('Germany', 'DE', 83019200, 357578),
-	createData('Ireland', 'IE', 4857000, 70273),
-	createData('Mexico', 'MX', 126577691, 1972550),
-	createData('Japan', 'JP', 126317000, 377973),
-	createData('France', 'FR', 67022000, 640679),
-	createData('United Kingdom', 'GB', 67545757, 242495),
-	createData('Russia', 'RU', 146793744, 17098246),
-	createData('Nigeria', 'NG', 200962417, 923768),
-	createData('Brazil', 'BR', 210147125, 8515767),
-  ];
-  
   
 
 const ItemList = (props) => {
@@ -348,26 +342,26 @@ const ItemList = (props) => {
 				<TableContainer sx={{ maxHeight: 512 }}>
 					<TableMUI stickyHeader aria-label="sticky table">
 						<TableHead>
-							<TableRow>
-								<TableCell align="center" colSpan={1}>
+							<StyledTableRow>
+								<StyledTableCell align="center" colSpan={1}>
 								
-								</TableCell>
-								<TableCell align="center" colSpan={1}>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
 									<Typography variant='h4'>Description</Typography>
-								</TableCell>
-								<TableCell align="center" colSpan={1}>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
 									<LanguageIcon />
-								</TableCell>
-								<TableCell align="center" colSpan={1}>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
 									<LockIcon />
-								</TableCell>
-								<TableCell align="center" colSpan={1}>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
 									<GroupIcon />
-								</TableCell>
-								<TableCell align="center" colSpan={1}>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
 
-								</TableCell>
-							</TableRow>
+								</StyledTableCell>
+							</StyledTableRow>
 						</TableHead>
 					<TableBody>
 						{content
@@ -384,7 +378,7 @@ const ItemList = (props) => {
 				<TablePagination
 					rowsPerPageOptions={[10, 25, 100]}
 					component="div"
-					count={rows.length}
+					count={content.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onPageChange={handleChangePage}

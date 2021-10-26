@@ -70,6 +70,7 @@ const random_state = (accountPair) => {
 	}
 }
 
+
 export const Main = (props) => {
 	const { api } = useSubstrate()
 
