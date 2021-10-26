@@ -88,7 +88,7 @@ export const Footer = (props) => (
 					</Grid>
 				</Grid>
 
-				<Grid direction="row">
+				<Grid container direction="row">
 						<Typography
 							variant="body1"
 							sx={{
