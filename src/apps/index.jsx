@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 import { Loader } from '../components/Loader'
@@ -6,28 +6,31 @@ import { Loader } from '../components/Loader'
 const Dashboard = (props) => {
 
 	const { api } = useSubstrate()
-	const { accountPair } = useWallet()
+	const { address } = useWallet()
 
-	const [bodies, setBodies] = useState(0)
-	const [campaigns, setCampaigns] = useState(0)
-	const [proposals, setProposals] = useState(0)
-	const [tangram, setTangram] = useState(0)
+	const [ name, setName ] = useState('')
+	const [ bodies, setBodies ] = useState(0)
+	const [ campaigns, setCampaigns ] = useState(0)
+	const [ proposals, setProposals ] = useState(0)
+	const [ tangram, setTangram ] = useState(0)
 
 	useEffect(() => {
 		let unsubscribe = null
 
 		api.queryMulti(
 			[
+				[api.query.system.account,address],
 				api.query.gameDaoControl.nonce,
 				api.query.gameDaoCrowdfunding.nonce,
 				api.query.gameDaoGovernance.nonce,
-				// api.query.gameDaoTangram.nextTangramId
+				api.query.gameDaoTangram.nextTangramId
 			],
-			([bodies, campaigns, proposals, creatures]) => {
+			([name, bodies, campaigns, proposals, creatures]) => {
+				setName(name.meta.name.toUpperCase())
 				setBodies(bodies.toNumber())
 				setCampaigns(campaigns.toNumber())
 				setProposals(proposals.toNumber())
-				// setTangram(tangram.toNumber())
+				setTangram(tangram.toNumber())
 			}
 		)
 			.then((unsub) => {
@@ -39,9 +42,13 @@ const Dashboard = (props) => {
 	}, [api])
 
 	return (
-		<Suspense fallback={<Loader text="Loading..."></Loader>}>
-			<h1>Hello.</h1>
-		</Suspense>
+		<>
+			<h1>Hello {name}</h1>
+			<h2>DAOs: {bodies}</h2>
+			<h2>Campaigns: {campaigns}</h2>
+			<h2>Proposals: {proposals}</h2>
+			<h2>Tangram: {tangram}</h2>
+		</>
 	)
 }
 
