@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { useSubstrate } from '../substrate-lib'
 
-// import { Button, Dropdown } from 'semantic-ui-react'
+import { useSubstrate } from '../substrate-lib'
+import { useWallet } from '../contexts/Wallet'
+
 import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
 
+
 const AccountComponent = (props) => {
+
 	const [open, setOpen] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(0)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
 	const { keyring } = useSubstrate()
-	const { setAccountAddress } = props
-	const [accountSelected, setAccountSelected] = useState('')
+	const { toggleAllowConnect, setAccountAddress } = useWallet()
+	const [ accountSelected, setAccountSelected ] = useState(null)
 
 	// Get the list of accounts we possess the private key for
 	const keyringOptions = keyring.getPairs().map((account) => ({
@@ -33,9 +36,14 @@ const AccountComponent = (props) => {
 		setAccountSelected(initialAddress)
 	}, [setAccountAddress, initialAddress])
 
-	const onChange = (address) => {
+	const onChange = (address='') => {
 		setAccountAddress(address)
 		setAccountSelected(address)
+	}
+
+	const handleToggleAllowConnect = (event) => {
+		console.log('toggle a')
+		toggleAllowConnect()
 	}
 
 	const handleClick = () => {
@@ -60,56 +68,40 @@ const AccountComponent = (props) => {
 		setOpen(false)
 	}
 
-	const handleDisconnect = () => {
-		console.log('disconnect')
+	const accountString = args => {
+		if (!args) return ''
+		const txt = ( args.text || args.value )
+		return ( txt.length < 10 ) ? txt : `${txt.slice(0, 10)}...`
 	}
 
 	return (
 		<>
-			{/*
 			{ !accountSelected ? (
-				<span>
-					Add your account with the{' '}
-					<a target="_blank" rel="noopener noreferrer" href="https://github.com/polkadot-js/extension">
-						Polkadot JS Extension
-					</a>
-				</span>
-			) : null }
-
-			<CopyToClipboard text={accountSelected}>
-				<Button variant="contained" color={accountSelected ? 'success' : 'error'}>COPY</Button>
-			</CopyToClipboard>
-		*/}
-
-			<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-
-				<CopyToClipboard text={accountSelected}>
-					<Button color={accountSelected ? 'success' : 'error'}>
-						{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
-					</Button>
-				</CopyToClipboard>
-
-
-				<IconButton
-					size="small"
-					aria-controls={open ? 'account-menu' : undefined}
-					aria-expanded={open ? 'true' : undefined}
-					aria-label="select account"
-					aria-haspopup="menu"
-					onClick={handleToggle}
-				>
-					<KeyboardArrowDownIcon fontSize="inherit"/>
-				</IconButton>
-
-						<BalanceAnnotation accountSelected={accountSelected} />
-
-				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
-					<LogoutIcon fontSize="inherit"/>
-				</IconButton>
-
-			</ButtonGroup>
-
+				<Button onClick={handleToggleAllowConnect}>{`connect`}</Button>
+			) : (
+				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
+					<CopyToClipboard text={accountSelected}>
+						<Button color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
+					</CopyToClipboard>
+					<IconButton
+						size="small"
+						aria-controls={open ? 'account-menu' : undefined}
+						aria-expanded={open ? 'true' : undefined}
+						aria-label="select account"
+						aria-haspopup="menu"
+						onClick={handleToggle}
+					>
+						<KeyboardArrowDownIcon fontSize="inherit" />
+					</IconButton>
 {/*
+					<BalanceAnnotation accountSelected={accountSelected} />
+*/}					<IconButton size="small" aria-label="disconnect" onClick={handleToggleAllowConnect}>
+						<LogoutIcon fontSize="inherit" />
+					</IconButton>
+				</ButtonGroup>
+			)}
+
+			{/*
 	TODO: needs to be bottom end, currently refuses to take the button as anchor ref
 */}
 			<Popper open={open} anchorEl={anchorRef.current} placement={'bottom-start'} role={undefined} transition disablePortal>
@@ -146,75 +138,77 @@ const AccountComponent = (props) => {
 	)
 }
 
-function BalanceAnnotation(props) {
-	const { accountSelected } = props
-	const { api } = useSubstrate()
+// const BalanceAnnotation = ({ accountSelected }) => {
 
-	// const [ accountBalance, setAccountBalance ] = useState(0);
+// 	const { api } = useSubstrate()
+// 	// const [ accountBalance, setAccountBalance ] = useState(0);
 
-	const [zero, setZERO] = useState(0)
-	const [play, setPLAY] = useState(0)
-	const [game, setGAME] = useState(0)
-	// const [zeur, setZEUR] = useState(0)
+// 	const [zero, setZERO] = useState(0)
+// 	const [play, setPLAY] = useState(0)
+// 	const [game, setGAME] = useState(0)
+// 	// const [zeur, setZEUR] = useState(0)
 
-	useEffect(() => {
-		if (!accountSelected) return
+// 	useEffect(() => {
+// 		if (!accountSelected || !api) return
 
-		const query = async () => {
-			let unsubscribe
-			const context = api.query.assets.account
+// 		const query = async () => {
+// 			let unsubscribe
+// 			const context = api.query.assets.account
 
-			api.queryMulti(
-				[
-					[context, [Number(0), accountSelected]],
-					[context, [Number(1), accountSelected]],
-					// [context, [Number(2), accountSelected]],
-				],
-				([_play, _game, _zeur]) => {
-					setPLAY(_play.toHuman().balance)
-					setGAME(_game.toHuman().balance)
-					// setZEUR(_zeur.toHuman().balance)
-				}
-			)
-				.then((unsub) => {
-					unsubscribe = unsub
-				})
-				.catch(console.error)
-			return () => unsubscribe && unsubscribe()
-		}
-		query()
-	}, [api, accountSelected])
+// 			api.queryMulti(
+// 				[
+// 					[api.query.system.account, accountSelected],
+// 					[context, [Number(0), accountSelected]],
+// 					[context, [Number(1), accountSelected]],
+// 				],
+// 				([_zero,_play, _game]) => {
+// 					setZERO(_zero.data.free.toHuman())
+// 					setPLAY(_play.toHuman().balance)
+// 					setGAME(_game.toHuman().balance)
+// 				}
+// 			)
+// 				.then((unsub) => {
+// 					unsubscribe = unsub
+// 				})
+// 				.catch(console.error)
+// 			return () => unsubscribe && unsubscribe()
+// 		}
+// 		query()
+// 	}, [api, accountSelected])
 
-	useEffect(() => {
-		let unsubscribe
-		accountSelected &&
-			api.query.system
-				.account(accountSelected, (balance) => {
-					setZERO(balance.data.free.toHuman())
-				})
-				.then((unsub) => {
-					unsubscribe = unsub
-				})
-				.catch(console.error)
+// 	// useEffect(() => {
+// 	// 	if (!accountSelected || !api) return
 
-		return () => unsubscribe && unsubscribe()
-	}, [api, accountSelected])
+// 	// 	let unsubscribe
+// 	// 	accountSelected &&
+// 	// 		api.query.system
+// 	// 			.account(accountSelected, (balance) => {
+// 	// 				setZERO(balance.data.free.toHuman())
+// 	// 			})
+// 	// 			.then((unsub) => {
+// 	// 				unsubscribe = unsub
+// 	// 			})
+// 	// 			.catch(console.error)
 
-	return accountSelected ? (
-		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
-			{zero}
-			<br />
-			{play} PLAY
-			<br />
-			{game} GAME
-			{/*<br/>{zeur} zDOT*/}
-		</div>
-	) : null
-}
+// 	// 	return () => unsubscribe && unsubscribe()
+
+// 	// }, [api, accountSelected])
+
+// 	return accountSelected ? (
+// 		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
+// 			{zero}
+// 			<br />
+// 			{play} PLAY
+// 			<br />
+// 			{game} GAME
+// 			{/*<br/>{zeur} zDOT*/}
+// 		</div>
+// 	) : null
+// }
 
 const AccountSelector = (props) => {
 	const { api, keyring } = useSubstrate()
 
-	return keyring.getPairs && api.query ? <AccountComponent {...props} /> : null
+	return api && keyring && keyring.getPairs && api.query ? <AccountComponent {...props} /> : null
 }
 export default AccountSelector

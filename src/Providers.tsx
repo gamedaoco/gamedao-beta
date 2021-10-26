@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { IconContext } from 'react-icons'
 
 import { SubstrateContextProvider } from './substrate-lib'
+import { WalletProvider } from './contexts/Wallet'
 
 import { darkTheme, lightTheme } from './themes/theme'
 
@@ -26,10 +27,12 @@ const Providers = (props) => {
 				<CssBaseline />
 				{/*<ReduxProvider store={store}>*/}
 				<SubstrateContextProvider>
+					 <WalletProvider>
 						<BrowserRouter>
 							<ScrollToTop />
 							<IconContext.Provider value={{ color: 'black', className: 'react-icon' }}>{props.children}</IconContext.Provider>
 						</BrowserRouter>
+					</WalletProvider>
 				</SubstrateContextProvider>
 				{/*</ReduxProvider>*/}
 			</ThemeProvider>

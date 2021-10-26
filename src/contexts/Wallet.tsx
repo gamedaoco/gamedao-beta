@@ -1,41 +1,62 @@
-import React, { createContext, useContext, useReducer, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
-import Loader from '../components/Loader'
-import ErrorMessage from '../components/Message'
 
 export type WalletState = {
 	allowConnect: boolean
-	connected: boolean
+	toggleAllowConnect: Function
 	accountPair: object
+	setAccountPair: Function
 	address: string
-	setAccountPair: VoidFunction
-	setAddress: VoidFunction
+	setAccountAddress: Function
+	connected: boolean
 }
 
 const INITIAL_STATE: WalletState = {
 	allowConnect: false,
-	connected: false,
+	toggleAllowConnect: () => {},
 	accountPair: null,
-	address: '',
 	setAccountPair: () => {},
-	setAddress: () => {},
+	address: '',
+	setAccountAddress: () => {},
+	connected: false,
 }
 
 const WalletContext = createContext<WalletState>(INITIAL_STATE)
-const useWalletContext = () => useContext(WalletContext)
+const useWallet = () => useContext(WalletContext)
 
 const WalletProvider = ({ children }) => {
 
+	const { api, keyring } = useSubstrate()
 	const [ state, setState ] = useState<WalletState>(INITIAL_STATE)
+	const [ accountAddress, setAccountAddress ] = useState('')
+	const [ allowConnect, toggleAllowConnect ] = useState(false)
+	const [ accountPair, setAccountPair ] = useState(null)
 
-	console.log('Wallet')
+	useEffect(()=>{
+		if(!api) return
+		if(!allowConnect) return
+		if(!keyring) return
+		console.log('api')
+	},[api, allowConnect, keyring])
+
+	const handleSetAccountPair = accountPair => setAccountPair(accountPair)
+	const handleSetAccountAddress = address => setAccountAddress(address)
+	const handleToggleAllowConnect = address => toggleAllowConnect(!allowConnect)
 
 	return (
-		<WalletContext.Provider value={{...state}}>
+		<WalletContext.Provider value={{
+			...state,
+			allowConnect: allowConnect,
+			toggleAllowConnect: handleToggleAllowConnect,
+			address: accountAddress,
+			setAccountAddress: handleSetAccountAddress,
+			accountPair: accountPair,
+			setAccountPair: handleSetAccountPair,
+		}}>
 			{children}
 		</WalletContext.Provider>
 	)
 
 }
 
-export { WalletContext, WalletProvider, useWalletContext }
+export { WalletContext, WalletProvider, useWallet }
