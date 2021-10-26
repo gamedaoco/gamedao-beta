@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Grid, Form, Radio, Pagination, Button, Icon, Menu } from 'semantic-ui-react'
+import { Container, Grid, Form, Pagination, Button, Icon, Menu } from 'semantic-ui-react'
 import CampaignCard from './CampaignCard'
-import { data, rnd } from '../lib/data'
+import { data } from '../lib/data'
 
 const FilterBar = ({ filter, setFilter }) => {
 	const handleOnChange = (e, { value }) => setFilter(value)
@@ -49,7 +49,7 @@ const CampaignGrid = ({ content, accountPair }) => {
 	useEffect(() => {
 		if (totalPages === 0) return
 		setPageContent(content.slice(page * pageSize, page * pageSize + pageSize))
-	}, [content, page, pageSize])
+	}, [content, page, pageSize, totalPages])
 
 	useEffect(() => {
 		if (!content) return

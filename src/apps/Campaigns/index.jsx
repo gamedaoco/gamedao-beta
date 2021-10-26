@@ -11,7 +11,7 @@
 
 import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
+// import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -30,34 +30,36 @@ const CreateCampaign = lazy(() => import('./Create'))
 //
 
 export const Campaigns = (props) => {
-	const { accountPair } = props
-	const { api } = useSubstrate()
-	const [nonce, updateNonce] = useState()
-	const [hashes, setHashes] = useState()
 
-	const [campaigns, setCampaigns] = useState()
-	const [balances, setBalances] = useState()
-	const [states, setStates] = useState()
-	const [content, setContent] = useState()
+	const { api } = useSubstrate()
+
+	const [ nonce, updateNonce ] = useState()
+	const [ hashes, setHashes ] = useState()
+	const [ campaigns, setCampaigns ] = useState()
+	const [ balances, setBalances ] = useState()
+	const [ states, setStates ] = useState()
+	const [ content, setContent ] = useState()
 
 	useEffect(() => {
+		if (!api) return
 		let unsubscribe = null
-
-		api.query.gameDaoCrowdfunding
-			.nonce((n) => {
-				if (n.isNone) {
-					updateNonce('<None>')
-				} else {
-					updateNonce(n.toNumber())
-				}
-			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-
+		const query = async (args) => {
+			const _req = api.query.gameDaoCrowdfunding
+			try {
+				_req.nonce((n) => {
+					if (n.isNone) updateNonce('<None>')
+					else updateNonce(n.toNumber())
+				}).then((unsub) => {
+					unsubscribe = unsub
+				})
+			} catch (err) {
+				console.error(err)
+			}
+		}
+		query()
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoCrowdfunding])
+
+	}, [api])
 
 	// useEffect(() => {
 
@@ -198,10 +200,13 @@ export const Campaigns = (props) => {
 				</Box>
 			</Stack>
 			<br />
-			{showCreateMode && <CreateCampaign accountPair={accountPair} />}
-			{!showCreateMode && content && nonce !== 0 && <CampaignGrid content={content} accountPair={accountPair} />}
+			{showCreateMode && <CreateCampaign />}
+			{!showCreateMode && content && nonce !== 0 && <CampaignGrid content={content} />}
 		</>
 	)
 }
 
-export default Campaigns
+export default function Component (props) {
+	const { api } = useSubstrate()
+	return api ? <Campaigns /> : null
+}
