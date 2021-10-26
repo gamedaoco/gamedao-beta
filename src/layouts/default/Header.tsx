@@ -1,7 +1,6 @@
 import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { Stack } from 'src/components'
 import AccountSelector from 'src/components/AccountSelector'
 
 interface ComponentProps {
@@ -22,7 +21,6 @@ function Main({ showWallet }: ComponentProps) {
 				}}
 			>
 					<AccountSelector />
-
 			</Toolbar>
 		</AppBar>
 	)

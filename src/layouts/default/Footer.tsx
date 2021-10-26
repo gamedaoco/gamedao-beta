@@ -17,16 +17,13 @@ export const Footer = (props) => (
 			py: '3em',
 			px: '1em',
 			mt: 'auto',
-
 			fontSize: '.8em',
-
 			color: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100]),
-
 			backgroundColor: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900]),
 		}}
 	>
 		<Container>
-{/*			<Grid spacing={1} columns={16}>
+			<Grid spacing={1} columns={16}>
 				<Grid container direction="row" mb={4}>
 					<Grid width={16}>
 						<a href="#top">
@@ -36,7 +33,7 @@ export const Footer = (props) => (
 				</Grid>
 
 				<Grid container direction="row" mb={4}>
-					<Grid xs={16} md={4} mb={4}>
+					<Grid md={4} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							About
 						</Typography>
@@ -47,28 +44,28 @@ export const Footer = (props) => (
 						<br />
 						<Link href="https://gamedao.co">gamedao.co</Link>
 					</Grid>
-					<Grid xs={16} md={4} mb={4}>
+					<Grid md={4} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							How we build
 						</Typography>
-						<Link as="a" href="https://zero.io">
+						<Link href="https://zero.io">
 							zero.io
 						</Link>
-						<Link as="a" href="https://substrate.dev">
+						<Link href="https://substrate.dev">
 							substrate.dev
 						</Link>
-						<Link as="a" href="https://kilt.io">
+						<Link href="https://kilt.io">
 							kilt protocol
 						</Link>
 						<br />
-						<Link as="a" href="https://github.com/gamedaoco">
+						<Link href="https://github.com/gamedaoco">
 							github
 						</Link>
-						<Link as="a" href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">
+						<Link href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">
 							Polkadot Explorer
 						</Link>
 					</Grid>
-					<Grid xs={16} md={8} mb={4}>
+					<Grid md={8} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							GameDAO. For the Creator and Player Economy.
 						</Typography>
@@ -92,9 +89,9 @@ export const Footer = (props) => (
 				</Grid>
 
 				<Grid container direction="row">
-					<Grid xs={16}>
+					<Grid>
 						<Typography
-							component="body1"
+							variant="body1"
 							sx={{
 								backgroundColor: 'transparent',
 								fontSize: '0.75em',
@@ -105,7 +102,7 @@ export const Footer = (props) => (
 						</Typography>
 					</Grid>
 				</Grid>
-			</Grid>*/}
+			</Grid>
 		</Container>
 	</Box>
 )

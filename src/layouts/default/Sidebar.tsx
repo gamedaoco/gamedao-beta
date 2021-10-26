@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
-import { useTheme } from '@mui/styles'
+// import { useTheme } from '@mui/styles'
 
-import HomeIcon from '@mui/icons-material/Home'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import { Stack, Typography } from 'src/components'
+import { BiWallet, BiListCheck, BiCoin, BiPyramid, BiGame, BiDiamond } from "react-icons/bi";
 
-
-import { BiWallet, BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
-
-import { Stack, Box, Typography } from 'src/components'
-import AccountSelector from 'src/components/AccountSelector'
+// import AccountSelector from 'src/components/AccountSelector'
 
 const StyledLink = styled(NavLink)(({ theme }) => ({
 	display: 'flex',
@@ -30,10 +27,10 @@ interface ComponentProps {
 }
 
 function Main({ showNavigation }: ComponentProps) {
-	const theme = useTheme()
+	// const theme = useTheme()
 	// const linkActiveColor = theme.palette.secondary.main
 
-	const [ isSidebarOpen, setSidebarOpen ] = React.useState(false)
+	const [ isSidebarOpen, setSidebarOpen ] = useState(false)
 	const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
 
 	return (
