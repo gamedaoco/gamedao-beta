@@ -13,7 +13,7 @@ import { darkTheme, lightTheme } from './themes/minimal'
 import { Box } from './components'
 
 export const Providers = (props) => {
-	const [isDarkMode, setDarkMode] = React.useState(true)
+	const [isDarkMode, setDarkMode] = React.useState(false)
 
 	function toggleColorMode() {
 		setDarkMode(!isDarkMode)
