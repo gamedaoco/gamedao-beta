@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
-// import { BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
+
+import { BiWallet, BiJoystick, BiHomeCircle, BiListCheck, BiListPlus, BiCoinStack, BiCoin, BiPyramid, BiGame, BiPlus, BiDiamond } from "react-icons/bi";
 
 import HomeIcon from '@mui/icons-material/Home'
 import AppBar from '@mui/material/AppBar'
@@ -18,6 +19,7 @@ const StyledLink = styled(NavLink)(({ theme }) => ({
 	'& > p': {
 		paddingLeft: '2rem',
 	},
+	minHeight: '24px',
 }))
 
 const imageURL = `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`
@@ -44,7 +46,7 @@ function Main({ accountPair, setAccountAddress }) {
 					height: '100vh',
 					width: isSidebarOpen ? '18rem' : '6rem',
 					overflow: 'hidden',
-					transition: 'all 0.5s ease;',
+					transition: 'all 0.1s ease;',
 				}}
 			>
 				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
@@ -53,22 +55,22 @@ function Main({ accountPair, setAccountAddress }) {
 					</StyledLink>
 					<AccountSelector setAccountAddress={setAccountAddress} />
 					<StyledLink to="/app">
-						<HomeIcon fontSize="large" /> <Typography>Dashboard</Typography>
+						<BiGame color="white" /> <Typography>Dashboard</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/organisations">
-						<HomeIcon fontSize="large" /> <Typography>Organisations</Typography>
+						<BiPyramid color="white" /> <Typography>Organisations</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/governance">
-						<HomeIcon fontSize="large" /> <Typography>Governance</Typography>
+						<BiListCheck color="white" /> <Typography>Governance</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/campaigns">
-						<HomeIcon fontSize="large" /> <Typography>Campaigns</Typography>
+						<BiCoin color="white" /> <Typography>Campaigns</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/tangram">
-						<HomeIcon fontSize="large" /> <Typography>Tangram</Typography>
+						<BiDiamond color="white" /> <Typography>Tangram</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/wallet">
-						<HomeIcon fontSize="large" /> <Typography>Wallet</Typography>
+						<BiWallet color="white" /> <Typography>Wallet</Typography>
 					</StyledLink>
 				</Stack>
 			</Toolbar>

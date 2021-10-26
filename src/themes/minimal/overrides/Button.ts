@@ -10,6 +10,7 @@ export default function Button(theme: Theme) {
 					'&:hover': {
 						boxShadow: 'none',
 					},
+	        		padding: '1em 0',
 				},
 				sizeLarge: {
 					height: 48,
