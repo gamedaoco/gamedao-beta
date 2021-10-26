@@ -1,10 +1,11 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 
 import { Grid, Button, Modal } from 'semantic-ui-react'
 
 const Component = (props) => {
-	const { accountPair } = props
+	const { address, accountPair } = useWallet()
 	const { api } = useSubstrate()
 
 	const [bodies, setBodies] = useState(0)
@@ -64,7 +65,7 @@ const Disclaimer = ({ open, setOpen }) => (
 		</Modal.Content>
 		<Modal.Actions>
 			<Button color="green" inverted onClick={() => setOpen(false)}>
-				<Icon name="checkmark" /> I understand
+				I understand
 			</Button>
 		</Modal.Actions>
 	</Modal>
@@ -76,7 +77,7 @@ const Intro = (props) => {
 }
 
 export default function Dapp(props) {
-	const { accountPair } = props
+	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
 	return api && accountPair ? <Component /> : <Intro />
