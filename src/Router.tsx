@@ -36,56 +36,37 @@ const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSideba
 
 const Router = (props) => {
 	return (
-		<>
-			<Switch>
-				<Route exact path="/">
-					<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Home />
-					</Suspense>
-				</Route>
+		<Switch>
 
-				<LayoutRoute exact path="/app" showHeader={true} showFooter={true}>
+				<LayoutRoute exact path="/" showFooter>
+					<Home />
+				</LayoutRoute>
+
+				<LayoutRoute exact path="/app" showSidebar showHeader showFooter>
 					<Dashboard/>
 				</LayoutRoute>
 
-				<Layout showHeader showFooter showSidebar >
+				<LayoutRoute exact path="/app/organisations" showSidebar showHeader showFooter>
+					<Organisations/>
+				</LayoutRoute>
+				<LayoutRoute exact path="/app/governance" showSidebar showHeader showFooter>
+					<Governance/>
+				</LayoutRoute>
+				<LayoutRoute exact path="/app/campaigns" showSidebar showHeader showFooter>
+					<Campaigns/>
+				</LayoutRoute>
+				<LayoutRoute exact path="/app/tangram" showSidebar showHeader showFooter>
+					<Tangram/>
+				</LayoutRoute>
+				<LayoutRoute exact path="/app/wallet" showSidebar showHeader showFooter>
+					<Wallet/>
+				</LayoutRoute>
 
-					<Route exact path="/app/organisations">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Organisations/>
-						</Suspense>
-					</Route>
-					<Route exact path="/app/governance">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Governance/>
-						</Suspense>
-					</Route>
-					<Route exact path="/app/campaigns">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Campaigns/>
-						</Suspense>
-					</Route>
-					<Route exact path="/app/tangram">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Tangram/>
-						</Suspense>
-					</Route>
-					<Route exact path="/app/wallet">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Wallet/>
-						</Suspense>
-					</Route>
+				<LayoutRoute exact path="/designsystem" showSidebar showHeader showFooter>
+					<Designsystem />
+				</LayoutRoute>
 
-					<Route exact path="/designsystem">
-						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Designsystem />
-						</Suspense>
-					</Route>
-
-				</Layout>
-
-			</Switch>
-		</>
+		</Switch>
 	)
 }
 
