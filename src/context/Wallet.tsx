@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate-lib'
 
 export type WalletState = {
 	allowConnect: boolean
@@ -26,7 +25,6 @@ const useWallet = () => useContext(WalletContext)
 
 const WalletProvider = ({ children }) => {
 
-	const { api, keyring } = useSubstrate()
 	const [ state, setState ] = useState<WalletState>()
 	const [ accountAddress, setAccountAddress ] = useState('')
 	const [ allowConnect, setAllowConnect ] = useState(false)
@@ -35,12 +33,6 @@ const WalletProvider = ({ children }) => {
 	useEffect(()=>{
 		setState(INITIAL_STATE)
 	},[setState])
-
-	// useEffect(()=>{
-	// 	if(!api) return
-	// 	if(!allowConnect) return
-	// 	if(!keyring) return
-	// },[api, allowConnect, keyring])
 
 	useEffect(()=>{
 		if(!accountAddress) return

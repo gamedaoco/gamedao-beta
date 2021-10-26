@@ -9,11 +9,10 @@ import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
 
-
 const AccountComponent = (props) => {
 
 	const { keyring } = useSubstrate()
-	const { allowConnect, setAllowConnect, address, setAccountAddress } = useWallet()
+	const { allowConnect, setAllowConnect, setAccountAddress } = useWallet()
 	const [ keyringOptions, setKeyringOptions ] = useState(null)
 	const [ initialAddress, setInitialAddress ] = useState(null)
 	const [ accountSelected, setAccountSelected ] = useState(null)
@@ -37,8 +36,7 @@ const AccountComponent = (props) => {
 		if(!allowConnect || !keyringOptions) return
 		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
 		setInitialAddress( args )
-		console.log('initialAddress',initialAddress)
-	},[keyringOptions])
+	},[allowConnect, keyringOptions, selectedIndex, initialAddress])
 
 	useEffect(()=>{
 		if(!allowConnect || !keyringOptions) return
@@ -46,7 +44,7 @@ const AccountComponent = (props) => {
 		setAccountAddress(args)
 		setAccountSelected(args)
 		console.log('setAccountAddress',args)
-	},[keyringOptions, selectedIndex])
+	},[allowConnect, keyringOptions, selectedIndex, setAccountAddress])
 
 	//
 	//
