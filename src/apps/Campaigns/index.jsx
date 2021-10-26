@@ -183,6 +183,7 @@ export const Campaigns = (props) => {
 	return (
 		<>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
+				<Typography>Campaigns</Typography>
 				<Typography>{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}</Typography>
 				<Box>
 					{showCreateMode ? (
