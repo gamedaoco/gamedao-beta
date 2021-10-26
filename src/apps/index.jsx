@@ -1,14 +1,12 @@
-/*
- (c) 2010-2020 GAMEDAO.CO, GAMEDAO COOPERATIVE.
-*/
-
 import React, { useEffect, useState, lazy, Suspense } from 'react'
 import { useSubstrate } from '../substrate-lib'
+import { useWallet } from '../context/Wallet'
 import { Loader } from '../components/Loader'
 
 const Dashboard = (props) => {
-	const { accountPair } = props
+
 	const { api } = useSubstrate()
+	const { accountPair } = useWallet()
 
 	const [bodies, setBodies] = useState(0)
 	const [campaigns, setCampaigns] = useState(0)
