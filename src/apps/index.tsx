@@ -6,7 +6,7 @@ import { Loader } from '../components/Loader'
 const Dashboard = (props) => {
 
 	const { api } = useSubstrate()
-	const { address } = useWallet()
+	const { address, allowConnect } = useWallet()
 
 	const [ name, setName ] = useState('')
 	const [ bodies, setBodies ] = useState(0)
@@ -16,18 +16,19 @@ const Dashboard = (props) => {
 
 	useEffect(() => {
 
-		if( !address ) return
+		if (!api) return
 		let unsubscribe = null
 
-		api.queryMulti(
-			[[api.query.identity.identityOf,address]],
-			([identity]) => setName(identity.toHuman().info.display.Raw || null)
-		).then( (unsub) => unsubscribe = unsub )
-		.catch(console.error)
+		if ( address && allowConnect ) api.queryMulti(
+				[[api.query.identity.identityOf,address]],
+				([identity]) => setName(identity.toHuman().info.display.Raw)
+			).then( (unsub) => unsubscribe = unsub )
+			.catch(console.error)
+		else setName('x')
 
 		return () => unsubscribe && unsubscribe()
 
-	}, [api])
+	}, [api, address, allowConnect])
 
 	useEffect(() => {
 

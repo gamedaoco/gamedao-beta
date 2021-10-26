@@ -20,7 +20,7 @@ function Main({ showWallet }: ComponentProps) {
 					justifyContent: 'end',
 				}}
 			>
-					<AccountSelector />
+				<AccountSelector />
 			</Toolbar>
 		</AppBar>
 	)

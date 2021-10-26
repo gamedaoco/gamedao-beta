@@ -12,45 +12,55 @@ import LogoutIcon from '@mui/icons-material/Logout'
 
 const AccountComponent = (props) => {
 
-	const [ open, setOpen ] = React.useState(false)
+	const { keyring } = useSubstrate()
+	const { allowConnect, setAllowConnect, address, setAccountAddress } = useWallet()
+	const [ keyringOptions, setKeyringOptions ] = useState(null)
+	const [ initialAddress, setInitialAddress ] = useState(null)
+	const [ accountSelected, setAccountSelected ] = useState(null)
 	const [ selectedIndex, setSelectedIndex ] = useState(0)
+
+	const [ open, setOpen ] = React.useState(false)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
-	const { keyring } = useSubstrate()
-	const { allowConnect, toggleAllowConnect, setAccountAddress } = useWallet()
-	const [ accountSelected, setAccountSelected ] = useState(null)
+	useEffect(()=>{
+		if(!allowConnect) return
+		const args = keyring.getPairs().map((account) => ({
+			key: account.address,
+			value: account.address,
+			text: account.meta.name.toUpperCase(),
+			icon: 'user',
+		}))
+		setKeyringOptions( args )
+	},[allowConnect, keyring])
 
-	// Get the list of accounts we possess the private key for
-	const keyringOptions = keyring.getPairs().map((account) => ({
-		key: account.address,
-		value: account.address,
-		text: account.meta.name.toUpperCase(),
-		icon: 'user',
-	}))
+	useEffect(()=>{
+		if(!allowConnect || !keyringOptions) return
+		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
+		setInitialAddress( args )
+		console.log('initialAddress',initialAddress)
+	},[keyringOptions])
 
-	const initialAddress = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
+	useEffect(()=>{
+		if(!allowConnect || !keyringOptions) return
+		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
+		setAccountAddress(args)
+		setAccountSelected(args)
+		console.log('setAccountAddress',args)
+	},[keyringOptions, selectedIndex])
 
-	// Set the initial address
-	useEffect(() => {
-		setAccountAddress(initialAddress)
-		setAccountSelected(initialAddress)
-	}, [setAccountAddress, initialAddress])
+	//
+	//
+	//
 
-	// const onChange = (address='') => {
-	// 	setAccountAddress(address)
-	// 	setAccountSelected(address)
-	// }
-
-	const handleToggleAllowConnect = (event) => {
-		console.log('toggle a')
-		toggleAllowConnect()
+	const handleConnect = (event) => {
+		setAllowConnect(true)
+		console.log('connect')
 	}
-
-	// const handleClick = () => {
-	// 	console.info(`You clicked ${keyringOptions[selectedIndex].value}`)
-	// 	setAccountAddress(keyringOptions[selectedIndex].value)
-	// 	setAccountSelected(keyringOptions[selectedIndex].value)
-	// }
+	const handleDisconnect = (event) => {
+		setAccountAddress('')
+		setAllowConnect(false)
+		console.log('disconnect')
+	}
 
 	const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
 		setSelectedIndex(index)
@@ -77,12 +87,14 @@ const AccountComponent = (props) => {
 	return (
 		<>
 			{ !allowConnect ? (
-				<Button variant="outlined" onClick={handleToggleAllowConnect}>{`connect wallet`}</Button>
+				<Button variant="outlined" onClick={handleConnect}>{`connect wallet`}</Button>
 			) : (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-					<CopyToClipboard text={accountSelected}>
-						<Button color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
-					</CopyToClipboard>
+					{ keyringOptions &&
+						<CopyToClipboard text={accountSelected}>
+							<Button color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
+						</CopyToClipboard>
+					}
 					<IconButton
 						size="small"
 						aria-controls={open ? 'account-menu' : undefined}
@@ -94,7 +106,7 @@ const AccountComponent = (props) => {
 						<KeyboardArrowDownIcon fontSize="inherit" />
 					</IconButton>
 					<BalanceAnnotation />
-					<IconButton size="small" aria-label="disconnect" onClick={handleToggleAllowConnect}>
+					<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
 						<LogoutIcon fontSize="inherit" />
 					</IconButton>
 				</ButtonGroup>

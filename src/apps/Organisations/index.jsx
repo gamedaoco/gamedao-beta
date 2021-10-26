@@ -360,6 +360,7 @@ const ItemList = (props) => {
 
 export const Main = (props) => {
 	const { api } = useSubstrate()
+	const { address } = useWallet()
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
@@ -534,10 +535,10 @@ export const Main = (props) => {
 				</Grid.Column>
 				<Grid.Column floated="right" width={6} verticalAlign="middle">
 					<Container textAlign="right">
-						{showCreateMode ? (
+						{ address && showCreateMode ? (
 							<Button onClick={handleCloseBtn}>
 								<Icon name="cancel" />
-								Close
+								Close {address}
 							</Button>
 						) : (
 							<Button onClick={handleCreateBtn}>
@@ -549,7 +550,7 @@ export const Main = (props) => {
 				</Grid.Column>
 			</Grid>
 			<br />
-			{showCreateMode && <CreateDAO accountPair={accountPair} />}
+			{showCreateMode && <CreateDAO />}
 			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 		</React.Fragment>
 	)
