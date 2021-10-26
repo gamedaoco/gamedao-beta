@@ -12,18 +12,20 @@ const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
 const Designsystem = lazy(() => import('./apps/Designsystem'))
 
-interface ComponentProps {
+export interface ComponentProps {
 	children?: React.ReactNode
 	path?: string
 	exact?: boolean
 	showFooter?: boolean
 	showHeader?: boolean
+	showSidebar?: boolean
 }
 
-const LayoutRoute = ({ children, path, exact, showFooter, showHeader }: ComponentProps) =>
+const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSidebar }: ComponentProps) =>
 	<Layout
 		showHeader={ showHeader ? showHeader : null }
 		showFooter={ showFooter ? showFooter : null }
+		showSidebar={ showSidebar ? showSidebar : null }
 		>
 		<Route exact path={path}>
 			<Suspense fallback={<Loader text="Loading..."></Loader>}>
@@ -49,7 +51,7 @@ const Router = (props) => {
 					<Dashboard accountPair={accountPair} />
 				</LayoutRoute>
 
-				<Layout showHeader={true} showFooter={true} >
+				<Layout showHeader showFooter showSidebar >
 
 					<Route exact path="/app/organisations">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
