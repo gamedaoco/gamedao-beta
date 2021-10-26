@@ -51,7 +51,6 @@ const Router = (props) => {
 
 				<Layout showHeader={true} showFooter={true} >
 
-
 					<Route exact path="/app/organisations">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
 							<Organisations accountPair={accountPair} />

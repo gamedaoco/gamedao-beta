@@ -18,14 +18,6 @@ export const darkTheme = createTheme({
 			main: '#3f51b5',
 		},
 	},
-
-	components: {
-		MuiButtonBase: {
-			defaultProps: {
-				disableRipple: true, // No more ripple, on the whole application 💣!
-			},
-		},
-	},
 })
 
 export const lightTheme = createTheme({
@@ -37,14 +29,6 @@ export const lightTheme = createTheme({
 		},
 		secondary: {
 			main: '#3f51b5',
-		},
-	},
-
-	components: {
-		MuiButtonBase: {
-			defaultProps: {
-				disableRipple: true, // No more ripple, on the whole application 💣!
-			},
 		},
 	},
 })

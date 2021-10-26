@@ -12,12 +12,22 @@ interface ComponentProps {
 
 const Layout = ({ showHeader, showFooter, showDrawer, children, showNavigation }: ComponentProps) => {
 	return (
-		<Box sx={{ height: '100%' }}>
-			{ showHeader && <Header showNavigation={showNavigation?showNavigation:null} /> }
-			<Container>
-				<Box sx={{ m: '2em', minHeight: '95vh' }}>{children}</Box>
-			</Container>
-			{ showFooter && <Footer/> }
+		<Box
+			sx={{
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'row',
+			}}
+		>
+			<Box flexGrow={0}>
+				{ showHeader && <Header showNavigation={showNavigation?showNavigation:null} /> }
+			</Box>
+			<Box flexGrow={1}>
+				<Container>
+					<Box sx={{ m: '2em', minHeight: '95vh' }}>{children}</Box>
+				</Container>
+				{ showFooter && <Footer/> }
+			</Box>
 		</Box>
 	)
 }

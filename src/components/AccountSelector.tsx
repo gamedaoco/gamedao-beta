@@ -4,7 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 
-import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
+import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -101,9 +101,6 @@ const AccountComponent = (props) => {
 				</ButtonGroup>
 			)}
 
-			{/*
-	TODO: needs to be bottom end, currently refuses to take the button as anchor ref
-*/}
 			<Popper open={open} anchorEl={anchorRef.current} placement={'bottom-start'} role={undefined} transition disablePortal>
 				{({ TransitionProps, placement }) => (
 					<Grow
@@ -122,7 +119,7 @@ const AccountComponent = (props) => {
 											selected={index === selectedIndex}
 											onClick={(event) => handleMenuItemClick(event, index)}
 										>
-											{option.text}
+											<Typography variant="subtitle1">{option.text}</Typography>
 										</MenuItem>
 									))}
 								</MenuList>
@@ -132,79 +129,77 @@ const AccountComponent = (props) => {
 				)}
 			</Popper>
 
-			{/*
-			 */}
 		</>
 	)
 }
 
-// const BalanceAnnotation = ({ accountSelected }) => {
+const BalanceAnnotation = ({ accountSelected }) => {
 
-// 	const { api } = useSubstrate()
-// 	// const [ accountBalance, setAccountBalance ] = useState(0);
+	const { api } = useSubstrate()
+	// const [ accountBalance, setAccountBalance ] = useState(0);
 
-// 	const [zero, setZERO] = useState(0)
-// 	const [play, setPLAY] = useState(0)
-// 	const [game, setGAME] = useState(0)
-// 	// const [zeur, setZEUR] = useState(0)
+	const [zero, setZERO] = useState(0)
+	const [play, setPLAY] = useState(0)
+	const [game, setGAME] = useState(0)
+	// const [zeur, setZEUR] = useState(0)
 
-// 	useEffect(() => {
-// 		if (!accountSelected || !api) return
+	useEffect(() => {
+		if (!accountSelected || !api) return
 
-// 		const query = async () => {
-// 			let unsubscribe
-// 			const context = api.query.assets.account
+		const query = async () => {
+			let unsubscribe
+			const context = api.query.assets.account
 
-// 			api.queryMulti(
-// 				[
-// 					[api.query.system.account, accountSelected],
-// 					[context, [Number(0), accountSelected]],
-// 					[context, [Number(1), accountSelected]],
-// 				],
-// 				([_zero,_play, _game]) => {
-// 					setZERO(_zero.data.free.toHuman())
-// 					setPLAY(_play.toHuman().balance)
-// 					setGAME(_game.toHuman().balance)
-// 				}
-// 			)
-// 				.then((unsub) => {
-// 					unsubscribe = unsub
-// 				})
-// 				.catch(console.error)
-// 			return () => unsubscribe && unsubscribe()
-// 		}
-// 		query()
-// 	}, [api, accountSelected])
+			api.queryMulti(
+				[
+					[api.query.system.account, accountSelected],
+					[context, [Number(0), accountSelected]],
+					[context, [Number(1), accountSelected]],
+				],
+				([_zero,_play, _game]) => {
+					setZERO(_zero.data.free.toHuman())
+					setPLAY(_play.toHuman().balance)
+					setGAME(_game.toHuman().balance)
+				}
+			)
+				.then((unsub) => {
+					unsubscribe = unsub
+				})
+				.catch(console.error)
+			return () => unsubscribe && unsubscribe()
+		}
+		query()
+	}, [api, accountSelected])
 
-// 	// useEffect(() => {
-// 	// 	if (!accountSelected || !api) return
+	// useEffect(() => {
+	// 	if (!accountSelected || !api) return
 
-// 	// 	let unsubscribe
-// 	// 	accountSelected &&
-// 	// 		api.query.system
-// 	// 			.account(accountSelected, (balance) => {
-// 	// 				setZERO(balance.data.free.toHuman())
-// 	// 			})
-// 	// 			.then((unsub) => {
-// 	// 				unsubscribe = unsub
-// 	// 			})
-// 	// 			.catch(console.error)
+	// 	let unsubscribe
+	// 	accountSelected &&
+	// 		api.query.system
+	// 			.account(accountSelected, (balance) => {
+	// 				setZERO(balance.data.free.toHuman())
+	// 			})
+	// 			.then((unsub) => {
+	// 				unsubscribe = unsub
+	// 			})
+	// 			.catch(console.error)
 
-// 	// 	return () => unsubscribe && unsubscribe()
+	// 	return () => unsubscribe && unsubscribe()
 
-// 	// }, [api, accountSelected])
+	// }, [api, accountSelected])
 
-// 	return accountSelected ? (
-// 		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
-// 			{zero}
-// 			<br />
-// 			{play} PLAY
-// 			<br />
-// 			{game} GAME
-// 			{/*<br/>{zeur} zDOT*/}
-// 		</div>
-// 	) : null
-// }
+	return accountSelected ? (
+		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '2px' }}>
+			{zero}
+			<br />
+			{play} PLAY
+			<br />
+			{game} GAME
+			{/*<br/>{zeur} zDOT*/}
+		</div>
+	) : null
+}
 
 const AccountSelector = (props) => {
 	const { api, keyring } = useSubstrate()
