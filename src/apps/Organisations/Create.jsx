@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { Container, Form, Divider, Segment, Image, Button } from 'semantic-ui-react'
+import { Form, Segment, Image } from 'semantic-ui-react'
+
+import { Typography, TextField, FormGroup, Box, Button, Divider, Container } from '../../components'
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
@@ -143,7 +145,10 @@ export const Main = (props) => {
 
 	// form fields
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = (e) => {
+		const { name, value } = e.target
+		return updateFormData({ ...formData, [name]: value })
+	}
 
 	//
 	// submit function
@@ -221,13 +226,19 @@ export const Main = (props) => {
 	if (!formData) return null
 
 	return (
+		<Box
+			component="form"
+			sx={{
+				'& > *': { m: 1 },
+			}}
+		>
 		<Segment vertical loading={loading}>
-			<h3>Create Organization</h3>
+			<Typography variant="h3">Create Organization</Typography>
 
 			<Form>
 				<br />
 				<Divider clearing horizontal>
-					General Information
+					<Typography>General Information</Typography>
 				</Divider>
 				<br />
 
@@ -284,32 +295,38 @@ export const Main = (props) => {
 
 				<br />
 				<Divider clearing horizontal>
-					Controller Settings
+					<Typography>Controller Settings</Typography>
 				</Divider>
 				<br />
 
-				<p>Note: In case you want to create a DAO, the controller must be the organization.</p>
+				<Typography>Note: In case you want to create a DAO, the controller must be the organization.</Typography>
 
-				<Form.Group widths="equal">
-					<Form.Input
-						fluid
-						label="Controller Account"
-						placeholder="Controller"
+				<FormGroup 
+				    sx={{
+						display: 'grid',
+						gridTemplateColumns: { sm: '1fr 1fr' },
+						gap: 2,
+					}}
+				>
+					<TextField
+						id="controller"
 						name="controller"
+						placeholder="Controller"
+						label="Controller Account"
 						value={formData.controller}
 						onChange={handleOnChange}
 						required
 					/>
-					<Form.Input
-						fluid
-						label="Treasury Account"
-						placeholder="Tresury"
+					<TextField
+						id="treasury"
 						name="treasury"
+						placeholder="Treasury"
+						label="Treasury Account"
 						value={formData.treasury}
 						onChange={handleOnChange}
 						required
 					/>
-				</Form.Group>
+				</FormGroup>
 
 				<Form.Group widths="equal">
 					<Form.Select
@@ -350,6 +367,7 @@ export const Main = (props) => {
 				</Container>
 			</Form>
 		</Segment>
+		</Box>
 	)
 }
 

@@ -7,45 +7,42 @@ import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
 
+import AddIcon from '@mui/icons-material/Add'
+import ClearIcon from '@mui/icons-material/Clear'
+import LanguageIcon from '@mui/icons-material/Language'
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import GroupIcon from '@mui/icons-material/Group'
+
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
 
-import { Icon, Pagination, Table, Header, Button, Container, Image, Grid } from 'semantic-ui-react'
-import {
-	BiJoystick,
-	BiHomeCircle,
-	BiListCheck,
-	BiListPlus,
-	BiCoinStack,
-	BiCoin,
-	BiPyramid,
-	BiGame,
-	BiPlus,
-	BiDiamond,
-	BiKey,
-	BiLockAlt,
-	BiLockOpenAlt,
-	BiGlobe,
-	BiGroup,
-} from 'react-icons/bi'
+import { 
+	Button, 
+	Typography, 
+	Box, 
+	Stack, 
+	Container, 
+	Paper, 
+	Table as TableMUI, 
+	TableBody, 
+	TableCell, 
+	TableContainer, 
+	TableHead, 
+	TablePagination, 
+	TableRow 
+} from '../../components'
 
- import styled from '@emotion/styled'
+
+import { Icon } from 'semantic-ui-react'
+
+
 
 const CreateDAO = lazy(() => import('./Create'))
 
 const dev = config.dev
 
-//
-//
-//
-
-const SmallText = styled.div`
-	font-size: 12px;
-`
-//
-//
-//
 
 const getFromAcct = async (api, accountPair) => {
 	const {
@@ -242,46 +239,84 @@ const Item = ({ content, accountPair }) => {
 	if (!itemContent) return null
 
 	return (
-		<Table.Row>
-			<Table.Cell>
+		<TableRow hover>
+			<TableCell>
 				<a onClick={() => console.log(itemContent, metadata)}>
-					<Header as="h4" image>
-						<Image rounded src={imageURL} />
-						<Header.Content>
-							{itemContent.name}
-							<Header.Subheader>{bodyToText()}</Header.Subheader>
-						</Header.Content>
-					</Header>
+					<Stack spacing={2} direction='row'>
+						<img style={{ maxHeight: '3rem' }} src={imageURL} />
+						<Box>
+							<Typography>{itemContent.name}</Typography>
+							<Typography>{bodyToText()}</Typography>
+						</Box>
+					</Stack>
 				</a>
-			</Table.Cell>
-			<Table.Cell>
-				<Container>
-					<SmallText>{metadata.description}</SmallText>
-				</Container>
-			</Table.Cell>
-			<Table.Cell>
+			</TableCell>
+			<TableCell>
+				<Typography>{metadata.description}</Typography>
+			</TableCell>
+			<TableCell>
 				{metadata.website && (
 					<a href={metadata.website} target="_blank">
-						<BiGlobe />
+						<LanguageIcon/>
 					</a>
 				)}
-			</Table.Cell>
-			<Table.Cell textAlign="center">{itemContent.access === '0' ? 'open' : <BiLockAlt />}</Table.Cell>
-			<Table.Cell>{itemContent.memberCount || 0}</Table.Cell>
+			</TableCell>
+			<TableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon/>}</TableCell>
+			<TableCell>{itemContent.memberCount || 0}</TableCell>
 			{/*
-			<Table.Cell>{itemContent.treasuryBalance||0}</Table.Cell>
-			<Table.Cell>{itemContent.motions||0}</Table.Cell>
-			<Table.Cell>{itemContent.campaigns||0}</Table.Cell>
-*/}
-			<Table.Cell>
+			<TableCell>{itemContent.treasuryBalance||0}</TableCell>
+			<TableCell>{itemContent.motions||0}</TableCell>
+			<TableCell>{itemContent.campaigns||0}</TableCell>
+			*/}
+			<TableCell>
 				<Interactions />
-			</Table.Cell>
-		</Table.Row>
+			</TableCell>
+		</TableRow>
 	)
 }
 
+
+  function createData(name, code, population, size) {
+	const density = population / size;
+	return { name, code, population, size, density };
+  }
+  
+  const rows = [
+	createData('India', 'IN', 1324171354, 3287263),
+	createData('China', 'CN', 1403500365, 9596961),
+	createData('Italy', 'IT', 60483973, 301340),
+	createData('United States', 'US', 327167434, 9833520),
+	createData('Canada', 'CA', 37602103, 9984670),
+	createData('Australia', 'AU', 25475400, 7692024),
+	createData('Germany', 'DE', 83019200, 357578),
+	createData('Ireland', 'IE', 4857000, 70273),
+	createData('Mexico', 'MX', 126577691, 1972550),
+	createData('Japan', 'JP', 126317000, 377973),
+	createData('France', 'FR', 67022000, 640679),
+	createData('United Kingdom', 'GB', 67545757, 242495),
+	createData('Russia', 'RU', 146793744, 17098246),
+	createData('Nigeria', 'NG', 200962417, 923768),
+	createData('Brazil', 'BR', 210147125, 8515767),
+  ];
+  
+  
+
 const ItemList = (props) => {
 	const { content, accountPair } = props
+
+	///
+	const [page, setPage] = React.useState(0);
+	const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
+	const handleChangePage = (event, newPage) => {
+	  setPage(newPage);
+	};
+  
+	const handleChangeRowsPerPage = (event) => {
+	  setRowsPerPage(+event.target.value);
+	  setPage(0);
+	};
+	///
 
 	const [activePage, setActivePage] = useState(1)
 	const [totalPages, setTotalPages] = useState(0)
@@ -308,50 +343,55 @@ const ItemList = (props) => {
 	// console.log(activePage,totalPages,offset,itemsPerPage)
 
 	return (
-		<Container>
-			<Container align="right">
-				<Button.Group>
-					<Button icon onClick={handleShowLessItems}>
-						<Icon name="block layout" />
-					</Button>
-					<Button icon onClick={handleShowMoreItems}>
-						<Icon name="grid layout" />
-					</Button>
-				</Button.Group>
-			</Container>
-			<Table striped fixed>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell width="4"></Table.HeaderCell>
-						<Table.HeaderCell width="6">Description</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiGlobe />
-						</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiLockAlt />
-						</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiGroup />
-						</Table.HeaderCell>
-						{/*
-						<Table.HeaderCell width='two'>Balance</Table.HeaderCell>
-						<Table.HeaderCell>Motions</Table.HeaderCell>
-						<Table.HeaderCell>Campaigns</Table.HeaderCell>
-*/}
-						<Table.HeaderCell />
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{content.slice(offset, offset + iPP[itemsPerPage] - 1).map((d, i) => {
-						const _content = {
-							...d,
-						}
-						return <Item key={offset + i} content={_content} accountPair={accountPair} />
-					})}
-				</Table.Body>
-			</Table>
-			{totalPages >= 2 && <Pagination onPageChange={handlePaginationChange} activePage={activePage} totalPages={totalPages} />}
-		</Container>
+		<Box>
+			<Paper sx={{ width: '100%' }}>
+				<TableContainer sx={{ maxHeight: 512 }}>
+					<TableMUI stickyHeader aria-label="sticky table">
+						<TableHead>
+							<TableRow>
+								<TableCell align="center" colSpan={1}>
+								
+								</TableCell>
+								<TableCell align="center" colSpan={1}>
+									<Typography variant='h4'>Description</Typography>
+								</TableCell>
+								<TableCell align="center" colSpan={1}>
+									<LanguageIcon />
+								</TableCell>
+								<TableCell align="center" colSpan={1}>
+									<LockIcon />
+								</TableCell>
+								<TableCell align="center" colSpan={1}>
+									<GroupIcon />
+								</TableCell>
+								<TableCell align="center" colSpan={1}>
+
+								</TableCell>
+							</TableRow>
+						</TableHead>
+					<TableBody>
+						{content
+						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+						.map((d, i) => {
+							const _content = {
+								...d,
+							}
+							return <Item key={offset + i} content={_content} accountPair={accountPair} />
+						})}
+					</TableBody>
+					</TableMUI>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[10, 25, 100]}
+					component="div"
+					count={rows.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+				/>
+			</Paper>
+		</Box>
 	)
 }
 
@@ -525,31 +565,33 @@ export const Main = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<React.Fragment>
-			<Grid>
-				<Grid.Column floated="left" width={6} verticalAlign="middle">
+		<Container maxWidth='lg'>
+			<Box sx={{
+				display: 'flex',
+				justifyContent: 'space-between'
+
+			}}>
+				<Box>
 					{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}
-				</Grid.Column>
-				<Grid.Column floated="right" width={6} verticalAlign="middle">
-					<Container textAlign="right">
+				</Box>
+				<Box>
 						{showCreateMode ? (
-							<Button onClick={handleCloseBtn}>
-								<Icon name="cancel" />
+							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
 								Close
 							</Button>
 						) : (
-							<Button onClick={handleCreateBtn}>
-								<Icon name="plus" />
+							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
 								New DAO
 							</Button>
 						)}
-					</Container>
-				</Grid.Column>
-			</Grid>
+				</Box>
+			</Box>
 			<br />
-			{showCreateMode && <CreateDAO accountPair={accountPair} />}
-			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} accountPair={accountPair} />}
-		</React.Fragment>
+			<Container maxWidth='md'>
+				{showCreateMode && <CreateDAO accountPair={accountPair} />}
+				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} accountPair={accountPair} />}
+			</Container>
+		</Container>
 	)
 }
 
@@ -564,3 +606,4 @@ export default function Module(props) {
 //
 //
 //
+

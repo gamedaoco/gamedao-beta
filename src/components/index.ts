@@ -4,6 +4,7 @@ export { default as Container } from '@mui/material/Container'
 export { default as Avatar } from '@mui/material/Avatar'
 export { default as Button } from '@mui/material/Button'
 export { default as TextField } from '@mui/material/TextField'
+export { default as FormGroup } from '@mui/material/FormGroup'
 export { default as FormControlLabel } from '@mui/material/FormControlLabel'
 export { default as Checkbox } from '@mui/material/Checkbox'
 export { default as Link } from '@mui/material/Link'
@@ -14,6 +15,17 @@ export { default as Stack } from '@mui/material/Stack'
 export { default as Backdrop } from '@mui/material/Backdrop'
 export { default as Divider } from '@mui/material/Divider'
 export { default as Card } from '@mui/material/Card'
+export { default as Paper } from '@mui/material/Paper';
+export { default as Table } from '@mui/material/Table';
+export { default as TableBody } from '@mui/material/TableBody';
+export { default as TableCell } from '@mui/material/TableCell';
+export { default as TableContainer } from '@mui/material/TableContainer';
+export { default as TableHead } from '@mui/material/TableHead';
+export { default as TablePagination } from '@mui/material/TablePagination';
+export { default as TableRow } from '@mui/material/TableRow';
+
+// styled
+export { styled } from '@mui/material/styles'
 
 // custom
 export * as Loader from './Loader'
