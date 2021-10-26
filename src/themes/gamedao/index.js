@@ -32,6 +32,9 @@ export const lightTheme = createTheme({
 			main: '#3f51b5',
 		},
 	},
+	shape: {
+		borderRadius: 1,
+	},
 	components: {
 		MuiButtonBase: {
 			defaultProps: {

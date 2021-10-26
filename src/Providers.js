@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { IconContext } from 'react-icons'
 import { SubstrateContextProvider } from './substrate-lib'
 
-import { darkTheme, lightTheme } from './themes/theme'
+import { darkTheme, lightTheme } from './themes/minimal'
 
 import { Box } from './components'
 
