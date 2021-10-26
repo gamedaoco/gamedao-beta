@@ -15,22 +15,35 @@ const Dashboard = (props) => {
 	const [ tangram, setTangram ] = useState(0)
 
 	useEffect(() => {
+
+		if( !address ) return
+		let unsubscribe = null
+
+		api.queryMulti(
+			[[api.query.identity.identityOf,address]],
+			([identity]) => setName(identity.toHuman().info.display.Raw || null)
+		).then( (unsub) => unsubscribe = unsub )
+		.catch(console.error)
+
+		return () => unsubscribe && unsubscribe()
+
+	}, [api])
+
+	useEffect(() => {
+
+		if( !api ) return
 		let unsubscribe = null
 
 		api.queryMulti(
 			[
-				[api.query.system.account,address],
 				api.query.gameDaoControl.nonce,
 				api.query.gameDaoCrowdfunding.nonce,
 				api.query.gameDaoGovernance.nonce,
-				api.query.gameDaoTangram.nextTangramId
 			],
-			([name, bodies, campaigns, proposals, creatures]) => {
-				setName(name.meta.name.toUpperCase())
-				setBodies(bodies.toNumber())
-				setCampaigns(campaigns.toNumber())
-				setProposals(proposals.toNumber())
-				setTangram(tangram.toNumber())
+			([ bodies, campaigns, proposals ]) => {
+				setBodies( bodies.toNumber() )
+				setCampaigns( campaigns.toNumber() )
+				setProposals( proposals.toNumber() )
 			}
 		)
 			.then((unsub) => {
@@ -39,7 +52,8 @@ const Dashboard = (props) => {
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api])
+
+	}, [ api, address ])
 
 	return (
 		<>
@@ -47,16 +61,14 @@ const Dashboard = (props) => {
 			<h2>DAOs: {bodies}</h2>
 			<h2>Campaigns: {campaigns}</h2>
 			<h2>Proposals: {proposals}</h2>
-			<h2>Tangram: {tangram}</h2>
 		</>
 	)
 }
 
 export default function Dapp(props) {
-	const { accountPair } = props
-	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoCrowdfunding ? ( // && accountPair
+	const { apiState } = useSubstrate()
+	console.log( 'apiState', apiState )
+	return ( apiState==='READY' ) ? (
 		<Dashboard {...props} />
 	) : null
 }

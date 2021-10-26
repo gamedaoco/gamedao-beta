@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Loader from './components/Loader'
 import Layout from './layouts/default'
@@ -35,9 +35,6 @@ const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSideba
 	</Layout>
 
 const Router = (props) => {
-
-	const [ accountPair, setAccountPair ] = useState(null)
-
 	return (
 		<>
 			<Switch>
@@ -48,34 +45,34 @@ const Router = (props) => {
 				</Route>
 
 				<LayoutRoute exact path="/app" showHeader={true} showFooter={true}>
-					<Dashboard accountPair={accountPair} />
+					<Dashboard/>
 				</LayoutRoute>
 
 				<Layout showHeader showFooter showSidebar >
 
 					<Route exact path="/app/organisations">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Organisations accountPair={accountPair} />
+							<Organisations/>
 						</Suspense>
 					</Route>
 					<Route exact path="/app/governance">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Governance accountPair={accountPair} />
+							<Governance/>
 						</Suspense>
 					</Route>
 					<Route exact path="/app/campaigns">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Campaigns accountPair={accountPair} />
+							<Campaigns/>
 						</Suspense>
 					</Route>
 					<Route exact path="/app/tangram">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Tangram accountPair={accountPair} />
+							<Tangram/>
 						</Suspense>
 					</Route>
 					<Route exact path="/app/wallet">
 						<Suspense fallback={<Loader text="Loading..."></Loader>}>
-							<Wallet accountPair={accountPair} />
+							<Wallet/>
 						</Suspense>
 					</Route>
 

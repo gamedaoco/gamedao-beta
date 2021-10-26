@@ -1,4 +1,3 @@
-import React, { useState, createRef } from 'react'
 import styled from '@emotion/styled'
 import Router from './Router'
 
@@ -10,7 +9,6 @@ const Wrapper = styled.div`
 `
 
 const App = (props) => {
-	const contextRef = createRef()
 	return (
 		<Wrapper>
 			<Router>{props.children}</Router>
