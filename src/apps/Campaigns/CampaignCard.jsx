@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
+
 import { web3FromSource } from '@polkadot/extension-dapp'
 // import { encodeAddress } from '@polkadot/util-crypto'
 // import { data } from '../lib/data'

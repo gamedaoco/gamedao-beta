@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
 import { Container, Button, Form, Segment, Divider, Image /*Dimmer*/ } from 'semantic-ui-react'

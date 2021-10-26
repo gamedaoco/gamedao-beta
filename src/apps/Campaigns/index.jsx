@@ -11,6 +11,7 @@
 
 import React, { useEffect, useState, lazy } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
