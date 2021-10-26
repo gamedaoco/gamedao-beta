@@ -1,6 +1,20 @@
 import { createTheme } from '@mui/material/styles'
 
+const globalTheme = {
+	shape: {
+		borderRadius: 1,
+	},
+	components: {
+		MuiButtonBase: {
+			defaultProps: {
+				disableRipple: true, // No more ripple, on the whole application 💣!
+			},
+		},
+	},
+}
+
 export const darkTheme = createTheme({
+	...globalTheme,
 	palette: {
 		mode: 'dark',
 		primary: {
@@ -10,19 +24,10 @@ export const darkTheme = createTheme({
 			main: '#3f51b5',
 		},
 	},
-	shape: {
-		borderRadius: 1,
-	},
-	components: {
-		MuiButtonBase: {
-			defaultProps: {
-				disableRipple: true, // No more ripple, on the whole application 💣!
-			},
-		},
-	},
 })
 
 export const lightTheme = createTheme({
+	...globalTheme,
 	palette: {
 		mode: 'light',
 		primary: {
@@ -30,16 +35,6 @@ export const lightTheme = createTheme({
 		},
 		secondary: {
 			main: '#3f51b5',
-		},
-	},
-	shape: {
-		borderRadius: 1,
-	},
-	components: {
-		MuiButtonBase: {
-			defaultProps: {
-				disableRipple: true, // No more ripple, on the whole application 💣!
-			},
 		},
 	},
 })

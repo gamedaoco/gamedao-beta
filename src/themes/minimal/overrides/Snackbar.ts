@@ -1,13 +1,13 @@
-import { Theme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
 export default function Snackbar(theme: Theme) {
-  return {
-    MuiSnackbarContent: {
-      styleOverrides: {
-        root: {}
-      }
-    }
-  };
+	return {
+		MuiSnackbarContent: {
+			styleOverrides: {
+				root: {},
+			},
+		},
+	}
 }

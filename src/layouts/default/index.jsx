@@ -4,11 +4,13 @@ import Footer from './Footer'
 
 const Page = ({ setAccountAddress, accountPair, children }) => {
 	return (
-		<Box sx={{ 
-			height: '100%', 
-			display: "flex", 
-			flexDirection: "row"
-		}}>
+		<Box
+			sx={{
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'row',
+			}}
+		>
 			<Box flexGrow={0}>
 				<Header setAccountAddress={setAccountAddress} accountPair={accountPair} />
 			</Box>

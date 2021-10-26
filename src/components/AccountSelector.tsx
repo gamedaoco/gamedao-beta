@@ -81,18 +81,17 @@ const AccountComponent = (props) => {
 			</CopyToClipboard>
 		*/}
 
-			<ButtonGroup sx={{ flexDirection: "column" }} variant="contained" ref={anchorRef} aria-label="account-selector">
-
+			<ButtonGroup sx={{ flexDirection: 'column' }} variant="contained" ref={anchorRef} aria-label="account-selector">
 				<BalanceAnnotation accountSelected={accountSelected} />
 
-				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect} >
-					<LogoutIcon fontSize="inherit"/>
+				<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
+					<LogoutIcon fontSize="inherit" />
 				</IconButton>
 
 				<Typography variant="subtitle1">
 					<CopyToClipboard text={accountSelected}>
 						<Button color={accountSelected ? 'success' : 'error'}>
-							{`${keyringOptions[selectedIndex].text||keyringOptions[selectedIndex].value.slice(0, 8)}`}
+							{`${keyringOptions[selectedIndex].text || keyringOptions[selectedIndex].value.slice(0, 8)}`}
 						</Button>
 					</CopyToClipboard>
 				</Typography>
@@ -105,12 +104,11 @@ const AccountComponent = (props) => {
 					aria-haspopup="menu"
 					onClick={handleToggle}
 				>
-					<KeyboardArrowDownIcon fontSize="inherit"/>
+					<KeyboardArrowDownIcon fontSize="inherit" />
 				</IconButton>
-
 			</ButtonGroup>
 
-{/*
+			{/*
 	TODO: needs to be bottom end, currently refuses to take the button as anchor ref
 */}
 			<Popper open={open} anchorEl={anchorRef.current} placement={'bottom-start'} role={undefined} transition disablePortal>
