@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { Stack, Typography } from 'src/components'
-import { BiWallet, BiListCheck, BiCoin, BiPyramid, BiGame, BiDiamond } from "react-icons/bi";
+import { BiWallet, BiCoin, BiPyramid, BiGame, BiDiamond, BiArch } from "react-icons/bi";
 
 // import AccountSelector from 'src/components/AccountSelector'
 
@@ -61,7 +61,7 @@ function Main({ showNavigation }: ComponentProps) {
 						<BiPyramid color="white" /> <Typography>Organisations</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/governance">
-						<BiListCheck color="white" /> <Typography>Governance</Typography>
+						<BiArch color="white" /> <Typography>Governance</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/campaigns">
 						<BiCoin color="white" /> <Typography>Campaigns</Typography>

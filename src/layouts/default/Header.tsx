@@ -1,6 +1,8 @@
 import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
 import AccountSelector from 'src/components/AccountSelector'
 
 interface ComponentProps {
@@ -11,6 +13,7 @@ function Main({ showWallet }: ComponentProps) {
 
 	return (
 		<AppBar color="transparent" position="sticky" elevation={0}>
+
 			<Toolbar
 				sx={{
 					zIndex: '9000',
@@ -20,7 +23,11 @@ function Main({ showWallet }: ComponentProps) {
 					justifyContent: 'end',
 				}}
 			>
-				<AccountSelector />
+				<Stack direction="row" justifyContent="start" alignItems="left">
+					<Button>GameDAO</Button>
+					<Button>Store</Button>
+					<AccountSelector />
+				</Stack>
 			</Toolbar>
 		</AppBar>
 	)
