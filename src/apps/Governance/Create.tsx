@@ -4,7 +4,13 @@ import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { Container, Form, Divider, Segment, Image, Button, Radio } from 'semantic-ui-react'
+// import { Container, Form, Divider, Segment, Image, Button, Radio } from 'semantic-ui-react'
+
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
@@ -15,7 +21,21 @@ import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 const dev = config.dev
 if (dev) console.log('dev mode')
 
+type GenericForm = {
+	id: string
+	purpose: string
+	description: string
+	cid: string
+	amount: number
+	duration: number
+	proposer: string
+	beneficiary: string
+	voting_types: number
+	[key: string]: any
+}
+
 const random_state = (accountPair, campaigns = []) => {
+
 	// version 0.1
 	// get a random campaign id
 	// create a random purpose
@@ -29,7 +49,7 @@ const random_state = (accountPair, campaigns = []) => {
 	const description = faker.company.catchPhrase()
 	const cid = ''
 	const amount = rnd(10) * 100
-	const duration = data.project_durations[rnd(data.project_durations.length)].value
+	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
 	const proposer = accountPair.address
 	const beneficiary = accountPair.address
 	const voting_types = data.voting_types[rnd(data.voting_types.length)].value
@@ -40,7 +60,7 @@ const random_state = (accountPair, campaigns = []) => {
 	// for proofs, extra info
 	// select asset for withdrawal
 
-	return {
+	const gen: GenericForm = {
 		id,
 		purpose,
 		description,
@@ -51,6 +71,7 @@ const random_state = (accountPair, campaigns = []) => {
 		beneficiary,
 		voting_types,
 	}
+	return gen
 }
 
 // proposal (flow)
@@ -61,18 +82,17 @@ const random_state = (accountPair, campaigns = []) => {
 export const Main = (props) => {
 	const { api } = useSubstrate()
 	const { accountPair, finalized } = props
-	const [block, setBlock] = useState(0)
+	const [ block, setBlock ] = useState(0)
 
-	const [loading, setLoading] = useState(false)
-	const [refresh, setRefresh] = useState(true)
+	const [ loading, setLoading ] = useState(false)
+	const [ refresh, setRefresh ] = useState(true)
 
-	const [formData, updateFormData] = useState()
-	const [fileCID, updateFileCID] = useState()
-	const [content, setContent] = useState()
+	const [ formData, updateFormData ] = useState({} as GenericForm)
+	const [ fileCID, updateFileCID ] = useState()
+	const [ content, setContent ] = useState({})
 
 	// campaign or organisation?
-	// actually you should select an organisation,
-	// then an eventual campaign belonging to it.
+	// user can choose whatever he belongs to.
 	const [entities, setEntities] = useState([])
 
 	useEffect(() => {
@@ -122,7 +142,13 @@ export const Main = (props) => {
 
 	// form fields
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = (e, { name, value }) => {
+		const update = {
+			...formData,
+			[name]: value
+		}
+		updateFormData(update)
+	}
 
 	// submit function
 

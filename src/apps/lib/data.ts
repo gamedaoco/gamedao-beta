@@ -6,6 +6,13 @@ export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
 //
 
+export const collateral_types = [
+	{ key: '0', text: 'GAME', value: 0 },
+	{ key: '1', text: 'PLAY', value: 1 },
+	{ key: '2', text: 'DAI', value: 2 },
+	{ key: '3', text: 'NFT', value: 3 },
+]
+
 export const voting_types = [
 	{ key: '0', text: 'Single Choice', value: 0 },
 	{ key: '1', text: 'Approval', value: 1 },
@@ -136,6 +143,7 @@ export const campaign_states = [
 //
 
 export const data = {
+	collateral_types,
 	campaign_states,
 	jsonEndpoint,
 	project_entities,
