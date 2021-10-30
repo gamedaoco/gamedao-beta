@@ -11,6 +11,7 @@ export { default as CircularProgress } from '@mui/material/CircularProgress'
 export { default as Stack } from '@mui/material/Stack'
 export { default as Backdrop } from '@mui/material/Backdrop'
 export { default as Divider } from '@mui/material/Divider'
+export { default as Slider } from '@mui/material/Slider'
 export { default as Card } from '@mui/material/Card'
 export { default as Paper } from '@mui/material/Paper';
 
