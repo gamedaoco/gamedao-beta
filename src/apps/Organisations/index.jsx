@@ -4,6 +4,7 @@
 import React, { useEffect, useState, lazy } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
 
@@ -118,8 +119,10 @@ const addMember = async (api, accountPair, id, target) => {
 
 const defaultContent = {}
 
-const Item = ({ content, accountPair }) => {
+const Item = ({ content }) => {
 	const { api } = useSubstrate()
+	const { address } = useWallet()
+
 	const [itemContent, setItemContent] = useState({})
 	const [metadata, setMetadata] = useState({})
 	const [imageURL, setImageURL] = useState(null)
@@ -165,7 +168,7 @@ const Item = ({ content, accountPair }) => {
 					// api.query.gameDaoControl.bodyConfig(content.id),
 					api.query.gameDaoControl.bodyController(content.id),
 					api.query.gameDaoControl.bodyAccess(content.id),
-					api.query.gameDaoControl.bodyMemberState([content.id, accountPair.address]),
+					api.query.gameDaoControl.bodyMemberState([content.id, address]),
 					api.query.gameDaoControl.bodyMemberCount(content.id),
 					api.query.gameDaoControl.bodyTreasury(content.id),
 				])
@@ -234,7 +237,7 @@ const Item = ({ content, accountPair }) => {
 
 	const buttonText = ['join', 'apply', 'leave']
 
-	const isAdmin = () => (accountPair.address === itemContent.controller ? true : false)
+	const isAdmin = () => (address === itemContent.controller ? true : false)
 	const isMember = () => (itemContent.memberState > 0 ? true : false)
 
 	const Interactions = () => {
@@ -296,7 +299,7 @@ const Item = ({ content, accountPair }) => {
   
 
 const ItemList = (props) => {
-	const { content, accountPair } = props
+	const { content } = props
 
 	///
 	const [page, setPage] = React.useState(0);
@@ -391,7 +394,7 @@ const ItemList = (props) => {
 
 export const Main = (props) => {
 	const { api } = useSubstrate()
-	const { accountPair } = props
+	const { address } = useWallet()
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
@@ -590,10 +593,9 @@ export const Main = (props) => {
 }
 
 export default function Module(props) {
-	const { accountPair } = props
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoControl ? ( // && accountPair
+	return api && api.query.gameDaoControl ? (
 		<Main {...props} />
 	) : null
 }

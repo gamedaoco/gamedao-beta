@@ -1,6 +1,5 @@
 import * as React from 'react'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-
 import { Avatar, Button, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '../components'
 
 function Copyright(props: any) {
@@ -8,7 +7,7 @@ function Copyright(props: any) {
 		<Typography variant="body2" color="text.secondary" align="center" {...props}>
 			{'Copyright © '}
 			<Link color="inherit" href="https://material-ui.com/">
-				Your Website
+				GameDAO
 			</Link>{' '}
 			{new Date().getFullYear()}
 			{'.'}
@@ -38,10 +37,16 @@ export default function SignIn() {
 						alignItems: 'center',
 					}}
 				>
-					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
+					<Typography component="h2" variant="h5">
+						Connect Wallet
+					</Typography>
+					<Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+						Connect with Polkadot-JS extension
+					</Button>
+
+					<hr/>
+
+					<Typography component="h2" variant="h5">
 						Sign in
 					</Typography>
 					<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>

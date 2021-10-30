@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
+
 import { Grid, Segment, Card, Button, Icon, Image, Transition } from 'semantic-ui-react'
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
@@ -9,6 +11,7 @@ const dev = config.dev
 
 const Item = ({ hash }) => {
 	const { api } = useSubstrate()
+	// const { address, accountPair } = useWallet()
 
 	const [content, setContent] = useState(null)
 
@@ -56,7 +59,7 @@ const Item = ({ hash }) => {
 	)
 }
 
-const ItemGrid = ({ hashes, accountPair }) => {
+const ItemGrid = ({ hashes }) => {
 	if (!hashes) return null
 
 	return (
@@ -64,7 +67,7 @@ const ItemGrid = ({ hashes, accountPair }) => {
 			<Grid stackable colums={8}>
 				{hashes &&
 					hashes.map((itemHash, index) => {
-						return <CampaignCard hash={itemHash} accountPair={accountPair} />
+						return <CampaignCard hash={itemHash} />
 					})}
 			</Grid>
 		</Container>
@@ -125,8 +128,8 @@ export const Content = (props) => {
 }
 
 export default function Module(props) {
-	const { accountPair } = props
+	// const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoTangram && accountPair ? <Content {...props} /> : null
+	return api && api.query.gameDaoTangram /*&& accountPair*/ ? <Content {...props} /> : null
 }

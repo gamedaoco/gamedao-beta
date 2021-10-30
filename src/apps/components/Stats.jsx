@@ -11,6 +11,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from 'src/context/Wallet'
 import { TxButton } from '../../substrate-lib/components'
 import { Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider } from 'semantic-ui-react'
 
