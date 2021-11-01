@@ -10,41 +10,53 @@ import { gateway } from '../lib/ipfs'
 import config from '../../config'
 const dev = config.dev
 
-import { Button, Typography, Box, Stack, Grid } from 'src/components'
+import { Typography, Grid } from 'src/components'
 
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
 import Paper from '@mui/material/Paper'
 
 import ItemRow from './ItemRow'
 
 export default function ItemTable({ content }) {
 
-	if (!content) return null
+	// if (!content) return null
 
 	return (
-		<TableContainer component={Paper}>
-			<Table aria-label="collapsible table">
-			<TableHead>
-				<TableRow>
-					<TableCell />
-					<TableCell></TableCell>
-					<TableCell align="right"></TableCell>
-					<TableCell align="right"></TableCell>
-					<TableCell align="right"></TableCell>
-					<TableCell align="right"></TableCell>
-				</TableRow>
-			</TableHead>
-			<TableBody>
-				{content.map((item, i) => (
-					<ItemRow key={i} content={item} />
-				))}
-			</TableBody>
-			</Table>
-		</TableContainer>
+		<React.Fragment>
+			<Grid container spacing={2}>
+
+				<Grid item xs={16}>
+					<Typography component="h3" variant="h4">General Information</Typography>
+				</Grid>
+
+				<Grid item xs={16}>
+					<TableContainer>
+						<Table aria-label="collapsible table">
+						<TableHead>
+							<TableRow>
+								<TableCell />
+								<TableCell>a</TableCell>
+								<TableCell align="right">b</TableCell>
+								<TableCell align="right">c</TableCell>
+								<TableCell align="right">d</TableCell>
+								<TableCell align="right">e</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{ content && content.map((item, i) => (
+								<ItemRow key={i} content={item} />
+							))}
+						</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+
+			</Grid>
+		</React.Fragment>
 	)
 }

@@ -91,8 +91,10 @@ export const Component = (props) => {
 					}
 				</Box>
 			</Stack>
-			{ showCreateMode && <CreateProposal /> }
-			{ !showCreateMode && content && nonce !== 0 && <ItemTable content={content} /> }
+			{ showCreateMode
+				? <CreateProposal />
+				: <ItemTable content={content} />
+			}
 		</React.Fragment>
 	)
 }

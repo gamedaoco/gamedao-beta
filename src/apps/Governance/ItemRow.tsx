@@ -68,6 +68,7 @@ export default function ItemRow ({ content }) {
 	return (
 
 		<React.Fragment>
+
 			<TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 				<TableCell>
 					<IconButton
@@ -132,6 +133,7 @@ export default function ItemRow ({ content }) {
 					</Collapse>
 				</TableCell>
 			</TableRow>
+
 		</React.Fragment>
 	)
 }

@@ -13,6 +13,12 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Form from '@mui/material/Stack';
 
+// selekta
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
@@ -238,111 +244,143 @@ export const Main = (props) => {
 	// })
 	// const entities = { ...data.orgs, ...campaigns }
 
+	const SelectBox = ({
+		value, handleOnChange, label, options
+	}) => {
+		const ref = `${value.text}-label`
+		return (
+			<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+				<InputLabel id={ref}>Age</InputLabel>
+				<Select
+					labelId={ref}
+					value={value}
+					onChange={handleOnChange}
+					label="Age"
+				>
+					<MenuItem value={null}></MenuItem>
+					{ options.map( (item, index)=>{
+						<MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>
+
+					})
+					}
+				</Select>
+			</FormControl>
+		)
+	}
+
 	if (!formData) return null
 
 	return (
-		<Form>
+		<React.Fragment>
 			<Grid container spacing={2}>
-				<Grid item xs={8}>
+				<Grid item>
 					<Typography component="h2" variant="h3">General Information</Typography>
 				</Grid>
 
-				<Form.Select
-					fluid
-					required
-					label="Organization / Campaign"
-					placeholder="Please select"
-					name="entity"
-					options={entities}
-					value={formData.entity}
-					onChange={handleOnChange}
-				/>
-
-				<Form.Group widths="equal">
-					<Form.Input fluid label="Proposal Title" placeholder="Title" name="purpose" value={formData.purpose} onChange={handleOnChange} required />
-				</Form.Group>
-
-				<Form.Group widths="equal">
-					<Form.TextArea
-						label="Short Description"
-						name="description"
-						value={formData.description}
-						placeholder="Tell us more"
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
-
-				<Form.Group widths="equal">
-					<Form.Select
+				<Grid item>
+			{/*
+					<Form>
+					<Select
 						fluid
-						label="Voting Type"
-						options={data.voting_types}
-						name="voting_types"
-						value={formData.voting_types}
-						onChange={handleOnChange}
-					/>
-					<Form.Select
-						fluid
-						label="Proposal Duration"
-						options={data.project_durations}
-						placeholder="Duration"
-						name="duration"
-						value={formData.duration}
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
-
-				<Form.Group widths="equal">
-					<Form.Select
-						fluid
-						disabled
-						label="Collateral Type"
-						options={data.collateral_types}
-						name="collateral_types"
-						value={formData.collateral_types}
-						onChange={handleOnChange}
-					/>
-					<Form.Input
-						fluid
-						type="number"
-						label="Collateral Amount"
-						placeholder="amount"
-						name="collateral_amount"
-						value={formData.collateral_amount}
-						onChange={handleOnChange}
 						required
-					/>
-				</Form.Group>
-
-				<Divider clearing horizontal>
-					For Withdrawals and Grants
-				</Divider>
-
-				<Form.Group widths="equal">
-					<Form.Input
-						fluid
-						label="Amount to transfer on success"
-						placeholder="amount"
-						name="amount"
-						value={formData.amount}
+						label="Organization / Campaign"
+						placeholder="Please select"
+						name="entity"
+						options={entities}
+						value={formData.entity}
 						onChange={handleOnChange}
 					/>
-					<Form.Input
-						fluid
-						label="Beneficiary Account"
-						placeholder="Beneficiary"
-						name="beneficiary"
-						value={formData.beneficiary}
-						onChange={handleOnChange}
-						required
-					/>
-				</Form.Group>
 
-				<Grid lg={16}>
+					<Group widths="equal">
+						<Input fluid label="Proposal Title" placeholder="Title" name="purpose" value={formData.purpose} onChange={handleOnChange} required />
+					</Group>
+
+					<Group widths="equal">
+						<TextArea
+							label="Short Description"
+							name="description"
+							value={formData.description}
+							placeholder="Tell us more"
+							onChange={handleOnChange}
+						/>
+					</Group>
+
+					<Group widths="equal">
+						<Select
+							fluid
+							label="Voting Type"
+							options={data.voting_types}
+							name="voting_types"
+							value={formData.voting_types}
+							onChange={handleOnChange}
+						/>
+						<Select
+							fluid
+							label="Proposal Duration"
+							options={data.project_durations}
+							placeholder="Duration"
+							name="duration"
+							value={formData.duration}
+							onChange={handleOnChange}
+						/>
+					</Group>
+
+					<Group widths="equal">
+						<Select
+							fluid
+							disabled
+							label="Collateral Type"
+							options={data.collateral_types}
+							name="collateral_types"
+							value={formData.collateral_types}
+							onChange={handleOnChange}
+						/>
+						<Input
+							fluid
+							type="number"
+							label="Collateral Amount"
+							placeholder="amount"
+							name="collateral_amount"
+							value={formData.collateral_amount}
+							onChange={handleOnChange}
+							required
+						/>
+					</Group>
+
+					<Divider clearing horizontal>
+						For Withdrawals and Grants
+					</Divider>
+
+					<Group widths="equal">
+						<Input
+							fluid
+							label="Amount to transfer on success"
+							placeholder="amount"
+							name="amount"
+							value={formData.amount}
+							onChange={handleOnChange}
+						/>
+						<Input
+							fluid
+							label="Beneficiary Account"
+							placeholder="Beneficiary"
+							name="beneficiary"
+							value={formData.beneficiary}
+							onChange={handleOnChange}
+							required
+						/>
+					</Group>
+
+
+					</Form>
+				*/}
+				</Grid>
+
+				<Grid>
 					<Button onClick={handleSubmit}>Publish Proposal</Button>
 				</Grid>
 			</Grid>
-		</Form>
+		</React.Fragment>
 	)
 }
 
