@@ -85,7 +85,7 @@ const AccountComponent = (props) => {
 	return (
 		<>
 			{ !allowConnect ? (
-				<Button variant="outlined" onClick={handleConnect}>{`connect wallet`}</Button>
+				<Button variant="outlined" onClick={handleConnect}>{`connect`}</Button>
 			) : (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
 					{ keyringOptions &&
