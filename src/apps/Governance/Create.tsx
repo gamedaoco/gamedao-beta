@@ -268,11 +268,12 @@ export const Main = (props) => {
 		)
 	}
 
-	if (!formData) return null
+	// if (!formData) return null
 
 	return (
 		<React.Fragment>
 			<Grid container spacing={2}>
+
 				<Grid item>
 					<Typography component="h2" variant="h3">General Information</Typography>
 				</Grid>
@@ -385,10 +386,8 @@ export const Main = (props) => {
 }
 
 export default function Module(props) {
-	const { accountPair } = props
 	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoCrowdfunding && accountPair ? <Main {...props} /> : null
+	return api && api.query.gameDaoGovernance ? <Main {...props} /> : null
 }
 
 //

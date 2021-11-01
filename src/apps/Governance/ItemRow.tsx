@@ -63,7 +63,7 @@ export default function ItemRow ({ content }) {
 	if (!content) return null
 	console.log(content)
 
-	const [open, setOpen] = React.useState(false);
+	const [ open, setOpen ] = React.useState(false);
 
 	return (
 
@@ -71,39 +71,32 @@ export default function ItemRow ({ content }) {
 
 			<TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 				<TableCell>
-					<IconButton
-						aria-label="expand row"
-						size="small"
-						onClick={() => setOpen(!open)}
-					>
-						{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+					<IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+						{ open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon /> }
 					</IconButton>
 				</TableCell>
 				<TableCell component="th" scope="row">
-					<Typography>
-						<img src={imageURL} />
-						{content.name}<br/>
-						{content.body}
-					</Typography>
+					<img src={imageURL} />
+					<Typography variant="caption">{content.name}<br/></Typography>
+					<Typography variant="caption">{content.body}</Typography>
 				</TableCell>
 				<TableCell align="right">{content.purpose}</TableCell>
 				<TableCell align="right">{content.amount}</TableCell>
 				<TableCell align="right">{content.expiry}</TableCell>
 				<TableCell align="right">{content.status}</TableCell>
-				<TableCell align="right">votes</TableCell>
-				<TableCell>
+				<TableCell align="right">
 					<Button> YES </Button>
 					<Button> NO </Button>
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
 					<Collapse in={open} timeout="auto" unmountOnExit>
 						<Box sx={{ margin: 1 }}>
-							<Typography variant="h6" gutterBottom component="div">
+{/*							<Typography variant="h6" gutterBottom component="div">
 								Details
 							</Typography>
-							<Table size="small" aria-label="purchases">
+*/}							<Table size="small" aria-label="purchases">
 								<TableHead>
 									<TableRow>
 										<TableCell>Date</TableCell>
@@ -113,20 +106,15 @@ export default function ItemRow ({ content }) {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{
+									<TableRow key={1}>
+										<TableCell component="th" scope="row">01.01.2001</TableCell>
+										<TableCell>Project Owner</TableCell>
+										<TableCell align="right">1234</TableCell>
+										<TableCell align="right">5678</TableCell>
+									</TableRow>
 {/*										row.history.map((historyRow) => (
-										<TableRow key={historyRow.date}>
-											<TableCell component="th" scope="row">
-												{historyRow.date}
-											</TableCell>
-											<TableCell>{historyRow.customerId}</TableCell>
-											<TableCell align="right">{historyRow.amount}</TableCell>
-											<TableCell align="right">
-												{Math.round(historyRow.amount * row.price * 100) / 100}
-											</TableCell>
-										</TableRow>
-									))*/}
-									}
+	*/
+									/*))*/}
 								</TableBody>
 							</Table>
 						</Box>

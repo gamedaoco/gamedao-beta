@@ -80,8 +80,8 @@ export const Component = (props) => {
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Box>
 				{ !content || nonce === 0
-					? ( <Typography component="h2" variant="h4">No proposals yet. Create one!</Typography> )
-					: ( <Typography>Total proposals: {nonce}</Typography> )
+					? ( <Typography component="h2" variant="h5">No proposals yet. Create one!</Typography> )
+					: ( <Typography component="h2" variant="h5">Total proposals: {nonce}</Typography> )
 				}
 				</Box>
 				<Box>

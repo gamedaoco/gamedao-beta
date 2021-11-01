@@ -28,29 +28,42 @@ export default function ItemTable({ content }) {
 
 	return (
 		<React.Fragment>
-			<Grid container spacing={2}>
+			<Grid container>
 
-				<Grid item xs={16}>
-					<Typography component="h3" variant="h4">General Information</Typography>
-				</Grid>
-
-				<Grid item xs={16}>
+				<Grid item xs={12}>
 					<TableContainer>
 						<Table aria-label="collapsible table">
 						<TableHead>
 							<TableRow>
 								<TableCell />
-								<TableCell>a</TableCell>
-								<TableCell align="right">b</TableCell>
-								<TableCell align="right">c</TableCell>
-								<TableCell align="right">d</TableCell>
-								<TableCell align="right">e</TableCell>
+								<TableCell align="center">Project</TableCell>
+								<TableCell align="right">Purpose</TableCell>
+								<TableCell align="right">Amount</TableCell>
+								<TableCell align="right">Expiry</TableCell>
+								<TableCell align="center">Status</TableCell>
+								<TableCell align="right">Action</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{ content && content.map((item, i) => (
 								<ItemRow key={i} content={item} />
 							))}
+							<ItemRow key={0} content={{
+								name:'Test',
+								body:'Hybrid DAO',
+								purpose:'',
+								amount:123,
+								expiry:1230,
+								status:'open'
+							}} />
+							<ItemRow key={1} content={{
+								name:'Bongo Klan',
+								body:'DAO',
+								purpose:'',
+								amount:123,
+								expiry:1230,
+								status:'open'
+							}} />
 						</TableBody>
 						</Table>
 					</TableContainer>
