@@ -9,8 +9,9 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import Form from '@mui/material/Stack';
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
@@ -240,13 +241,11 @@ export const Main = (props) => {
 	if (!formData) return null
 
 	return (
-		<Segment vertical loading={loading}>
-			<Form>
-				<br />
-				<Divider clearing horizontal>
-					General Information
-				</Divider>
-				<br />
+		<Form>
+			<Grid container spacing={2}>
+				<Grid item xs={8}>
+					<Typography component="h2" variant="h3">General Information</Typography>
+				</Grid>
 
 				<Form.Select
 					fluid
@@ -339,11 +338,11 @@ export const Main = (props) => {
 					/>
 				</Form.Group>
 
-				<Container textAlign="right">
+				<Grid lg={16}>
 					<Button onClick={handleSubmit}>Publish Proposal</Button>
-				</Container>
-			</Form>
-		</Segment>
+				</Grid>
+			</Grid>
+		</Form>
 	)
 }
 
