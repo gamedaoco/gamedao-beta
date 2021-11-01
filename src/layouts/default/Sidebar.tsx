@@ -28,7 +28,7 @@ interface ComponentProps {
 
 function Main({ showNavigation }: ComponentProps) {
 	const theme = useTheme()
-	const linkActiveColor = theme.palette.secondary.main
+	const linkActiveColor = theme.palette.secondary.darker
 
 	const [ isSidebarOpen, setSidebarOpen ] = useState(false)
 	const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
@@ -46,7 +46,7 @@ function Main({ showNavigation }: ComponentProps) {
 					height: '100vh',
 					width: isSidebarOpen ? '18rem' : '6rem',
 					overflow: 'hidden',
-					transition: 'all 0.1s ease;',
+					transition: 'all 0.2s ease-in-out;',
 				}}
 			>
 				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
