@@ -373,7 +373,7 @@ const ItemList = (props) => {
 							const _content = {
 								...d,
 							}
-							return <Item key={offset + i} content={_content} accountPair={accountPair} />
+							return <Item key={offset + i} content={_content} />
 						})}
 					</TableBody>
 					</TableMUI>
@@ -572,9 +572,9 @@ export const Main = (props) => {
 					{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}
 				</Box>
 				<Box>
-						{showCreateMode ? (
+						{address && showCreateMode ? (
 							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
-								Close
+								Close {address}
 							</Button>
 						) : (
 							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
@@ -585,8 +585,8 @@ export const Main = (props) => {
 			</Box>
 			<br />
 			<Container maxWidth='md'>
-				{showCreateMode && <CreateDAO accountPair={accountPair} />}
-				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} accountPair={accountPair} />}
+				{showCreateMode && <CreateDAO/>}
+				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 			</Container>
 		</Container>
 	)

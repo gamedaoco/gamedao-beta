@@ -527,6 +527,8 @@ export default function Module(props) {
 	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
+	console.log(accountPair)
+
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
 }
 

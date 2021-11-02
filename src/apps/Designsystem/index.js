@@ -3,7 +3,7 @@ import { Card, Button, Divider, FormControlLabel, Checkbox, Link, Grid, Box, Typ
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
 
-export const Designsystem = (props: any) => (
+export const Designsystem = (props) => (
 	<Stack>
 		<Typography variant="h1">Designsystem</Typography>
 		<Divider />
