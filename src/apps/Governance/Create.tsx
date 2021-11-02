@@ -87,8 +87,9 @@ const random_state = (accountPair, campaigns = []) => {
 // 0.3 -> surveys
 
 export const Main = (props) => {
+
 	const { api } = useSubstrate()
-	const { accountPair, finalized } = props
+	const { accountPair, address } = useWallet()
 	const [ block, setBlock ] = useState(0)
 
 	const [ loading, setLoading ] = useState(false)
@@ -100,16 +101,16 @@ export const Main = (props) => {
 
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
-	const [entities, setEntities] = useState([])
+	const [ entities, setEntities ] = useState([])
 
 	useEffect(() => {
-		if (!accountPair) return
+		if ( !api || !address ) return
 
 		const query = async () => {
 			try {
 				const [memberships, contributions, successful] = await Promise.all([
-					api.query.gameDaoControl.memberships(accountPair.address),
-					api.query.gameDaoCrowdfunding.campaignsContributed(accountPair.address),
+					api.query.gameDaoControl.memberships(address),
+					api.query.gameDaoCrowdfunding.campaignsContributed(address),
 					api.query.gameDaoCrowdfunding.campaignsByState(3),
 				])
 				const new_entities = new Array()
@@ -125,13 +126,13 @@ export const Main = (props) => {
 			}
 		}
 		query()
-	}, [api, accountPair])
+	}, [api, address])
 
 	//
 	//
 	//
 
-	const getFromAcct = async () => {
+	const getFromAcct = async accountPair => {
 		const {
 			address,
 			meta: { source, isInjected },
@@ -196,7 +197,7 @@ export const Main = (props) => {
 			const { voting_type, id, purpose, cid, amount } = formData
 
 			const payload = [voting_type, id, purpose, cid, amount, expiry]
-			const from = await getFromAcct()
+			const from = await getFromAcct(accountPair)
 			// TODO: refactor to have unified method name on module...
 			const tx = api.tx.gameDaoGovernance.createProposal(...payload)
 			const hash = await tx.signAndSend(from, ({ status, events }) => {
@@ -214,23 +215,11 @@ export const Main = (props) => {
 		}
 	}
 
-	const bestBlock = finalized ? api.derive.chain.bestNumberFinalized : api.derive.chain.bestNumber
+	useEffect(() => {
+	}, [])
 
 	useEffect(() => {
-		let unsubscribe = null
-
-		bestBlock((number) => {
-			setBlock(number.toNumber())
-		})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-
-		return () => unsubscribe && unsubscribe()
-	}, [bestBlock])
-
-	useEffect(() => {
+		if (!accountPair) return
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
 		updateFileCID(null)
