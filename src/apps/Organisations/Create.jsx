@@ -250,9 +250,6 @@ export const Main = (props) => {
 
 	if (!formData) return null
 
-	const c = useFormControl();
-
-	console.log(c)
 
 	return (
 		<Box
