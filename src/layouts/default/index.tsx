@@ -12,9 +12,9 @@ interface ComponentProps {
 	children?: React.ReactNode
 }
 
-const Layout = ({ showHeader, showFooter, showSidebar, children, showNavigation, showWallet=true }: ComponentProps) => {
+const Layout = ({ showHeader, showFooter, showSidebar, children, showNavigation, showWallet = true }: ComponentProps) => {
 	return (
-        <>
+		<>
 			<Box
 				sx={{
 					height: '100%',
@@ -22,23 +22,16 @@ const Layout = ({ showHeader, showFooter, showSidebar, children, showNavigation,
 					flexDirection: 'row',
 				}}
 			>
-
-				<Box flexGrow={0}>
-					{ showSidebar && <Sidebar showNavigation={ showNavigation ? showNavigation : null } /> }
-				</Box>
+				<Box flexGrow={0}>{showSidebar && <Sidebar showNavigation={showNavigation ? showNavigation : null} />}</Box>
 
 				<Box flexGrow={1}>
-					{ showHeader && <Header showWallet={ showWallet ? showWallet : null } /> }
+					{showHeader && <Header showWallet={showWallet ? showWallet : null} />}
 					<Container>
-						<Box sx={{ m: '2em', minHeight: '95vh' }}>{ children }</Box>
+						<Box sx={{ minHeight: '95vh' }}>{children}</Box>
 					</Container>
 				</Box>
-
 			</Box>
-
-			<Box flexGrow={1}>
-				{ showFooter && <Footer/> }
-			</Box>
+			<Box flexGrow={1}>{showFooter && <Footer />}</Box>
 		</>
 	)
 }
