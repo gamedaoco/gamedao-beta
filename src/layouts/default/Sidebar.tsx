@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { Stack, Typography } from 'src/components'
-import { BiWallet, BiListCheck, BiCoin, BiPyramid, BiGame, BiDiamond } from "react-icons/bi";
+import { BiWallet, BiCoin, BiPyramid, BiGame, BiDiamond, BiArch } from "react-icons/bi";
 
 // import AccountSelector from 'src/components/AccountSelector'
 
@@ -28,7 +28,7 @@ interface ComponentProps {
 
 function Main({ showNavigation }: ComponentProps) {
 	const theme = useTheme()
-	const linkActiveColor = theme.palette.secondary.main
+	const linkActiveColor = theme.palette.secondary.darker
 
 	const [ isSidebarOpen, setSidebarOpen ] = useState(false)
 	const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
@@ -46,7 +46,7 @@ function Main({ showNavigation }: ComponentProps) {
 					height: '100vh',
 					width: isSidebarOpen ? '18rem' : '6rem',
 					overflow: 'hidden',
-					transition: 'all 0.1s ease;',
+					transition: 'all 0.2s ease-in-out;',
 				}}
 			>
 				<Stack direction="column" justifyContent="start" alignItems="left" spacing={4}>
@@ -61,7 +61,7 @@ function Main({ showNavigation }: ComponentProps) {
 						<BiPyramid color="white" /> <Typography>Organisations</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/governance">
-						<BiListCheck color="white" /> <Typography>Governance</Typography>
+						<BiArch color="white" /> <Typography>Governance</Typography>
 					</StyledLink>
 					<StyledLink activeStyle={{ color: linkActiveColor }} to="/app/campaigns">
 						<BiCoin color="white" /> <Typography>Campaigns</Typography>

@@ -24,13 +24,13 @@ const Layout = ({ showHeader, showFooter, showSidebar, children, showNavigation,
 			>
 
 				<Box flexGrow={0}>
-					{ showSidebar && <Sidebar showNavigation={showNavigation?showNavigation:null} /> }
+					{ showSidebar && <Sidebar showNavigation={ showNavigation ? showNavigation : null } /> }
 				</Box>
 
 				<Box flexGrow={1}>
-					{ showHeader && <Header showWallet={showWallet?showWallet:null} /> }
+					{ showHeader && <Header showWallet={ showWallet ? showWallet : null } /> }
 					<Container>
-						<Box sx={{ m: '2em', minHeight: '95vh' }}>{children}</Box>
+						<Box sx={{ m: '2em', minHeight: '95vh' }}>{ children }</Box>
 					</Container>
 				</Box>
 

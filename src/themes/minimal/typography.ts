@@ -81,8 +81,8 @@ const typography = {
 		fontSize: pxToRem(14),
 	},
 	caption: {
-		lineHeight: 1.5,
-		fontSize: pxToRem(12),
+		lineHeight: 1.2,
+		fontSize: pxToRem(10),
 	},
 	overline: {
 		fontWeight: 700,

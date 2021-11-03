@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
-import { useSubstrate } from '../substrate-lib'
-import { useWallet } from '../context/Wallet'
+import { useSubstrate } from 'src/substrate-lib/SubstrateContext'
+import { useWallet } from 'src/context/Wallet'
 
 import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
@@ -12,7 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 const AccountComponent = (props) => {
 
 	const { keyring } = useSubstrate()
-	const { allowConnect, setAllowConnect, setAccountAddress } = useWallet()
+	const { allowConnect, setAllowConnect, setAccountAddress, setAccountPair } = useWallet()
 	const [ keyringOptions, setKeyringOptions ] = useState(null)
 	const [ initialAddress, setInitialAddress ] = useState(null)
 	const [ accountSelected, setAccountSelected ] = useState(null)
@@ -28,6 +28,7 @@ const AccountComponent = (props) => {
 			value: account.address,
 			text: account.meta.name.toUpperCase(),
 			icon: 'user',
+			accountPair: account
 		}))
 		setKeyringOptions( args )
 	},[allowConnect, keyring])
@@ -36,6 +37,7 @@ const AccountComponent = (props) => {
 		if(!allowConnect || !keyringOptions) return
 		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
 		setInitialAddress( args )
+		setAccountPair( args.accountPair )
 	},[allowConnect, keyringOptions, selectedIndex, initialAddress])
 
 	useEffect(()=>{
@@ -43,6 +45,7 @@ const AccountComponent = (props) => {
 		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
 		setAccountAddress(args)
 		setAccountSelected(args)
+		setAccountPair( args.accountPair )
 		console.log('setAccountAddress',args)
 	},[allowConnect, keyringOptions, selectedIndex, setAccountAddress])
 
@@ -85,12 +88,12 @@ const AccountComponent = (props) => {
 	return (
 		<>
 			{ !allowConnect ? (
-				<Button variant="outlined" onClick={handleConnect}>{`connect wallet`}</Button>
+				<Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>
 			) : (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
 					{ keyringOptions &&
 						<CopyToClipboard text={accountSelected}>
-							<Button color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
+							<Button size="small" color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
 						</CopyToClipboard>
 					}
 					<IconButton
