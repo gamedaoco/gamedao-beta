@@ -8,45 +8,61 @@ import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
 
+import AddIcon from '@mui/icons-material/Add'
+import ClearIcon from '@mui/icons-material/Clear'
+import LanguageIcon from '@mui/icons-material/Language'
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import GroupIcon from '@mui/icons-material/Group'
+
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
 
-import { Icon, Pagination, Table, Header, Button, Container, Image, Grid } from 'semantic-ui-react'
-import {
-	BiJoystick,
-	BiHomeCircle,
-	BiListCheck,
-	BiListPlus,
-	BiCoinStack,
-	BiCoin,
-	BiPyramid,
-	BiGame,
-	BiPlus,
-	BiDiamond,
-	BiKey,
-	BiLockAlt,
-	BiLockOpenAlt,
-	BiGlobe,
-	BiGroup,
-} from 'react-icons/bi'
+import { 
+	Button, 
+	Typography, 
+	Box, 
+	Stack, 
+	Container, 
+	Paper, 
+	Table as TableMUI, 
+	TableBody, 
+	TableCell, 
+	TableContainer, 
+	TableHead, 
+	TablePagination, 
+	TableRow,
+	styled
+} from '../../components'
 
-import styled from '@emotion/styled'
 
 const CreateDAO = lazy(() => import('./Create'))
 
 const dev = config.dev
 
-//
-//
-//
 
-const SmallText = styled.div`
-	font-size: 12px;
-`
-//
-//
-//
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.MuiTableCell-head`]: {
+	  backgroundColor: theme.palette.common.black,
+	  color: theme.palette.common.white,
+	},
+	[`&.MuiTableCell-body`]: {
+	  fontSize: 14,
+	},
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	'&:nth-of-type(odd)': {
+	  backgroundColor: theme.palette.action.hover,
+	},
+	// hide last border
+	'&:last-child td, &:last-child th': {
+	  border: 0,
+	},
+  }));
+
+
 
 const getFromAcct = async (api, accountPair) => {
 	const {
@@ -245,46 +261,59 @@ const Item = ({ content }) => {
 	if (!itemContent) return null
 
 	return (
-		<Table.Row>
-			<Table.Cell>
+		<StyledTableRow hover>
+			<StyledTableCell>
 				<a onClick={() => console.log(itemContent, metadata)}>
-					<Header as="h4" image>
-						<Image rounded src={imageURL} />
-						<Header.Content>
-							{itemContent.name}
-							<Header.Subheader>{bodyToText()}</Header.Subheader>
-						</Header.Content>
-					</Header>
+					<Stack spacing={2} direction='row'>
+						<img style={{ maxHeight: '3rem' }} src={imageURL} />
+						<Box>
+							<Typography>{itemContent.name}</Typography>
+							<Typography>{bodyToText()}</Typography>
+						</Box>
+					</Stack>
 				</a>
-			</Table.Cell>
-			<Table.Cell>
-				<Container>
-					<SmallText>{metadata.description}</SmallText>
-				</Container>
-			</Table.Cell>
-			<Table.Cell>
+			</StyledTableCell>
+			<StyledTableCell>
+				<Typography>{metadata.description}</Typography>
+			</StyledTableCell>
+			<StyledTableCell>
 				{metadata.website && (
 					<a href={metadata.website} target="_blank">
-						<BiGlobe />
+						<LanguageIcon/>
 					</a>
 				)}
-			</Table.Cell>
-			<Table.Cell textAlign="center">{itemContent.access === '0' ? 'open' : <BiLockAlt />}</Table.Cell>
-			<Table.Cell>{itemContent.memberCount || 0}</Table.Cell>
+			</StyledTableCell>
+			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon/>}</StyledTableCell>
+			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
 			{/*
-			<Table.Cell>{itemContent.treasuryBalance||0}</Table.Cell>
-			<Table.Cell>{itemContent.motions||0}</Table.Cell>
-			<Table.Cell>{itemContent.campaigns||0}</Table.Cell>
-*/}
-			<Table.Cell>
+			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.motions||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.campaigns||0}</StyledTableCell>
+			*/}
+			<StyledTableCell>
 				<Interactions />
-			</Table.Cell>
-		</Table.Row>
+			</StyledTableCell>
+		</StyledTableRow>
 	)
 }
+  
 
 const ItemList = (props) => {
 	const { content } = props
+
+	///
+	const [page, setPage] = React.useState(0);
+	const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
+	const handleChangePage = (event, newPage) => {
+	  setPage(newPage);
+	};
+  
+	const handleChangeRowsPerPage = (event) => {
+	  setRowsPerPage(+event.target.value);
+	  setPage(0);
+	};
+	///
 
 	const [activePage, setActivePage] = useState(1)
 	const [totalPages, setTotalPages] = useState(0)
@@ -311,50 +340,55 @@ const ItemList = (props) => {
 	// console.log(activePage,totalPages,offset,itemsPerPage)
 
 	return (
-		<Container>
-			<Container align="right">
-				<Button.Group>
-					<Button icon onClick={handleShowLessItems}>
-						<Icon name="block layout" />
-					</Button>
-					<Button icon onClick={handleShowMoreItems}>
-						<Icon name="grid layout" />
-					</Button>
-				</Button.Group>
-			</Container>
-			<Table striped fixed>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell width="4"></Table.HeaderCell>
-						<Table.HeaderCell width="6">Description</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiGlobe />
-						</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiLockAlt />
-						</Table.HeaderCell>
-						<Table.HeaderCell width="1">
-							<BiGroup />
-						</Table.HeaderCell>
-						{/*
-						<Table.HeaderCell width='two'>Balance</Table.HeaderCell>
-						<Table.HeaderCell>Motions</Table.HeaderCell>
-						<Table.HeaderCell>Campaigns</Table.HeaderCell>
-*/}
-						<Table.HeaderCell />
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{content.slice(offset, offset + iPP[itemsPerPage] - 1).map((d, i) => {
-						const _content = {
-							...d,
-						}
-						return <Item key={offset + i} content={_content} />
-					})}
-				</Table.Body>
-			</Table>
-			{totalPages >= 2 && <Pagination onPageChange={handlePaginationChange} activePage={activePage} totalPages={totalPages} />}
-		</Container>
+		<Box>
+			<Paper sx={{ width: '100%' }}>
+				<TableContainer sx={{ maxHeight: 512 }}>
+					<TableMUI stickyHeader aria-label="sticky table">
+						<TableHead>
+							<StyledTableRow>
+								<StyledTableCell align="center" colSpan={1}>
+								
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<Typography variant='h4'>Description</Typography>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<LanguageIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<LockIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<GroupIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+
+								</StyledTableCell>
+							</StyledTableRow>
+						</TableHead>
+					<TableBody>
+						{content
+						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+						.map((d, i) => {
+							const _content = {
+								...d,
+							}
+							return <Item key={offset + i} content={_content} />
+						})}
+					</TableBody>
+					</TableMUI>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[10, 25, 100]}
+					component="div"
+					count={content.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+				/>
+			</Paper>
+		</Box>
 	)
 }
 
@@ -528,31 +562,33 @@ export const Main = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<React.Fragment>
-			<Grid>
-				<Grid.Column floated="left" width={6} verticalAlign="middle">
+		<Container maxWidth='lg'>
+			<Box sx={{
+				display: 'flex',
+				justifyContent: 'space-between'
+
+			}}>
+				<Box>
 					{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}
-				</Grid.Column>
-				<Grid.Column floated="right" width={6} verticalAlign="middle">
-					<Container textAlign="right">
-						{ address && showCreateMode ? (
-							<Button onClick={handleCloseBtn}>
-								<Icon name="cancel" />
+				</Box>
+				<Box>
+						{address && showCreateMode ? (
+							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
 								Close {address}
 							</Button>
 						) : (
-							<Button onClick={handleCreateBtn}>
-								<Icon name="plus" />
+							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
 								New DAO
 							</Button>
 						)}
-					</Container>
-				</Grid.Column>
-			</Grid>
+				</Box>
+			</Box>
 			<br />
-			{showCreateMode && <CreateDAO />}
-			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
-		</React.Fragment>
+			<Container maxWidth='md'>
+				{showCreateMode && <CreateDAO/>}
+				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
+			</Container>
+		</Container>
 	)
 }
 
@@ -566,3 +602,4 @@ export default function Module(props) {
 //
 //
 //
+

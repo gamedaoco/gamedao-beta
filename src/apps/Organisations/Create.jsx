@@ -1,10 +1,34 @@
 import React, { useEffect, useState } from 'react'
 
+const steps = [
+  'Select master blaster campaign settings',
+  'Create an ad group',
+  'Create an ad',
+];
+
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { Container, Form, Divider, Segment, Image, Button } from 'semantic-ui-react'
+import { 
+	Typography, 
+	TextField, 
+	FormGroup, 
+	Box, 
+	Button, 
+	Divider, 
+	Container, 
+	Stepper, 
+	Input,
+	Step, 
+	Select,
+	StepLabel,
+	InputLabel,
+	FormControl,
+	MenuItem,
+	TextareaAutosize,
+	useFormControl 
+} from '../../components'
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
@@ -68,6 +92,7 @@ const random_state = (accountPair) => {
 		entity,
 	}
 }
+
 
 export const Main = (props) => {
 	const { api } = useSubstrate()
@@ -144,7 +169,10 @@ export const Main = (props) => {
 
 	// form fields
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = (e) => {
+		const { name, value } = e.target
+		return updateFormData({ ...formData, [name]: value })
+	}
 
 	//
 	// submit function
@@ -219,144 +247,284 @@ export const Main = (props) => {
 		setLoading(false)
 	}, [accountPair, refresh])
 
+
 	if (!formData) return null
 
+
 	return (
-		<Segment vertical loading={loading}>
-			<h3>Create Organization</h3>
+		<Box
+			component="form"
+			sx={{
+				'& > *': { m: 1 },
+			}}
+		>
 
-			<Form>
-				<br />
-				<Divider clearing horizontal>
-					General Information
-				</Divider>
-				<br />
+			<Box sx={{ textAlign: "center", width: '100%', my: 4 }}>
+				<Typography variant="h3">Create Organization</Typography>
+			</Box>
 
-				<Form.Group widths="equal">
-					<Form.Input fluid label="Name" placeholder="Name" name="name" value={formData.name} onChange={handleOnChange} required />
-					<Form.Input fluid label="Contact Email" placeholder="email" name="email" value={formData.email} onChange={handleOnChange} />
+			<Box sx={{ width: '100%' }}>
+				<Stepper activeStep={1} alternativeLabel>
+					{steps.map((label) => (
+					<Step key={label}>
+						<StepLabel>{label}</StepLabel>
+					</Step>
+					))}
+				</Stepper>
+			</Box>
 
-					<Form.Select fluid label="Organizational Body" name="body" options={data.dao_bodies} value={formData.body} onChange={handleOnChange} />
+			<br />
+			<Divider clearing horizontal>
+				<Typography>General Information</Typography>
+			</Divider>
+			<br />
 
-					<Form.Select
-						fluid
+			<FormGroup 
+				sx={{
+					gap: 2,
+					my: 2
+				}}
+			>
+				<TextField
+					label="Name" 
+					placeholder="Name" 
+					name="name" 
+					value={formData.name} 
+					onChange={handleOnChange} 
+					required 
+				/>
+				<TextField
+					label="Contact Email" 
+					placeholder="email" 
+					name="email" 
+					value={formData.email} 
+					onChange={handleOnChange} 
+				/>
+				<FormControl fullWidth>
+					<InputLabel id="body-select-label">Organizational Body</InputLabel>
+					<Select
+						label="Organizational Body" 
+						name="body"
+						placeholder="Organizational Body"
+						labelId="body-select-label"
+						id="body"
+						value={formData.body} 
+						onChange={handleOnChange}
+						required
+					>
+						{data.dao_bodies.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+					</Select>
+				</FormControl>
+				<FormControl fullWidth>
+					<InputLabel id="country-select-label">Country</InputLabel>
+					<Select
 						label="Country"
 						name="country"
 						placeholder="Country"
-						options={data.countries}
+						labelId="country-select-label"
+						id="country"
 						value={formData.country}
 						onChange={handleOnChange}
-					/>
-				</Form.Group>
-
-				{fileCID && (
-					<Image.Group size="tiny">
-						{fileCID.logo && <Image alt={formData.name} src={gateway + fileCID.logo} />}
-						{fileCID.header && <Image alt={formData.name} src={gateway + fileCID.header} />}
-					</Image.Group>
-				)}
-
-				<Form.Group widths="equal">
-					<Form.Input type="file" label="Logo Graphic" name="logo" onChange={onFileChange} />
-					<Form.Input type="file" label="Header Graphic" name="header" onChange={onFileChange} />
-				</Form.Group>
-
-				<Form.Group widths="equal">
-					<Form.TextArea
-						label="Short Description"
-						name="description"
-						value={formData.description}
-						placeholder="Tell us more"
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
-
-				<Form.Group widths="equal">
-					<Form.Input
-						fluid
-						label="Website"
-						placeholder="https://your.website.xyz"
-						name="website"
-						value={formData.website}
-						onChange={handleOnChange}
-					/>
-					<Form.Input fluid label="Code Repository" placeholder="repo" name="repo" value={formData.repo} onChange={handleOnChange} />
-				</Form.Group>
-
-				<br />
-				<Divider clearing horizontal>
-					Controller Settings
-				</Divider>
-				<br />
-
-				<p>Note: In case you want to create a DAO, the controller must be the organization.</p>
-
-				<Form.Group widths="equal">
-					<Form.Input
-						fluid
-						label="Controller Account"
-						placeholder="Controller"
-						name="controller"
-						value={formData.controller}
-						onChange={handleOnChange}
 						required
-					/>
-					<Form.Input
-						fluid
-						label="Treasury Account"
-						placeholder="Tresury"
-						name="treasury"
-						value={formData.treasury}
-						onChange={handleOnChange}
-						required
-					/>
-				</Form.Group>
+					>
+						{data.countries.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+					</Select>
+				</FormControl>
+			</FormGroup>
 
-				<Form.Group widths="equal">
-					<Form.Select
-						fluid
-						label="Member Access Control"
-						options={data.dao_member_governance}
-						name="access"
-						value={formData.access}
-						onChange={handleOnChange}
-						required
-					/>
-					<Form.Input
-						fluid
-						label="Member Limit"
-						placeholder="100"
-						name="member_limit"
-						value={formData.member_limit}
-						onChange={handleOnChange}
-						required
-					/>
-				</Form.Group>
+			{fileCID && (
+				<>
+					{fileCID.logo && <img alt={formData.name} src={gateway + fileCID.logo} />}
+					{fileCID.header && <img alt={formData.name} src={gateway + fileCID.header} />}
+				</>
+			)}
 
-				<Form.Group widths="equal">
-					<Form.Select
-						fluid
-						label="Fee Model"
-						options={data.dao_fee_model}
-						name="fee_model"
-						value={formData.fee_model}
-						onChange={handleOnChange}
-						required
-					/>
-					<Form.Input fluid label="Membership Fee" placeholder="10" name="fee" value={formData.fee} onChange={handleOnChange} required />
-				</Form.Group>
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2
+				}}
+			>
+				<InputLabel id="logo-label">Logo Graphic</InputLabel>
+				<Input 
+					labelId="logo-label"
+					type="file" 
+					label="Logo Graphic" 
+					name="logo" 
+					onChange={onFileChange} 
+				/>
+				<InputLabel id="header-gfx-label">Header Graphic</InputLabel>
+				<Input 
+					labelId="header-gfx-label"
+					type="file" 
+					label="Header Graphic" 
+					name="header" 
+					onChange={onFileChange} 
+				/>
+			</FormGroup>
 
-				<Container textAlign="right">
-					<Button onClick={handleSubmit}>Create Organization</Button>
-				</Container>
-			</Form>
-		</Segment>
+			
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2
+				}}
+			>
+				<InputLabel id="short-descr-label">Short Description</InputLabel>
+				<TextareaAutosize
+					aria-label="Short Description"
+					minRows={3}
+					placeholder="Minimum 3 rows"
+					
+					label="Short Description"
+					name="description"
+					value={formData.description}
+					placeholder="Tell us more"
+					onChange={handleOnChange}
+				/>
+			</FormGroup>
+
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2
+				}}
+			>
+				<TextField
+					label="Website"
+					placeholder="https://your.website.xyz"
+					isInjected="website"
+					name="website"
+					value={formData.website}
+					onChange={handleOnChange}
+				/>
+				<TextField
+					label="Code Repository" 
+					placeholder="repo" 
+					id="repo"
+					name="repo" 
+					value={formData.repo} 
+					onChange={handleOnChange} 
+				/>
+			</FormGroup>
+
+			<br />
+			<Divider clearing horizontal>
+				<Typography>Controller Settings</Typography>
+			</Divider>
+			<br />
+
+			<Typography>Note: In case you want to create a DAO, the controller must be the organization.</Typography>
+
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2
+				}}
+			>
+				<TextField
+					id="controller"
+					name="controller"
+					placeholder="Controller"
+					label="Controller Account"
+					value={formData.controller}
+					onChange={handleOnChange}
+					required
+				/>
+				<TextField
+					id="treasury"
+					name="treasury"
+					placeholder="Treasury"
+					label="Treasury Account"
+					value={formData.treasury}
+					onChange={handleOnChange}
+					required
+				/>
+			</FormGroup>
+
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2
+				}}
+			>	
+				<FormControl fullWidth>
+					<InputLabel id="member-select-label">Member Access Control</InputLabel>
+					<Select
+					labelId="member-select-label"
+					id="member-select"
+					label="Member Access Control"
+					name="access"
+					value={formData.access}
+					onChange={handleOnChange}
+					required
+					>
+						{data.dao_member_governance.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+					</Select>
+				</FormControl>
+				<TextField
+					id="member_limit"
+					name="member_limit"
+					placeholder="100"
+					label="Member Limit"
+					value={formData.member_limit}
+					onChange={handleOnChange}
+					required
+				/>
+			</FormGroup>
+
+			<FormGroup 
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+				}}
+			>
+				<FormControl fullWidth>
+					<InputLabel id="fee_model-label">Fee Model</InputLabel>
+					<Select
+					labelId="fee_model-label"
+					id="fee_model"
+					label="Fee Model"
+					name="fee_model"
+					value={formData.fee_model}
+					onChange={handleOnChange}
+					required
+					>
+						{data.dao_fee_model.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+					</Select>
+				</FormControl>
+				<TextField
+					id="fee"
+					name="fee"
+					label="Membership Fee" 
+					placeholder="10"
+					value={formData.fee} 
+					onChange={handleOnChange} 
+					required
+				/>
+			</FormGroup>
+
+			<Button fullWidth variant={"outlined"} onClick={handleSubmit}>Create Organization</Button>
+		</Box>
 	)
 }
 
 export default function Module(props) {
 	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
+
+	console.log(accountPair)
 
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
 }
