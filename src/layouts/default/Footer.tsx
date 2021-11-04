@@ -14,8 +14,8 @@ export const Footer = (props) => (
 	<Box
 		component="footer"
 		sx={{
-			py: '3em',
-			px: '1em',
+			py: 3,
+			px: 1,
 			mt: 'auto',
 			fontSize: '.8em',
 			color: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100]),
@@ -48,22 +48,12 @@ export const Footer = (props) => (
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
 							How we build
 						</Typography>
-						<Link href="https://zero.io">
-							zero.io
-						</Link>
-						<Link href="https://substrate.dev">
-							substrate.dev
-						</Link>
-						<Link href="https://kilt.io">
-							kilt protocol
-						</Link>
+						<Link href="https://zero.io">zero.io</Link>
+						<Link href="https://substrate.dev">substrate.dev</Link>
+						<Link href="https://kilt.io">kilt protocol</Link>
 						<br />
-						<Link href="https://github.com/gamedaoco">
-							github
-						</Link>
-						<Link href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">
-							Polkadot Explorer
-						</Link>
+						<Link href="https://github.com/gamedaoco">github</Link>
+						<Link href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">Polkadot Explorer</Link>
 					</Grid>
 					<Grid item md={8} mb={4}>
 						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
@@ -89,16 +79,16 @@ export const Footer = (props) => (
 				</Grid>
 
 				<Grid container direction="row">
-						<Typography
-							variant="body1"
-							sx={{
-								backgroundColor: 'transparent',
-								fontSize: '0.75em',
-								color: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100]),
-							}}
-						>
-							{`© 2019-${new Date().getFullYear()} `}GAMEDAO CO. Powered by ZERO.IO
-						</Typography>
+					<Typography
+						variant="body1"
+						sx={{
+							backgroundColor: 'transparent',
+							fontSize: '0.75em',
+							color: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100]),
+						}}
+					>
+						{`© 2019-${new Date().getFullYear()} `}GAMEDAO CO. Powered by ZERO.IO
+					</Typography>
 				</Grid>
 			</Grid>
 		</Container>
