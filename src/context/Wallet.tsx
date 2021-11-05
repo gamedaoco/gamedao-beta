@@ -23,6 +23,7 @@ const INITIAL_STATE: WalletState = {
 const WalletContext = createContext<WalletState>(INITIAL_STATE)
 const useWallet = () => useContext(WalletContext)
 
+
 const WalletProvider = ({ children }) => {
 
 	const [ state, setState ] = useState<WalletState>()

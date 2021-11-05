@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from 'react'
-
-const steps = [
-  'Select master blaster campaign settings',
-  'Create an ad group',
-  'Create an ad',
-];
+const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { 
-	Typography, 
-	TextField, 
-	FormGroup, 
-	Box, 
-	Button, 
-	Divider, 
-	Container, 
-	Stepper, 
+import {
+	Typography,
+	TextField,
+	FormGroup,
+	Box,
+	Button,
+	Divider,
+	Container,
+	Stepper,
 	Input,
-	Step, 
+	Step,
 	Select,
 	StepLabel,
 	InputLabel,
 	FormControl,
 	MenuItem,
 	TextareaAutosize,
-	useFormControl 
+	useFormControl,
 } from '../../components'
 
 import faker from 'faker'
@@ -92,7 +87,6 @@ const random_state = (accountPair) => {
 		entity,
 	}
 }
-
 
 export const Main = (props) => {
 	const { api } = useSubstrate()
@@ -247,9 +241,7 @@ export const Main = (props) => {
 		setLoading(false)
 	}, [accountPair, refresh])
 
-
 	if (!formData) return null
-
 
 	return (
 		<Box
@@ -258,17 +250,16 @@ export const Main = (props) => {
 				'& > *': { m: 1 },
 			}}
 		>
-
-			<Box sx={{ textAlign: "center", width: '100%', my: 4 }}>
+			<Box sx={{ textAlign: 'center', width: '100%', my: 4 }}>
 				<Typography variant="h3">Create Organization</Typography>
 			</Box>
 
 			<Box sx={{ width: '100%' }}>
 				<Stepper activeStep={1} alternativeLabel>
 					{steps.map((label) => (
-					<Step key={label}>
-						<StepLabel>{label}</StepLabel>
-					</Step>
+						<Step key={label}>
+							<StepLabel>{label}</StepLabel>
+						</Step>
 					))}
 				</Stepper>
 			</Box>
@@ -279,40 +270,31 @@ export const Main = (props) => {
 			</Divider>
 			<br />
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
 			>
-				<TextField
-					label="Name" 
-					placeholder="Name" 
-					name="name" 
-					value={formData.name} 
-					onChange={handleOnChange} 
-					required 
-				/>
-				<TextField
-					label="Contact Email" 
-					placeholder="email" 
-					name="email" 
-					value={formData.email} 
-					onChange={handleOnChange} 
-				/>
+				<TextField label="Name" placeholder="Name" name="name" value={formData.name} onChange={handleOnChange} required />
+				<TextField label="Contact Email" placeholder="email" name="email" value={formData.email} onChange={handleOnChange} />
 				<FormControl fullWidth>
 					<InputLabel id="body-select-label">Organizational Body</InputLabel>
 					<Select
-						label="Organizational Body" 
+						label="Organizational Body"
 						name="body"
 						placeholder="Organizational Body"
 						labelId="body-select-label"
 						id="body"
-						value={formData.body} 
+						value={formData.body}
 						onChange={handleOnChange}
 						required
 					>
-						{data.dao_bodies.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+						{data.dao_bodies.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 				<FormControl fullWidth>
@@ -327,7 +309,11 @@ export const Main = (props) => {
 						onChange={handleOnChange}
 						required
 					>
-						{data.countries.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+						{data.countries.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 			</FormGroup>
@@ -339,39 +325,26 @@ export const Main = (props) => {
 				</>
 			)}
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
 			>
 				<InputLabel id="logo-label">Logo Graphic</InputLabel>
-				<Input 
-					labelId="logo-label"
-					type="file" 
-					label="Logo Graphic" 
-					name="logo" 
-					onChange={onFileChange} 
-				/>
+				<Input labelId="logo-label" type="file" label="Logo Graphic" name="logo" onChange={onFileChange} />
 				<InputLabel id="header-gfx-label">Header Graphic</InputLabel>
-				<Input 
-					labelId="header-gfx-label"
-					type="file" 
-					label="Header Graphic" 
-					name="header" 
-					onChange={onFileChange} 
-				/>
+				<Input labelId="header-gfx-label" type="file" label="Header Graphic" name="header" onChange={onFileChange} />
 			</FormGroup>
 
-			
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
 			>
 				<InputLabel id="short-descr-label">Short Description</InputLabel>
@@ -379,7 +352,6 @@ export const Main = (props) => {
 					aria-label="Short Description"
 					minRows={3}
 					placeholder="Minimum 3 rows"
-					
 					label="Short Description"
 					name="description"
 					value={formData.description}
@@ -388,12 +360,12 @@ export const Main = (props) => {
 				/>
 			</FormGroup>
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
 			>
 				<TextField
@@ -404,14 +376,7 @@ export const Main = (props) => {
 					value={formData.website}
 					onChange={handleOnChange}
 				/>
-				<TextField
-					label="Code Repository" 
-					placeholder="repo" 
-					id="repo"
-					name="repo" 
-					value={formData.repo} 
-					onChange={handleOnChange} 
-				/>
+				<TextField label="Code Repository" placeholder="repo" id="repo" name="repo" value={formData.repo} onChange={handleOnChange} />
 			</FormGroup>
 
 			<br />
@@ -422,12 +387,12 @@ export const Main = (props) => {
 
 			<Typography>Note: In case you want to create a DAO, the controller must be the organization.</Typography>
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
 			>
 				<TextField
@@ -450,26 +415,30 @@ export const Main = (props) => {
 				/>
 			</FormGroup>
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
 					gap: 2,
-					my: 2
+					my: 2,
 				}}
-			>	
+			>
 				<FormControl fullWidth>
 					<InputLabel id="member-select-label">Member Access Control</InputLabel>
 					<Select
-					labelId="member-select-label"
-					id="member-select"
-					label="Member Access Control"
-					name="access"
-					value={formData.access}
-					onChange={handleOnChange}
-					required
+						labelId="member-select-label"
+						id="member-select"
+						label="Member Access Control"
+						name="access"
+						value={formData.access}
+						onChange={handleOnChange}
+						required
 					>
-						{data.dao_member_governance.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+						{data.dao_member_governance.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 				<TextField
@@ -483,7 +452,7 @@ export const Main = (props) => {
 				/>
 			</FormGroup>
 
-			<FormGroup 
+			<FormGroup
 				sx={{
 					display: 'grid',
 					gridTemplateColumns: { sm: '1fr 1fr' },
@@ -493,29 +462,27 @@ export const Main = (props) => {
 				<FormControl fullWidth>
 					<InputLabel id="fee_model-label">Fee Model</InputLabel>
 					<Select
-					labelId="fee_model-label"
-					id="fee_model"
-					label="Fee Model"
-					name="fee_model"
-					value={formData.fee_model}
-					onChange={handleOnChange}
-					required
+						labelId="fee_model-label"
+						id="fee_model"
+						label="Fee Model"
+						name="fee_model"
+						value={formData.fee_model}
+						onChange={handleOnChange}
+						required
 					>
-						{data.dao_fee_model.map( item => <MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>)}
+						{data.dao_fee_model.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
-				<TextField
-					id="fee"
-					name="fee"
-					label="Membership Fee" 
-					placeholder="10"
-					value={formData.fee} 
-					onChange={handleOnChange} 
-					required
-				/>
+				<TextField id="fee" name="fee" label="Membership Fee" placeholder="10" value={formData.fee} onChange={handleOnChange} required />
 			</FormGroup>
 
-			<Button fullWidth variant={"outlined"} onClick={handleSubmit}>Create Organization</Button>
+			<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
+				Create Organization
+			</Button>
 		</Box>
 	)
 }
@@ -524,7 +491,11 @@ export default function Module(props) {
 	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
+	const context = useWallet()
+	console.log('🚀 ~ file: Create.jsx ~ line 495 ~ Module ~ context', context)
+
 	console.log(accountPair)
+	console.log('🚀 ~ file: Create.jsx ~ line 497 ~ Module ~ accountPair', accountPair)
 
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
 }

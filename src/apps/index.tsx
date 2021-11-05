@@ -15,11 +15,12 @@ const Dashboard = (props) => {
 	useEffect(() => {
 
 		if (!api) return
+        console.log("🚀 ~ file: index.tsx ~ line 18 ~ useEffect ~ api", api?.query)
 		let unsubscribe = null
-
+		
 		if ( address && allowConnect ) api.queryMulti(
 				[[api.query.identity.identityOf,address]],
-				([identity]) => setName(identity.toHuman().info.display.Raw)
+				([identity]) => setName(identity.toHuman()?.info.display.Raw ?? '')
 			).then( (unsub) => unsubscribe = unsub )
 			.catch(console.error)
 		else setName('x')

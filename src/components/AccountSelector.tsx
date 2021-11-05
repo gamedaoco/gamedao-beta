@@ -29,24 +29,28 @@ const AccountComponent = (props) => {
 			text: account.meta.name.toUpperCase(),
 			icon: 'user',
 			accountPair: account
-		}))
+		}));
+
 		setKeyringOptions( args )
 	},[allowConnect, keyring])
 
 	useEffect(()=>{
-		if(!allowConnect || !keyringOptions) return
-		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
-		setInitialAddress( args )
-		setAccountPair( args.accountPair )
+		if(!allowConnect || !keyringOptions || !selectedIndex) return
+		const args = keyringOptions?.[selectedIndex] 
+		if (args) {
+			setInitialAddress( args?.value ?? '' )
+			setAccountPair( args?.accountPair )
+		}
 	},[allowConnect, keyringOptions, selectedIndex, initialAddress])
 
 	useEffect(()=>{
 		if(!allowConnect || !keyringOptions) return
-		const args = keyringOptions.length > 0 ? keyringOptions[selectedIndex].value : ''
-		setAccountAddress(args)
-		setAccountSelected(args)
-		setAccountPair( args.accountPair )
-		console.log('setAccountAddress',args)
+		const args = keyringOptions?.[selectedIndex]
+		if (args) {
+			setAccountPair( args?.accountPair )
+			setAccountAddress( args?.value ?? '')
+			setAccountSelected( args?.value ?? '')
+		}
 	},[allowConnect, keyringOptions, selectedIndex, setAccountAddress])
 
 	//

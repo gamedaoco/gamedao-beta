@@ -30,15 +30,14 @@ const CreateCampaign = lazy(() => import('./Create'))
 //
 
 export const Campaigns = (props) => {
-
 	const { api } = useSubstrate()
 
-	const [ nonce, updateNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
-	const [ campaigns, setCampaigns ] = useState()
-	const [ balances, setBalances ] = useState()
-	const [ states, setStates ] = useState()
-	const [ content, setContent ] = useState()
+	const [nonce, updateNonce] = useState()
+	const [hashes, setHashes] = useState()
+	const [campaigns, setCampaigns] = useState()
+	const [balances, setBalances] = useState()
+	const [states, setStates] = useState()
+	const [content, setContent] = useState()
 
 	useEffect(() => {
 		if (!api) return
@@ -58,7 +57,6 @@ export const Campaigns = (props) => {
 		}
 		query()
 		return () => unsubscribe && unsubscribe()
-
 	}, [api])
 
 	// useEffect(() => {
@@ -206,7 +204,7 @@ export const Campaigns = (props) => {
 	)
 }
 
-export default function Component (props) {
+export default function Component(props) {
 	const { api } = useSubstrate()
 	return api ? <Campaigns /> : null
 }

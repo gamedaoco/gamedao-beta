@@ -86,7 +86,7 @@ const random_state = (accountPair, campaigns = []) => {
 // 0.2 -> organisational votings
 // 0.3 -> surveys
 
-export const Main = (props) => {
+export const Main = () => {
 
 	const { api } = useSubstrate()
 	const { accountPair, address } = useWallet()
@@ -374,9 +374,12 @@ export const Main = (props) => {
 	)
 }
 
-export default function Module(props) {
+export default function Module() {
 	const { api } = useSubstrate()
-	return api && api.query.gameDaoGovernance ? <Main {...props} /> : null
+
+    console.log("🚀 ~ file: Create.tsx ~ line 382 ~ Module ~  api.query.gameDaoGovernance",  api.query.gameDaoGovernance)
+	
+	return api && api.query.gameDaoGovernance ? <Main  /> : null
 }
 
 //
