@@ -6,6 +6,7 @@ import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { createErrorNotification } from 'src/utils/notification'
 
 function accountString(args) {
 	if (!args) return ''
@@ -66,6 +67,8 @@ const AccountComponent = () => {
 
 		if (args.length > 0) {
 			setKeyringOptions(args)
+		} else {
+			createErrorNotification('No accounts found in keyring')
 		}
 	}, [allowConnect, keyring])
 
@@ -74,7 +77,6 @@ const AccountComponent = () => {
 		const args = keyringOptions?.[selectedIndex]
 		if (args) {
 			setInitialAddress(args?.value ?? '')
-
 			updateWalletState({ accountPair: args?.accountPair })
 		}
 	}, [keyringOptions, selectedIndex])

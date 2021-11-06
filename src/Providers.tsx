@@ -8,6 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { IconContext } from 'react-icons'
 import { darkTheme, lightTheme } from './themes/minimal'
+import { ToastContainer } from 'react-toastify'
 
 import { Box } from './components'
 
@@ -40,6 +41,7 @@ export const Providers = (props) => {
 					</WalletProvider>
 				</SubstrateContextProvider>
 			</ThemeProvider>
+			<ToastContainer theme={isDarkMode ? 'dark' : 'light'} />
 			<ThemeSwitcher isDarkMode={isDarkMode} onClick={toggleColorMode} />
 		</>
 	)

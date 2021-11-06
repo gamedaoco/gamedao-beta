@@ -8,6 +8,7 @@ import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import keyring from '@polkadot/ui-keyring'
 
 import config from '../config'
+import { createErrorNotification } from 'src/utils/notification'
 
 const parsedQuery = queryString.parse(window.location.search)
 const connectedSocket = parsedQuery.rpc || config.PROVIDER_SOCKET
@@ -110,6 +111,7 @@ const loadAccounts = (state, dispatch) => {
 			dispatch({ type: 'SET_KEYRING', payload: keyring })
 		} catch (e) {
 			console.error(e)
+			createErrorNotification(e)
 			dispatch({ type: 'KEYRING_ERROR' })
 		}
 	}
