@@ -15,4 +15,3 @@ The information set forth should not be considered exhaustive and does not imply
 For more information on the ZERO Protocol and GameDAO, please consult our whitepaper.
 
 Nothing published by ONE.IO GmbH should be interpreted as investment advice. ONE.IO GmbH is in no way providing trading or investment advice. Please consult with your appropriate licensed professional before making any financial transactions, including any investments related to ideas or opinions expressed, past, present, or future by the aforementioned entities and any future entities that may operate under the parent entities. ONE.IO GmbH does not intend to express financial, legal, tax, or any other advice and any conclusions drawn from statements made by, or on, ONE.IO GmbH shall not be deemed to constitute advice in any jurisdiction. Information is provided for educational and amusement purposes only.
-

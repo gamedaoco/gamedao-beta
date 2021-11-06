@@ -19,22 +19,26 @@ export const Designsystem = (props) => (
 
 		<Typography variant="h3">TileItem & TileItem Feature</Typography>
 		<Divider />
-		<Box sx={{
-			display: 'flex',
-			flexFlow: 'row wrap'
-		}}>
+		<Box
+			sx={{
+				display: 'flex',
+				flexFlow: 'row wrap',
+			}}
+		>
 			<TileItem />
-			<TileItem feature/>
+			<TileItem feature />
 		</Box>
 
 		<Typography variant="h3">Tiles</Typography>
 		<Divider />
-		<Box sx={{
-			display: 'flex',
-			flexFlow: 'row wrap'
-		}}>
+		<Box
+			sx={{
+				display: 'flex',
+				flexFlow: 'row wrap',
+			}}
+		>
 			<TileItem />
-			<TileItem feature/>
+			<TileItem feature />
 			<TileItem />
 			<TileItem />
 			<TileItem />

@@ -3,47 +3,38 @@ import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 
 const Dashboard = (props) => {
-
 	const { api } = useSubstrate()
 	const { address, allowConnect } = useWallet()
 
-	const [ name, setName ] = useState('')
-	const [ bodies, setBodies ] = useState(0)
-	const [ campaigns, setCampaigns ] = useState(0)
-	const [ proposals, setProposals ] = useState(0)
+	const [name, setName] = useState('')
+	const [bodies, setBodies] = useState(0)
+	const [campaigns, setCampaigns] = useState(0)
+	const [proposals, setProposals] = useState(0)
 
 	useEffect(() => {
-
 		if (!api) return
-        console.log("🚀 ~ file: index.tsx ~ line 18 ~ useEffect ~ api", api?.query)
+		console.log('🚀 ~ file: index.tsx ~ line 18 ~ useEffect ~ api', api?.query)
 		let unsubscribe = null
-		
-		if ( address && allowConnect ) api.queryMulti(
-				[[api.query.identity.identityOf,address]],
-				([identity]) => setName(identity.toHuman()?.info.display.Raw ?? '')
-			).then( (unsub) => unsubscribe = unsub )
-			.catch(console.error)
+
+		if (address && allowConnect)
+			api.queryMulti([[api.query.identity.identityOf, address]], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
+				.then((unsub) => (unsubscribe = unsub))
+				.catch(console.error)
 		else setName('x')
 
 		return () => unsubscribe && unsubscribe()
-
 	}, [api, address, allowConnect])
 
 	useEffect(() => {
-
-		if( !api ) return
+		if (!api) return
 		let unsubscribe = null
 
 		api.queryMulti(
-			[
-				api.query.gameDaoControl.nonce,
-				api.query.gameDaoCrowdfunding.nonce,
-				api.query.gameDaoGovernance.nonce,
-			],
-			([ bodies, campaigns, proposals ]) => {
-				setBodies( bodies.toNumber() )
-				setCampaigns( campaigns.toNumber() )
-				setProposals( proposals.toNumber() )
+			[api.query.gameDaoControl.nonce, api.query.gameDaoCrowdfunding.nonce, api.query.gameDaoGovernance.nonce],
+			([bodies, campaigns, proposals]) => {
+				setBodies(bodies.toNumber())
+				setCampaigns(campaigns.toNumber())
+				setProposals(proposals.toNumber())
 			}
 		)
 			.then((unsub) => {
@@ -52,8 +43,7 @@ const Dashboard = (props) => {
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-
-	}, [ api, address ])
+	}, [api, address])
 
 	return (
 		<>
@@ -67,8 +57,6 @@ const Dashboard = (props) => {
 
 export default function Dapp(props) {
 	const { apiState } = useSubstrate()
-	console.log( 'apiState', apiState )
-	return ( apiState==='READY' ) ? (
-		<Dashboard {...props} />
-	) : null
+	console.log('apiState', apiState)
+	return apiState === 'READY' ? <Dashboard {...props} /> : null
 }

@@ -22,8 +22,7 @@ import Paper from '@mui/material/Paper'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
-export default function ItemRow ({ content }) {
-
+export default function ItemRow({ content }) {
 	// should be the image of the associated org
 	const [imageURL, setImageURL] = useState(null)
 
@@ -63,21 +62,22 @@ export default function ItemRow ({ content }) {
 	if (!content) return null
 	console.log(content)
 
-	const [ open, setOpen ] = React.useState(false);
+	const [open, setOpen] = React.useState(false)
 
 	return (
-
 		<React.Fragment>
-
 			<TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 				<TableCell>
 					<IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-						{ open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon /> }
+						{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 					</IconButton>
 				</TableCell>
 				<TableCell component="th" scope="row">
 					<img src={imageURL} />
-					<Typography variant="caption">{content.name}<br/></Typography>
+					<Typography variant="caption">
+						{content.name}
+						<br />
+					</Typography>
 					<Typography variant="caption">{content.body}</Typography>
 				</TableCell>
 				<TableCell align="right">{content.purpose}</TableCell>
@@ -93,10 +93,11 @@ export default function ItemRow ({ content }) {
 				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
 					<Collapse in={open} timeout="auto" unmountOnExit>
 						<Box sx={{ margin: 1 }}>
-{/*							<Typography variant="h6" gutterBottom component="div">
+							{/*							<Typography variant="h6" gutterBottom component="div">
 								Details
 							</Typography>
-*/}							<Table size="small" aria-label="purchases">
+*/}{' '}
+							<Table size="small" aria-label="purchases">
 								<TableHead>
 									<TableRow>
 										<TableCell>Date</TableCell>
@@ -107,13 +108,15 @@ export default function ItemRow ({ content }) {
 								</TableHead>
 								<TableBody>
 									<TableRow key={1}>
-										<TableCell component="th" scope="row">01.01.2001</TableCell>
+										<TableCell component="th" scope="row">
+											01.01.2001
+										</TableCell>
 										<TableCell>Project Owner</TableCell>
 										<TableCell align="right">1234</TableCell>
 										<TableCell align="right">5678</TableCell>
 									</TableRow>
-{/*										row.history.map((historyRow) => (
-	*/
+									{/*										row.history.map((historyRow) => (
+									 */
 									/*))*/}
 								</TableBody>
 							</Table>
@@ -121,7 +124,6 @@ export default function ItemRow ({ content }) {
 					</Collapse>
 				</TableCell>
 			</TableRow>
-
 		</React.Fragment>
 	)
 }

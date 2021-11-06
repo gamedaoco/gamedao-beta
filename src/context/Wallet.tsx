@@ -23,40 +23,39 @@ const INITIAL_STATE: WalletState = {
 const WalletContext = createContext<WalletState>(INITIAL_STATE)
 const useWallet = () => useContext(WalletContext)
 
-
 const WalletProvider = ({ children }) => {
+	const [state, setState] = useState<WalletState>()
+	const [accountAddress, setAccountAddress] = useState('')
+	const [allowConnect, setAllowConnect] = useState(false)
+	const [accountPair, setAccountPair] = useState(null)
 
-	const [ state, setState ] = useState<WalletState>()
-	const [ accountAddress, setAccountAddress ] = useState('')
-	const [ allowConnect, setAllowConnect ] = useState(false)
-	const [ accountPair, setAccountPair ] = useState(null)
-
-	useEffect(()=>{
+	useEffect(() => {
 		setState(INITIAL_STATE)
-	},[setState])
+	}, [setState])
 
-	useEffect(()=>{
-		if(!accountAddress) return
-	},[accountAddress])
+	useEffect(() => {
+		if (!accountAddress) return
+	}, [accountAddress])
 
-	const handleSetAccountPair = accountPair => setAccountPair(accountPair)
-	const handleSetAccountAddress = address => setAccountAddress(address)
-	const handleSetAllowConnect = arg => setAllowConnect(arg)
+	const handleSetAccountPair = (accountPair) => setAccountPair(accountPair)
+	const handleSetAccountAddress = (address) => setAccountAddress(address)
+	const handleSetAllowConnect = (arg) => setAllowConnect(arg)
 
 	return (
-		<WalletContext.Provider value={{
-			...state,
-			allowConnect: allowConnect,
-			setAllowConnect: handleSetAllowConnect,
-			address: accountAddress,
-			setAccountAddress: handleSetAccountAddress,
-			accountPair: accountPair,
-			setAccountPair: handleSetAccountPair,
-		}}>
+		<WalletContext.Provider
+			value={{
+				...state,
+				allowConnect: allowConnect,
+				setAllowConnect: handleSetAllowConnect,
+				address: accountAddress,
+				setAccountAddress: handleSetAccountAddress,
+				accountPair: accountPair,
+				setAccountPair: handleSetAccountPair,
+			}}
+		>
 			{children}
 		</WalletContext.Provider>
 	)
-
 }
 
 export { WalletContext, WalletProvider, useWallet }

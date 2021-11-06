@@ -18,12 +18,11 @@ const ItemTable = lazy(() => import('./ItemTable'))
 const CreateProposal = lazy(() => import('./Create'))
 
 export const Component = (props) => {
-
 	const { api } = useSubstrate()
 	const { accountPair } = props
-	const [ nonce, setNonce ] = useState()
-	const [ hashes, setHashes ] = useState()
-	const [ content, setContent ] = useState()
+	const [nonce, setNonce] = useState()
+	const [hashes, setHashes] = useState()
+	const [content, setContent] = useState()
 
 	useEffect(() => {
 		let unsubscribe = null
@@ -70,31 +69,42 @@ export const Component = (props) => {
 	// group by organization
 	// dropdown to select organization
 
-	const [ showCreateMode, setCreateMode ] = useState(false)
+	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
 		<React.Fragment>
-			<Typography component="h1" variant="h3">Governance</Typography>
+			<Typography component="h1" variant="h3">
+				Governance
+			</Typography>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Box>
-				{ !content || nonce === 0
-					? ( <Typography component="h2" variant="h5">No proposals yet. Create one!</Typography> )
-					: ( <Typography component="h2" variant="h5">Total proposals: {nonce}</Typography> )
-				}
+					{!content || nonce === 0 ? (
+						<Typography component="h2" variant="h5">
+							No proposals yet. Create one!
+						</Typography>
+					) : (
+						<Typography component="h2" variant="h5">
+							Total proposals: {nonce}
+						</Typography>
+					)}
 				</Box>
 				<Box>
-					{ showCreateMode
-						? ( <Button onClick={handleCloseBtn} startIcon={<Close />}> Cancel </Button> )
-						: ( <Button onClick={handleCreateBtn} startIcon={<Add />}> New Proposal </Button> )
-					}
+					{showCreateMode ? (
+						<Button onClick={handleCloseBtn} startIcon={<Close />}>
+							{' '}
+							Cancel{' '}
+						</Button>
+					) : (
+						<Button onClick={handleCreateBtn} startIcon={<Add />}>
+							{' '}
+							New Proposal{' '}
+						</Button>
+					)}
 				</Box>
 			</Stack>
-			{ showCreateMode
-				? <CreateProposal />
-				: <ItemTable content={content} />
-			}
+			{showCreateMode ? <CreateProposal /> : <ItemTable content={content} />}
 		</React.Fragment>
 	)
 }

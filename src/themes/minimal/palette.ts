@@ -83,7 +83,6 @@ const SECONDARY = {
 	main: '#ababab',
 	dark: '#696969',
 	darker: '#363636',
-
 }
 const INFO = {
 	lighter: '#D0F2FF',

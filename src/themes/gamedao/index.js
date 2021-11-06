@@ -4,7 +4,7 @@ const globalTheme = {
 	shape: {
 		borderRadius: 1,
 	},
-	shadows: 0
+	shadows: 0,
 }
 
 export const darkTheme = createTheme({

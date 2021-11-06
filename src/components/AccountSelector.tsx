@@ -10,48 +10,47 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
 
 const AccountComponent = (props) => {
-
 	const { keyring } = useSubstrate()
 	const { allowConnect, setAllowConnect, setAccountAddress, setAccountPair } = useWallet()
-	const [ keyringOptions, setKeyringOptions ] = useState(null)
-	const [ initialAddress, setInitialAddress ] = useState(null)
-	const [ accountSelected, setAccountSelected ] = useState(null)
-	const [ selectedIndex, setSelectedIndex ] = useState(0)
+	const [keyringOptions, setKeyringOptions] = useState(null)
+	const [initialAddress, setInitialAddress] = useState(null)
+	const [accountSelected, setAccountSelected] = useState(null)
+	const [selectedIndex, setSelectedIndex] = useState(0)
 
-	const [ open, setOpen ] = React.useState(false)
+	const [open, setOpen] = React.useState(false)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
-	useEffect(()=>{
-		if(!allowConnect) return
+	useEffect(() => {
+		if (!allowConnect) return
 		const args = keyring.getPairs().map((account) => ({
 			key: account.address,
 			value: account.address,
 			text: account.meta.name.toUpperCase(),
 			icon: 'user',
-			accountPair: account
-		}));
+			accountPair: account,
+		}))
 
-		setKeyringOptions( args )
-	},[allowConnect, keyring])
+		setKeyringOptions(args)
+	}, [allowConnect, keyring])
 
-	useEffect(()=>{
-		if(!allowConnect || !keyringOptions || !selectedIndex) return
-		const args = keyringOptions?.[selectedIndex] 
-		if (args) {
-			setInitialAddress( args?.value ?? '' )
-			setAccountPair( args?.accountPair )
-		}
-	},[allowConnect, keyringOptions, selectedIndex, initialAddress])
-
-	useEffect(()=>{
-		if(!allowConnect || !keyringOptions) return
+	useEffect(() => {
+		if (!allowConnect || !keyringOptions || !selectedIndex) return
 		const args = keyringOptions?.[selectedIndex]
 		if (args) {
-			setAccountPair( args?.accountPair )
-			setAccountAddress( args?.value ?? '')
-			setAccountSelected( args?.value ?? '')
+			setInitialAddress(args?.value ?? '')
+			setAccountPair(args?.accountPair)
 		}
-	},[allowConnect, keyringOptions, selectedIndex, setAccountAddress])
+	}, [allowConnect, keyringOptions, selectedIndex, initialAddress])
+
+	useEffect(() => {
+		if (!allowConnect || !keyringOptions) return
+		const args = keyringOptions?.[selectedIndex]
+		if (args) {
+			setAccountPair(args?.accountPair)
+			setAccountAddress(args?.value ?? '')
+			setAccountSelected(args?.value ?? '')
+		}
+	}, [allowConnect, keyringOptions, selectedIndex, setAccountAddress])
 
 	//
 	//
@@ -83,23 +82,23 @@ const AccountComponent = (props) => {
 		setOpen(false)
 	}
 
-	const accountString = args => {
+	const accountString = (args) => {
 		if (!args) return ''
-		const txt = ( args.text || args.value )
-		return ( txt.length < 10 ) ? txt : `${txt.slice(0, 10)}...`
+		const txt = args.text || args.value
+		return txt.length < 10 ? txt : `${txt.slice(0, 10)}...`
 	}
 
 	return (
 		<>
-			{ !allowConnect ? (
+			{!allowConnect ? (
 				<Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>
 			) : (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-					{ keyringOptions &&
+					{keyringOptions && (
 						<CopyToClipboard text={accountSelected}>
 							<Button size="small" color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
 						</CopyToClipboard>
-					}
+					)}
 					<IconButton
 						size="small"
 						aria-controls={open ? 'account-menu' : undefined}
@@ -144,13 +143,11 @@ const AccountComponent = (props) => {
 					</Grow>
 				)}
 			</Popper>
-
 		</>
 	)
 }
 
 const BalanceAnnotation = () => {
-
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 
@@ -159,7 +156,6 @@ const BalanceAnnotation = () => {
 	const [game, setGAME] = useState(0)
 
 	useEffect(() => {
-
 		if (!address || !api) return
 		let unsubscribe
 		const query = async () => {
@@ -170,7 +166,7 @@ const BalanceAnnotation = () => {
 					[context, [Number(0), address]],
 					[context, [Number(1), address]],
 				],
-				([_zero,_play, _game]) => {
+				([_zero, _play, _game]) => {
 					setZERO(_zero.data.free.toHuman())
 					setPLAY(_play.toHuman().balance)
 					setGAME(_game.toHuman().balance)
@@ -183,7 +179,6 @@ const BalanceAnnotation = () => {
 		}
 		query()
 		return () => unsubscribe && unsubscribe()
-
 	}, [api, address])
 
 	return address ? (
@@ -195,14 +190,11 @@ const BalanceAnnotation = () => {
 			{game} GAME
 		</div>
 	) : null
-
 }
 
 const AccountSelector = (props) => {
-
 	const { api, keyring } = useSubstrate()
 	return api && keyring && keyring.getPairs && api.query ? <AccountComponent {...props} /> : null
-
 }
 
 export default AccountSelector

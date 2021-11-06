@@ -6,18 +6,18 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 
 // import { Container, Form, Divider, Segment, Image, Button, Radio } from 'semantic-ui-react'
 
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import Form from '@mui/material/Stack';
+import Typography from '@mui/material/Typography'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import Form from '@mui/material/Stack'
 
 // selekta
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
 
 import faker from 'faker'
 import { data, rnd } from '../lib/data'
@@ -42,7 +42,6 @@ type GenericForm = {
 }
 
 const random_state = (accountPair, campaigns = []) => {
-
 	// version 0.1
 	// get a random campaign id
 	// create a random purpose
@@ -87,24 +86,23 @@ const random_state = (accountPair, campaigns = []) => {
 // 0.3 -> surveys
 
 export const Main = () => {
-
 	const { api } = useSubstrate()
 	const { accountPair, address } = useWallet()
-	const [ block, setBlock ] = useState(0)
+	const [block, setBlock] = useState(0)
 
-	const [ loading, setLoading ] = useState(false)
-	const [ refresh, setRefresh ] = useState(true)
+	const [loading, setLoading] = useState(false)
+	const [refresh, setRefresh] = useState(true)
 
-	const [ formData, updateFormData ] = useState({} as GenericForm)
-	const [ fileCID, updateFileCID ] = useState()
-	const [ content, setContent ] = useState({})
+	const [formData, updateFormData] = useState({} as GenericForm)
+	const [fileCID, updateFileCID] = useState()
+	const [content, setContent] = useState({})
 
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
-	const [ entities, setEntities ] = useState([])
+	const [entities, setEntities] = useState([])
 
 	useEffect(() => {
-		if ( !api || !address ) return
+		if (!api || !address) return
 
 		const query = async () => {
 			try {
@@ -132,7 +130,7 @@ export const Main = () => {
 	//
 	//
 
-	const getFromAcct = async accountPair => {
+	const getFromAcct = async (accountPair) => {
 		const {
 			address,
 			meta: { source, isInjected },
@@ -153,7 +151,7 @@ export const Main = () => {
 	const handleOnChange = (e, { name, value }) => {
 		const update = {
 			...formData,
-			[name]: value
+			[name]: value,
 		}
 		updateFormData(update)
 	}
@@ -215,8 +213,7 @@ export const Main = () => {
 		}
 	}
 
-	useEffect(() => {
-	}, [])
+	useEffect(() => {}, [])
 
 	useEffect(() => {
 		if (!accountPair) return
@@ -233,25 +230,18 @@ export const Main = () => {
 	// })
 	// const entities = { ...data.orgs, ...campaigns }
 
-	const SelectBox = ({
-		value, handleOnChange, label, options
-	}) => {
+	const SelectBox = ({ value, handleOnChange, label, options }) => {
 		const ref = `${value.text}-label`
 		return (
 			<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
 				<InputLabel id={ref}>Age</InputLabel>
-				<Select
-					labelId={ref}
-					value={value}
-					onChange={handleOnChange}
-					label="Age"
-				>
+				<Select labelId={ref} value={value} onChange={handleOnChange} label="Age">
 					<MenuItem value={null}></MenuItem>
-					{ options.map( (item, index)=>{
-						<MenuItem key={item.key} value={item.value}>{item.text}</MenuItem>
-
-					})
-					}
+					{options.map((item, index) => {
+						;<MenuItem key={item.key} value={item.value}>
+							{item.text}
+						</MenuItem>
+					})}
 				</Select>
 			</FormControl>
 		)
@@ -262,13 +252,14 @@ export const Main = () => {
 	return (
 		<React.Fragment>
 			<Grid container spacing={2}>
-
 				<Grid item>
-					<Typography component="h2" variant="h3">General Information</Typography>
+					<Typography component="h2" variant="h3">
+						General Information
+					</Typography>
 				</Grid>
 
 				<Grid item>
-			{/*
+					{/*
 					<Form>
 					<Select
 						fluid
@@ -377,9 +368,9 @@ export const Main = () => {
 export default function Module() {
 	const { api } = useSubstrate()
 
-    console.log("🚀 ~ file: Create.tsx ~ line 382 ~ Module ~  api.query.gameDaoGovernance",  api.query.gameDaoGovernance)
-	
-	return api && api.query.gameDaoGovernance ? <Main  /> : null
+	console.log('🚀 ~ file: Create.tsx ~ line 382 ~ Module ~  api.query.gameDaoGovernance', api.query.gameDaoGovernance)
+
+	return api && api.query.gameDaoGovernance ? <Main /> : null
 }
 
 //

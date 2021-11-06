@@ -12,19 +12,20 @@ import { darkTheme, lightTheme } from './themes/minimal'
 import { Box } from './components'
 
 export const Providers = (props) => {
-
-	const [ isDarkMode, setDarkMode ] = React.useState(false)
-	const toggleColorMode = () => setDarkMode( !isDarkMode )
+	const [isDarkMode, setDarkMode] = React.useState(false)
+	const toggleColorMode = () => setDarkMode(!isDarkMode)
 
 	return (
 		<>
-			<ThemeProvider theme={ isDarkMode ? darkTheme : lightTheme }>
+			<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
 				<CssBaseline />
 				<SubstrateContextProvider>
-					 <WalletProvider>
+					<WalletProvider>
 						<BrowserRouter>
 							<ScrollToTop />
-							<IconContext.Provider value={{ color: ( isDarkMode ? 'white' : 'black'), className: 'react-icon' }}>{props.children}</IconContext.Provider>
+							<IconContext.Provider value={{ color: isDarkMode ? 'white' : 'black', className: 'react-icon' }}>
+								{props.children}
+							</IconContext.Provider>
 						</BrowserRouter>
 					</WalletProvider>
 				</SubstrateContextProvider>
