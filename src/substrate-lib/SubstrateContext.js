@@ -28,6 +28,8 @@ const INIT_STATE = {
 	api: null,
 	apiError: null,
 	apiState: null,
+	loadAccounts: () => {},
+	logout: () => {},
 }
 
 ///
@@ -55,6 +57,9 @@ const reducer = (state, action) => {
 
 		case 'KEYRING_ERROR':
 			return { ...state, keyring: null, keyringState: 'ERROR' }
+
+		case 'RESET_KEYRING':
+			return { ...state, keyring: null, keyringState: null }
 
 		default:
 			throw new Error(`Unknown type: ${action.type}`)
@@ -117,6 +122,8 @@ const loadAccounts = (state, dispatch) => {
 
 	// This is the heavy duty work
 	loadAccts = true
+
+	console.log('🚀 ~ file: SubstrateContext.js ~ line 123 ~ loadAccounts ~ asyncLoadAccounts')
 	asyncLoadAccounts()
 }
 
@@ -132,9 +139,10 @@ const SubstrateContextProvider = (props) => {
 
 	const [state, dispatch] = useReducer(reducer, initState)
 	connect(state, dispatch)
-	loadAccounts(state, dispatch)
 
-	return <SubstrateContext.Provider value={state}>{props.children}</SubstrateContext.Provider>
+	const handleLoadAccounts = () => loadAccounts(state, dispatch)
+	const handleLogout = () => dispatch({ type: 'RESET_KEYRING' })
+	return <SubstrateContext.Provider value={{ ...state, loadAccounts: handleLoadAccounts, logout: handleLogout }}>{props.children}</SubstrateContext.Provider>
 }
 
 // prop typechecking

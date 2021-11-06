@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 export type WalletState = {
 	allowConnect: boolean
@@ -24,32 +24,17 @@ const WalletContext = createContext<WalletState>(INITIAL_STATE)
 const useWallet = () => useContext(WalletContext)
 
 const WalletProvider = ({ children }) => {
-	const [state, setState] = useState<WalletState>()
-	const [accountAddress, setAccountAddress] = useState('')
-	const [allowConnect, setAllowConnect] = useState(false)
-	const [accountPair, setAccountPair] = useState(null)
-
-	useEffect(() => {
-		setState(INITIAL_STATE)
-	}, [setState])
-
-	useEffect(() => {
-		if (!accountAddress) return
-	}, [accountAddress])
-
-	const handleSetAccountPair = (accountPair) => setAccountPair(accountPair)
-	const handleSetAccountAddress = (address) => setAccountAddress(address)
-	const handleSetAllowConnect = (arg) => setAllowConnect(arg)
+	const [state, setState] = useState<WalletState>(INITIAL_STATE)
+	const handleSetAccountPair = (accountPair) => setState({ ...state, accountPair })
+	const handleSetAccountAddress = (address) => setState({ ...state, address })
+	const handleSetAllowConnect = (allowConnect) => setState({ ...state, allowConnect })
 
 	return (
 		<WalletContext.Provider
 			value={{
 				...state,
-				allowConnect: allowConnect,
 				setAllowConnect: handleSetAllowConnect,
-				address: accountAddress,
 				setAccountAddress: handleSetAccountAddress,
-				accountPair: accountPair,
 				setAccountPair: handleSetAccountPair,
 			}}
 		>
