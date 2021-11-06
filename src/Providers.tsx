@@ -13,7 +13,17 @@ import { Box } from './components'
 
 export const Providers = (props) => {
 	const [isDarkMode, setDarkMode] = React.useState(false)
-	const toggleColorMode = () => setDarkMode(!isDarkMode)
+	const toggleColorMode = () => {
+		localStorage.setItem('darkMode', JSON.stringify(!isDarkMode))
+		setDarkMode(!isDarkMode)
+	}
+
+	useEffect(() => {
+		const localStorageDarkMode = localStorage.getItem('darkMode') || 'false'
+		if (JSON.parse(localStorageDarkMode) === true) {
+			setDarkMode(true)
+		}
+	}, [])
 
 	return (
 		<>
