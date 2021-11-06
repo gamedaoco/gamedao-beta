@@ -5,7 +5,6 @@ import { useWallet } from 'src/context/Wallet'
 import { Button, Typography, Box, Stack } from 'src/components'
 
 const Component = (props) => {
-
 	// const { address, accountPair } = useWallet()
 	// const { api } = useSubstrate()
 
@@ -42,9 +41,10 @@ const Component = (props) => {
 	return (
 		<>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
-				<Typography component="h1" variant="h3">Wallet</Typography>
-				<Box>
-				</Box>
+				<Typography component="h1" variant="h3">
+					Wallet
+				</Typography>
+				<Box></Box>
 			</Stack>
 		</>
 	)

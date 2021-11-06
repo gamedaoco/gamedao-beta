@@ -9,6 +9,7 @@ import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
+import { useWallet } from 'src/context/Wallet'
 
 const dev = config.dev
 console.log(dev)
@@ -54,9 +55,9 @@ const random_state = (accountPair) => {
 	}
 }
 
-export const Main = (props) => {
+export const Main = () => {
 	const { api } = useSubstrate()
-	const { accountPair, finalized } = props
+	const { accountPair, finalized } = useWallet()
 	const [block, setBlock] = useState(0)
 	const [nonce, updateNonce] = useState(0)
 	const [orgHashes, updateOrgHashes] = useState([])
@@ -421,11 +422,11 @@ export const Main = (props) => {
 	)
 }
 
-export default function Module(props) {
-	const { accountPair } = props
+export default function Module() {
 	const { api } = useSubstrate()
+	const { accountPair } = useWallet()
 
-	return api && api.query.gameDaoCrowdfunding && accountPair ? <Main {...props} /> : null
+	return api && api.query.gameDaoCrowdfunding && accountPair ? <Main /> : null
 }
 
 //

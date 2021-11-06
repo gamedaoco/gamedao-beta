@@ -8,6 +8,7 @@ import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import keyring from '@polkadot/ui-keyring'
 
 import config from '../config'
+import { createErrorNotification } from 'src/utils/notification'
 
 const parsedQuery = queryString.parse(window.location.search)
 const connectedSocket = parsedQuery.rpc || config.PROVIDER_SOCKET
@@ -28,6 +29,8 @@ const INIT_STATE = {
 	api: null,
 	apiError: null,
 	apiState: null,
+	loadAccounts: () => {},
+	logout: () => {},
 }
 
 ///
@@ -55,6 +58,9 @@ const reducer = (state, action) => {
 
 		case 'KEYRING_ERROR':
 			return { ...state, keyring: null, keyringState: 'ERROR' }
+
+		case 'RESET_KEYRING':
+			return { ...state, keyring: null, keyringState: null }
 
 		default:
 			throw new Error(`Unknown type: ${action.type}`)
@@ -105,6 +111,7 @@ const loadAccounts = (state, dispatch) => {
 			dispatch({ type: 'SET_KEYRING', payload: keyring })
 		} catch (e) {
 			console.error(e)
+			createErrorNotification(e)
 			dispatch({ type: 'KEYRING_ERROR' })
 		}
 	}
@@ -117,6 +124,7 @@ const loadAccounts = (state, dispatch) => {
 
 	// This is the heavy duty work
 	loadAccts = true
+
 	asyncLoadAccounts()
 }
 
@@ -132,9 +140,10 @@ const SubstrateContextProvider = (props) => {
 
 	const [state, dispatch] = useReducer(reducer, initState)
 	connect(state, dispatch)
-	loadAccounts(state, dispatch)
 
-	return <SubstrateContext.Provider value={state}>{props.children}</SubstrateContext.Provider>
+	const handleLoadAccounts = () => loadAccounts(state, dispatch)
+	const handleLogout = () => dispatch({ type: 'RESET_KEYRING' })
+	return <SubstrateContext.Provider value={{ ...state, loadAccounts: handleLoadAccounts, logout: handleLogout }}>{props.children}</SubstrateContext.Provider>
 }
 
 // prop typechecking

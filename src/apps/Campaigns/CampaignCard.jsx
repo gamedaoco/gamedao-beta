@@ -67,7 +67,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			}
 		}
 		query()
-	}, [api, id,owner])
+	}, [api, id, owner])
 
 	//
 

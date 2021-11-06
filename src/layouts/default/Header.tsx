@@ -11,10 +11,8 @@ interface ComponentProps {
 }
 
 function Main({ showWallet }: ComponentProps) {
-
 	return (
 		<AppBar color="transparent" position="sticky" elevation={0}>
-
 			<Toolbar
 				sx={{
 					zIndex: '9000',
@@ -24,14 +22,24 @@ function Main({ showWallet }: ComponentProps) {
 					// justifyContent: 'end',
 				}}
 			>
-				<Stack direction="row" justifyContent="start" alignItems="left" 				sx={{
-					width: '50%',
-				}}>
+				<Stack
+					direction="row"
+					justifyContent="start"
+					alignItems="left"
+					sx={{
+						width: '50%',
+					}}
+				>
 					<NetInfo />
 				</Stack>
-				<Stack direction="row" justifyContent="end" alignItems="right" 				sx={{
-					width: '50%',
-				}}>
+				<Stack
+					direction="row"
+					justifyContent="end"
+					alignItems="right"
+					sx={{
+						width: '50%',
+					}}
+				>
 					<Button>GameDAO</Button>
 					<Button>Store</Button>
 					<AccountSelector />

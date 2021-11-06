@@ -19,50 +19,46 @@ import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
 
-import { 
-	Button, 
-	Typography, 
-	Box, 
-	Stack, 
-	Container, 
-	Paper, 
-	Table as TableMUI, 
-	TableBody, 
-	TableCell, 
-	TableContainer, 
-	TableHead, 
-	TablePagination, 
+import {
+	Button,
+	Typography,
+	Box,
+	Stack,
+	Container,
+	Paper,
+	Table as TableMUI,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TablePagination,
 	TableRow,
-	styled
+	styled,
 } from '../../components'
-
 
 const CreateDAO = lazy(() => import('./Create'))
 
 const dev = config.dev
 
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.MuiTableCell-head`]: {
-	  backgroundColor: theme.palette.common.black,
-	  color: theme.palette.common.white,
+		backgroundColor: theme.palette.common.black,
+		color: theme.palette.common.white,
 	},
 	[`&.MuiTableCell-body`]: {
-	  fontSize: 14,
+		fontSize: 14,
 	},
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+}))
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
 	'&:nth-of-type(odd)': {
-	  backgroundColor: theme.palette.action.hover,
+		backgroundColor: theme.palette.action.hover,
 	},
 	// hide last border
 	'&:last-child td, &:last-child th': {
-	  border: 0,
+		border: 0,
 	},
-  }));
-
-
+}))
 
 const getFromAcct = async (api, accountPair) => {
 	const {
@@ -264,7 +260,7 @@ const Item = ({ content }) => {
 		<StyledTableRow hover>
 			<StyledTableCell>
 				<a onClick={() => console.log(itemContent, metadata)}>
-					<Stack spacing={2} direction='row'>
+					<Stack spacing={2} direction="row">
 						<img style={{ maxHeight: '3rem' }} src={imageURL} />
 						<Box>
 							<Typography>{itemContent.name}</Typography>
@@ -279,11 +275,11 @@ const Item = ({ content }) => {
 			<StyledTableCell>
 				{metadata.website && (
 					<a href={metadata.website} target="_blank">
-						<LanguageIcon/>
+						<LanguageIcon />
 					</a>
 				)}
 			</StyledTableCell>
-			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon/>}</StyledTableCell>
+			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon />}</StyledTableCell>
 			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
 			{/*
 			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
@@ -296,23 +292,22 @@ const Item = ({ content }) => {
 		</StyledTableRow>
 	)
 }
-  
 
 const ItemList = (props) => {
 	const { content } = props
 
 	///
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
+	const [page, setPage] = React.useState(0)
+	const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
 	const handleChangePage = (event, newPage) => {
-	  setPage(newPage);
-	};
-  
+		setPage(newPage)
+	}
+
 	const handleChangeRowsPerPage = (event) => {
-	  setRowsPerPage(+event.target.value);
-	  setPage(0);
-	};
+		setRowsPerPage(+event.target.value)
+		setPage(0)
+	}
 	///
 
 	const [activePage, setActivePage] = useState(1)
@@ -346,11 +341,9 @@ const ItemList = (props) => {
 					<TableMUI stickyHeader aria-label="sticky table">
 						<TableHead>
 							<StyledTableRow>
+								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
 								<StyledTableCell align="center" colSpan={1}>
-								
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<Typography variant='h4'>Description</Typography>
+									<Typography variant="h4">Description</Typography>
 								</StyledTableCell>
 								<StyledTableCell align="center" colSpan={1}>
 									<LanguageIcon />
@@ -361,21 +354,17 @@ const ItemList = (props) => {
 								<StyledTableCell align="center" colSpan={1}>
 									<GroupIcon />
 								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-
-								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
 							</StyledTableRow>
 						</TableHead>
-					<TableBody>
-						{content
-						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-						.map((d, i) => {
-							const _content = {
-								...d,
-							}
-							return <Item key={offset + i} content={_content} />
-						})}
-					</TableBody>
+						<TableBody>
+							{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
+								const _content = {
+									...d,
+								}
+								return <Item key={offset + i} content={_content} />
+							})}
+						</TableBody>
 					</TableMUI>
 				</TableContainer>
 				<TablePagination
@@ -395,6 +384,7 @@ const ItemList = (props) => {
 export const Main = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
+	const context = useWallet()
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
@@ -562,30 +552,29 @@ export const Main = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<Container maxWidth='lg'>
-			<Box sx={{
-				display: 'flex',
-				justifyContent: 'space-between'
-
-			}}>
+		<Container maxWidth="lg">
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+				}}
+			>
+				<Box>{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}</Box>
 				<Box>
-					{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}
-				</Box>
-				<Box>
-						{address && showCreateMode ? (
-							<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
-								Close {address}
-							</Button>
-						) : (
-							<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
-								New DAO
-							</Button>
-						)}
+					{address && showCreateMode ? (
+						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+							Close {address}
+						</Button>
+					) : (
+						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+							New DAO
+						</Button>
+					)}
 				</Box>
 			</Box>
 			<br />
-			<Container maxWidth='md'>
-				{showCreateMode && <CreateDAO/>}
+			<Container maxWidth="md">
+				{showCreateMode && <CreateDAO />}
 				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 			</Container>
 		</Container>
@@ -595,11 +584,8 @@ export const Main = (props) => {
 export default function Module(props) {
 	const { api } = useSubstrate()
 
-	return api && api.query.gameDaoControl ? (
-		<Main {...props} />
-	) : null
+	return api && api.query.gameDaoControl ? <Main {...props} /> : null
 }
 //
 //
 //
-

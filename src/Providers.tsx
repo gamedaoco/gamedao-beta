@@ -8,27 +8,40 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { IconContext } from 'react-icons'
 import { darkTheme, lightTheme } from './themes/minimal'
+import { ToastContainer } from 'react-toastify'
 
 import { Box } from './components'
 
 export const Providers = (props) => {
+	const [isDarkMode, setDarkMode] = React.useState(false)
+	const toggleColorMode = () => {
+		localStorage.setItem('darkMode', JSON.stringify(!isDarkMode))
+		setDarkMode(!isDarkMode)
+	}
 
-	const [ isDarkMode, setDarkMode ] = React.useState(false)
-	const toggleColorMode = () => setDarkMode( !isDarkMode )
+	useEffect(() => {
+		const localStorageDarkMode = localStorage.getItem('darkMode') || 'false'
+		if (JSON.parse(localStorageDarkMode) === true) {
+			setDarkMode(true)
+		}
+	}, [])
 
 	return (
 		<>
-			<ThemeProvider theme={ isDarkMode ? darkTheme : lightTheme }>
+			<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
 				<CssBaseline />
 				<SubstrateContextProvider>
-					 <WalletProvider>
+					<WalletProvider>
 						<BrowserRouter>
 							<ScrollToTop />
-							<IconContext.Provider value={{ color: ( isDarkMode ? 'white' : 'black'), className: 'react-icon' }}>{props.children}</IconContext.Provider>
+							<IconContext.Provider value={{ color: isDarkMode ? 'white' : 'black', className: 'react-icon' }}>
+								{props.children}
+							</IconContext.Provider>
 						</BrowserRouter>
 					</WalletProvider>
 				</SubstrateContextProvider>
 			</ThemeProvider>
+			<ToastContainer theme={isDarkMode ? 'dark' : 'light'} />
 			<ThemeSwitcher isDarkMode={isDarkMode} onClick={toggleColorMode} />
 		</>
 	)

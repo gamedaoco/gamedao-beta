@@ -21,51 +21,44 @@ export interface ComponentProps {
 	showSidebar?: boolean
 }
 
-const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSidebar }: ComponentProps) =>
-	<Layout
-		showHeader={ showHeader ? showHeader : null }
-		showFooter={ showFooter ? showFooter : null }
-		showSidebar={ showSidebar ? showSidebar : null }
-		>
+const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSidebar }: ComponentProps) => (
+	<Layout showHeader={showHeader ? showHeader : null} showFooter={showFooter ? showFooter : null} showSidebar={showSidebar ? showSidebar : null}>
 		<Route exact path={path}>
-			<Suspense fallback={<Loader text="Loading..."></Loader>}>
-				{children}
-			</Suspense>
+			<Suspense fallback={<Loader text="Loading..."></Loader>}>{children}</Suspense>
 		</Route>
 	</Layout>
+)
 
 const Router = (props) => {
 	return (
 		<Switch>
+			<LayoutRoute exact path="/" showFooter>
+				<Home />
+			</LayoutRoute>
 
-				<LayoutRoute exact path="/" showFooter>
-					<Home />
-				</LayoutRoute>
+			<LayoutRoute exact path="/app" showSidebar showHeader showFooter>
+				<Dashboard />
+			</LayoutRoute>
 
-				<LayoutRoute exact path="/app" showSidebar showHeader showFooter>
-					<Dashboard/>
-				</LayoutRoute>
+			<LayoutRoute exact path="/app/organisations" showSidebar showHeader showFooter>
+				<Organisations />
+			</LayoutRoute>
+			<LayoutRoute exact path="/app/governance" showSidebar showHeader showFooter>
+				<Governance />
+			</LayoutRoute>
+			<LayoutRoute exact path="/app/campaigns" showSidebar showHeader showFooter>
+				<Campaigns />
+			</LayoutRoute>
+			<LayoutRoute exact path="/app/tangram" showSidebar showHeader showFooter>
+				<Tangram />
+			</LayoutRoute>
+			<LayoutRoute exact path="/app/wallet" showSidebar showHeader showFooter>
+				<Wallet />
+			</LayoutRoute>
 
-				<LayoutRoute exact path="/app/organisations" showSidebar showHeader showFooter>
-					<Organisations/>
-				</LayoutRoute>
-				<LayoutRoute exact path="/app/governance" showSidebar showHeader showFooter>
-					<Governance/>
-				</LayoutRoute>
-				<LayoutRoute exact path="/app/campaigns" showSidebar showHeader showFooter>
-					<Campaigns/>
-				</LayoutRoute>
-				<LayoutRoute exact path="/app/tangram" showSidebar showHeader showFooter>
-					<Tangram/>
-				</LayoutRoute>
-				<LayoutRoute exact path="/app/wallet" showSidebar showHeader showFooter>
-					<Wallet/>
-				</LayoutRoute>
-
-				<LayoutRoute exact path="/designsystem" showSidebar showHeader showFooter>
-					<Designsystem />
-				</LayoutRoute>
-
+			<LayoutRoute exact path="/designsystem" showSidebar showHeader showFooter>
+				<Designsystem />
+			</LayoutRoute>
 		</Switch>
 	)
 }

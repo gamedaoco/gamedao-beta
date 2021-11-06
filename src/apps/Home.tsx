@@ -44,7 +44,7 @@ export default function SignIn() {
 						Connect with Polkadot-JS extension
 					</Button>
 
-					<hr/>
+					<hr />
 
 					<Typography component="h2" variant="h5">
 						Sign in

@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
-import Typography from '@mui/material/Typography';
+import Typography from '@mui/material/Typography'
 
 const NetInfo = () => {
 	const { api, apiState } = useSubstrate()
-	const [ version, setVersion ] = useState('')
-	const [ blockNumber, setBlockNumber ] = useState(0)
-	const [ blockNumberTimer, setBlockNumberTimer ] = useState(0)
-	const [ bestNumber, setBestNumber ] = useState()
+	const [version, setVersion] = useState('')
+	const [blockNumber, setBlockNumber] = useState(0)
+	const [blockNumberTimer, setBlockNumberTimer] = useState(0)
+	const [bestNumber, setBestNumber] = useState()
 
 	useEffect(() => {
 		if (apiState !== 'READY' || !api) return
@@ -46,7 +46,8 @@ const NetInfo = () => {
 
 	return (
 		<Typography variant="caption">
-			{version && `Network ${version}`}<br/>
+			{version && `Network ${version}`}
+			<br />
 			{blockNumber && `Blocktime ${blockNumber} / ${blockNumberTimer}s`}
 		</Typography>
 	)
