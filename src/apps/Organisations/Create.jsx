@@ -491,12 +491,6 @@ export default function Module(props) {
 	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
 
-	const context = useWallet()
-	console.log('🚀 ~ file: Create.jsx ~ line 495 ~ Module ~ context', context)
-
-	console.log(accountPair)
-	console.log('🚀 ~ file: Create.jsx ~ line 497 ~ Module ~ accountPair', accountPair)
-
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
 }
 

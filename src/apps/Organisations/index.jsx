@@ -37,7 +37,6 @@ import {
 } from '../../components'
 
 const CreateDAO = lazy(() => import('./Create'))
-console.log('🚀 ~ file: index.jsx ~ line 40 ~ CreateDAO', CreateDAO)
 
 const dev = config.dev
 
@@ -386,7 +385,6 @@ export const Main = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 	const context = useWallet()
-	console.log('🚀 ~ file: index.jsx ~ line 389 ~ Main ~ context', context)
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()

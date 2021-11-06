@@ -123,7 +123,6 @@ const loadAccounts = (state, dispatch) => {
 	// This is the heavy duty work
 	loadAccts = true
 
-	console.log('🚀 ~ file: SubstrateContext.js ~ line 123 ~ loadAccounts ~ asyncLoadAccounts')
 	asyncLoadAccounts()
 }
 

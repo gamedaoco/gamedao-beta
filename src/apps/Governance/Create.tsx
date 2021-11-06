@@ -367,9 +367,6 @@ export const Main = () => {
 
 export default function Module() {
 	const { api } = useSubstrate()
-
-	console.log('🚀 ~ file: Create.tsx ~ line 382 ~ Module ~  api.query.gameDaoGovernance', api.query.gameDaoGovernance)
-
 	return api && api.query.gameDaoGovernance ? <Main /> : null
 }
 
