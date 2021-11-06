@@ -15,7 +15,7 @@ function accountString(args) {
 
 const AccountComponent = () => {
 	const { keyring, loadAccounts, logout } = useSubstrate()
-	const { allowConnect, setAllowConnect, setAccountAddress, setAccountPair } = useWallet()
+	const { allowConnect, updateWalletState } = useWallet()
 	const [keyringOptions, setKeyringOptions] = useState(null)
 	// TODO: @2075 For what do we need the initialAddress I don't see any usage
 	const [initialAddress, setInitialAddress] = useState(null)
@@ -28,14 +28,13 @@ const AccountComponent = () => {
 	const handleConnect = (e) => {
 		e.stopPropagation()
 		loadAccounts()
-		setAllowConnect(true)
+		updateWalletState({ allowConnect: true })
 		console.log('connect')
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
 		logout()
-		setAccountAddress('')
-		setAllowConnect(false)
+		updateWalletState({ address: '', allowConnect: false })
 		console.log('disconnect')
 	}
 
@@ -75,7 +74,8 @@ const AccountComponent = () => {
 		const args = keyringOptions?.[selectedIndex]
 		if (args) {
 			setInitialAddress(args?.value ?? '')
-			setAccountPair(args?.accountPair)
+
+			updateWalletState({ accountPair: args?.accountPair })
 		}
 	}, [keyringOptions, selectedIndex])
 
@@ -83,9 +83,8 @@ const AccountComponent = () => {
 		if (!allowConnect || !keyringOptions) return
 		const args = keyringOptions?.[selectedIndex]
 		if (args) {
-			setAccountPair(args?.accountPair)
-			setAccountAddress(args?.value ?? '')
 			setAccountSelected(args?.value ?? '')
+			updateWalletState({ accountPair: args?.accountPair, address: args?.value ?? '' })
 		}
 	}, [keyringOptions, selectedIndex])
 

@@ -242,7 +242,6 @@ export const Main = (props) => {
 	}, [accountPair, refresh])
 
 	if (!formData) return null
-
 	return (
 		<Box
 			component="form"
@@ -490,10 +489,5 @@ export const Main = (props) => {
 export default function Module(props) {
 	const { accountPair } = useWallet()
 	const { api } = useSubstrate()
-
 	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
 }
-
-//
-//
-//
