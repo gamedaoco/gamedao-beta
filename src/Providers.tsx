@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { createContext, useContext, useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
 
 import { SubstrateContextProvider } from './substrate-lib'
@@ -12,54 +12,58 @@ import { ToastContainer } from 'react-toastify'
 
 import { Box } from './components'
 
+export type ThemeState = {
+	darkmodeEnabled: boolean
+	setDarkmodeEnabled: (enabled: boolean) => void
+}
+
+const INITIAL_STATE: ThemeState = {
+	darkmodeEnabled: false,
+	setDarkmodeEnabled: (enabled: boolean) => {},
+}
+
+const ThemeContext = createContext<ThemeState>(INITIAL_STATE)
+export const useThemeState = () => useContext(ThemeContext)
+
 export const Providers = (props) => {
-	const [isDarkMode, setDarkMode] = React.useState(false)
-	const toggleColorMode = () => {
-		localStorage.setItem('darkMode', JSON.stringify(!isDarkMode))
-		setDarkMode(!isDarkMode)
-	}
+	const [state, setState] = React.useState(INITIAL_STATE)
 
 	useEffect(() => {
 		const localStorageDarkMode = localStorage.getItem('darkMode') || 'false'
 		if (JSON.parse(localStorageDarkMode) === true) {
-			setDarkMode(true)
+			setState({ ...state, darkmodeEnabled: true })
 		}
 	}, [])
 
+	function handleSetDarkModeEnabled(enabled: boolean) {
+		setState({ ...state, darkmodeEnabled: enabled })
+		localStorage.setItem('darkMode', enabled.toString())
+	}
+
 	return (
 		<>
-			<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+			<ThemeProvider theme={state.darkmodeEnabled ? darkTheme : lightTheme}>
 				<CssBaseline />
 				<SubstrateContextProvider>
 					<WalletProvider>
-						<BrowserRouter>
-							<ScrollToTop />
-							<IconContext.Provider value={{ color: isDarkMode ? 'white' : 'black', className: 'react-icon' }}>
-								{props.children}
-							</IconContext.Provider>
-						</BrowserRouter>
+						<ThemeContext.Provider
+							value={{
+								...state,
+								setDarkmodeEnabled: handleSetDarkModeEnabled,
+							}}
+						>
+							<BrowserRouter>
+								<ScrollToTop />
+								<IconContext.Provider value={{ color: state.darkmodeEnabled ? 'white' : 'black', className: 'react-icon' }}>
+									{props.children}
+								</IconContext.Provider>
+							</BrowserRouter>
+						</ThemeContext.Provider>
 					</WalletProvider>
 				</SubstrateContextProvider>
 			</ThemeProvider>
-			<ToastContainer theme={isDarkMode ? 'dark' : 'light'} />
-			<ThemeSwitcher isDarkMode={isDarkMode} onClick={toggleColorMode} />
+			<ToastContainer theme={state.darkmodeEnabled ? 'dark' : 'light'} />
 		</>
-	)
-}
-
-function ThemeSwitcher({ isDarkMode, onClick }) {
-	return (
-		<Box
-			onClick={onClick}
-			sx={{
-				position: 'fixed',
-				bottom: '1rem',
-				right: '1rem',
-				cursor: 'pointer',
-			}}
-		>
-			{isDarkMode ? '☀️' : '🌙'}
-		</Box>
 	)
 }
 
