@@ -14,6 +14,8 @@ import LanguageIcon from '@mui/icons-material/Language'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import GroupIcon from '@mui/icons-material/Group'
+import ListItem from '../../components/ListItem'
+import ListTileSwitch, { ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
@@ -37,6 +39,7 @@ import {
 } from '../../components'
 
 const CreateDAO = lazy(() => import('./Create'))
+const TileItem = lazy(() => import('../../components/TileItem'))
 
 const dev = config.dev
 
@@ -314,6 +317,7 @@ const ItemList = (props) => {
 	const [totalPages, setTotalPages] = useState(0)
 	const [offset, setOffset] = useState(0)
 	const [itemsPerPage, setItemsPerPage] = useState(3)
+	const [displayMode, setDisplayMode] = useState(ListTileEnum.LIST)
 
 	const iPP = [3, 5, 9, 18, 36, 72]
 	const handleShowMoreItems = () => setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
@@ -336,7 +340,29 @@ const ItemList = (props) => {
 
 	return (
 		<Box>
-			<Paper sx={{ width: '100%' }}>
+			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
+			<Box sx={{ display: 'grid', gridTemplateColumns: displayMode === ListTileEnum.TILE ? '1fr 1fr 1fr' : '1fr', rowGap: 2, columnGap: 2 }}>
+				{content.map((c) =>
+					displayMode === ListTileEnum.LIST ? (
+						<ListItem
+							key={c.id}
+							headline={c.name}
+							metaHeadline={'Organization'}
+							achievedGoals={[`${c.created} created`, `${c.mutated} mutated`]}
+							imageURL={'https://via.placeholder.com/500x500'}
+						></ListItem>
+					) : (
+						<TileItem
+							key={c.id}
+							headline={c.name}
+							metaHeadline={'Organization'}
+							achievedGoals={[`${c.created} created`, `${c.mutated} mutated`]}
+							imageURL={'https://via.placeholder.com/500x500'}
+						/>
+					)
+				)}
+			</Box>
+			{/* <Paper sx={{ width: '100%' }}>
 				<TableContainer sx={{ maxHeight: 512 }}>
 					<TableMUI stickyHeader aria-label="sticky table">
 						<TableHead>
@@ -376,7 +402,7 @@ const ItemList = (props) => {
 					onPageChange={handleChangePage}
 					onRowsPerPageChange={handleChangeRowsPerPage}
 				/>
-			</Paper>
+			</Paper> */}
 		</Box>
 	)
 }
