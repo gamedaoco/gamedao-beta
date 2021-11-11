@@ -172,10 +172,10 @@ function Main({ showNavigation }: ComponentProps) {
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Social</NavHeader>
 				<Box sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}>
-					<a href="https://www.linkedin.com/company/gamedaoco"><SiDiscord size={'28px'} /></a>
-					<a href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
-					<a href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
-					<a href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
+					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiDiscord size={'28px'} /></a>
+					<a target="_blank" href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
+					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
+					<a target="_blank" href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
