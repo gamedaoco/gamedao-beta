@@ -106,7 +106,7 @@ function Main({ showNavigation }: ComponentProps) {
 						marginLeft: '1rem',
 					}}
 				>
-					<Typography variant="h5">GAME</Typography>
+					<Typography variant="h4">GAME</Typography>
 					<Typography sx={{ marginTop: '-10px' }} variant="h3">DAO</Typography>
 				</Box>
 			</Box>
