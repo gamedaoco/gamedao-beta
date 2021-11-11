@@ -4,7 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubHeader from '@mui/material/ListSubheader'
 import { styled } from '@mui/material/styles'
-import { SiDiscord, SiLinkedin, SiGithub } from 'react-icons/si'
+import { SiDiscord, SiLinkedin, SiGithub, SiTelegram } from 'react-icons/si'
 import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
@@ -161,20 +161,21 @@ function Main({ showNavigation }: ComponentProps) {
 						<Typography variant="h5">Wallet</Typography>
 					</SidebarButton>
 				</NavLink>
-				<NavLink to="/">
+				<a href="https://docs.gamedao.co">
 					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="document" />
 						</ListItemIcon>
 						<Typography variant="h5">Documentation</Typography>
 					</SidebarButton>
-				</NavLink>
+				</a>
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Social</NavHeader>
 				<Box sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}>
-					<SiDiscord size={'28px'} />
-					<SiGithub size={'28px'} />
-					<SiLinkedin size={'28px'} />
+					<a href="https://www.linkedin.com/company/gamedaoco"><SiDiscord size={'28px'} /></a>
+					<a href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
+					<a href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
+					<a href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
