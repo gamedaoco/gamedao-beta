@@ -5,10 +5,9 @@ import { useWallet } from 'src/context/Wallet'
 import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import LogoutIcon from '@mui/icons-material/Logout'
 import { createErrorNotification } from 'src/utils/notification'
-import { useThemeState } from 'src/Providers'
 import { Icons, ICON_MAPPING } from './Icons'
+import { useThemeState } from 'src/context/ThemeState'
 
 function accountString(args) {
 	if (!args) return ''
