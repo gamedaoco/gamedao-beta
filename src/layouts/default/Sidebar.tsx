@@ -2,17 +2,15 @@ import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
 import ListSubHeader from '@mui/material/ListSubheader'
 import { styled } from '@mui/material/styles'
-import { BiArch, BiCoin, BiDiamond, BiGame, BiPyramid, BiWallet } from 'react-icons/bi'
 import { SiDiscord, SiLinkedin, SiGithub } from 'react-icons/si'
 import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useThemeState } from 'src/Providers'
-import { Divider, Paper, Typography } from 'src/components'
+import { Divider, Paper, Typography, FontIcon, Stack } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 interface ComponentProps {
 	showNavigation?: boolean
@@ -24,7 +22,7 @@ const SidebarButton = styled(ListItemButton)(({ theme }) => ({
 	marginRight: theme.spacing(1),
 	marginTop: theme.spacing(0.5),
 	marginBottom: theme.spacing(0.5),
-	borderRadius: 22,
+	borderRadius: '2rem',
 	color: theme.palette.text.secondary,
 	['&:hover']: {
 		color: theme.palette.text.primary,
@@ -38,12 +36,10 @@ const NavHeader = styled(ListSubHeader)(({ theme }) => ({
 }))
 
 const NavBadge = styled(Badge)(({ theme }) => ({
-	flexGrow: 1,
-	marginRight: theme.spacing(1),
 	['& .MuiBadge-badge']: {
 		color: theme.palette.background.default,
 		borderRadius: 6,
-		right: 'initial',
+		right: "initial"
 	},
 }))
 
@@ -91,7 +87,7 @@ function Main({ showNavigation }: ComponentProps) {
 			sx={{
 				position: 'sticky',
 				top: 0,
-				width: '220px',
+				width: '275px',
 				display: 'flex',
 				flexDirection: 'column',
 				flex: 1,
@@ -99,8 +95,8 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid #33383F',
 			}}
 		>
-			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 2, marginTop: 2 }}>
-				<Icons src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo} alt={'GameDAO'} sx={{ width: '25%' }} />
+			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 1.5 }}>
+				<Icons src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo} alt={'GameDAO'} sx={{ height: '45.4px' }} />
 				<Box
 					sx={{
 						display: 'flex',
@@ -110,82 +106,67 @@ function Main({ showNavigation }: ComponentProps) {
 						marginLeft: '1rem',
 					}}
 				>
-					<Typography variant="h5">Game</Typography>
-					<Typography variant="h5">DAO</Typography>
+					<Typography variant="h5">GAME</Typography>
+					<Typography sx={{ marginTop: '-10px' }} variant="h3">DAO</Typography>
 				</Box>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
 				<NavLink to="/app">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons
-								src={ICON_MAPPING.dashboard}
-								alt={'Dashboard'}
-								sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }}
-							/>
+							<FontIcon sx={{ fontSize: '4rem' }} name="dashboard" />
 						</ListItemIcon>
-						<ListItemText>Dashboard</ListItemText>
+						<Typography variant="h5">Dashboard</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/organisations">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons
-								src={ICON_MAPPING.organizations}
-								alt={'Organisations'}
-								sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }}
-							/>
+							<FontIcon sx={{ fontSize: '4rem' }} name="organization" />
 						</ListItemIcon>
-						<ListItemText>Organisations</ListItemText>
+						<Typography variant="h5">Organisations</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/governance">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons src={ICON_MAPPING.voting} alt={'Votings'} sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }} />
+							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
 						</ListItemIcon>
-						<ListItemText>Votings</ListItemText>
+						<Typography variant="h5">Votings</Typography>
+						<Box/>
 						<NavBadge badgeContent={5} color={'primary'} />
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/campaigns">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons
-								src={ICON_MAPPING.campains}
-								alt={'Campaigns'}
-								sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }}
-							/>
+							<FontIcon sx={{ fontSize: '4rem' }} name="campaign" />
 						</ListItemIcon>
-						<ListItemText>Campaigns</ListItemText>
+						<Typography variant="h5">Campaigns</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/tangram">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons src={ICON_MAPPING.tangram} alt={'Tangram'} sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }} />
+							<FontIcon sx={{ fontSize: '4rem' }} name="tangram" />
 						</ListItemIcon>
-						<ListItemText>Tangram</ListItemText>
+						<Typography variant="h5">Tangram</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/wallet">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons src={ICON_MAPPING.wallet} alt={'Wallet'} sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }} />
+							<FontIcon sx={{ fontSize: '4rem' }} name="wallet" />
 						</ListItemIcon>
-						<ListItemText>Wallet</ListItemText>
+						<Typography variant="h5">Wallet</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/">
-					<SidebarButton sx={{ padding: '0.8rem' }}>
+					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
-							<Icons
-								src={ICON_MAPPING.documentation}
-								alt={'Wallet'}
-								sx={{ width: '1.75rem', filter: darkmodeEnabled ? 'invert(1)' : 'invert(0)' }}
-							/>
+							<FontIcon sx={{ fontSize: '4rem' }} name="document" />
 						</ListItemIcon>
-						<ListItemText>Documentation</ListItemText>
+						<Typography variant="h5">Documentation</Typography>
 					</SidebarButton>
 				</NavLink>
 				<Box sx={{ flex: 1 }} />
