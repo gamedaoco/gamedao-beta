@@ -75,9 +75,35 @@ const Cards = () => (
 
 const Icons = () => (
 	<Stack>
-		<FontIcon/>
+		<FontIcon name="calendar"/>
 		<br />
-		<FontIcon color='primary' sx={{ fontSize: '4rem'}} />
+		<FontIcon name="arrowdown"/>
+		<br />
+		<FontIcon name="arrowup"/>
+		<br />
+		<FontIcon name="campaign"/>
+		<br />
+		<FontIcon name="check"/>
+		<br />
+		<FontIcon name="dashboard"/>
+		<br />
+		<FontIcon name="document"/>
+		<br />
+		<FontIcon name="howto"/>
+		<br />
+		<FontIcon name="image"/>
+		<br />
+		<FontIcon name="organization"/>
+		<br />
+		<FontIcon name="organization2"/>
+		<br />
+		<FontIcon name="store"/>
+		<br />
+		<FontIcon name="tangram"/>
+		<br />
+		<FontIcon name="voting"/>
+		<br />
+		<FontIcon name="waööet"/>
 		<br />
 	</Stack>
 )

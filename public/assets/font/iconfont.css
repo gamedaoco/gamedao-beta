@@ -45,7 +45,7 @@
   .icon-howto:before {
     content: "\e83f";
   }
-  .icon--image:before {
+  .icon-image:before {
     content: "\e840";
   }
   .icon-organization:before {
