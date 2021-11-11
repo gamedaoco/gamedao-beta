@@ -14,6 +14,7 @@ export const Footer = (props) => (
 	<Box
 		component="footer"
 		sx={{
+			borderTop: '1px solid #33383F',
 			py: 3,
 			px: 1,
 			mt: 'auto',

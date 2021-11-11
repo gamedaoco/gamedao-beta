@@ -38,6 +38,9 @@ export { default as Stepper } from '@mui/material/Stepper'
 export { default as Step } from '@mui/material/Step'
 export { default as StepLabel } from '@mui/material/StepLabel'
 
+//icons
+export { Icons, FontIcon } from './Icons'
+
 //hooks
 export { useFormControl } from '@mui/material/FormControl'
 

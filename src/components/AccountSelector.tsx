@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { createErrorNotification } from 'src/utils/notification'
+import { useThemeState } from 'src/Providers'
+import { Icons, ICON_MAPPING } from './Icons'
 
 function accountString(args) {
 	if (!args) return ''
@@ -17,6 +19,7 @@ function accountString(args) {
 const AccountComponent = () => {
 	const { keyring, loadAccounts, logout } = useSubstrate()
 	const { allowConnect, updateWalletState } = useWallet()
+	const { darkmodeEnabled } = useThemeState()
 	const [keyringOptions, setKeyringOptions] = useState(null)
 	// TODO: @2075 For what do we need the initialAddress I don't see any usage
 	const [initialAddress, setInitialAddress] = useState(null)
@@ -113,7 +116,7 @@ const AccountComponent = () => {
 					</IconButton>
 					<BalanceAnnotation />
 					<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
-						<LogoutIcon fontSize="inherit" />
+						<Icons src={ICON_MAPPING.logout} alt={'logout'} sx={{ filter: darkmodeEnabled ? 'invert(0)' : 'invert(1)' }} />
 					</IconButton>
 				</ButtonGroup>
 			)}
