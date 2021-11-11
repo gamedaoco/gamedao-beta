@@ -176,6 +176,7 @@ function Main({ showNavigation }: ComponentProps) {
 					<a target="_blank" href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
 					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
 					<a target="_blank" href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
+					<a target="_blank" href="https://discord.gg/P7NHWGzJ7r"><SiDiscord size={'28px'} /></a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
