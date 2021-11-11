@@ -5,7 +5,7 @@ import { useWallet } from 'src/context/Wallet'
 import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { createErrorNotification } from 'src/utils/notification'
+import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
 import { Icons, ICON_MAPPING } from './Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useStore } from 'src/context/Store'
@@ -73,7 +73,7 @@ const AccountComponent = () => {
 
 	useEffect(() => {
 		// Set selected account
-		if (accounts.length > 0 && selectedIndex >= 0 && selectedIndex < accounts.length && address !== accounts?.[selectedIndex]?.address) {
+		if (accounts?.length > 0 && selectedIndex >= 0 && selectedIndex < accounts.length && address !== accounts?.[selectedIndex]?.address) {
 			updateWalletState({ account: accounts[selectedIndex], address: accounts[selectedIndex]?.address })
 		}
 	}, [selectedIndex])
@@ -83,7 +83,7 @@ const AccountComponent = () => {
 			{(!allowConnect || !accounts) && <Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>}
 			{account && address && (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-					<CopyToClipboard text={address}>
+					<CopyToClipboard text={address} onCopy={() => createInfoNotification('Address copied')}>
 						<Button size="small" color={address ? 'success' : 'error'}>{`${accountString(address)}`}</Button>
 					</CopyToClipboard>
 
@@ -146,7 +146,7 @@ const BalanceAnnotation = () => {
 		if (!address || !api) return
 		let unsubscribe
 		const query = async () => {
-			const context = api.query.assets.account
+			const context = api.query.assets?.account
 			api.queryMulti(
 				[
 					[api.query.system.account, address],
