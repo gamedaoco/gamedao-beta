@@ -41,7 +41,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	flexGrow: 1,
 	marginRight: theme.spacing(1),
 	['& .MuiBadge-badge']: {
-		color: theme.palette.text.primary,
+		color: theme.palette.background.default,
 		borderRadius: 6,
 		right: 'initial',
 	},

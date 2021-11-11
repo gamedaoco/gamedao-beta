@@ -74,36 +74,36 @@ const Cards = () => (
 )
 
 const Icons = () => (
-	<Stack>
-		<FontIcon name="calendar"/>
+	<Stack direction="row">
+		<FontIcon fontSize='large' name="calendar"/>
 		<br />
-		<FontIcon name="arrowdown"/>
+		<FontIcon fontSize='large' name="arrowdown"/>
 		<br />
-		<FontIcon name="arrowup"/>
+		<FontIcon fontSize='large' name="arrowup"/>
 		<br />
-		<FontIcon name="campaign"/>
+		<FontIcon fontSize='large' name="campaign"/>
 		<br />
-		<FontIcon name="check"/>
+		<FontIcon fontSize='large' name="check"/>
 		<br />
-		<FontIcon name="dashboard"/>
+		<FontIcon fontSize='large' name="dashboard"/>
 		<br />
-		<FontIcon name="document"/>
+		<FontIcon fontSize='large' name="document"/>
 		<br />
-		<FontIcon name="howto"/>
+		<FontIcon fontSize='large' name="howto"/>
 		<br />
-		<FontIcon name="image"/>
+		<FontIcon fontSize='large' name="image"/>
 		<br />
-		<FontIcon name="organization"/>
+		<FontIcon fontSize='large' name="organization"/>
 		<br />
-		<FontIcon name="organization2"/>
+		<FontIcon fontSize='large' name="organization2"/>
 		<br />
-		<FontIcon name="store"/>
+		<FontIcon fontSize='large' name="store"/>
 		<br />
-		<FontIcon name="tangram"/>
+		<FontIcon fontSize='large' name="tangram"/>
 		<br />
-		<FontIcon name="voting"/>
+		<FontIcon fontSize='large' name="voting"/>
 		<br />
-		<FontIcon name="waööet"/>
+		<FontIcon fontSize='large' name="waööet"/>
 		<br />
 	</Stack>
 )
