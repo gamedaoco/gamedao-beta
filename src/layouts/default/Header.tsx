@@ -2,7 +2,7 @@ import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Stack from '@mui/material/Stack'
-import AccountSelector from 'src/components/AccountSelector'
+import AccountSelector from 'src/components/AccountSelector2'
 import NetInfo from 'src/components/NetInfo'
 
 function Main() {

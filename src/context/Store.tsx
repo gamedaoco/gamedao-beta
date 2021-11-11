@@ -2,11 +2,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 
 export type StoreState = {
 	darkModeState: boolean
+	allowConnection: boolean
 	updateStore: Function
 }
 
 const INITIAL_STATE: StoreState = {
 	darkModeState: false, // false = light mode, true = dark mode
+	allowConnection: false, // false = no connection, true = connection
 	updateStore: (opt) => {},
 }
 

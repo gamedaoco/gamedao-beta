@@ -11,6 +11,7 @@ import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
 import { StoreProvider } from './context/Store'
 import { ThemeStateProvider, useThemeState } from './context/ThemeState'
+import { NetworkProvider } from './context/Network'
 
 function Wrapper({ children }) {
 	const { darkmodeEnabled } = useThemeState()
@@ -34,7 +35,9 @@ export const Providers = ({ children }) => {
 	return (
 		<StoreProvider>
 			<ThemeStateProvider>
-				<Wrapper>{children}</Wrapper>
+				<NetworkProvider>
+					<Wrapper>{children}</Wrapper>
+				</NetworkProvider>
 			</ThemeStateProvider>
 		</StoreProvider>
 	)
