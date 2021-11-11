@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card, Button, Divider, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Stack } from '../../components'
+import { Card, Button, Divider, FontIcon, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Stack, Icon } from '../../components'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
 
@@ -12,6 +12,11 @@ export const Designsystem = (props) => (
 		<Typography variant="h3">Buttons</Typography>
 		<Divider />
 		<Buttons />
+
+		
+		<Typography variant="h3">Icons</Typography>
+		<Divider />
+		<Icons />
 
 		<Typography variant="h3">ListItem</Typography>
 		<Divider />
@@ -64,6 +69,15 @@ const Cards = () => (
 	<Stack>
 		<br />
 		<Card>default card</Card>
+		<br />
+	</Stack>
+)
+
+const Icons = () => (
+	<Stack>
+		<FontIcon/>
+		<br />
+		<FontIcon color='primary' sx={{ fontSize: '4rem'}} />
 		<br />
 	</Stack>
 )

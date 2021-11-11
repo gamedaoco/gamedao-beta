@@ -1,5 +1,7 @@
 import React from 'react'
 import { Box } from '.'
+import Icon from '@mui/material/Icon';
+
 
 export const ICON_MAPPING = {
 	logo: `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`,
@@ -21,4 +23,8 @@ export const ICON_MAPPING = {
 
 export function Icons({ src, alt, ...props }) {
 	return <Box component={'img'} src={src} alt={alt || 'icon'} {...props} />
+}
+
+export function FontIcon({name = 'tangram', ...props}){
+    return <Icon baseClassName="gamedao-icon-font" className={"icon-"+name} {...props} />
 }
