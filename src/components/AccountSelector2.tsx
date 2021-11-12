@@ -11,8 +11,9 @@ import { useThemeState } from 'src/context/ThemeState'
 import { useStore } from 'src/context/Store'
 import { usePolkadotExtension } from '@substra-hooks/core'
 
-function accountString(address) {
-	return address.length < 10 ? address : `${address.slice(0, 6)} ... ${address.slice(-6)}`
+function accountString(account) {
+	const text = account?.meta?.name || account?.address || ''
+	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
 
 const AccountComponent = () => {
@@ -78,13 +79,15 @@ const AccountComponent = () => {
 		}
 	}, [selectedIndex])
 
+	console.log('accounts', accounts)
+
 	return (
 		<>
 			{(!allowConnect || !accounts) && <Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>}
 			{account && address && (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
 					<CopyToClipboard text={address} onCopy={() => createInfoNotification('Address copied')}>
-						<Button size="small" color={address ? 'success' : 'error'}>{`${accountString(address)}`}</Button>
+						<Button title={address} size="small" color={address ? 'success' : 'error'}>{`${accountString(account)}`}</Button>
 					</CopyToClipboard>
 
 					<IconButton
@@ -120,8 +123,9 @@ const AccountComponent = () => {
 											disabled={index === 2}
 											selected={index === selectedIndex}
 											onClick={(event) => handleMenuItemClick(event, index)}
+											title={option?.address}
 										>
-											<Typography variant="subtitle1">{accountString(option.address)}</Typography>
+											<Typography variant="subtitle1">{accountString(option)}</Typography>
 										</MenuItem>
 									))}
 								</MenuList>

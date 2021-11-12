@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Loader from './components/Loader'
 import Layout from './layouts/default'
 
@@ -19,47 +19,29 @@ export interface ComponentProps {
 	showFooter?: boolean
 	showHeader?: boolean
 	showSidebar?: boolean
+	element?: React.ReactNode
 }
 
-const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSidebar }: ComponentProps) => (
+const LayoutRoute = ({ showFooter, showHeader, showSidebar, element }: ComponentProps) => (
 	<Layout showHeader={showHeader ? showHeader : null} showFooter={showFooter ? showFooter : null} showSidebar={showSidebar ? showSidebar : null}>
-		<Route exact path={path}>
-			<Suspense fallback={<Loader text="Loading..."></Loader>}>{children}</Suspense>
-		</Route>
+		{element}
 	</Layout>
 )
 
 const Router = (props) => {
 	return (
-		<Switch>
-			<LayoutRoute exact path="/" showFooter>
-				<Home />
-			</LayoutRoute>
-
-			<LayoutRoute exact path="/app" showSidebar showHeader showFooter>
-				<Dashboard />
-			</LayoutRoute>
-
-			<LayoutRoute exact path="/app/organisations" showSidebar showHeader showFooter>
-				<Organisations />
-			</LayoutRoute>
-			<LayoutRoute exact path="/app/governance" showSidebar showHeader showFooter>
-				<Governance />
-			</LayoutRoute>
-			<LayoutRoute exact path="/app/campaigns" showSidebar showHeader showFooter>
-				<Campaigns />
-			</LayoutRoute>
-			<LayoutRoute exact path="/app/tangram" showSidebar showHeader showFooter>
-				<Tangram />
-			</LayoutRoute>
-			<LayoutRoute exact path="/app/wallet" showSidebar showHeader showFooter>
-				<Wallet />
-			</LayoutRoute>
-
-			<LayoutRoute exact path="/designsystem" showSidebar showHeader showFooter>
-				<Designsystem />
-			</LayoutRoute>
-		</Switch>
+		<Suspense fallback={<Loader text="Loading..."></Loader>}>
+			<Routes>
+				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
+				<Route path="/app" element={<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />}></Route>
+				<Route path="/app/organisations" element={<LayoutRoute showSidebar showHeader showFooter element={Organisations} />}></Route>
+				<Route path="/app/governance" element={<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />}></Route>
+				<Route path="/app/campaigns" element={<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />}></Route>
+				<Route path="/app/tangram" element={<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />}></Route>
+				<Route path="/app/wallet" element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}></Route>
+				<Route path="/app/designsystem" element={<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />}></Route>
+			</Routes>
+		</Suspense>
 	)
 }
 

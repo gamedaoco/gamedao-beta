@@ -22,6 +22,7 @@ const API_PROVIDER_CONFIG = {
 	[ENetworks.zero]: {
 		id: ENetworks.zero,
 		wsProviderUrl: config.PROVIDER_SOCKET,
+		types: config.types,
 	},
 	[ENetworks.kusama]: {
 		id: ENetworks.kusama,

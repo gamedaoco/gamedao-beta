@@ -24,7 +24,7 @@ export default function LogoOnlyLayout({ children }: LogoOnlyLayoutProps) {
 		<>
 			<Box>
 				<HeaderStyle>
-					<Link href="/"></Link>
+					<Link to="/"></Link>
 				</HeaderStyle>
 				{children}
 			</Box>
