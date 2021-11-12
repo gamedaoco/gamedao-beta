@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Loader from './components/Loader'
-import LayoutDefault from './layouts/default'
+import Layout from './layouts/default'
 
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
@@ -42,8 +42,8 @@ const Router = (props) => {
 				<Route path="/app/tangram" element={<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />}></Route>
 				<Route path="/app/wallet" element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}></Route>
 				<Route path="/app/designsystem" element={<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />}></Route>
-        <Route path="/app/organisations/admin/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />}></Route>
-        <Route path="/app/organisations/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />}></Route>
+        			<Route path="/app/organisations/admin/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />}></Route>
+        			<Route path="/app/organisations/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />}></Route>
 			</Routes>
 		</Suspense>
 	)
