@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
+import { useIdentity } from 'src/hooks/useIdentity'
 
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
-	const { address, allowConnect } = useWallet()
+	const { address } = useWallet()
+	const identity = useIdentity(address)
 
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(0)
@@ -12,19 +14,10 @@ const Dashboard = (props) => {
 	const [proposals, setProposals] = useState(0)
 
 	useEffect(() => {
-		if (!api) return
-		let unsubscribe = null
-
-		if (address && allowConnect) {
-			api.queryMulti([[api.query.identity.identityOf, address]], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
-				.then((unsub) => (unsubscribe = unsub))
-				.catch(console.error)
-		} else {
-			setName('')
+		if (identity) {
+			setName(identity.toHuman()?.info?.display?.Raw ?? '')
 		}
-
-		return () => unsubscribe && unsubscribe()
-	}, [api, address, allowConnect])
+	}, [identity])
 
 	useEffect(() => {
 		if (!api) return

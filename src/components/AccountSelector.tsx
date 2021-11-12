@@ -5,43 +5,43 @@ import { useWallet } from 'src/context/Wallet'
 import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { createErrorNotification } from 'src/utils/notification'
+import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
 import { Icons, ICON_MAPPING } from './Icons'
 import { useThemeState } from 'src/context/ThemeState'
+import { useStore } from 'src/context/Store'
+import { usePolkadotExtension } from '@substra-hooks/core'
+import { useBalance } from 'src/hooks/useBalance'
 
-function accountString(args) {
-	if (!args) return ''
-	const txt = args.text || args.value
-	return txt.length < 10 ? txt : `${txt.slice(0, 10)}...`
+function accountString(account) {
+	const text = account?.meta?.name || account?.address || ''
+	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
 
 const AccountComponent = () => {
-	const { keyring, loadAccounts, logout } = useSubstrate()
-	const { allowConnect, updateWalletState } = useWallet()
 	const { darkmodeEnabled } = useThemeState()
-	const [keyringOptions, setKeyringOptions] = useState(null)
-	// TODO: @2075 For what do we need the initialAddress I don't see any usage
-	const [initialAddress, setInitialAddress] = useState(null)
-	const [accountSelected, setAccountSelected] = useState(null)
+	const { updateStore, allowConnection } = useStore()
+	const [open, setOpen] = useState(false)
+	const { accounts, w3enable, w3Enabled } = usePolkadotExtension()
 	const [selectedIndex, setSelectedIndex] = useState(0)
+	const { allowConnect, updateWalletState, account, address } = useWallet()
 
-	const [open, setOpen] = React.useState(false)
 	const anchorRef = useRef<HTMLDivElement>(null)
 
 	const handleConnect = (e) => {
 		e.stopPropagation()
-		loadAccounts()
-		updateWalletState({ allowConnect: true })
-		console.log('connect')
+		if (allowConnection) {
+			updateWalletState({ allowConnect: true })
+		} else {
+			updateStore({ allowConnection: true })
+		}
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
-		logout()
-		updateWalletState({ address: '', allowConnect: false })
-		console.log('disconnect')
+		updateWalletState({ allowConnect: false })
 	}
 
-	const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+	const handleMenuItemClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+		e.stopPropagation()
 		setSelectedIndex(index)
 		setOpen(false)
 	}
@@ -58,51 +58,37 @@ const AccountComponent = () => {
 	}
 
 	useEffect(() => {
-		if (!allowConnect || !keyring) return
-		const args = keyring.getPairs().map((account) => ({
-			key: account.address,
-			value: account.address,
-			text: account.meta.name.toUpperCase(),
-			icon: 'user',
-			accountPair: account,
-		}))
-
-		if (args.length > 0) {
-			setKeyringOptions(args)
-		} else {
-			createErrorNotification('No accounts found in keyring')
+		// Open web3 connection and load accounts
+		if (allowConnect && !w3Enabled) {
+			w3enable()
+		} else if (w3Enabled && !allowConnect) {
+			updateWalletState({ address: null, account: null, allowConnect: false, connected: false })
 		}
-	}, [allowConnect, keyring])
+	}, [allowConnect])
 
 	useEffect(() => {
-		if (!allowConnect || !keyringOptions || !selectedIndex) return
-		const args = keyringOptions?.[selectedIndex]
-		if (args) {
-			setInitialAddress(args?.value ?? '')
-			updateWalletState({ accountPair: args?.accountPair })
+		// Set initial account => default account 0
+		if (accounts && allowConnect) {
+			updateWalletState({ account: accounts[0], address: accounts[0]?.address })
 		}
-	}, [keyringOptions, selectedIndex])
+	}, [accounts, allowConnect])
 
 	useEffect(() => {
-		if (!allowConnect || !keyringOptions) return
-		const args = keyringOptions?.[selectedIndex]
-		if (args) {
-			setAccountSelected(args?.value ?? '')
-			updateWalletState({ accountPair: args?.accountPair, address: args?.value ?? '' })
+		// Set selected account
+		if (accounts?.length > 0 && selectedIndex >= 0 && selectedIndex < accounts.length && address !== accounts?.[selectedIndex]?.address) {
+			updateWalletState({ account: accounts[selectedIndex], address: accounts[selectedIndex]?.address })
 		}
-	}, [keyringOptions, selectedIndex])
+	}, [selectedIndex])
 
 	return (
 		<>
-			{!allowConnect || !keyringOptions ? (
-				<Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>
-			) : (
+			{(!allowConnect || !accounts) && <Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>}
+			{account && address && (
 				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-					{keyringOptions && (
-						<CopyToClipboard text={accountSelected}>
-							<Button size="small" color={accountSelected ? 'success' : 'error'}>{`${accountString(keyringOptions[selectedIndex])}`}</Button>
-						</CopyToClipboard>
-					)}
+					<CopyToClipboard text={address} onCopy={() => createInfoNotification('Address copied')}>
+						<Button title={address} size="small" color={address ? 'success' : 'error'}>{`${accountString(account)}`}</Button>
+					</CopyToClipboard>
+
 					<IconButton
 						size="small"
 						aria-controls={open ? 'account-menu' : undefined}
@@ -119,7 +105,6 @@ const AccountComponent = () => {
 					</IconButton>
 				</ButtonGroup>
 			)}
-
 			<Popper open={open} anchorEl={anchorRef.current} placement={'bottom-start'} role={undefined} transition disablePortal>
 				{({ TransitionProps, placement }) => (
 					<Grow
@@ -131,14 +116,15 @@ const AccountComponent = () => {
 						<Paper>
 							<ClickAwayListener onClickAway={handleClose}>
 								<MenuList id="account-menu">
-									{keyringOptions.map((option, index) => (
+									{accounts?.map((option, index) => (
 										<MenuItem
 											key={index}
 											disabled={index === 2}
 											selected={index === selectedIndex}
 											onClick={(event) => handleMenuItemClick(event, index)}
+											title={option?.address}
 										>
-											<Typography variant="subtitle1">{option.text}</Typography>
+											<Typography variant="subtitle1">{accountString(option)}</Typography>
 										</MenuItem>
 									))}
 								</MenuList>
@@ -152,48 +138,17 @@ const AccountComponent = () => {
 }
 
 const BalanceAnnotation = () => {
-	const { api } = useSubstrate()
-	const { address } = useWallet()
+	const { balanceZero, balancePlay, balanceGame } = useBalance()
 
-	const [zero, setZERO] = useState(0)
-	const [play, setPLAY] = useState(0)
-	const [game, setGAME] = useState(0)
-
-	useEffect(() => {
-		if (!address || !api) return
-		let unsubscribe
-		const query = async () => {
-			const context = api.query.assets.account
-			api.queryMulti(
-				[
-					[api.query.system.account, address],
-					[context, [Number(0), address]],
-					[context, [Number(1), address]],
-				],
-				([_zero, _play, _game]) => {
-					setZERO(_zero.data.free.toHuman())
-					setPLAY(_play.toHuman().balance)
-					setGAME(_game.toHuman().balance)
-				}
-			)
-				.then((unsub) => {
-					unsubscribe = unsub
-				})
-				.catch(console.error)
-		}
-		query()
-		return () => unsubscribe && unsubscribe()
-	}, [api, address])
-
-	return address ? (
+	return (
 		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '8px' }}>
-			{zero}
+			{balanceZero}
 			<br />
-			{play} PLAY
+			{balancePlay} PLAY
 			<br />
-			{game} GAME
+			{balanceGame} GAME
 		</div>
-	) : null
+	)
 }
 
 const AccountSelector = (props) => {
