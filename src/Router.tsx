@@ -1,12 +1,14 @@
 import React, { lazy, Suspense } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Loader from './components/Loader'
-import Layout from './layouts/default'
+import LayoutDefault from './layouts/default'
 
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Organisations = lazy(() => import('./apps/Organisations'))
+const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
+const DAODashboard = lazy(() => import('./apps/Organisations/dashboard'))
 const Governance = lazy(() => import('./apps/Governance'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
@@ -22,11 +24,11 @@ export interface ComponentProps {
 }
 
 const LayoutRoute = ({ children, path, exact, showFooter, showHeader, showSidebar }: ComponentProps) => (
-	<Layout showHeader={showHeader ? showHeader : null} showFooter={showFooter ? showFooter : null} showSidebar={showSidebar ? showSidebar : null}>
+	<LayoutDefault showHeader={showHeader ? showHeader : null} showFooter={showFooter ? showFooter : null} showSidebar={showSidebar ? showSidebar : null}>
 		<Route exact path={path}>
 			<Suspense fallback={<Loader text="Loading..."></Loader>}>{children}</Suspense>
 		</Route>
-	</Layout>
+	</LayoutDefault>
 )
 
 const Router = (props) => {
@@ -40,9 +42,16 @@ const Router = (props) => {
 				<Dashboard />
 			</LayoutRoute>
 
+			<LayoutRoute path="/app/organisations/admin/:id" showSidebar showHeader showFooter>
+				<DAOAdmin />
+			</LayoutRoute>
+			<LayoutRoute path="/app/organisations/:id" showSidebar showHeader showFooter>
+				<DAODashboard />
+			</LayoutRoute>
 			<LayoutRoute exact path="/app/organisations" showSidebar showHeader showFooter>
 				<Organisations />
 			</LayoutRoute>
+
 			<LayoutRoute exact path="/app/governance" showSidebar showHeader showFooter>
 				<Governance />
 			</LayoutRoute>
