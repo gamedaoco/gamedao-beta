@@ -30,7 +30,6 @@ export const Designsystem = (props) => (
 			metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
 			headline={'Discovery of the Metaverse'}
 			progressValue={50}
-			achievedGoals={['13249 backers', '380k/500k PLAY', 'Dec 1. 2021', "Space, Jump'n'Run, 2d"]}
 		>
 			<Typography>
 				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
@@ -52,7 +51,6 @@ export const Designsystem = (props) => (
 				metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
 				headline={'Discovery of the Metaverse'}
 				progressValue={50}
-				achievedGoals={['13249 backers', '380k/500k PLAY', 'Dec 1. 2021', "Space, Jump'n'Run, 2d"]}
 			/>
 			<TileItem
 				feature
@@ -60,7 +58,6 @@ export const Designsystem = (props) => (
 				metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
 				headline={'Discovery of the Metaverse'}
 				progressValue={50}
-				achievedGoals={['13249 backers', '380k/500k PLAY', 'Dec 1. 2021', "Space, Jump'n'Run, 2d"]}
 			/>
 		</Box>
 

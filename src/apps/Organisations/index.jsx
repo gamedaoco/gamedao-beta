@@ -12,6 +12,9 @@ import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import LanguageIcon from '@mui/icons-material/Language'
 import LockIcon from '@mui/icons-material/Lock'
+import OpenLockIcon from '@mui/icons-material/LockOpen'
+import WebsiteIcon from '@mui/icons-material/Web'
+import MemberIcon from '@mui/icons-material/AccountBox'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import GroupIcon from '@mui/icons-material/Group'
 import ListItem from '../../components/ListItem'
@@ -42,26 +45,6 @@ const CreateDAO = lazy(() => import('./Create'))
 const TileItem = lazy(() => import('../../components/TileItem'))
 
 const dev = config.dev
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-	[`&.MuiTableCell-head`]: {
-		backgroundColor: theme.palette.common.black,
-		color: theme.palette.common.white,
-	},
-	[`&.MuiTableCell-body`]: {
-		fontSize: 14,
-	},
-}))
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-	'&:nth-of-type(odd)': {
-		backgroundColor: theme.palette.action.hover,
-	},
-	// hide last border
-	'&:last-child td, &:last-child th': {
-		border: 0,
-	},
-}))
 
 const getFromAcct = async (api, accountPair) => {
 	const {
@@ -118,7 +101,7 @@ const addMember = async (api, accountPair, id, target) => {
 
 const defaultContent = {}
 
-const Item = ({ content }) => {
+const Item = ({ content, mode }) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 
@@ -134,7 +117,6 @@ const Item = ({ content }) => {
 	}, [content])
 
 	// get offchain data
-
 	useEffect(() => {
 		if (!itemContent.cid || itemContent.cid.length < 3) return
 		fetch(gateway + itemContent.cid)
@@ -243,11 +225,13 @@ const Item = ({ content }) => {
 		const text = buttonText[itemContent.access]
 		return (
 			<>
-				{(isMember() || isAdmin()) && <Button basic onClick={handleDashboard} value={itemContent.access} size="mini">{`Dashboard`}</Button>}
-				{isMember() && !isAdmin() && <Button basic onClick={handleMembership} value={itemContent.access} size="mini">{`leave`}</Button>}
-				{!isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size="mini">{`${text}`}</Button>}
+				{(isMember() || isAdmin()) && (
+					<Button variant={'outlined'} fullWidth onClick={handleDashboard} value={itemContent.access}>{`Dashboard`}</Button>
+				)}
+				{isMember() && !isAdmin() && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`leave`}</Button>}
+				{!isMember() && text && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`${text}`}</Button>}
 				{isAdmin() && (
-					<Button basic onClick={handleAdmin} size="mini">
+					<Button variant={'outlined'} fullWidth onClick={handleAdmin}>
 						Admin
 					</Button>
 				)}
@@ -257,42 +241,41 @@ const Item = ({ content }) => {
 
 	const bodyToText = () => d.dao_bodies.filter((b) => b.value === Number(content.body))[0].text
 
+	const metaContent = React.useMemo(() => {
+		return (
+			<Stack sx={{ width: '100%', height: '100%' }} direction={'column'} justifyContent={mode === ListTileEnum.TILE ? 'flex-end' : 'inherit'} spacing={1}>
+				<Stack direction={'row'} spacing={1}>
+					<WebsiteIcon /> <a href={metadata.website}>{metadata.website}</a>
+				</Stack>
+				{itemContent.access === '0' ? (
+					<Stack direction={'row'} spacing={1}>
+						<LockIcon /> <Typography>Locked</Typography>
+					</Stack>
+				) : (
+					<Stack direction={'row'} spacing={1}>
+						<OpenLockIcon /> <Typography>Open</Typography>
+					</Stack>
+				)}
+				<Stack direction={'row'} spacing={1}>
+					<MemberIcon />
+					<Typography>{itemContent.memberCount || 0} Members</Typography>
+				</Stack>
+				{mode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
+				<Interactions />
+			</Stack>
+		)
+	}, [itemContent, metadata, mode])
+
 	if (!itemContent) return null
 
-	return (
-		<StyledTableRow hover>
-			<StyledTableCell>
-				<a onClick={() => console.log(itemContent, metadata)}>
-					<Stack spacing={2} direction="row">
-						<img style={{ maxHeight: '3rem' }} src={imageURL} />
-						<Box>
-							<Typography>{itemContent.name}</Typography>
-							<Typography>{bodyToText()}</Typography>
-						</Box>
-					</Stack>
-				</a>
-			</StyledTableCell>
-			<StyledTableCell>
-				<Typography>{metadata.description}</Typography>
-			</StyledTableCell>
-			<StyledTableCell>
-				{metadata.website && (
-					<a href={metadata.website} target="_blank">
-						<LanguageIcon />
-					</a>
-				)}
-			</StyledTableCell>
-			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon />}</StyledTableCell>
-			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
-			{/*
-			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
-			<StyledTableCell>{itemContent.motions||0}</StyledTableCell>
-			<StyledTableCell>{itemContent.campaigns||0}</StyledTableCell>
-			*/}
-			<StyledTableCell>
-				<Interactions />
-			</StyledTableCell>
-		</StyledTableRow>
+	return mode === ListTileEnum.LIST ? (
+		<ListItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
+			<Typography>{metadata.description}</Typography>
+		</ListItem>
+	) : (
+		<TileItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
+			<Typography>{metadata.description}</Typography>
+		</TileItem>
 	)
 }
 
@@ -342,57 +325,12 @@ const ItemList = (props) => {
 		<Box>
 			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
 			<Box sx={{ display: 'grid', gridTemplateColumns: displayMode === ListTileEnum.TILE ? '1fr 1fr 1fr' : '1fr', rowGap: 2, columnGap: 2 }}>
-				{content.map((c) =>
-					displayMode === ListTileEnum.LIST ? (
-						<ListItem
-							key={c.id}
-							headline={c.name}
-							metaHeadline={'Organization'}
-							achievedGoals={[`${c.created} created`, `${c.mutated} mutated`]}
-							imageURL={'https://via.placeholder.com/500x500'}
-						></ListItem>
-					) : (
-						<TileItem
-							key={c.id}
-							headline={c.name}
-							metaHeadline={'Organization'}
-							achievedGoals={[`${c.created} created`, `${c.mutated} mutated`]}
-							imageURL={'https://via.placeholder.com/500x500'}
-						/>
-					)
-				)}
-			</Box>
-			{/* <Paper sx={{ width: '100%' }}>
-				<TableContainer sx={{ maxHeight: 512 }}>
-					<TableMUI stickyHeader aria-label="sticky table">
-						<TableHead>
-							<StyledTableRow>
-								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<Typography variant="h4">Description</Typography>
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<LanguageIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<LockIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<GroupIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
-							</StyledTableRow>
-						</TableHead>
-						<TableBody>
-							{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
-								const _content = {
-									...d,
-								}
-								return <Item key={offset + i} content={_content} />
-							})}
-						</TableBody>
-					</TableMUI>
-				</TableContainer>
+				{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
+					const _content = {
+						...d,
+					}
+					return <Item mode={displayMode} key={offset + i} content={_content} />
+				})}
 				<TablePagination
 					rowsPerPageOptions={[10, 25, 100]}
 					component="div"
@@ -402,7 +340,7 @@ const ItemList = (props) => {
 					onPageChange={handleChangePage}
 					onRowsPerPageChange={handleChangeRowsPerPage}
 				/>
-			</Paper> */}
+			</Box>
 		</Box>
 	)
 }
@@ -599,10 +537,8 @@ export const Main = (props) => {
 				</Box>
 			</Box>
 			<br />
-			<Container maxWidth="md">
-				{showCreateMode && <CreateDAO />}
-				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
-			</Container>
+			{showCreateMode && <CreateDAO />}
+			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 		</Container>
 	)
 }

@@ -9,46 +9,29 @@ export const TileItem: React.FC<
 		metaHeadline: string
 		headline: string
 		progressValue?: number
-		achievedGoals?: string[]
+		metaContent?: React.ReactNode
 	}>
 > = (props) => (
-	<>
-		<Card>
-			<Stack>
-				<Box sx={{ maxHeight: props.feature ? '300px' : 'auto' }}>
-					<img width="100%" height="100%" src={props.imageURL} />
-				</Box>
-				<Stack
-					sx={{
-						p: '1rem',
-					}}
-				>
-					<Typography variant="h6">{props.metaHeadline}</Typography>
-					<Typography variant="h4">
-						{props.feature ? 'FEATURED:' : ''} {props.headline}
-					</Typography>
-					{typeof props.progressValue === 'number' ? <Slider disabled defaultValue={props.progressValue} /> : null}
-				</Stack>
-				<Stack
-					direction="row"
-					sx={{
-						p: '1rem',
-					}}
-				>
-					<Box
-						sx={{
-							display: 'grid',
-							margin: '0 auto',
-							gridTemplateColumns: { sm: '2fr 2fr' },
-						}}
-					>
-						{props.achievedGoals &&
-							props.achievedGoals.map((goal) => <Typography variant={props.feature ? 'h4' : 'subtitle2'}>✅ {goal}</Typography>)}
-					</Box>
-				</Stack>
+	<Card sx={{ minHeight: '100%' }}>
+		<Stack sx={{ height: '100%' }}>
+			<Box sx={{ maxHeight: props.feature ? '300px' : 'auto' }}>
+				<img width="100%" height="100%" src={props.imageURL} />
+			</Box>
+			<Stack
+				sx={{
+					p: 2,
+				}}
+			>
+				<Typography variant="h6">{props.metaHeadline}</Typography>
+				<Typography variant="h4">
+					{props.feature ? 'FEATURED:' : ''} {props.headline}
+				</Typography>
+				{typeof props.progressValue === 'number' ? <Slider disabled defaultValue={props.progressValue} /> : null}
 			</Stack>
-		</Card>
-	</>
+			<Box sx={{ flex: 1 }} />
+			<Box sx={{ padding: 2, flex: 1 }}>{props.metaContent}</Box>
+		</Stack>
+	</Card>
 )
 
 export default TileItem

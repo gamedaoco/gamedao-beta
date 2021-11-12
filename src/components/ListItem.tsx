@@ -8,7 +8,7 @@ export const ListItem: React.FC<
 		metaHeadline: string
 		headline: string
 		progressValue?: number
-		achievedGoals?: string[]
+		metaContent?: React.ReactNode
 	}>
 > = (props) => (
 	<>
@@ -31,17 +31,17 @@ export const ListItem: React.FC<
 					<Typography variant="h6">{props.metaHeadline}</Typography>
 					<Typography variant="h4">{props.headline}</Typography>
 					{props.children}
-					<Box sx={{ flex: 1 }} />
-					{typeof props.progressValue === 'number' ? <Slider disabled defaultValue={props.progressValue} /> : null}
+					{typeof props.progressValue === 'number' ? (
+						<>
+							<Box sx={{ flex: 1 }} />
+							<Slider disabled defaultValue={props.progressValue} />
+						</>
+					) : null}
 				</Stack>
 
 				<Stack direction="row">
 					<Divider sx={{ mx: 2, height: '100%' }} orientation="vertical" flexItem />
-					<Stack justifyContent="space-around" sx={{ height: '100%' }}>
-						{props.achievedGoals?.map((goal) => (
-							<Typography>✅ {goal}</Typography>
-						))}
-					</Stack>
+					{props.metaContent}
 				</Stack>
 			</Box>
 		</Card>
