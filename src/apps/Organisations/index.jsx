@@ -44,6 +44,26 @@ import {
 const CreateDAO = lazy(() => import('./Create'))
 const TileItem = lazy(() => import('../../components/TileItem'))
 
+const TileWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	gridTemplateColumns: '1fr',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+	[theme.breakpoints.up('md')]: {
+		gridTemplateColumns: '1fr 1fr 1fr',
+	},
+	[theme.breakpoints.up('lg')]: {
+		gridTemplateColumns: '1fr 1fr 1fr 1fr',
+	},
+}))
+
+const ListWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	gridTemplateColumns: '1fr',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+}))
+
 const dev = config.dev
 
 const getFromAcct = async (api, accountPair) => {
@@ -317,6 +337,8 @@ const ItemList = (props) => {
 		setOffset((activePage - 1) * iPP[itemsPerPage])
 	}
 
+	const Wrapper = React.useMemo(() => (displayMode === ListTileEnum.LIST ? ListWrapper : TileWrapper), [displayMode])
+
 	if (!content) return null
 
 	// console.log(activePage,totalPages,offset,itemsPerPage)
@@ -324,23 +346,24 @@ const ItemList = (props) => {
 	return (
 		<Box>
 			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
-			<Box sx={{ display: 'grid', gridTemplateColumns: displayMode === ListTileEnum.TILE ? '1fr 1fr 1fr' : '1fr', rowGap: 2, columnGap: 2 }}>
+			<Wrapper>
 				{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
 					const _content = {
 						...d,
 					}
 					return <Item mode={displayMode} key={offset + i} content={_content} />
 				})}
-				<TablePagination
-					rowsPerPageOptions={[10, 25, 100]}
-					component="div"
-					count={content.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>
-			</Box>
+			</Wrapper>
+			<Box sx={{ my: 2 }} />
+			<TablePagination
+				rowsPerPageOptions={[10, 25, 100]}
+				component="div"
+				count={content.length}
+				rowsPerPage={rowsPerPage}
+				page={page}
+				onPageChange={handleChangePage}
+				onRowsPerPageChange={handleChangeRowsPerPage}
+			/>
 		</Box>
 	)
 }
