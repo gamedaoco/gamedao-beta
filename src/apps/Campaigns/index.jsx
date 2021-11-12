@@ -84,7 +84,7 @@ export const Campaigns = (props) => {
 	// }, [nonce, accountPair, api, state, api.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
-		if (nonce === 0) return
+		if (nonce === 0 || !api.query.gameDaoCrowdfunding?.campaignsArray) return
 
 		const query = api.query.gameDaoCrowdfunding.campaignsArray
 		const req = [...new Array(nonce)].map((a, i) => i)

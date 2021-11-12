@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
-
+import RocketIcon from '@mui/icons-material/Launch'
+import TimeIcon from '@mui/icons-material/LockClock'
+import IdentityIcon from '@mui/icons-material/PermIdentity'
+import SendIcon from '@mui/icons-material/Send'
+import TagIcon from '@mui/icons-material/Tag'
+import WarningIcon from '@mui/icons-material/Warning'
+import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
+import React, { useEffect, useState } from 'react'
+import ListItem from '../../components/ListItem'
+import TileItem from '../../components/TileItem'
+import { useSubstrate } from '../../substrate-lib'
+import { ListTileEnum } from '../components/ListTileSwitch'
 // import { encodeAddress } from '@polkadot/util-crypto'
 // import { data } from '../lib/data'
 import { gateway } from '../lib/ipfs'
-// import config from '../../config'
-// const dev = config.dev
 
-import { Grid, Card, Icon, Image, Segment } from 'semantic-ui-react'
-import { Form } from 'semantic-ui-react'
-
-import { Button } from '../../components'
-
-const CampaignCard = ({ item, index, accountPair }) => {
+const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 	// console.log(item)
 	const { api } = useSubstrate()
 
@@ -30,7 +35,9 @@ const CampaignCard = ({ item, index, accountPair }) => {
 
 	const [formData, updateFormData] = useState({ amount: 0 })
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = (e) => {
+		updateFormData({ ...formData, [e.target.name]: e.target.value })
+	}
 
 	useEffect(() => {
 		if (!cid || cid.length < 4) return
@@ -199,131 +206,106 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	// 	)
 	// }
 
+	const metaInfo = React.useMemo(() => {
+		return (
+			<Stack direction={'column'} spacing={1}>
+				<Stack direction={'row'} spacing={1}>
+					<RocketIcon />
+					<Typography>{date}</Typography>
+				</Stack>
+				{state === '1' && (
+					<Stack direction={'row'} spacing={2}>
+						<TimeIcon />
+						<Typography>{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining</Typography>
+					</Stack>
+				)}
+				{content?.identity ? (
+					<Stack direction={'row'} spacing={2}>
+						<IdentityIcon />
+						<a href={`/id/${owner}`}>{content.identity}</a>
+						<br />
+					</Stack>
+				) : (
+					<Stack direction={'row'} spacing={2}>
+						<WarningIcon />
+						<a href="/faq#unknown_entity">unknown entity</a>
+					</Stack>
+				)}
+				<Stack direction={'row'} spacing={2}>
+					<TagIcon />
+					<Typography>{tags.join(', ')}</Typography>
+				</Stack>
+			</Stack>
+		)
+	}, [content])
+
+	const metaActions = React.useMemo(() => {
+		switch (state) {
+			case '1': {
+				return (
+					<TextField
+						InputLabelProps={{ shrink: true }}
+						placeholder="amount"
+						name="amount"
+						value={formData.amount}
+						onChange={handleOnChange}
+						fullWidth
+						type="number"
+						label={'Contribute to this campaign'}
+						InputProps={{
+							endAdornment: (
+								<IconButton onClick={() => handleSubmit()}>
+									<SendIcon />
+								</IconButton>
+							),
+						}}
+					/>
+				)
+			}
+
+			case '3': {
+				return <Typography>Campaign successful</Typography>
+			}
+			case '4': {
+				return <Typography>Campaign failed</Typography>
+			}
+		}
+	}, [content, state, formData])
+
 	if (!content) return null
 
-	return (
-		<Grid.Column mobile={16} tablet={8} computer={4}>
-			<Segment vertical loading={loading}>
-				<Card href="" color={governance === '1' ? 'pink' : 'teal'}>
-					<Image label={governance === '1' && { as: 'a', corner: 'right', icon: 'heart', color: 'pink' }} src={imageURL} wrapped ui={true} />
-					<Card.Content>
-						<Card.Header color="black">
-							<a href={`/campaign/${id}`}>{name}</a>
-						</Card.Header>
-						<Card.Meta>
-							{content.backers} backer{content.backers === 1 ? '' : 's'}.<br />
-							{balance}/{cap} contributed.
-						</Card.Meta>
-						{/*					<Card.Description>
-					</Card.Description>*/}
-					</Card.Content>
-					<Card.Content extra>
-						{state === '1' && (
-							<>
-								Contribute to this campaign
-								<Form.Input
-									action={{
-										color: 'green',
-										icon: 'check',
-										onClick: handleSubmit,
-									}}
-									placeholder="amount"
-									size="mini"
-									name="amount"
-									value={formData.amount}
-									onChange={handleOnChange}
-									fluid
-									type="number"
-								/>
-							</>
-						)}
-
-						{state === '3' && (
-							<>
-								Campaign Successful
-								<Button color="green" size="small">
-									Project Page
-								</Button>
-							</>
-						)}
-
-						{state === '4' && (
-							<>
-								Campaign Failed
-								<Button color="orange" size="tiny">
-									Project Page
-								</Button>
-							</>
-						)}
-
-						{/*
-						<Form.Group widths='equal'>
-							<Form.Input
-								type='amount'
-								label='amount'
-								name='amount'
-								value={formData.amount}
-								onChange={handleOnChange}
-								size='small'
-								/>
-							<Button
-								content="Contribute Now"
-								labelPosition='right'
-								icon='checkmark'
-								onClick={handleSubmit}
-								positive
-								size = 'small'
-							/>
-						</Form.Group>
-				{ accountPair &&
-					<Buy
-						open={open}
-						imageURL={imageURL}
-						handleOnChange={handleOnChange}
-						handleSubmit={handleSubmit}
-						formData={formData}
-					/>
-				}
-*/}
-					</Card.Content>
-					<Card.Content extra>
-						{/*
-					<Icon name='eye' />{views} views.<br/>
-					<br/>
-*/}
-						<Icon name="rocket" />
-						{date}
-						<br />
-						{state === '1' && (
-							<>
-								<Icon name="time" />
-								{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
-								<br />
-							</>
-						)}
-						{content.identity ? (
-							<>
-								<a href={`/id/${owner}`}>
-									<Icon color="green" name="certificate" />
-									{content.identity}
-								</a>
-								<br />
-							</>
-						) : (
-							<>
-								<a href="/faq#unknown_entity">
-									<Icon color="orange" name="warning" />
-									unknown entity
-								</a>
-								<br />
-							</>
-						)}
-						<Icon name="tag" />
-						{tags.join(', ')} <br />
-					</Card.Content>
-				</Card>
-			</Segment>
-		</Grid.Column>
+	return displayMode === ListTileEnum.TILE ? (
+		<TileItem
+			imageURL={imageURL}
+			headline={name}
+			metaHeadline={`${content.backers} backer(s)`}
+			metaContent={
+				<Stack direction={'column'} spacing={2}>
+					{metaInfo}
+					{metaActions}
+				</Stack>
+			}
+		>
+			<Typography>
+				{balance} / {cap} contributed
+			</Typography>
+		</TileItem>
+	) : (
+		<ListItem
+			imageURL={imageURL}
+			headline={name}
+			metaHeadline={`${content.backers} backer(s)`}
+			metaContent={
+				<Stack direction={'column'} spacing={2}>
+					{metaInfo}
+					{metaActions}
+				</Stack>
+			}
+		>
+			<Typography>
+				{balance} / {cap} contributed
+			</Typography>
+		</ListItem>
 	)
 }
 
