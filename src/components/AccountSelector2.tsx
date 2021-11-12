@@ -10,6 +10,7 @@ import { Icons, ICON_MAPPING } from './Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useStore } from 'src/context/Store'
 import { usePolkadotExtension } from '@substra-hooks/core'
+import { useBalance } from 'src/hooks/useBalance'
 
 function accountString(account) {
 	const text = account?.meta?.name || account?.address || ''
@@ -79,8 +80,6 @@ const AccountComponent = () => {
 		}
 	}, [selectedIndex])
 
-	console.log('accounts', accounts)
-
 	return (
 		<>
 			{(!allowConnect || !accounts) && <Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>}
@@ -139,48 +138,17 @@ const AccountComponent = () => {
 }
 
 const BalanceAnnotation = () => {
-	const { api } = useSubstrate()
-	const { address } = useWallet()
+	const { balanceZero, balancePlay, balanceGame } = useBalance()
 
-	const [zero, setZERO] = useState(0)
-	const [play, setPLAY] = useState(0)
-	const [game, setGAME] = useState(0)
-
-	useEffect(() => {
-		if (!address || !api) return
-		let unsubscribe
-		const query = async () => {
-			const context = api.query.assets?.account
-			api.queryMulti(
-				[
-					[api.query.system.account, address],
-					[context, [Number(0), address]],
-					[context, [Number(1), address]],
-				],
-				([_zero, _play, _game]) => {
-					setZERO(_zero.data.free.toHuman())
-					setPLAY(_play.toHuman().balance)
-					setGAME(_game.toHuman().balance)
-				}
-			)
-				.then((unsub) => {
-					unsubscribe = unsub
-				})
-				.catch(console.error)
-		}
-		query()
-		return () => unsubscribe && unsubscribe()
-	}, [api, address])
-
-	return address ? (
+	return (
 		<div style={{ fontSize: '8px', lineHeight: '10px', marginRight: '10px', marginLeft: '10px', marginTop: '8px' }}>
-			{zero}
+			{balanceZero}
 			<br />
-			{play} PLAY
+			{balancePlay} PLAY
 			<br />
-			{game} GAME
+			{balanceGame} GAME
 		</div>
-	) : null
+	)
 }
 
 const AccountSelector = (props) => {

@@ -46,6 +46,7 @@
 		"@ramp-network/ramp-instant-sdk": "^2.5.0",
 		"@substra-hooks/core": "^0.0.22",
 		"@zeroio/type-definitions": "^0.0.11",
+		"await-to-js": "^3.0.0",
 		"big.js": "^6.1.1",
 		"change-case": "^4.1.2",
 		"faker": "^5.5.3",
