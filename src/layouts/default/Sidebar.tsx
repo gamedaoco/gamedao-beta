@@ -9,9 +9,9 @@ import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { useThemeState } from 'src/Providers'
 import { Divider, Paper, Typography, FontIcon, Stack } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
+import { useThemeState } from 'src/context/ThemeState'
 interface ComponentProps {
 	showNavigation?: boolean
 }
@@ -39,7 +39,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	['& .MuiBadge-badge']: {
 		color: theme.palette.background.default,
 		borderRadius: 6,
-		right: "initial"
+		right: 'initial',
 	},
 }))
 
@@ -107,7 +107,9 @@ function Main({ showNavigation }: ComponentProps) {
 					}}
 				>
 					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ marginTop: '-10px' }} variant="h3">DAO</Typography>
+					<Typography sx={{ marginTop: '-10px' }} variant="h3">
+						DAO
+					</Typography>
 				</Box>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
@@ -133,7 +135,7 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
 						</ListItemIcon>
 						<Typography variant="h5">Votings</Typography>
-						<Box/>
+						<Box />
 						<NavBadge badgeContent={5} color={'primary'} />
 					</SidebarButton>
 				</NavLink>

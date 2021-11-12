@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import React, { useEffect, useState } from 'react'
+import { useIdentity } from 'src/hooks/useIdentity'
 import ListItem from '../../components/ListItem'
 import TileItem from '../../components/TileItem'
 import { useSubstrate } from '../../substrate-lib'
@@ -21,8 +22,8 @@ import { gateway } from '../lib/ipfs'
 const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 	// console.log(item)
 	const { api } = useSubstrate()
-
 	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
+	const identity = useIdentity(owner)
 
 	// console.log(state)
 
@@ -59,13 +60,10 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 
 		const query = async () => {
 			try {
-				const [backers, identity] = await Promise.all([
-					api.query.gameDaoCrowdfunding.campaignContributorsCount(id),
-					api.query.identity.identityOf(owner),
-				])
+				const [backers] = await Promise.all([api.query.gameDaoCrowdfunding.campaignContributorsCount(id)])
 				setContent({
+					...(content ?? {}),
 					backers: backers.toHuman(),
-					identity: identity.toHuman().info.display.Raw || null,
 				})
 				setLoading(false)
 				// console.log('identity',identity.toHuman().info.display.Raw)
@@ -75,6 +73,12 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 		}
 		query()
 	}, [api, id, owner])
+
+	useEffect(() => {
+		if (identity) {
+			setContent({ ...(content ?? {}), identity: identity.toHuman()?.info?.display?.Raw ?? null })
+		}
+	}, [identity])
 
 	//
 

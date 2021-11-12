@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate-lib'
-import { useWallet } from '../context/Wallet'
-import { useIdentity } from 'src/hooks/useIdentity'
+import { useParams } from 'react-router-dom'
+import { useSubstrate } from '../../substrate-lib'
+import { useWallet } from '../../context/Wallet'
+import {
+	Button,
+	Typography,
+	Box,
+	Container,
+	Paper,
+	styled,
+} from '../../components'
+
+// TODO:
+// - Drop item to your members
 
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
-	const { address } = useWallet()
-	const identity = useIdentity(address)
+	const { address, allowConnect } = useWallet()
+	const { id } = useParams()
 
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(0)
@@ -14,10 +25,19 @@ const Dashboard = (props) => {
 	const [proposals, setProposals] = useState(0)
 
 	useEffect(() => {
-		if (identity) {
-			setName(identity.toHuman()?.info?.display?.Raw ?? '')
+		if (!api) return
+		let unsubscribe = null
+
+		if (address && allowConnect) {
+			api.queryMulti([[api.query.identity.identityOf, address]], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
+				.then((unsub) => (unsubscribe = unsub))
+				.catch(console.error)
+		} else {
+			setName('')
 		}
-	}, [identity])
+
+		return () => unsubscribe && unsubscribe()
+	}, [api, address, allowConnect])
 
 	useEffect(() => {
 		if (!api) return
@@ -40,12 +60,12 @@ const Dashboard = (props) => {
 	}, [api, address])
 
 	return (
-		<>
-			<h1>Hello {name}</h1>
+		<React.Fragment>
+			<Typography component="h1" variant="h3">DAO Admin</Typography>
 			<h2>DAOs: {bodies}</h2>
 			<h2>Campaigns: {campaigns}</h2>
 			<h2>Proposals: {proposals}</h2>
-		</>
+		</React.Fragment>
 	)
 }
 
