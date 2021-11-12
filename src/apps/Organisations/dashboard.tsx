@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from '../../context/Wallet'
 import {
@@ -12,7 +13,13 @@ import {
 
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
-	const { address, allowConnect } = useWallet()
+	const { address } = useWallet()
+	const { id } = useParams()
+
+	// query all data related to the dao:
+	// - treasury total / available / locked
+	// - members
+	// - campaigns
 
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(0)
@@ -20,11 +27,12 @@ const Dashboard = (props) => {
 	const [proposals, setProposals] = useState(0)
 
 	useEffect(() => {
-		if (!api) return
 		let unsubscribe = null
 
-		if (address && allowConnect) {
-			api.queryMulti([[api.query.identity.identityOf, address]], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
+		if (address) {
+			api.queryMulti([
+				[api.query.identity.identityOf, address]
+			], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
 				.then((unsub) => (unsubscribe = unsub))
 				.catch(console.error)
 		} else {
@@ -32,10 +40,9 @@ const Dashboard = (props) => {
 		}
 
 		return () => unsubscribe && unsubscribe()
-	}, [api, address, allowConnect])
+	}, [api, address])
 
 	useEffect(() => {
-		if (!api) return
 		let unsubscribe = null
 
 		api.queryMulti(
@@ -65,7 +72,8 @@ const Dashboard = (props) => {
 }
 
 export default function Dapp(props) {
-	const { apiState } = useSubstrate()
+	const { api, apiState } = useSubstrate()
+	const { allowConnect } = useWallet()
 	console.log('apiState', apiState)
-	return apiState === 'READY' ? <Dashboard {...props} /> : null
+	return allowConnect && api && apiState === 'READY' ? <Dashboard {...props} /> : null
 }

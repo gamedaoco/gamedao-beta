@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from '../../context/Wallet'
 import {
@@ -13,6 +14,7 @@ import {
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
 	const { address, allowConnect } = useWallet()
+	const { id } = useParams()
 
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(0)

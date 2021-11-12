@@ -553,30 +553,26 @@ export const Main = (props) => {
 
 	return (
 		<Container maxWidth="lg">
-			<Box
-				sx={{
-					display: 'flex',
-					justifyContent: 'space-between',
-				}}
-			>
-				<Box>{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}</Box>
-				<Box>
-					{address && showCreateMode ? (
-						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
-							Close {address}
-						</Button>
-					) : (
-						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
-							New DAO
-						</Button>
-					)}
-				</Box>
-			</Box>
+
+			<Typography component="h1" variant="h3">
+				Organisations
+			</Typography>
+
+			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
+				<Box>{
+					!content || nonce === 0
+					? <h4>No organizations yet. Create one!</h4>
+					: <h4>Total organizations: {nonce}</h4>
+				}</Box>
+				<Box>{
+					address && showCreateMode
+					? <Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}> Close {address} </Button>
+					: <Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}> New DAO </Button>
+				}</Box>
+			</Stack>
 			<br />
-			<Container maxWidth="md">
 				{showCreateMode && <CreateDAO />}
 				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
-			</Container>
 		</Container>
 	)
 }
