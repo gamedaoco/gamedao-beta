@@ -68,6 +68,11 @@ const Router = (props) => {
 			<LayoutRoute exact path="/designsystem" showSidebar showHeader showFooter>
 				<Designsystem />
 			</LayoutRoute>
+
+			<LayoutRoute path="*" showSidebar showHeader showFooter>
+				<Dashboard />
+			</LayoutRoute>
+
 		</Switch>
 	)
 }

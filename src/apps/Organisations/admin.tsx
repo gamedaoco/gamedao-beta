@@ -11,6 +11,9 @@ import {
 	styled,
 } from '../../components'
 
+// TODO:
+// - Drop item to your members
+
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
 	const { address, allowConnect } = useWallet()

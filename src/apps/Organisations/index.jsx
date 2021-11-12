@@ -2,6 +2,7 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
@@ -228,8 +229,8 @@ const Item = ({ content }) => {
 		}
 	}
 
-	const handleAdmin = () => console.log('open admin')
-	const handleDashboard = () => console.log('open dashboard')
+	const handleAdmin = () => history.push('/app/organisations/admin/1234')
+	const handleDashboard = () => history.push('/app/organisations/dashboard/1234');
 
 	const buttonText = ['join', 'apply', 'leave']
 
@@ -553,11 +554,9 @@ export const Main = (props) => {
 
 	return (
 		<Container maxWidth="lg">
-
 			<Typography component="h1" variant="h3">
 				Organisations
 			</Typography>
-
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Box>{
 					!content || nonce === 0
@@ -571,8 +570,8 @@ export const Main = (props) => {
 				}</Box>
 			</Stack>
 			<br />
-				{showCreateMode && <CreateDAO />}
-				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
+			{showCreateMode && <CreateDAO />}
+			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 		</Container>
 	)
 }
