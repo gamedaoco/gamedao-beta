@@ -2527,10 +2527,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@substra-hooks/core@^0.0.22":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@substra-hooks/core/-/core-0.0.22.tgz#640bee5aa7571a40ccd19098a2a2742f36d2890e"
-  integrity sha512-y93kSZ3xwYwrQTR1YZGQiK78TkHivmpcVyAFh2/JpzUaeGB8n6Scs385EoREVyNdL0yy/O2AI2FEsvu580+Zzw==
+"@substra-hooks/core@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@substra-hooks/core/-/core-0.0.26.tgz#0073db8069e5e9caf6b995579d645c080f5c9979"
+  integrity sha512-3RhdoXPBYgFVqUyPbviX7WzMAf203YkTvb365+kl5pku9oJB1zgu2CtjJiLf+bMfN/7vESoKP8xfGAG3PO52VA==
   dependencies:
     "@types/react" "17.0.34"
     nanoid "3.1.30"
@@ -4931,10 +4931,10 @@ concat-stream@^1.5.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-concurrently@^6.0.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-6.3.0.tgz#63128cb4a6ed54d3c0ed8528728590a5fe54582a"
-  integrity sha512-k4k1jQGHHKsfbqzkUszVf29qECBrkvBKkcPJEUDTyVR7tZd1G/JOfnst4g1sYbFvJ4UjHZisj1aWQR8yLKpGPw==
+concurrently@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-6.4.0.tgz#5387ee86be435a0eb51c292ade8a00acf479f170"
+  integrity sha512-HZ3D0RTQMH3oS4gvtYj1P+NBc6PzE2McEra6yEFcQKrUQ9HvtTGU4Dbne083F034p+LRb7kWU0tPRNvSGs1UCQ==
   dependencies:
     chalk "^4.1.0"
     date-fns "^2.16.1"

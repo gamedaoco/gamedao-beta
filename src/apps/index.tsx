@@ -2,21 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
-	const identity = useIdentity(address)
-
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(0)
 	const [campaigns, setCampaigns] = useState(0)
 	const [proposals, setProposals] = useState(0)
 
+	const aaa = useCrowdfunding()
+	console.log('🚀 ~ file: index.jsx ~ line 44 ~ Campaigns ~ aaa', aaa)
+
+	const identity = useIdentity(address)
+
 	useEffect(() => {
-		if (identity) {
-			setName(identity.toHuman()?.info?.display?.Raw ?? '')
-		}
+		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
 	useEffect(() => {

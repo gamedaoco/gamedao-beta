@@ -42,8 +42,8 @@ const Router = (props) => {
 				<Route path="/app/tangram" element={<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />}></Route>
 				<Route path="/app/wallet" element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}></Route>
 				<Route path="/app/designsystem" element={<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />}></Route>
-        			<Route path="/app/organisations/admin/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />}></Route>
-        			<Route path="/app/organisations/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />}></Route>
+				<Route path="/app/organisations/admin/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />}></Route>
+				<Route path="/app/organisations/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />}></Route>
 			</Routes>
 		</Suspense>
 	)
