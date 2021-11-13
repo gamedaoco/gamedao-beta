@@ -8,14 +8,10 @@ const Dashboard = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 	const [name, setName] = useState('')
-	const [bodies, setBodies] = useState(0)
-	const [campaigns, setCampaigns] = useState(0)
-	const [proposals, setProposals] = useState(0)
-
-	const aaa = useCrowdfunding()
-	console.log('🚀 ~ file: index.jsx ~ line 44 ~ Campaigns ~ aaa', aaa)
-
+	const [bodies, setBodies] = useState(null)
+	const [proposals, setProposals] = useState(null)
 	const identity = useIdentity(address)
+	const { campaignsCount } = useCrowdfunding()
 
 	useEffect(() => {
 		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
@@ -26,10 +22,9 @@ const Dashboard = (props) => {
 		let unsubscribe = null
 
 		api.queryMulti(
-			[api.query.gameDaoControl.nonce, api.query.gameDaoCrowdfunding.nonce, api.query.gameDaoGovernance.nonce],
-			([bodies, campaigns, proposals]) => {
+			[api.query.gameDaoControl.nonce, api.query.gameDaoGovernance.nonce],
+			([bodies, proposals]) => {
 				setBodies(bodies.toNumber())
-				setCampaigns(campaigns.toNumber())
 				setProposals(proposals.toNumber())
 			}
 		)
@@ -43,10 +38,10 @@ const Dashboard = (props) => {
 
 	return (
 		<>
-			<h1>Hello {name}</h1>
-			<h2>DAOs: {bodies}</h2>
-			<h2>Campaigns: {campaigns}</h2>
-			<h2>Proposals: {proposals}</h2>
+			<h1>Hello {name ?? 'Loading...'}</h1>
+			<h2>DAOs: {bodies ?? 'Loading...'}</h2>
+			<h2>Campaigns: {campaignsCount ?? 'Loading...'}</h2>
+			<h2>Proposals: {proposals ?? 'Loading...'}</h2>
 		</>
 	)
 }

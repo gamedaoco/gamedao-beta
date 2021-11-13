@@ -5,6 +5,9 @@ import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { ApiPromise } from '@polkadot/api'
 
+// Todo: Logic for subscribing to changes
+// Todo: Max initial load. Currently all are loaded
+
 type CrowdfundingState = {
 	campaignsCount: number
 	campaignsHash: object // Mapping from hash to id
@@ -17,13 +20,13 @@ type CrowdfundingState = {
 }
 
 const INITIAL_STATE: CrowdfundingState = {
-	campaignsCount: 0,
-	campaignsHash: {},
-	campaignsIndex: {},
-	campaigns: {},
-	campaignBalance: {},
-	campaignState: {},
-	campaignContributorsCount: {},
+	campaignsCount: null,
+	campaignsHash: null,
+	campaignsIndex: null,
+	campaigns: null,
+	campaignBalance: null,
+	campaignState: null,
+	campaignContributorsCount: null,
 	updateCampaigns: () => {},
 }
 
@@ -104,7 +107,6 @@ async function queryCampaignBalance(apiProvider: ApiPromise, hashes: any): Promi
 
 	const mapping = {}
 	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		console.log('🚀 ~ file: useCrowdfunding.ts ~ line 167 ~ data.map ~ c', c)
 		mapping[hashes[i]] = c
 	})
 
@@ -126,7 +128,6 @@ async function queryCampaignState(apiProvider: ApiPromise, hashes: any): Promise
 
 	const mapping = {}
 	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		console.log('🚀 ~ file: useCrowdfunding.ts ~ line 189 ~ data.map ~ c', c)
 		mapping[hashes[i]] = c
 	})
 
@@ -153,7 +154,6 @@ async function queryCampaignContributorsCount(
 
 	const mapping = {}
 	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		console.log('🚀 ~ file: useCrowdfunding.ts ~ line 189 ~ data.map ~ c', c)
 		mapping[hashes[i]] = c
 	})
 
@@ -163,9 +163,8 @@ async function queryCampaignContributorsCount(
 export const useCrowdfunding = () => {
 	const [state, setState] = useState<CrowdfundingState>(INITIAL_STATE)
 	const [lastCampaignsCount, setLastCampaignsCount] = useState<number>(null)
-
-	const isMountedRef = useIsMountedRef()
 	const apiProvider = useApiProvider()
+	const isMountedRef = useIsMountedRef()
 
 	// Update campaigns by querying the blockchain
 	const handleUpdateCampaigns = async (hashes: Array<string>) => {
@@ -221,9 +220,8 @@ export const useCrowdfunding = () => {
 	// Fetch new campaign hashes
 	useEffect(() => {
 		if (
-			state?.campaignsCount >= 0 &&
-			lastCampaignsCount !== state.campaignsCount &&
-			apiProvider
+			(state?.campaignsCount >= 0 && lastCampaignsCount) ??
+			(0 !== state.campaignsCount && apiProvider)
 		) {
 			queryCampaignsHash(apiProvider, lastCampaignsCount ?? 0, state.campaignsCount).then(
 				(opt) => {
@@ -284,8 +282,6 @@ export const useCrowdfunding = () => {
 			})()
 		}
 	}, [state.campaignsHash])
-
-	console.log('🚀 ~ file: useCrowdfunding.ts ~ line 277 ~ useCrowdfunding ~ state', state)
 
 	return state
 }
