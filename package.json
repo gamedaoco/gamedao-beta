@@ -44,7 +44,7 @@
 		"@polkadot/util": "^7.8.2",
 		"@polkadot/util-crypto": "~7.8.2",
 		"@ramp-network/ramp-instant-sdk": "^2.5.0",
-		"@substra-hooks/core": "^0.0.22",
+		"@substra-hooks/core": "^0.0.26",
 		"@zeroio/type-definitions": "^0.0.11",
 		"await-to-js": "^3.0.0",
 		"big.js": "^6.1.1",
@@ -88,7 +88,7 @@
 		"babel-plugin-transform-export-extensions": "^6.22.0",
 		"chalk": "^4.1.2",
 		"commitizen": "^4.2.3",
-		"concurrently": "^6.0.0",
+		"concurrently": "^6.4.0",
 		"conventional-changelog": "^3.1.24",
 		"cz-customizable": "^6.2.0",
 		"dotenv": "^10.0.0",
@@ -210,7 +210,7 @@
 		"useTabs": true,
 		"semi": false,
 		"singleQuote": true,
-		"printWidth": 160,
+		"printWidth": 100,
 		"bracketSpacing": true
 	}
 }

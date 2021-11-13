@@ -2,21 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 
 const Dashboard = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
-	const identity = useIdentity(address)
-
 	const [name, setName] = useState('')
-	const [bodies, setBodies] = useState(0)
-	const [campaigns, setCampaigns] = useState(0)
-	const [proposals, setProposals] = useState(0)
+	const [bodies, setBodies] = useState(null)
+	const [proposals, setProposals] = useState(null)
+	const identity = useIdentity(address)
+	const { campaignsCount } = useCrowdfunding()
 
 	useEffect(() => {
-		if (identity) {
-			setName(identity.toHuman()?.info?.display?.Raw ?? '')
-		}
+		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
 	useEffect(() => {
@@ -24,10 +22,9 @@ const Dashboard = (props) => {
 		let unsubscribe = null
 
 		api.queryMulti(
-			[api.query.gameDaoControl.nonce, api.query.gameDaoCrowdfunding.nonce, api.query.gameDaoGovernance.nonce],
-			([bodies, campaigns, proposals]) => {
+			[api.query.gameDaoControl.nonce, api.query.gameDaoGovernance.nonce],
+			([bodies, proposals]) => {
 				setBodies(bodies.toNumber())
-				setCampaigns(campaigns.toNumber())
 				setProposals(proposals.toNumber())
 			}
 		)
@@ -41,10 +38,10 @@ const Dashboard = (props) => {
 
 	return (
 		<>
-			<h1>Hello {name}</h1>
-			<h2>DAOs: {bodies}</h2>
-			<h2>Campaigns: {campaigns}</h2>
-			<h2>Proposals: {proposals}</h2>
+			<h1>Hello {name ?? 'Loading...'}</h1>
+			<h2>DAOs: {bodies ?? 'Loading...'}</h2>
+			<h2>Campaigns: {campaignsCount ?? 'Loading...'}</h2>
+			<h2>Proposals: {proposals ?? 'Loading...'}</h2>
 		</>
 	)
 }

@@ -17,6 +17,8 @@ import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 
 import { Button, Typography, Box, Stack } from '../../components'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useApiProvider } from '@substra-hooks/core'
 
 const CampaignGrid = lazy(() => import('./CampaignGrid'))
 const CreateCampaign = lazy(() => import('./Create'))
@@ -30,151 +32,25 @@ const CreateCampaign = lazy(() => import('./Create'))
 //
 
 export const Campaigns = (props) => {
-	const { api } = useSubstrate()
+	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
+		useCrowdfunding()
 
-	const [nonce, updateNonce] = useState()
-	const [hashes, setHashes] = useState()
-	const [campaigns, setCampaigns] = useState()
-	const [balances, setBalances] = useState()
-	const [states, setStates] = useState()
 	const [content, setContent] = useState()
 
 	useEffect(() => {
-		if (!api) return
-		let unsubscribe = null
-		const query = async (args) => {
-			const _req = api.query.gameDaoCrowdfunding
-			try {
-				_req.nonce((n) => {
-					if (n.isNone) updateNonce('<None>')
-					else updateNonce(n.toNumber())
-				}).then((unsub) => {
-					unsubscribe = unsub
-				})
-			} catch (err) {
-				console.error(err)
+		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
+
+		const content = Object.keys(campaignsIndex).map((index) => {
+			const itemHash = campaignsIndex[index]
+
+			return {
+				...(campaigns[itemHash] ?? {}),
+				state: campaignState[itemHash],
+				balance: campaignBalance[itemHash],
 			}
-		}
-		query()
-		return () => unsubscribe && unsubscribe()
-	}, [api])
-
-	// useEffect(() => {
-
-	// 	let unsubscribe = null
-
-	// 	const query = api.query.gameDaoCrowdfunding
-	// 	let contributed, owned
-
-	// 	api.queryMulti([
-	// 		[query.campaignsContributedCount, accountPair.address],
-	// 		[query.campaignsOwnedCount, accountPair.address],
-	// 	],([contributed,owned]) => {
-	// 		setState({
-	// 			...state,
-	// 			contributed: contributed.toNumber(),
-	// 			owned: owned.toNumber(),
-	// 		})
-	// 	}).then(unsub => {
-	// 		unsubscribe = unsub;
-	// 	}).catch(console.error);
-
-	// 	return () => unsubscribe && unsubscribe()
-
-	// }, [nonce, accountPair, api, state, api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		if (nonce === 0 || !api.query.gameDaoCrowdfunding?.campaignsArray) return
-
-		const query = api.query.gameDaoCrowdfunding.campaignsArray
-		const req = [...new Array(nonce)].map((a, i) => i)
-		const queryHashes = async (args) => {
-			const res = await query.multi(req).then((_) => _.map((_h) => _h.toHuman()))
-			setHashes(res)
-		}
-		queryHashes()
-	}, [nonce, api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		if (!hashes) return
-
-		const query = api.query.gameDaoCrowdfunding.campaigns
-		const queryCampaigns = async (args) => {
-			let _req = []
-			try {
-				for (var i = 0; i < args.length; i++) _req.push(query(args[i]))
-				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
-				setCampaigns(res)
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		queryCampaigns(hashes)
-	}, [hashes, api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		if (!hashes) return
-
-		const query = api.query.gameDaoCrowdfunding.campaignBalance
-		const queryContributions = async (args) => {
-			let req = []
-			try {
-				for (var i = 0; i < args.length; i++) req.push(query(args[i]))
-				const res = await Promise.all(req).then((_) => _.map((_c, _i) => [args[_i], _c.toHuman()]))
-				setBalances(res)
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		queryContributions(hashes)
-	}, [hashes, api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		if (!hashes) return
-
-		const query = api.query.gameDaoCrowdfunding.campaignState
-		const queryStates = async (args) => {
-			let req = []
-			try {
-				for (var i = 0; i < args.length; i++) req.push(query(args[i]))
-				const res = await Promise.all(req).then((_) => _.map((_c, _i) => [args[_i], _c.toHuman()]))
-				setStates(res)
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		queryStates(hashes)
-	}, [hashes, api.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		if (!campaigns || !balances || !states) return
-
-		const content = campaigns.map((item, index) => {
-			let state,
-				balance = 0,
-				id = item.id
-
-			if (states.length > 0) {
-				const filter = states.filter((s) => s[0] === id)
-				state = filter.length === 0 ? 0 : filter[0][1]
-			}
-
-			if (balances.length > 0) {
-				const filter = balances.filter((s) => s[0] === id)
-				balance = filter.length === 0 ? 0 : filter[0][1]
-			}
-
-			const _item = {
-				...item,
-				state,
-				balance,
-			}
-
-			return _item
 		})
-
 		setContent(content)
-	}, [campaigns, balances, states])
+	}, [campaignsIndex, campaignBalance, campaignState, campaigns])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
@@ -184,14 +60,28 @@ export const Campaigns = (props) => {
 		<>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Typography>Campaigns</Typography>
-				<Typography>{!content || nonce === 0 ? <h4>No campaigns yet. Create one!</h4> : <h4>Total campaigns: {nonce}</h4>}</Typography>
+				<Typography>
+					{!content || campaignsCount === 0 ? (
+						<h4>No campaigns yet. Create one!</h4>
+					) : (
+						<h4>Total campaigns: {campaignsCount ?? 'Loading...'}</h4>
+					)}
+				</Typography>
 				<Box>
 					{showCreateMode ? (
-						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+						<Button
+							variant="outlined"
+							startIcon={<ClearIcon />}
+							onClick={handleCloseBtn}
+						>
 							<Typography>Close</Typography>
 						</Button>
 					) : (
-						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+						<Button
+							variant="outlined"
+							startIcon={<AddIcon />}
+							onClick={handleCreateBtn}
+						>
 							<Typography>New Campaign</Typography>
 						</Button>
 					)}
@@ -199,12 +89,14 @@ export const Campaigns = (props) => {
 			</Stack>
 			<br />
 			{showCreateMode && <CreateCampaign />}
-			{!showCreateMode && content && nonce !== 0 && <CampaignGrid content={content} />}
+			{!showCreateMode && content && campaignsCount !== 0 && (
+				<CampaignGrid content={content} />
+			)}
 		</>
 	)
 }
 
 export default function Component(props) {
-	const { api } = useSubstrate()
-	return api ? <Campaigns /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Campaigns /> : null
 }
