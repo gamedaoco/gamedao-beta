@@ -1,29 +1,19 @@
-import React, { useEffect, useState } from 'react'
-
-import { useWallet } from 'src/context/Wallet'
-import { web3FromSource } from '@polkadot/extension-dapp'
-
-// import { Container, Form, Divider, Segment, Image, Button, Radio } from 'semantic-ui-react'
-
-import Typography from '@mui/material/Typography'
-import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Form from '@mui/material/Stack'
-
-// selekta
-import Select, { SelectChangeEvent } from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-
-import faker from 'faker'
-import { data, rnd } from '../lib/data'
-import config from '../../config'
-
-import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
+import MuiSelect from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import { web3FromSource } from '@polkadot/extension-dapp'
 import { useApiProvider } from '@substra-hooks/core'
+import faker from 'faker'
+import React, { useEffect, useState } from 'react'
+import { useWallet } from 'src/context/Wallet'
+import config from '../../config'
+import { data, rnd } from '../lib/data'
+import { gateway, pinJSONToIPFS } from '../lib/ipfs'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -148,7 +138,8 @@ export const Main = () => {
 
 	// form fields
 
-	const handleOnChange = (e, { name, value }) => {
+	const handleOnChange = (e) => {
+		const { name, value } = e.target
 		const update = {
 			...formData,
 			[name]: value,
@@ -233,135 +224,160 @@ export const Main = () => {
 	// })
 	// const entities = { ...data.orgs, ...campaigns }
 
-	const SelectBox = ({ value, handleOnChange, label, options }) => {
-		const ref = `${value.text}-label`
-		return (
-			<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-				<InputLabel id={ref}>Age</InputLabel>
-				<Select labelId={ref} value={value} onChange={handleOnChange} label="Age">
-					<MenuItem value={null}></MenuItem>
-					{options.map((item, index) => {
-						;<MenuItem key={item.key} value={item.value}>
-							{item.text}
-						</MenuItem>
-					})}
-				</Select>
-			</FormControl>
-		)
-	}
-
-	// if (!formData) return null
+	if (!formData) return null
 
 	return (
 		<React.Fragment>
 			<Grid container spacing={2}>
-				<Grid item>
-					<Typography component="h2" variant="h3">
-						General Information
-					</Typography>
-				</Grid>
-
-				<Grid item>
-					{/*
-					<Form>
-					<Select
-						fluid
-						required
-						label="Organization / Campaign"
-						placeholder="Please select"
-						name="entity"
-						options={entities}
-						value={formData.entity}
-						onChange={handleOnChange}
-					/>
-
-					<Group widths="equal">
-						<Input fluid label="Proposal Title" placeholder="Title" name="purpose" value={formData.purpose} onChange={handleOnChange} required />
-					</Group>
-
-					<Group widths="equal">
-						<TextArea
-							label="Short Description"
-							name="description"
-							value={formData.description}
-							placeholder="Tell us more"
-							onChange={handleOnChange}
-						/>
-					</Group>
-
-					<Group widths="equal">
-						<Select
-							fluid
-							label="Voting Type"
-							options={data.voting_types}
-							name="voting_types"
-							value={formData.voting_types}
-							onChange={handleOnChange}
-						/>
-						<Select
-							fluid
-							label="Proposal Duration"
-							options={data.project_durations}
-							placeholder="Duration"
-							name="duration"
-							value={formData.duration}
-							onChange={handleOnChange}
-						/>
-					</Group>
-
-					<Group widths="equal">
-						<Select
-							fluid
-							disabled
-							label="Collateral Type"
-							options={data.collateral_types}
-							name="collateral_types"
-							value={formData.collateral_types}
-							onChange={handleOnChange}
-						/>
-						<Input
-							fluid
-							type="number"
-							label="Collateral Amount"
-							placeholder="amount"
-							name="collateral_amount"
-							value={formData.collateral_amount}
-							onChange={handleOnChange}
-							required
-						/>
-					</Group>
-
-					<Divider clearing horizontal>
-						For Withdrawals and Grants
-					</Divider>
-
-					<Group widths="equal">
-						<Input
-							fluid
-							label="Amount to transfer on success"
-							placeholder="amount"
-							name="amount"
-							value={formData.amount}
-							onChange={handleOnChange}
-						/>
-						<Input
-							fluid
-							label="Beneficiary Account"
-							placeholder="Beneficiary"
-							name="beneficiary"
-							value={formData.beneficiary}
-							onChange={handleOnChange}
-							required
-						/>
-					</Group>
-
-
-					</Form>
-				*/}
-				</Grid>
-
-				<Grid>
-					<Button onClick={handleSubmit}>Publish Proposal</Button>
+				<Grid item xs={12}>
+					<form>
+						<Grid container spacing={2}>
+							<Grid item xs={12}>
+								<Divider>General Information</Divider>
+							</Grid>
+							<Grid item xs={12}>
+								<FormControl fullWidth>
+									<InputLabel>Organization / Campaign</InputLabel>
+									<MuiSelect
+										required
+										label="Organization / Campaign"
+										fullWidth
+										name="entity"
+										value={formData.entity}
+										onChange={handleOnChange}
+									>
+										{entities.map((e) => (
+											<MenuItem key={e.key} value={e.value}>
+												{e.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									name={'purpose'}
+									label={'Proposal Title'}
+									placeholder={'Title'}
+									InputLabelProps={{ shrink: true }}
+									value={formData.purpose}
+									onChange={handleOnChange}
+									fullWidth
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									multiline
+									fullWidth
+									label={'Short Description'}
+									value={formData.description}
+									placeholder={'Tell us more'}
+									onChange={handleOnChange}
+									name={'description'}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<FormControl fullWidth>
+									<InputLabel>Voting Type</InputLabel>
+									<MuiSelect
+										label={'Voting Type'}
+										name={'voting_types'}
+										value={formData.voting_types}
+										onChange={handleOnChange}
+										fullWidth
+									>
+										{data.voting_types.map((vt) => (
+											<MenuItem key={vt.key} value={vt.value}>
+												{vt.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<FormControl fullWidth>
+									<InputLabel>Duration</InputLabel>
+									<MuiSelect
+										label={'Duration'}
+										name={'duration'}
+										value={formData.duration}
+										onChange={handleOnChange}
+										fullWidth
+									>
+										{data.project_durations.map((pd) => (
+											<MenuItem key={pd.key} value={pd.value}>
+												{pd.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<FormControl fullWidth>
+									<InputLabel>Collateral Type</InputLabel>
+									<MuiSelect
+										label={'Collateral Type'}
+										name={'collateral_types'}
+										value={formData.collateral_types}
+										onChange={handleOnChange}
+										fullWidth
+									>
+										{data.collateral_types.map((ct) => (
+											<MenuItem key={ct.key} value={ct.value}>
+												{ct.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									type={'number'}
+									name={'collateral_amount'}
+									value={formData.collateral_amount}
+									onChange={handleOnChange}
+									fullWidth
+									label={'Collateral Amount'}
+									InputLabelProps={{ shrink: true }}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Divider>For withdrawals and grants</Divider>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									type={'number'}
+									name={'amount'}
+									value={formData.amount}
+									onChange={handleOnChange}
+									fullWidth
+									label={'Amount to transfer on success'}
+									InputLabelProps={{ shrink: true }}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									type={'text'}
+									name={'beneficiary'}
+									value={formData.beneficiary}
+									onChange={handleOnChange}
+									fullWidth
+									label={'Beneficiary Account'}
+									InputLabelProps={{ shrink: true }}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Button
+									variant={'contained'}
+									fullWidth
+									color={'primary'}
+									onClick={handleSubmit}
+								>
+									Publish Proposal
+								</Button>
+							</Grid>
+						</Grid>
+					</form>
 				</Grid>
 			</Grid>
 		</React.Fragment>
