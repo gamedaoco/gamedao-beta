@@ -11,7 +11,8 @@ import {
     Container, 
     Button, 
     Stack,
-    Slider
+    Slider,
+    Image16to9
 } from '../../components'
 
 import { Canvas } from "@react-three/fiber";
@@ -19,6 +20,7 @@ import { useLoader } from "@react-three/fiber";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Suspense } from "react";
+import { TileReward } from "./TileReward"
 
 const Model = () => {
   const gltf = useLoader(GLTFLoader, "/assets/models/tangram/Tangram.gltf");
@@ -29,18 +31,27 @@ const Model = () => {
   );
 };
 
+const Model2 = () => {
+  const gltf = useLoader(GLTFLoader, "/assets/models/binas_house/scene.gltf");
+  return (
+    <>
+      <primitive object={gltf.scene} scale={0.4} />
+    </>
+  );
+};
+
+
 
 function Renderer() {
   return (
-    <>
-      <Canvas>
+    <Box sx={{ zIndex: '100000 !important' }}>
+      <Canvas invalidateFrameloop={true}>
         <Suspense fallback={null}>
-          <Model />
-          <OrbitControls />
-          <Environment preset="dawn" background />
+          <Model scale={1}/>
+          <OrbitControls zoom={2}  position={[-400,0,0]} rotateSpeed={1} autoRotate={true}/>
         </Suspense>
       </Canvas>
-    </>
+    </Box>
   );
 }
 
@@ -115,7 +126,7 @@ export default function Campaign(){
                         <Box>
                             <Stack direction='row'>
                                 {t.map(tag => {
-                                    return <Chip label="Chip Outlined" variant="outlined" />
+                                    return <Chip sx={{ padding: 0 }} label={tag} variant="outlined" />
                                 })}
                             </Stack>
                         </Box>
@@ -149,6 +160,21 @@ export default function Campaign(){
                     </Box>
                 </Box>
             </Container>
+              {/*<Box sx={{ 
+                position: 'absolute', 
+                zIndex: '100000 !important',
+                right: '10vw',
+                top: '5vh',
+                width: '30vw',
+                height: '30vh'
+                }}>
+                <Canvas invalidateFrameloop={true}>
+                  <Suspense fallback={null}>
+                    <Model scale={1}/>
+                    <OrbitControls />
+                  </Suspense>
+                </Canvas>
+              </Box>*/}
             <br/>
             <Container
                 maxWidth='md'
@@ -163,15 +189,106 @@ export default function Campaign(){
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    Item One
+                  <Description/>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Item Two
+                    <Rewards/>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Item Three
+                    <Milestones/>
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                    <Funding/>
                 </TabPanel>
                 </Box>
             </Container>
         </Box>
+}
+
+function Description(){
+  return <Box sx={{ mt: 10 }}>
+  <Typography variant="h4">LEVEL UP &</Typography>
+  <Typography variant="h2">BE LEGENDARY</Typography>
+  <Typography>From the developer of Virgo Versus The Zodiac and Osteoblasts comes a Tactical Rhythm JRPG in which you play as the Singer who fights the oppressive government to bring back Music to a melodyless world. Play as Ailuri, a small hero set on an adventure to protect the world from environmental destruction. Complete vast levels, rescue animals.</Typography>
+  <Box 			
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      my: 10
+    }}
+  >
+      <Typography variant="h4">CHOOSE YOUR</Typography>
+      <Typography variant="h2">CHAMPION</Typography>
+
+      <Stack direction="row" sx={{ width: '100%' }}>
+        {[0,1,2,3,4].map(x => <TileReward/>)}
+      </Stack>
+  </Box>
+  <Box 			
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      my: 10
+    }}
+  >
+      <Typography variant="h4">SOME CATCHY</Typography>
+      <Typography variant="h2">HEADLINE</Typography>
+      <Typography>From the developer of Virgo Versus The Zodiac and Osteoblasts comes a Tactical Rhythm JRPG in which you play as the Singer who fights the oppressive government to bring back Music to a melodyless world. Play as Ailuri, a small hero set on an adventure to protect the world from environmental destruction. Complete vast levels, rescue animals.</Typography>
+  </Box>
+
+  <Box 			
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      my: 10
+    }}
+  >
+      <Typography variant="h4">STUNNING &</Typography>
+      <Typography variant="h2">MYSTICAL WORLDS</Typography>
+      <Image16to9 sx={{ overflow: 'hidden', width: '100%' }} />
+      <Stack direction="row" sx={{ width: '100%' }}>
+        <Image16to9 sx={{ overflow: 'hidden', m: 1, flex: '1 1 auto' }} src=""/>
+        <Image16to9 sx={{ overflow: 'hidden', m: 1, flex: '1 1 auto' }} src=""/>
+        <Image16to9 sx={{ overflow: 'hidden', m: 1, flex: '1 1 auto' }} src=""/>
+        <Image16to9 sx={{ overflow: 'hidden', m: 1, flex: '1 1 auto' }} src=""/>
+      </Stack>
+ </Box>
+</Box>
+}
+
+
+function Rewards(){
+  return <Box sx={{ mt: 10 }}>
+  <Typography variant="h4">PRE HEADLINE</Typography>
+  <Typography variant="h2">REWARDS</Typography>
+  <Typography>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
+  <Box 			
+    sx={{
+      display: 'flex',
+      flexFlow: 'row wrap',
+    }}
+  >
+    <TileReward disabled/>
+    {[0,1,2,3,4].map(x => <TileReward/>)}
+  </Box>
+</Box>
+}
+
+function Milestones(){
+  return <Box sx={{ mt: 10 }}>
+    <Typography variant="h4">PRE HEADLINE</Typography>
+    <Typography variant="h2">MILESTONES</Typography>
+    <Typography>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
+  </Box>
+}
+
+function Funding(){
+  return <Box sx={{ mt: 10 }}>
+    <Typography variant="h4">PRE HEADLINE</Typography>
+    <Typography variant="h2">FUNDING</Typography>
+    <Typography>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
+  </Box>
 }

@@ -18,6 +18,9 @@
     "format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@react-three/drei": "4.1.8",
+    "@react-three/fiber": "6.0.14",
+    "three": "0.127.0",
     "@emotion/cache": "^11.5.0",
     "@emotion/react": "^11.5.0",
     "@emotion/server": "^11.4.0",
