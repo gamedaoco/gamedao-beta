@@ -163,7 +163,7 @@ function Main({ showNavigation }: ComponentProps) {
 						<Typography variant="h5">Wallet</Typography>
 					</SidebarButton>
 				</NavLink>
-				<a href="https://docs.gamedao.co">
+				<a href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
 					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="document" />

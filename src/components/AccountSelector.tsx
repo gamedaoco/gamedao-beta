@@ -71,7 +71,7 @@ const AccountComponent = () => {
 		if (accounts && allowConnect) {
 			updateWalletState({ account: accounts[0], address: accounts[0]?.address })
 		}
-	}, [accounts, allowConnect, updateWalletState])
+	}, [accounts, allowConnect])
 
 	useEffect(() => {
 		// Set selected account
