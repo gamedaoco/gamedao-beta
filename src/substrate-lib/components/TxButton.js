@@ -3,12 +3,21 @@ import PropTypes from 'prop-types'
 import { Button } from 'semantic-ui-react'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { useSubstrate } from '../'
 import utils from '../utils'
+import { useApiProvider } from '@substra-hooks/core'
 
-function TxButton({ accountPair = null, label, setStatus, color = 'blue', style = null, type = 'QUERY', attrs = null, disabled = false }) {
+function TxButton({
+	accountPair = null,
+	label,
+	setStatus,
+	color = 'blue',
+	style = null,
+	type = 'QUERY',
+	attrs = null,
+	disabled = false,
+}) {
 	// Hooks
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const [unsub, setUnsub] = useState(null)
 	const [sudoKey, setSudoKey] = useState(null)
 
@@ -24,15 +33,15 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 
 	const loadSudoKey = () => {
 		;(async function () {
-			if (!api || !api.query.sudo) {
+			if (!apiProvider || !apiProvider.query.sudo) {
 				return
 			}
-			const sudoKey = await api.query.sudo.key()
+			const sudoKey = await apiProvider.query.sudo.key()
 			sudoKey.isEmpty ? setSudoKey(null) : setSudoKey(sudoKey.toString())
 		})()
 	}
 
-	useEffect(loadSudoKey, [api])
+	useEffect(loadSudoKey, [apiProvider])
 
 	const getFromAcct = async () => {
 		const {
@@ -46,7 +55,7 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
 		}
@@ -55,7 +64,9 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 	}
 
 	const txResHandler = ({ status }) =>
-		status.isFinalized ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`) : setStatus(`Current transaction status: ${status.type}`)
+		status.isFinalized
+			? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
+			: setStatus(`Current transaction status: ${status.type}`)
 
 	const txErrHandler = (err) => setStatus(`😞 Transaction Failed: ${err.toString()}`)
 
@@ -63,7 +74,9 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 		const fromAcct = await getFromAcct()
 		const transformed = transformParams(paramFields, inputParams)
 		// transformed can be empty parameters
-		const txExecute = transformed ? api.tx.sudo.sudo(api.tx[palletRpc][callable](...transformed)) : api.tx.sudo.sudo(api.tx[palletRpc][callable]())
+		const txExecute = transformed
+			? apiProvider.tx.sudo.sudo(apiProvider.tx[palletRpc][callable](...transformed))
+			: apiProvider.tx.sudo.sudo(apiProvider.tx[palletRpc][callable]())
 
 		const unsub = txExecute.signAndSend(fromAcct, txResHandler).catch(txErrHandler)
 		setUnsub(() => unsub)
@@ -71,7 +84,10 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 
 	const uncheckedSudoTx = async () => {
 		const fromAcct = await getFromAcct()
-		const txExecute = api.tx.sudo.sudoUncheckedWeight(api.tx[palletRpc][callable](...inputParams), 0)
+		const txExecute = apiProvider.tx.sudo.sudoUncheckedWeight(
+			apiProvider.tx[palletRpc][callable](...inputParams),
+			0
+		)
 
 		const unsub = txExecute.signAndSend(fromAcct, txResHandler).catch(txErrHandler)
 		setUnsub(() => unsub)
@@ -82,7 +98,9 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 		const transformed = transformParams(paramFields, inputParams)
 		// transformed can be empty parameters
 
-		const txExecute = transformed ? api.tx[palletRpc][callable](...transformed) : api.tx[palletRpc][callable]()
+		const txExecute = transformed
+			? apiProvider.tx[palletRpc][callable](...transformed)
+			: apiProvider.tx[palletRpc][callable]()
 
 		const unsub = await txExecute.signAndSend(fromAcct, txResHandler).catch(txErrHandler)
 		setUnsub(() => unsub)
@@ -91,28 +109,31 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 	const unsignedTx = async () => {
 		const transformed = transformParams(paramFields, inputParams)
 		// transformed can be empty parameters
-		const txExecute = transformed ? api.tx[palletRpc][callable](...transformed) : api.tx[palletRpc][callable]()
+		const txExecute = transformed
+			? apiProvider.tx[palletRpc][callable](...transformed)
+			: apiProvider.tx[palletRpc][callable]()
 
 		const unsub = await txExecute.send(txResHandler).catch(txErrHandler)
 		setUnsub(() => unsub)
 	}
 
-	const queryResHandler = (result) => (result.isNone ? setStatus('None') : setStatus(result.toString()))
+	const queryResHandler = (result) =>
+		result.isNone ? setStatus('None') : setStatus(result.toString())
 
 	const query = async () => {
 		const transformed = transformParams(paramFields, inputParams)
-		const unsub = await api.query[palletRpc][callable](...transformed, queryResHandler)
+		const unsub = await apiProvider.query[palletRpc][callable](...transformed, queryResHandler)
 		setUnsub(() => unsub)
 	}
 
 	const rpc = async () => {
 		const transformed = transformParams(paramFields, inputParams, { emptyAsNull: false })
-		const unsub = await api.rpc[palletRpc][callable](...transformed, queryResHandler)
+		const unsub = await apiProvider.rpc[palletRpc][callable](...transformed, queryResHandler)
 		setUnsub(() => unsub)
 	}
 
 	const constant = () => {
-		const result = api.consts[palletRpc][callable]
+		const result = apiProvider.consts[palletRpc][callable]
 		result.isNone ? setStatus('None') : setStatus(result.toString())
 	}
 
@@ -137,7 +158,11 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 		//   Otherwise, it will not be added
 		const paramVal = inputParams.map((inputParam) => {
 			// To cater the js quirk that `null` is a type of `object`.
-			if (typeof inputParam === 'object' && inputParam !== null && typeof inputParam.value === 'string') {
+			if (
+				typeof inputParam === 'object' &&
+				inputParam !== null &&
+				typeof inputParam.value === 'string'
+			) {
 				return inputParam.value.trim()
 			} else if (typeof inputParam === 'string') {
 				return inputParam.trim()
@@ -155,14 +180,21 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 			if (type.indexOf('Vec<') >= 0) {
 				converted = converted.split(',').map((e) => e.trim())
 				converted = converted.map((single) =>
-					isNumType(type) ? (single.indexOf('.') >= 0 ? Number.parseFloat(single) : Number.parseInt(single)) : single
+					isNumType(type)
+						? single.indexOf('.') >= 0
+							? Number.parseFloat(single)
+							: Number.parseInt(single)
+						: single
 				)
 				return [...memo, converted]
 			}
 
 			// Deal with a single value
 			if (isNumType(type)) {
-				converted = converted.indexOf('.') >= 0 ? Number.parseFloat(converted) : Number.parseInt(converted)
+				converted =
+					converted.indexOf('.') >= 0
+						? Number.parseFloat(converted)
+						: Number.parseInt(converted)
 			}
 			return [...memo, converted]
 		}, [])
@@ -203,7 +235,13 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 			style={style}
 			type="submit"
 			onClick={transaction}
-			disabled={disabled || !palletRpc || !callable || !allParamsFilled() || ((isSudo() || isUncheckedSudo()) && !isSudoer(accountPair))}
+			disabled={
+				disabled ||
+				!palletRpc ||
+				!callable ||
+				!allParamsFilled() ||
+				((isSudo() || isUncheckedSudo()) && !isSudoer(accountPair))
+			}
 		>
 			{label}
 		</Button>
@@ -214,7 +252,15 @@ function TxButton({ accountPair = null, label, setStatus, color = 'blue', style 
 TxButton.propTypes = {
 	accountPair: PropTypes.object,
 	setStatus: PropTypes.func.isRequired,
-	type: PropTypes.oneOf(['QUERY', 'RPC', 'SIGNED-TX', 'UNSIGNED-TX', 'SUDO-TX', 'UNCHECKED-SUDO-TX', 'CONSTANT']).isRequired,
+	type: PropTypes.oneOf([
+		'QUERY',
+		'RPC',
+		'SIGNED-TX',
+		'UNSIGNED-TX',
+		'SUDO-TX',
+		'UNCHECKED-SUDO-TX',
+		'CONSTANT',
+	]).isRequired,
 	attrs: PropTypes.shape({
 		palletRpc: PropTypes.string,
 		callable: PropTypes.string,

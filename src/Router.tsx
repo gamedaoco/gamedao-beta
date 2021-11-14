@@ -25,7 +25,11 @@ export interface ComponentProps {
 }
 
 const LayoutRoute = ({ showFooter, showHeader, showSidebar, element }: ComponentProps) => (
-	<Layout showHeader={showHeader ? showHeader : null} showFooter={showFooter ? showFooter : null} showSidebar={showSidebar ? showSidebar : null}>
+	<Layout
+		showHeader={showHeader ? showHeader : null}
+		showFooter={showFooter ? showFooter : null}
+		showSidebar={showSidebar ? showSidebar : null}
+	>
 		{element}
 	</Layout>
 )
@@ -35,15 +39,63 @@ const Router = (props) => {
 		<Suspense fallback={<Loader text="Loading..."></Loader>}>
 			<Routes>
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
-				<Route path="/app" element={<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />}></Route>
-				<Route path="/app/organisations" element={<LayoutRoute showSidebar showHeader showFooter element={<Organisations />} />}></Route>
-				<Route path="/app/governance" element={<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />}></Route>
-				<Route path="/app/campaigns" element={<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />}></Route>
-				<Route path="/app/tangram" element={<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />}></Route>
-				<Route path="/app/wallet" element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}></Route>
-				<Route path="/app/designsystem" element={<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />}></Route>
-				<Route path="/app/organisations/admin/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />}></Route>
-				<Route path="/app/organisations/:id" element={<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />}></Route>
+				<Route
+					path="/app"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />
+					}
+				></Route>
+				<Route
+					path="/app/organisations"
+					element={
+						<LayoutRoute
+							showSidebar
+							showHeader
+							showFooter
+							element={<Organisations />}
+						/>
+					}
+				></Route>
+				<Route
+					path="/app/governance"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />
+					}
+				></Route>
+				<Route
+					path="/app/campaigns"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />
+					}
+				></Route>
+				<Route
+					path="/app/tangram"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />
+					}
+				></Route>
+				<Route
+					path="/app/wallet"
+					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}
+				></Route>
+				<Route
+					path="/app/designsystem"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />
+					}
+				></Route>
+				<Route
+					path="/app/organisations/admin/:id"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />
+					}
+				></Route>
+				<Route
+					path="/app/organisations/:id"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />
+					}
+				></Route>
 			</Routes>
 		</Suspense>
 	)

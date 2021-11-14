@@ -1,15 +1,16 @@
+import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { Statistic, Grid, Card, Icon } from 'semantic-ui-react'
 
-import { useSubstrate } from '../substrate-lib'
-
 function Main(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { finalized } = props
 	const [blockNumber, setBlockNumber] = useState(0)
 	const [blockNumberTimer, setBlockNumberTimer] = useState(0)
 
-	const bestNumber = finalized ? api.derive.chain.bestNumberFinalized : api.derive.chain.bestNumber
+	const bestNumber = finalized
+		? apiProvider.derive.chain.bestNumberFinalized
+		: apiProvider.derive.chain.bestNumber
 
 	useEffect(() => {
 		let unsubscribeAll = null
@@ -39,7 +40,10 @@ function Main(props) {
 		<Grid.Column>
 			<Card>
 				<Card.Content textAlign="center">
-					<Statistic label={(finalized ? 'Finalized' : 'Current') + ' Block'} value={blockNumber} />
+					<Statistic
+						label={(finalized ? 'Finalized' : 'Current') + ' Block'}
+						value={blockNumber}
+					/>
 				</Card.Content>
 				<Card.Content extra>
 					<Icon name="time" /> {blockNumberTimer}
@@ -50,6 +54,11 @@ function Main(props) {
 }
 
 export default function BlockNumber(props) {
-	const { api } = useSubstrate()
-	return api.derive && api.derive.chain && api.derive.chain.bestNumber && api.derive.chain.bestNumberFinalized ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider.derive &&
+		apiProvider.derive.chain &&
+		apiProvider.derive.chain.bestNumber &&
+		apiProvider.derive.chain.bestNumberFinalized ? (
+		<Main {...props} />
+	) : null
 }

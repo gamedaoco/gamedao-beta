@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
@@ -24,6 +23,7 @@ import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
+import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -86,7 +86,8 @@ const random_state = (accountPair, campaigns = []) => {
 // 0.3 -> surveys
 
 export const Main = () => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
+
 	const { accountPair, address } = useWallet()
 	const [block, setBlock] = useState(0)
 
@@ -102,19 +103,19 @@ export const Main = () => {
 	const [entities, setEntities] = useState([])
 
 	useEffect(() => {
-		if (!api || !address) return
+		if (!apiProvider || !address) return
 
 		const query = async () => {
 			try {
 				const [memberships, contributions, successful] = await Promise.all([
-					api.query.gameDaoControl.memberships(address),
-					api.query.gameDaoCrowdfunding.campaignsContributed(address),
-					api.query.gameDaoCrowdfunding.campaignsByState(3),
+					apiProvider.query.gameDaoControl.memberships(address),
+					apiProvider.query.gameDaoCrowdfunding.campaignsContributed(address),
+					apiProvider.query.gameDaoCrowdfunding.campaignsByState(3),
 				])
 				const new_entities = new Array()
 					// .concat(...memberships.toHuman())
-					.concat(...contributions.toHuman())
-					.concat(...successful.toHuman())
+					.concat(...(contributions as any).toHuman())
+					.concat(...(successful as any).toHuman())
 					.map((h, i) => {
 						return { key: i, text: h, value: h }
 					})
@@ -124,7 +125,7 @@ export const Main = () => {
 			}
 		}
 		query()
-	}, [api, address])
+	}, [apiProvider, address])
 
 	//
 	//
@@ -139,7 +140,7 @@ export const Main = () => {
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
 		}
@@ -197,13 +198,16 @@ export const Main = () => {
 			const payload = [voting_type, id, purpose, cid, amount, expiry]
 			const from = await getFromAcct(accountPair)
 			// TODO: refactor to have unified method name on module...
-			const tx = api.tx.gameDaoGovernance.createProposal(...payload)
+			const tx = apiProvider.tx.gameDaoGovernance.createProposal(...payload)
 			const hash = await tx.signAndSend(from, ({ status, events }) => {
 				if (events.length) {
 					events.forEach((record) => {
 						const { event } = record
 						// const types = event.typeDef
-						if (event.section === 'gameDaoGovernance' && event.method === 'ProposalCreated') {
+						if (
+							event.section === 'gameDaoGovernance' &&
+							event.method === 'ProposalCreated'
+						) {
 							console.log('proposal created:', hash)
 							setRefresh(true)
 						}
@@ -366,8 +370,8 @@ export const Main = () => {
 }
 
 export default function Module() {
-	const { api } = useSubstrate()
-	return api && api.query.gameDaoGovernance ? <Main /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider && apiProvider.query.gameDaoGovernance ? <Main /> : null
 }
 
 //

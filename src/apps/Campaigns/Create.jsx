@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
 import { Container, Button, Form, Segment, Divider, Image /*Dimmer*/ } from 'semantic-ui-react'
@@ -10,6 +9,7 @@ import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 import { useWallet } from 'src/context/Wallet'
+import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 console.log(dev)
@@ -56,7 +56,7 @@ const random_state = (accountPair) => {
 }
 
 export const Main = () => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { accountPair, finalized } = useWallet()
 	const [block, setBlock] = useState(0)
 	const [nonce, updateNonce] = useState(0)
@@ -79,18 +79,20 @@ export const Main = () => {
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
 		}
 		return fromAcct
 	}
 
-	const bestBlock = finalized ? api.derive.chain.bestNumberFinalized : api.derive.chain.bestNumber
+	const bestBlock = finalized
+		? apiProvider.derive.chain.bestNumberFinalized
+		: apiProvider.derive.chain.bestNumber
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoCrowdfunding
+		apiProvider.query.gameDaoCrowdfunding
 			.nonce((n) => {
 				if (n.isNone) {
 					updateNonce(0)
@@ -103,7 +105,7 @@ export const Main = () => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoCrowdfunding])
+	}, [apiProvider.query.gameDaoCrowdfunding])
 
 	useEffect(() => {
 		let unsubscribe = null
@@ -121,7 +123,7 @@ export const Main = () => {
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoControl
+		apiProvider.query.gameDaoControl
 			.controlledBodies(accountPair.address, (b) => {
 				if (b.isNone || b.length === 0) return
 				const hashes = [...new Set(b.toHuman().map((_) => _))]
@@ -133,7 +135,7 @@ export const Main = () => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [accountPair, api.query.gameDaoControl])
+	}, [accountPair, apiProvider.query.gameDaoControl])
 
 	//
 
@@ -141,7 +143,9 @@ export const Main = () => {
 		if (orgHashes.length === 0) return
 		const req = [...orgHashes]
 		const query = async (args) => {
-			const res = await api.query.gameDaoControl.bodies.multi(req).then((_) => _.map((_h) => _h.toHuman()))
+			const res = await apiProvider.query.gameDaoControl.bodies
+				.multi(req)
+				.then((_) => _.map((_h) => _h.toHuman()))
 			const _ = res.map((body, i) => {
 				const org = {
 					key: i,
@@ -153,7 +157,7 @@ export const Main = () => {
 			updateOrgs(_)
 		}
 		query()
-	}, [orgHashes, accountPair, api.query.gameDaoControl])
+	}, [orgHashes, accountPair, apiProvider.query.gameDaoControl])
 
 	useEffect(() => {
 		if (orgs.length === 0) return
@@ -244,13 +248,16 @@ export const Main = () => {
 			console.log('payload', payload)
 
 			const from = await getFromAcct()
-			const tx = api.tx.gameDaoCrowdfunding.create(...payload)
+			const tx = apiProvider.tx.gameDaoCrowdfunding.create(...payload)
 			const hash = await tx.signAndSend(from, ({ status, events }) => {
 				if (events.length) {
 					events.forEach((record) => {
 						const { event } = record
 						// const types = event.typeDef
-						if (event.section === 'gameDaoCrowdfunding' && event.method === 'CampaignCreated') {
+						if (
+							event.section === 'gameDaoCrowdfunding' &&
+							event.method === 'CampaignCreated'
+						) {
 							console.log('campaign created:', hash)
 							setRefresh(true)
 						}
@@ -295,7 +302,15 @@ export const Main = () => {
 					onChange={handleOnChange}
 				/>
 
-				<Form.Input fluid required label="Campaign name" placeholder="Campaign name" name="title" value={formData.title} onChange={handleOnChange} />
+				<Form.Input
+					fluid
+					required
+					label="Campaign name"
+					placeholder="Campaign name"
+					name="title"
+					value={formData.title}
+					onChange={handleOnChange}
+				/>
 
 				<Form.TextArea
 					label="Campaign Description"
@@ -313,14 +328,28 @@ export const Main = () => {
 
 				{fileCID && (
 					<Image.Group size="tiny">
-						{fileCID.logo && <Image alt={formData.title} src={gateway + fileCID.logo} />}
-						{fileCID.header && <Image alt={formData.title} src={gateway + fileCID.header} />}
+						{fileCID.logo && (
+							<Image alt={formData.title} src={gateway + fileCID.logo} />
+						)}
+						{fileCID.header && (
+							<Image alt={formData.title} src={gateway + fileCID.header} />
+						)}
 					</Image.Group>
 				)}
 
 				<Form.Group widths="equal">
-					<Form.Input type="file" label="Logo Graphic" name="logo" onChange={onFileChange} />
-					<Form.Input type="file" label="Header Graphic" name="header" onChange={onFileChange} />
+					<Form.Input
+						type="file"
+						label="Logo Graphic"
+						name="logo"
+						onChange={onFileChange}
+					/>
+					<Form.Input
+						type="file"
+						label="Header Graphic"
+						name="header"
+						onChange={onFileChange}
+					/>
 				</Form.Group>
 
 				{/* legal body applying for the funding */}
@@ -332,8 +361,22 @@ export const Main = () => {
 				<br />
 
 				<Form.Group widths="equal">
-					<Form.Input fluid label="Name" placeholder="Name" name="name" value={formData.name} onChange={handleOnChange} />
-					<Form.Input fluid label="Email" placeholder="Email" name="email" value={formData.email} onChange={handleOnChange} />
+					<Form.Input
+						fluid
+						label="Name"
+						placeholder="Name"
+						name="name"
+						value={formData.name}
+						onChange={handleOnChange}
+					/>
+					<Form.Input
+						fluid
+						label="Email"
+						placeholder="Email"
+						name="email"
+						value={formData.email}
+						onChange={handleOnChange}
+					/>
 				</Form.Group>
 
 				<br />
@@ -342,7 +385,10 @@ export const Main = () => {
 				</Divider>
 				<br />
 
-				<Container>This section is already covered during org creation, currently only a placeholder / reminder.</Container>
+				<Container>
+					This section is already covered during org creation, currently only a
+					placeholder / reminder.
+				</Container>
 
 				<Form.Group widths="equal">
 					<Form.Select
@@ -371,7 +417,15 @@ export const Main = () => {
 				{/* usage of funding and protocol to initiate after successfully raising */}
 
 				<Form.Group widths="equal">
-					<Form.Input fluid label="Admin Account" placeholder="Admin" name="admin" value={formData.admin} onChange={handleOnChange} required />
+					<Form.Input
+						fluid
+						label="Admin Account"
+						placeholder="Admin"
+						name="admin"
+						value={formData.admin}
+						onChange={handleOnChange}
+						required
+					/>
 				</Form.Group>
 
 				<Form.Group widths="equal">
@@ -396,9 +450,23 @@ export const Main = () => {
 				</Form.Group>
 
 				<Form.Group widths="equal">
-					<Form.Input fluid label="Deposit (PLAY)" placeholder="Deposit" name="deposit" value={formData.deposit} onChange={handleOnChange} />
+					<Form.Input
+						fluid
+						label="Deposit (PLAY)"
+						placeholder="Deposit"
+						name="deposit"
+						value={formData.deposit}
+						onChange={handleOnChange}
+					/>
 
-					<Form.Input fluid label="Funding Target (PLAY)" placeholder="Cap" name="cap" value={formData.cap} onChange={handleOnChange} />
+					<Form.Input
+						fluid
+						label="Funding Target (PLAY)"
+						placeholder="Cap"
+						name="cap"
+						value={formData.cap}
+						onChange={handleOnChange}
+					/>
 
 					<Form.Select
 						fluid
@@ -411,8 +479,18 @@ export const Main = () => {
 					/>
 				</Form.Group>
 
-				<Form.Checkbox label="DAO Governance" name="governance" checked={formData.governance} onChange={handleOnChange} />
-				<Form.Checkbox label="I agree to the Terms and Conditions" name="accept" checked={formData.accept} onChange={handleOnChange} />
+				<Form.Checkbox
+					label="DAO Governance"
+					name="governance"
+					checked={formData.governance}
+					onChange={handleOnChange}
+				/>
+				<Form.Checkbox
+					label="I agree to the Terms and Conditions"
+					name="accept"
+					checked={formData.accept}
+					onChange={handleOnChange}
+				/>
 
 				<Container textAlign="right">
 					<Button onClick={handleSubmit}>Create Campaign</Button>
@@ -423,10 +501,10 @@ export const Main = () => {
 }
 
 export default function Module() {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { accountPair } = useWallet()
 
-	return api && api.query.gameDaoCrowdfunding && accountPair ? <Main /> : null
+	return apiProvider && accountPair ? <Main /> : null
 }
 
 //
