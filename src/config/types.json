@@ -128,6 +128,21 @@
 		"status": "u8"
 	},
 
+  "ProposalMetadata": {
+    "title": "Vec<u8>",
+    "cid": "Vec<u8>",
+    "amount": "Balance"
+  },
+
+  "Timestamp": "Moment",
+  "EventMessage": "Vec<u8>",
+  "Nonce": "u64",
+  "TitleText": "Vec<u8>",
+  "CID": "Vec<u8>",
+  "ProposalType": "u8",
+  "ProposalState": "u8",
+  "VotingType": "u8",
+
 	"Entity": {
 		"account": "AccountId",
 		"index": "u128",
