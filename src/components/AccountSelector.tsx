@@ -107,41 +107,43 @@ const AccountComponent = () => {
 
 	return (
 		<>
-			{(!allowConnect || !accounts) && (
+			{!allowConnect || !accounts ? (
 				<Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>
-			)}
-			{account && address && (
-				<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-					<CopyToClipboard
-						text={address}
-						onCopy={() => createInfoNotification('Address copied')}
-					>
-						<Button
-							title={address}
-							size="small"
-							color={address ? 'success' : 'error'}
-						>{`${accountString(account)}`}</Button>
-					</CopyToClipboard>
+			) : (
+				account &&
+				address && (
+					<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
+						<CopyToClipboard
+							text={address}
+							onCopy={() => createInfoNotification('Address copied')}
+						>
+							<Button
+								title={address}
+								size="small"
+								color={address ? 'success' : 'error'}
+							>{`${accountString(account)}`}</Button>
+						</CopyToClipboard>
 
-					<IconButton
-						size="small"
-						aria-controls={open ? 'account-menu' : undefined}
-						aria-expanded={open ? 'true' : undefined}
-						aria-label="select account"
-						aria-haspopup="menu"
-						onClick={handleToggle}
-					>
-						<KeyboardArrowDownIcon fontSize="inherit" />
-					</IconButton>
-					<BalanceAnnotation />
-					<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
-						<Icons
-							src={ICON_MAPPING.logout}
-							alt={'logout'}
-							sx={{ filter: darkmodeEnabled ? 'invert(0)' : 'invert(1)' }}
-						/>
-					</IconButton>
-				</ButtonGroup>
+						<IconButton
+							size="small"
+							aria-controls={open ? 'account-menu' : undefined}
+							aria-expanded={open ? 'true' : undefined}
+							aria-label="select account"
+							aria-haspopup="menu"
+							onClick={handleToggle}
+						>
+							<KeyboardArrowDownIcon fontSize="inherit" />
+						</IconButton>
+						<BalanceAnnotation />
+						<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
+							<Icons
+								src={ICON_MAPPING.logout}
+								alt={'logout'}
+								sx={{ filter: darkmodeEnabled ? 'invert(0)' : 'invert(1)' }}
+							/>
+						</IconButton>
+					</ButtonGroup>
+				)
 			)}
 			<Popper
 				open={open}
