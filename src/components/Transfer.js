@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Form, Input, Grid, Label, Icon } from 'semantic-ui-react'
+import { useWallet } from '../context/Wallet'
 import { TxButton } from '../substrate-lib/components'
 
 export default function Main(props) {
 	const [status, setStatus] = useState(null)
 	const [formState, setFormState] = useState({ addressTo: null, amount: 0 })
-	const { accountPair } = props
+	const { account } = useWallet()
 
 	const onChange = (_, data) => setFormState((prev) => ({ ...prev, [data.state]: data.value }))
 
@@ -26,14 +27,20 @@ export default function Main(props) {
 				</Form.Field>
 
 				<Form.Field>
-					<Input fluid label="To" type="text" placeholder="address" state="addressTo" onChange={onChange} />
+					<Input
+						fluid
+						label="To"
+						type="text"
+						placeholder="address"
+						state="addressTo"
+						onChange={onChange}
+					/>
 				</Form.Field>
 				<Form.Field>
 					<Input fluid label="Amount" type="number" state="amount" onChange={onChange} />
 				</Form.Field>
 				<Form.Field style={{ textAlign: 'center' }}>
 					<TxButton
-						accountPair={accountPair}
 						label="Submit"
 						type="SIGNED-TX"
 						setStatus={setStatus}

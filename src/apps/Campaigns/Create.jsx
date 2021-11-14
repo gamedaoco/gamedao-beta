@@ -13,7 +13,7 @@ import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 
-const random_state = (accountPair) => {
+const random_state = (account) => {
 	const name = faker.name.findName()
 	const email = faker.internet.email()
 	const title = faker.commerce.productName()
@@ -31,7 +31,7 @@ const random_state = (accountPair) => {
 	const tags = ['dao', 'game']
 	const org = null
 
-	const admin = accountPair.address
+	const admin = account.address
 
 	return {
 		name,
@@ -56,7 +56,7 @@ const random_state = (accountPair) => {
 
 export const Main = () => {
 	const apiProvider = useApiProvider()
-	const { accountPair, finalized } = useWallet()
+	const { account, finalized } = useWallet()
 	const [block, setBlock] = useState(0)
 	const [nonce, updateNonce] = useState(0)
 	const [orgHashes, updateOrgHashes] = useState([])
@@ -73,14 +73,14 @@ export const Main = () => {
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 		let fromAcct
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
 			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 		return fromAcct
 	}
@@ -123,7 +123,7 @@ export const Main = () => {
 	useEffect(() => {
 		let unsubscribe = null
 		apiProvider.query.gameDaoControl
-			.controlledBodies(accountPair.address, (b) => {
+			.controlledBodies(account.address, (b) => {
 				if (b.isNone || b.length === 0) return
 				const hashes = [...new Set(b.toHuman().map((_) => _))]
 				updateOrgHashes(hashes)
@@ -134,7 +134,7 @@ export const Main = () => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [accountPair, apiProvider.query.gameDaoControl])
+	}, [account, apiProvider.query.gameDaoControl])
 
 	//
 
@@ -156,13 +156,13 @@ export const Main = () => {
 			updateOrgs(_)
 		}
 		query()
-	}, [orgHashes, accountPair, apiProvider.query.gameDaoControl])
+	}, [orgHashes, account, apiProvider.query.gameDaoControl])
 
 	useEffect(() => {
 		if (orgs.length === 0) return
-		const initial_state = random_state(accountPair)
+		const initial_state = random_state(account)
 		updateFormData(initial_state)
-	}, [orgs, accountPair])
+	}, [orgs, account])
 
 	// handle form state
 
@@ -231,7 +231,7 @@ export const Main = () => {
 			const deposit = formData.deposit + 1000000000000
 
 			const payload = [
-				// accountPair.address,
+				// account.address,
 				formData.org,
 				formData.admin,
 				formData.title,
@@ -272,10 +272,10 @@ export const Main = () => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
 		updateFileCID(null)
-		updateFormData(random_state(accountPair))
+		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
-	}, [accountPair, refresh])
+	}, [account, refresh])
 
 	if (!formData) return null
 
@@ -501,9 +501,9 @@ export const Main = () => {
 
 export default function Module() {
 	const apiProvider = useApiProvider()
-	const { accountPair } = useWallet()
+	const { account } = useWallet()
 
-	return apiProvider && accountPair ? <Main /> : null
+	return apiProvider && account ? <Main /> : null
 }
 
 //

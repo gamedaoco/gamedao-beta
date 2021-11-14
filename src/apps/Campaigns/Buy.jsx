@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Header, Text, Image, Modal, Form } from 'semantic-ui-react'
+import { useWallet } from '../../context/Wallet'
 
-const Buy = ({ accountPair, content }) => {
+const Buy = ({ content }) => {
 	const { imageURL, title, description } = content
 
 	const [formData, updateFormData] = useState({})

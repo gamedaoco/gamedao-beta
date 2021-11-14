@@ -41,7 +41,7 @@ type GenericForm = {
 	[key: string]: any
 }
 
-const random_state = (accountPair, campaigns = []) => {
+const random_state = (account, campaigns = []) => {
 	// version 0.1
 	// get a random campaign id
 	// create a random purpose
@@ -56,8 +56,8 @@ const random_state = (accountPair, campaigns = []) => {
 	const cid = ''
 	const amount = rnd(10) * 100
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
-	const proposer = accountPair.address
-	const beneficiary = accountPair.address
+	const proposer = account.address
+	const beneficiary = account.address
 	const voting_types = data.voting_types[rnd(data.voting_types.length)].value
 
 	// TODO:
@@ -87,8 +87,7 @@ const random_state = (accountPair, campaigns = []) => {
 
 export const Main = () => {
 	const apiProvider = useApiProvider()
-
-	const { accountPair, address } = useWallet()
+	const { account, address } = useWallet()
 	const [block, setBlock] = useState(0)
 
 	const [loading, setLoading] = useState(false)
@@ -131,18 +130,18 @@ export const Main = () => {
 	//
 	//
 
-	const getFromAcct = async (accountPair) => {
+	const getFromAcct = async (account) => {
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 		let fromAcct
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
 			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 		return fromAcct
 	}
@@ -196,7 +195,7 @@ export const Main = () => {
 			const { voting_type, id, purpose, cid, amount } = formData
 
 			const payload = [voting_type, id, purpose, cid, amount, expiry]
-			const from = await getFromAcct(accountPair)
+			const from = await getFromAcct(account)
 			// TODO: refactor to have unified method name on module...
 			const tx = apiProvider.tx.gameDaoGovernance.createProposal(...payload)
 			const hash = await tx.signAndSend(from, ({ status, events }) => {
@@ -220,14 +219,14 @@ export const Main = () => {
 	useEffect(() => {}, [])
 
 	useEffect(() => {
-		if (!accountPair) return
+		if (!account) return
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
 		updateFileCID(null)
-		updateFormData(random_state(accountPair))
+		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
-	}, [accountPair, refresh])
+	}, [account, refresh])
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }

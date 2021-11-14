@@ -4,7 +4,6 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
 export type WalletState = {
 	allowConnect: boolean
-	accountPair: object
 	address: string
 	account: InjectedAccountWithMeta
 	connected: boolean
@@ -13,7 +12,6 @@ export type WalletState = {
 
 const INITIAL_STATE: WalletState = {
 	allowConnect: false,
-	accountPair: null,
 	address: null,
 	account: null,
 	connected: false,

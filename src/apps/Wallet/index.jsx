@@ -6,7 +6,7 @@ import { Button, Typography, Box, Stack } from 'src/components'
 import { useApiProvider } from '@substra-hooks/core'
 
 const Component = (props) => {
-	// const { address, accountPair } = useWallet()
+	// const { address } = useWallet()
 
 	// const [bodies, setBodies] = useState(0)
 	// const [campaigns, setCampaigns] = useState(0)

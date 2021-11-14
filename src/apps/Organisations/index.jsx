@@ -65,30 +65,30 @@ const ListWrapper = styled(Box)(({ theme }) => ({
 
 const dev = config.dev
 
-const getFromAcct = async (api, accountPair) => {
+const getFromAcct = async (api, account) => {
 	const {
 		address,
 		meta: { source, isInjected },
-	} = accountPair
+	} = account
 	let fromAcct
 	if (isInjected) {
 		const injected = await web3FromSource(source)
 		fromAcct = address
 		api.setSigner(injected.signer)
 	} else {
-		fromAcct = accountPair
+		fromAcct = account
 	}
 	return fromAcct
 }
 
-const addMember = async (api, accountPair, id, target) => {
-	console.log(accountPair.address, id)
+const addMember = async (api, account, id, target) => {
+	console.log(account.address, id)
 
 	target.disabled = true
 
-	const payload = [id, accountPair.address]
+	const payload = [id, account.address]
 
-	const from = await getFromAcct(api, accountPair)
+	const from = await getFromAcct(api, account)
 	const tx = api.tx.gameDaoControl.addMember(...payload)
 	const hash = await tx.signAndSend(from, ({ status, events }) => {
 		console.log('Transaction status:', status.type)
@@ -122,7 +122,7 @@ const defaultContent = {}
 
 const Item = ({ content, mode }) => {
 	const apiProvider = useApiProvider()
-	const { address } = useWallet()
+	const { address, account } = useWallet()
 
 	const [itemContent, setItemContent] = useState({})
 	const [metadata, setMetadata] = useState({})
@@ -216,7 +216,7 @@ const Item = ({ content, mode }) => {
 		switch (op) {
 			case '0':
 				console.log('join')
-				await addMember(apiProvider, accountPair, itemContent.id, e.target)
+				await addMember(apiProvider, account, itemContent.id, e.target)
 				// join
 				return
 			case '1':
@@ -408,7 +408,7 @@ const ItemList = (props) => {
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
-	const context = useWallet()
+	const { account } = useWallet()
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
@@ -488,92 +488,12 @@ export const Main = (props) => {
 					})
 				)
 				setConfigs(res)
-				// console.log('configs', res)
 			} catch (err) {
 				console.error(err)
 			}
 		}
 		getContent(hashes)
 	}, [hashes, apiProvider.query.gameDaoControl])
-
-	// useEffect(() => {
-
-	// 	if ( !hashes ) return
-
-	// 	const getMemberCount = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyMemberCount(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=> {
-	// 				// console.log( 'members',_c.toHuman() )
-	// 				return { id: args[_i], count: _c.toHuman() }
-	// 			}))
-	// 			setMembers(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getMemberCount(hashes)
-
-	// }, [hashes, apiProvider.query.gameDaoControl])
-
-	// useEffect(() => {
-
-	// 	if ( !hashes ) return
-
-	// 	const getMembershipState = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push( apiProvider.query.gameDaoControl.bodyMemberState( ( args[i], accountPair ) ) )
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				const _res = { id: args[_i], state: _c.toHuman() }
-	// 				// console.log(_res)
-	// 				return _res
-	// 			}))
-	// 			setMembers(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getMembershipState(hashes)
-
-	// }, [hashes, apiProvider.query.gameDaoControl, accountPair])
-
-	// useEffect(() => {
-	// 	if ( !hashes ) return
-	// 	const getContent = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyTreasury(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				return { id: args[_i], treasury: _c.toHuman(), balance: 1 }
-	// 			}))
-	// 			setBalances(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getContent(hashes)
-	// }, [hashes, apiProvider.query.gameDaoControl])
-
-	// useEffect(() => {
-	// 	if ( !hashes ) return
-	// 	const getContent = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyAccess(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				const _res = { id: args[_i], access: _c.toHuman() }
-	// 				// console.log(_res)
-	// 				return _res
-	// 			}))
-	// 			setAccess(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getContent(hashes)
-	// }, [hashes, apiProvider.query.gameDaoControl])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
@@ -603,7 +523,7 @@ export const Main = (props) => {
 						>
 							Close {address}
 						</Button>
-					) : (
+					) : account ? (
 						<Button
 							variant="outlined"
 							startIcon={<AddIcon />}
@@ -611,7 +531,7 @@ export const Main = (props) => {
 						>
 							New DAO
 						</Button>
-					)}
+					) : null}
 				</Box>
 			</Box>
 			<br />

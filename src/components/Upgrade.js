@@ -5,7 +5,6 @@ import { TxButton } from '../substrate-lib/components'
 export default function Main(props) {
 	const [status, setStatus] = useState('')
 	const [proposal, setProposal] = useState({})
-	const { accountPair } = props
 
 	const bufferToHex = (buffer) => {
 		return Array.from(new Uint8Array(buffer))
@@ -28,11 +27,16 @@ export default function Main(props) {
 			<h1>Upgrade Runtime</h1>
 			<Form>
 				<Form.Field>
-					<Input type="file" id="file" label="Wasm File" accept=".wasm" onChange={(e) => handleFileChosen(e.target.files[0])} />
+					<Input
+						type="file"
+						id="file"
+						label="Wasm File"
+						accept=".wasm"
+						onChange={(e) => handleFileChosen(e.target.files[0])}
+					/>
 				</Form.Field>
 				<Form.Field style={{ textAlign: 'center' }}>
 					<TxButton
-						accountPair={accountPair}
 						label="Upgrade"
 						type="UNCHECKED-SUDO-TX"
 						setStatus={setStatus}

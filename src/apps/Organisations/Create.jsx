@@ -28,20 +28,21 @@ import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
+import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
 
-const random_state = (accountPair) => {
+const random_state = (account) => {
 	const name = faker.commerce.productName()
 	const email = faker.internet.email()
 	const website = faker.internet.url()
 	const repo = faker.internet.url()
 	const description = faker.company.catchPhrase()
 
-	const creator = accountPair.address
-	const controller = accountPair.address
-	const treasury = accountPair.address
+	const creator = account.address
+	const controller = account.address
+	const treasury = account.address
 
 	const body = 0
 	const access = 0
@@ -89,7 +90,7 @@ const random_state = (accountPair) => {
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
 
-	const { accountPair } = useWallet()
+	const { account } = useWallet()
 	// const [ status, setStatus ] = useState('')
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -107,14 +108,14 @@ export const Main = (props) => {
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 		let fromAcct
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
 			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 		return fromAcct
 	}
@@ -122,11 +123,11 @@ export const Main = (props) => {
 	// generator for the demo
 
 	useEffect(() => {
-		if (!accountPair) return
+		if (!account) return
 		if (dev) console.log('generate form data')
-		const initial_state = random_state(accountPair)
+		const initial_state = random_state(account)
 		updateFormData(initial_state)
-	}, [accountPair])
+	}, [account])
 
 	// update json payload from form data
 
@@ -198,7 +199,7 @@ export const Main = (props) => {
 			if (dev) console.log('2. send tx')
 
 			const payload = [
-				accountPair.address,
+				account.address,
 				formData.controller,
 				formData.treasury,
 				formData.name,
@@ -234,10 +235,10 @@ export const Main = (props) => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
 		updateFileCID(null)
-		updateFormData(random_state(accountPair))
+		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
-	}, [accountPair, refresh])
+	}, [account, refresh])
 
 	if (!formData) return null
 	return (
@@ -519,17 +520,17 @@ export const Main = (props) => {
 				/>
 			</FormGroup>
 
-			<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
-				Create Organization
-			</Button>
+			{account && (
+				<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
+					Create Organization
+				</Button>
+			)}
 		</Box>
 	)
 }
 
 export default function Module(props) {
-	const { accountPair } = useWallet()
+	const { account } = useWallet()
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoControl && accountPair ? (
-		<Main {...props} />
-	) : null
+	return apiProvider && apiProvider.query.gameDaoControl && account ? <Main {...props} /> : null
 }
