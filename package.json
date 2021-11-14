@@ -1,214 +1,216 @@
 {
-  "name": "gamedao",
-  "version": "0.1.3",
-  "private": true,
-  "author": "2075@zero.io",
-  "license": "Apache-2.0",
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "CI=true react-app-rewired test --env=jsdom",
-    "eject": "react-app-rewired eject",
-    "lint": "eslint src/**/*.js",
-    "lint:ci": "eslint src/**/*.js --max-warnings=0",
-    "lint:fix": "eslint --fix src/**/*.js",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d build -m '[ci skip] Updates'",
-    "format": "prettier --write --check 'src/**/*.{js,json,jsx,ts,tsx}'",
-    "format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
-  },
-  "dependencies": {
-    "@emotion/cache": "^11.5.0",
-    "@emotion/react": "^11.5.0",
-    "@emotion/server": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
-    "@iconify/icons-ant-design": "^1.1.0",
-    "@iconify/icons-eva": "^1.1.0",
-    "@iconify/icons-ic": "^1.1.13",
-    "@iconify/react": "^3.0.1",
-    "@mui/icons-material": "^5.0.5",
-    "@mui/lab": "^5.0.0-alpha.53",
-    "@mui/material": "^5.0.6",
-    "@mui/styles": "^5.0.2",
-    "@mui/system": "^5.0.6",
-    "@mui/utils": "^5.0.0",
-    "@mui/x-data-grid": "^4.0.2",
-    "@pinata/sdk": "^1.1.23",
-    "@polkadot/api": "^6.6.1",
-    "@polkadot/api-contract": "^6.6.1",
-    "@polkadot/extension-dapp": "~0.40.4",
-    "@polkadot/keyring": "~7.7.1",
-    "@polkadot/types": "~6.6.1",
-    "@polkadot/ui-keyring": "~0.86.3",
-    "@polkadot/ui-settings": "~0.86.3",
-    "@polkadot/util": "~7.7.1",
-    "@polkadot/util-crypto": "~7.7.1",
-    "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@zeroio/type-definitions": "^0.0.11",
-    "big.js": "^6.1.1",
-    "change-case": "^4.1.2",
-    "faker": "^5.5.3",
-    "formik": "^2.2.9",
-    "framer-motion": "^5.0.1",
-    "ipfs-http-client": "^53.0.1",
-    "material-ui-image": "^3.3.2",
-    "moment": "^2.29.1",
-    "nprogress": "^0.2.0",
-    "prettier": "^2.4.1",
-    "prop-types": "~15.7.2",
-    "query-string": "~7.0.1",
-    "react": "~17.0.2",
-    "react-copy-to-clipboard": "~5.0.4",
-    "react-dom": "~17.0.2",
-    "react-helmet-async": "^1.1.2",
-    "react-icons": "^4.3.1",
-    "react-intersection-observer": "^8.32.2",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "~4.0.3",
-    "react-scroll": "^1.8.4",
-    "react-slick": "^0.28.0",
-    "react-spring": "^9.3.0",
-    "react-toastify": "^8.1.0",
-    "redux": "^4.1.2",
-    "redux-persist": "^6.0.0",
-    "semantic-ui-css": "~2.4.1",
-    "semantic-ui-react": "^2.0.4",
-    "simplebar-react": "^2.3.6",
-    "stylis-plugin-rtl": "^2.1.1",
-    "toformat": "^2.0.0",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "@types/node": "^16.11.6",
-    "@types/react": "^17.0.33",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "babel-plugin-styled-components": "^1.13.3",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "chalk": "^4.1.2",
-    "commitizen": "^4.2.3",
-    "concurrently": "^6.0.0",
-    "conventional-changelog": "^3.1.24",
-    "cz-customizable": "^6.2.0",
-    "dotenv": "^10.0.0",
-    "eslint-config-semistandard": "~16.0.0",
-    "eslint-config-standard": "~16.0.3",
-    "eslint-plugin-import": "~2.25.2",
-    "eslint-plugin-node": "~11.1.0",
-    "eslint-plugin-only-warn": "~1.0.3",
-    "eslint-plugin-promise": "~5.1.1",
-    "eslint-plugin-standard": "~5.0.0",
-    "gh-pages": "~3.2.3",
-    "husky": "^7.0.4",
-    "lint-staged": "^11.2.6",
-    "loglevel": "^1.7.1",
-    "loglevel-plugin-prefix": "^0.8.4",
-    "prettier": "^2.4.1",
-    "pretty-quick": "^3.1.1",
-    "react-app-rewired": "~2.1.8",
-    "rimraf": "^3.0.2",
-    "semistandard": "~16.0.1",
-    "ts-jest": "^27.0.7",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.4.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
-    "plugins": [
-      "only-warn"
-    ],
-    "rules": {
-      "semi": [
-        "off",
-        "never"
-      ],
-      "no-extra-semi": 1
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "homepage": "https://gamedao.co",
-  "bugs": {
-    "url": "https://github.com/gamedaoco/gamedao-poc/issues"
-  },
-  "keywords": [
-    "substrate",
-    "subzero",
-    "playzero",
-    "gamedao"
-  ],
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": "./node_modules/@picgo/bump-version/.cz-config.js"
-    }
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testMatch": [
-      "**/*.(test|spec).(ts|tsx)"
-    ],
-    "globals": {
-      "ts-jest": {
-        "babelConfig": true,
-        "tsConfig": "jest.tsconfig.json"
-      }
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "enzyme.js"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/enzyme.js",
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text",
-      "text-summary"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/mocks.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/mocks.js"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn format:verify"
-    }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 4,
-    "useTabs": true,
-    "semi": false,
-    "singleQuote": true,
-    "printWidth": 160,
-    "bracketSpacing": true
-  }
+	"name": "gamedao",
+	"version": "0.1.3",
+	"private": true,
+	"author": "2075@zero.io",
+	"license": "Apache-2.0",
+	"scripts": {
+		"start": "react-app-rewired start",
+		"build": "react-app-rewired build",
+		"test": "CI=true react-app-rewired test --env=jsdom",
+		"eject": "react-app-rewired eject",
+		"lint": "eslint src/**/*.js",
+		"lint:ci": "eslint src/**/*.js --max-warnings=0",
+		"lint:fix": "eslint --fix src/**/*.js",
+		"predeploy": "yarn build",
+		"deploy": "gh-pages -d build -m '[ci skip] Updates'",
+		"format": "prettier --write --check 'src/**/*.{js,json,jsx,ts,tsx}'",
+		"format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
+	},
+	"dependencies": {
+		"@emotion/cache": "^11.6.0",
+		"@emotion/react": "^11.6.0",
+		"@emotion/server": "^11.4.0",
+		"@emotion/styled": "^11.6.0",
+		"@iconify/icons-ant-design": "^1.1.0",
+		"@iconify/icons-eva": "^1.1.0",
+		"@iconify/icons-ic": "^1.1.13",
+		"@iconify/react": "^3.0.1",
+		"@mui/icons-material": "^5.0.5",
+		"@mui/lab": "^5.0.0-alpha.53",
+		"@mui/material": "^5.0.6",
+		"@mui/styles": "^5.0.2",
+		"@mui/system": "^5.0.6",
+		"@mui/utils": "^5.0.0",
+		"@mui/x-data-grid": "^4.0.2",
+		"@pinata/sdk": "^1.1.23",
+		"@polkadot/api": "^6.6.1",
+		"@polkadot/api-contract": "^6.6.1",
+		"@polkadot/extension-dapp": "~0.41.1",
+		"@polkadot/keyring": "~7.8.2",
+		"@polkadot/types": "~6.8.1",
+		"@polkadot/ui-keyring": "~0.86.3",
+		"@polkadot/ui-settings": "~0.86.3",
+		"@polkadot/util": "^7.8.2",
+		"@polkadot/util-crypto": "~7.8.2",
+		"@ramp-network/ramp-instant-sdk": "^2.5.0",
+		"@substra-hooks/core": "^0.0.26",
+		"@zeroio/type-definitions": "^0.0.11",
+		"await-to-js": "^3.0.0",
+		"big.js": "^6.1.1",
+		"change-case": "^4.1.2",
+		"faker": "^5.5.3",
+		"formik": "^2.2.9",
+		"framer-motion": "^5.0.1",
+		"ipfs-http-client": "^54.0.0",
+		"material-ui-image": "^3.3.2",
+		"moment": "^2.29.1",
+		"nprogress": "^0.2.0",
+		"prettier": "^2.4.1",
+		"prop-types": "~15.7.2",
+		"query-string": "~7.0.1",
+		"react": "~17.0.2",
+		"react-copy-to-clipboard": "~5.0.4",
+		"react-dom": "~17.0.2",
+		"react-helmet-async": "^1.1.2",
+		"react-icons": "^4.3.1",
+		"react-intersection-observer": "^8.32.2",
+		"react-router-dom": "^6.0.2",
+		"react-scripts": "~4.0.3",
+		"react-scroll": "^1.8.4",
+		"react-slick": "^0.28.0",
+		"react-spring": "^9.3.0",
+		"react-toastify": "^8.1.0",
+		"redux": "^4.1.2",
+		"redux-persist": "^6.0.0",
+		"semantic-ui-css": "~2.4.1",
+		"semantic-ui-react": "^2.0.4",
+		"simplebar-react": "^2.3.6",
+		"stylis-plugin-rtl": "^2.1.1",
+		"toformat": "^2.0.0",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@types/node": "^16.11.6",
+		"@types/react": "^17.0.33",
+		"babel-plugin-module-resolver": "^4.1.0",
+		"babel-plugin-styled-components": "^1.13.3",
+		"babel-plugin-transform-export-extensions": "^6.22.0",
+		"chalk": "^4.1.2",
+		"commitizen": "^4.2.3",
+		"concurrently": "^6.4.0",
+		"conventional-changelog": "^3.1.24",
+		"cz-customizable": "^6.2.0",
+		"dotenv": "^10.0.0",
+		"eslint-config-semistandard": "~16.0.0",
+		"eslint-config-standard": "~16.0.3",
+		"eslint-plugin-import": "~2.25.2",
+		"eslint-plugin-node": "~11.1.0",
+		"eslint-plugin-only-warn": "~1.0.3",
+		"eslint-plugin-promise": "~5.1.1",
+		"eslint-plugin-standard": "~5.0.0",
+		"gh-pages": "~3.2.3",
+		"husky": "^7.0.4",
+		"lint-staged": "^12.0.2",
+		"loglevel": "^1.7.1",
+		"loglevel-plugin-prefix": "^0.8.4",
+		"prettier": "^2.4.1",
+		"pretty-quick": "^3.1.1",
+		"react-app-rewired": "~2.1.8",
+		"rimraf": "^3.0.2",
+		"semistandard": "~16.0.1",
+		"ts-jest": "^27.0.7",
+		"ts-node": "^10.4.0",
+		"typescript": "^4.4.4"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app"
+		],
+		"plugins": [
+			"only-warn"
+		],
+		"rules": {
+			"semi": [
+				"off",
+				"never"
+			],
+			"no-extra-semi": 1
+		}
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"homepage": "https://gamedao.co",
+	"bugs": {
+		"url": "https://github.com/gamedaoco/gamedao-poc/issues"
+	},
+	"keywords": [
+		"substrate",
+		"subzero",
+		"playzero",
+		"gamedao"
+	],
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-customizable"
+		},
+		"cz-customizable": {
+			"config": "./node_modules/@picgo/bump-version/.cz-config.js"
+		}
+	},
+	"jest": {
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx"
+		],
+		"transform": {
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"testMatch": [
+			"**/*.(test|spec).(ts|tsx)"
+		],
+		"globals": {
+			"ts-jest": {
+				"babelConfig": true,
+				"tsConfig": "jest.tsconfig.json"
+			}
+		},
+		"coveragePathIgnorePatterns": [
+			"/node_modules/",
+			"enzyme.js"
+		],
+		"setupTestFrameworkScriptFile": "<rootDir>/enzyme.js",
+		"coverageReporters": [
+			"json",
+			"lcov",
+			"text",
+			"text-summary"
+		],
+		"moduleNameMapper": {
+			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/mocks.js",
+			"\\.(css|less)$": "<rootDir>/__mocks__/mocks.js"
+		}
+	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+			"pre-commit": "yarn format:verify"
+		}
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"prettier": {
+		"trailingComma": "es5",
+		"tabWidth": 4,
+		"useTabs": true,
+		"semi": false,
+		"singleQuote": true,
+		"printWidth": 100,
+		"bracketSpacing": true
+	}
 }

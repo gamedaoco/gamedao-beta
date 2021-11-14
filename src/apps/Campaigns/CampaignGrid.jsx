@@ -6,9 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { data } from '../lib/data'
 import CampaignCard from './CampaignCard'
 import { styled } from '../../components'
-import ListTileSwitch, { ListTileEnum } from '../components/ListTileSwitch'
-
-//
+import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 
 const TileWrapper = styled(Box)(({ theme }) => ({
 	display: 'grid',
@@ -73,7 +71,8 @@ const CampaignGrid = ({ content, accountPair }) => {
 	const [scope, setScope] = useState(0) // 0 any 1 owned 2 contributed
 
 	const iPP = [3, 5, 9, 18, 36, 72]
-	const handleShowMoreItems = () => setPageSize(pageSize < iPP.length - 1 ? pageSize + 1 : pageSize)
+	const handleShowMoreItems = () =>
+		setPageSize(pageSize < iPP.length - 1 ? pageSize + 1 : pageSize)
 	const handleShowLessItems = () => setPageSize(pageSize > 0 ? pageSize - 1 : 0)
 
 	const handlePaginationChange = (e, { activePage }) => setPage(activePage - 1)
@@ -91,7 +90,10 @@ const CampaignGrid = ({ content, accountPair }) => {
 		if (!content) return
 
 		// filter by campaign state
-		const filterByState = filter === '-1' ? content : content.filter((item) => (item.state === filter ? item : null))
+		const filterByState =
+			filter === '-1'
+				? content
+				: content.filter((item) => (item.state === filter ? item : null))
 
 		// filter by protocol
 
@@ -109,7 +111,10 @@ const CampaignGrid = ({ content, accountPair }) => {
 		setPage(0)
 	}, [content, filter, scope])
 
-	const Wrapper = React.useMemo(() => (displayMode === ListTileEnum.TILE ? TileWrapper : ListWrapper), [displayMode])
+	const Wrapper = React.useMemo(
+		() => (displayMode === ListTileEnum.TILE ? TileWrapper : ListWrapper),
+		[displayMode]
+	)
 
 	return (
 		<Stack direction={'column'} spacing={2}>
@@ -121,7 +126,15 @@ const CampaignGrid = ({ content, accountPair }) => {
 			<Wrapper>
 				{pageContent &&
 					pageContent.map((item, index) => {
-						const c = <CampaignCard displayMode={displayMode} key={index} item={item} index={index} accountPair={accountPair} />
+						const c = (
+							<CampaignCard
+								displayMode={displayMode}
+								key={index}
+								item={item}
+								index={index}
+								accountPair={accountPair}
+							/>
+						)
 						if (filter === '-1') return c
 						return item.state === filter ? c : null
 					})}

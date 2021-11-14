@@ -2,10 +2,9 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
-
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
+import { encodeAddress } from '@polkadot/util-crypto'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -14,8 +13,11 @@ import LockIcon from '@mui/icons-material/Lock'
 import OpenLockIcon from '@mui/icons-material/LockOpen'
 import WebsiteIcon from '@mui/icons-material/Web'
 import MemberIcon from '@mui/icons-material/AccountBox'
-import ListItem from '../../components/ListItem'
-import ListTileSwitch, { ListTileEnum } from '../components/ListTileSwitch'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import GroupIcon from '@mui/icons-material/Group'
+import { ListItem } from '../../components/ListItem'
+import { TileItem } from '../../components/TileItem'
+import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
@@ -37,9 +39,9 @@ import {
 	TableRow,
 	styled,
 } from '../../components'
+import { useApiProvider } from '@substra-hooks/core'
 
 const CreateDAO = lazy(() => import('./Create'))
-const TileItem = lazy(() => import('../../components/TileItem'))
 
 const TileWrapper = styled(Box)(({ theme }) => ({
 	display: 'grid',
@@ -119,7 +121,7 @@ const addMember = async (api, accountPair, id, target) => {
 const defaultContent = {}
 
 const Item = ({ content, mode }) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 
 	const [itemContent, setItemContent] = useState({})
@@ -163,12 +165,12 @@ const Item = ({ content, mode }) => {
 					memberCount,
 					treasury,
 				] = await Promise.all([
-					// api.query.gameDaoControl.bodyConfig(content.id),
-					api.query.gameDaoControl.bodyController(content.id),
-					api.query.gameDaoControl.bodyAccess(content.id),
-					api.query.gameDaoControl.bodyMemberState([content.id, address]),
-					api.query.gameDaoControl.bodyMemberCount(content.id),
-					api.query.gameDaoControl.bodyTreasury(content.id),
+					// apiProvider.query.gameDaoControl.bodyConfig(content.id),
+					apiProvider.query.gameDaoControl.bodyController(content.id),
+					apiProvider.query.gameDaoControl.bodyAccess(content.id),
+					apiProvider.query.gameDaoControl.bodyMemberState([content.id, address]),
+					apiProvider.query.gameDaoControl.bodyMemberCount(content.id),
+					apiProvider.query.gameDaoControl.bodyTreasury(content.id),
 				])
 				updateContent({
 					// ...config.toHuman(),
@@ -183,15 +185,15 @@ const Item = ({ content, mode }) => {
 			}
 		}
 		query()
-	}, [api, content])
+	}, [apiProvider, content])
 
 	// useEffect(() => {
 
 	// 	if (!content.treasury) return
 
 	// 	const query = async () => {
-	// 		const unsub = await api.queryMulti([
-	// 			[api.query.system.account, content.treasury],
+	// 		const unsub = await apiProvider.queryMulti([
+	// 			[apiProvider.query.system.account, content.treasury],
 	// 		], ([{ data: balance }]) => {
 	// 			console.log(`----> treasury of ${balance.free}`);
 	// 			setItemContent({
@@ -202,7 +204,7 @@ const Item = ({ content, mode }) => {
 	// 	}
 	// 	query()
 
-	// }, [content, api.query.system.account])
+	// }, [content, apiProvider.query.system.account])
 
 	//
 	//
@@ -214,7 +216,7 @@ const Item = ({ content, mode }) => {
 		switch (op) {
 			case '0':
 				console.log('join')
-				await addMember(api, accountPair, itemContent.id, e.target)
+				await addMember(apiProvider, accountPair, itemContent.id, e.target)
 				// join
 				return
 			case '1':
@@ -243,10 +245,29 @@ const Item = ({ content, mode }) => {
 		return (
 			<>
 				{(isMember() || isAdmin()) && (
-					<Button variant={'outlined'} fullWidth onClick={handleDashboard} value={itemContent.access}>{`Dashboard`}</Button>
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleDashboard}
+						value={itemContent.access}
+					>{`Dashboard`}</Button>
 				)}
-				{isMember() && !isAdmin() && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`leave`}</Button>}
-				{!isMember() && text && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`${text}`}</Button>}
+				{isMember() && !isAdmin() && (
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleMembership}
+						value={itemContent.access}
+					>{`leave`}</Button>
+				)}
+				{!isMember() && text && (
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleMembership}
+						value={itemContent.access}
+					>{`${text}`}</Button>
+				)}
 				{isAdmin() && (
 					<Button variant={'outlined'} fullWidth onClick={handleAdmin}>
 						Admin
@@ -260,7 +281,12 @@ const Item = ({ content, mode }) => {
 
 	const metaContent = React.useMemo(() => {
 		return (
-			<Stack sx={{ width: '100%', height: '100%' }} direction={'column'} justifyContent={mode === ListTileEnum.TILE ? 'flex-end' : 'inherit'} spacing={1}>
+			<Stack
+				sx={{ width: '100%', height: '100%' }}
+				direction={'column'}
+				justifyContent={mode === ListTileEnum.TILE ? 'flex-end' : 'inherit'}
+				spacing={1}
+			>
 				<Stack direction={'row'} spacing={1}>
 					<WebsiteIcon /> <a href={metadata.website}>{metadata.website}</a>
 				</Stack>
@@ -286,11 +312,21 @@ const Item = ({ content, mode }) => {
 	if (!itemContent) return null
 
 	return mode === ListTileEnum.LIST ? (
-		<ListItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
+		<ListItem
+			imageURL={imageURL}
+			headline={itemContent.name}
+			metaHeadline={bodyToText()}
+			metaContent={metaContent}
+		>
 			<Typography>{metadata.description}</Typography>
 		</ListItem>
 	) : (
-		<TileItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
+		<TileItem
+			imageURL={imageURL}
+			headline={itemContent.name}
+			metaHeadline={bodyToText()}
+			metaContent={metaContent}
+		>
 			<Typography>{metadata.description}</Typography>
 		</TileItem>
 	)
@@ -320,7 +356,8 @@ const ItemList = (props) => {
 	const [displayMode, setDisplayMode] = useState(ListTileEnum.LIST)
 
 	const iPP = [3, 5, 9, 18, 36, 72]
-	const handleShowMoreItems = () => setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
+	const handleShowMoreItems = () =>
+		setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
 	const handleShowLessItems = () => setItemsPerPage(itemsPerPage > 0 ? itemsPerPage - 1 : 0)
 
 	useEffect(() => {
@@ -334,7 +371,10 @@ const ItemList = (props) => {
 		setOffset((activePage - 1) * iPP[itemsPerPage])
 	}
 
-	const Wrapper = React.useMemo(() => (displayMode === ListTileEnum.LIST ? ListWrapper : TileWrapper), [displayMode])
+	const Wrapper = React.useMemo(
+		() => (displayMode === ListTileEnum.LIST ? ListWrapper : TileWrapper),
+		[displayMode]
+	)
 
 	if (!content) return null
 
@@ -366,7 +406,7 @@ const ItemList = (props) => {
 }
 
 export const Main = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 	const context = useWallet()
 
@@ -385,7 +425,7 @@ export const Main = (props) => {
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoControl
+		apiProvider.query.gameDaoControl
 			.nonce((n) => {
 				if (n.isNone) {
 					setNonce('<None>')
@@ -398,7 +438,7 @@ export const Main = (props) => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoControl])
+	}, [apiProvider.query.gameDaoControl])
 
 	// on nonce change get hashes
 
@@ -406,11 +446,13 @@ export const Main = (props) => {
 		if (nonce === 0) return
 		const req = [...new Array(nonce)].map((a, i) => i)
 		const queryHashes = async (args) => {
-			const hashes = await api.query.gameDaoControl.bodyByNonce.multi(req).then((_) => _.map((_h) => _h.toHuman()))
+			const hashes = await apiProvider.query.gameDaoControl.bodyByNonce
+				.multi(req)
+				.then((_) => _.map((_h) => _h.toHuman()))
 			setHashes(hashes)
 		}
 		queryHashes()
-	}, [nonce, api.query.gameDaoControl])
+	}, [nonce, apiProvider.query.gameDaoControl])
 
 	// on hashes get content
 
@@ -419,7 +461,8 @@ export const Main = (props) => {
 		const getContent = async (args) => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodies(args[i]))
+				for (var i = 0; i < args.length; i++)
+					_req.push(apiProvider.query.gameDaoControl.bodies(args[i]))
 				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
 				setContent(res)
 			} catch (err) {
@@ -427,7 +470,7 @@ export const Main = (props) => {
 			}
 		}
 		getContent(hashes)
-	}, [hashes, api.query.gameDaoControl])
+	}, [hashes, apiProvider.query.gameDaoControl])
 
 	// on hashes get config
 
@@ -436,7 +479,8 @@ export const Main = (props) => {
 		const getContent = async (args) => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyConfig(args[i]))
+				for (var i = 0; i < args.length; i++)
+					_req.push(apiProvider.query.gameDaoControl.bodyConfig(args[i]))
 				const res = await Promise.all(_req).then((_) =>
 					_.map((_c, _i) => {
 						const _res = { id: args[_i], ..._c.toHuman() }
@@ -450,7 +494,7 @@ export const Main = (props) => {
 			}
 		}
 		getContent(hashes)
-	}, [hashes, api.query.gameDaoControl])
+	}, [hashes, apiProvider.query.gameDaoControl])
 
 	// useEffect(() => {
 
@@ -459,7 +503,7 @@ export const Main = (props) => {
 	// 	const getMemberCount = async args => {
 	// 		let _req = []
 	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyMemberCount(args[i]))
+	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyMemberCount(args[i]))
 	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=> {
 	// 				// console.log( 'members',_c.toHuman() )
 	// 				return { id: args[_i], count: _c.toHuman() }
@@ -471,7 +515,7 @@ export const Main = (props) => {
 	// 	}
 	// 	getMemberCount(hashes)
 
-	// }, [hashes, api.query.gameDaoControl])
+	// }, [hashes, apiProvider.query.gameDaoControl])
 
 	// useEffect(() => {
 
@@ -480,7 +524,7 @@ export const Main = (props) => {
 	// 	const getMembershipState = async args => {
 	// 		let _req = []
 	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push( api.query.gameDaoControl.bodyMemberState( ( args[i], accountPair ) ) )
+	// 			for (var i = 0; i < args.length; i++) _req.push( apiProvider.query.gameDaoControl.bodyMemberState( ( args[i], accountPair ) ) )
 	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
 	// 				const _res = { id: args[_i], state: _c.toHuman() }
 	// 				// console.log(_res)
@@ -493,14 +537,14 @@ export const Main = (props) => {
 	// 	}
 	// 	getMembershipState(hashes)
 
-	// }, [hashes, api.query.gameDaoControl, accountPair])
+	// }, [hashes, apiProvider.query.gameDaoControl, accountPair])
 
 	// useEffect(() => {
 	// 	if ( !hashes ) return
 	// 	const getContent = async args => {
 	// 		let _req = []
 	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyTreasury(args[i]))
+	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyTreasury(args[i]))
 	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
 	// 				return { id: args[_i], treasury: _c.toHuman(), balance: 1 }
 	// 			}))
@@ -510,14 +554,14 @@ export const Main = (props) => {
 	// 		}
 	// 	}
 	// 	getContent(hashes)
-	// }, [hashes, api.query.gameDaoControl])
+	// }, [hashes, apiProvider.query.gameDaoControl])
 
 	// useEffect(() => {
 	// 	if ( !hashes ) return
 	// 	const getContent = async args => {
 	// 		let _req = []
 	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyAccess(args[i]))
+	// 			for (var i = 0; i < args.length; i++) _req.push(apiProvider.query.gameDaoControl.bodyAccess(args[i]))
 	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
 	// 				const _res = { id: args[_i], access: _c.toHuman() }
 	// 				// console.log(_res)
@@ -529,7 +573,7 @@ export const Main = (props) => {
 	// 		}
 	// 	}
 	// 	getContent(hashes)
-	// }, [hashes, api.query.gameDaoControl])
+	// }, [hashes, apiProvider.query.gameDaoControl])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
@@ -543,14 +587,28 @@ export const Main = (props) => {
 					justifyContent: 'space-between',
 				}}
 			>
-				<Box>{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}</Box>
+				<Box>
+					{!content || nonce === 0 ? (
+						<h4>No organizations yet. Create one!</h4>
+					) : (
+						<h4>Total organizations: {nonce}</h4>
+					)}
+				</Box>
 				<Box>
 					{address && showCreateMode ? (
-						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+						<Button
+							variant="outlined"
+							startIcon={<ClearIcon />}
+							onClick={handleCloseBtn}
+						>
 							Close {address}
 						</Button>
 					) : (
-						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+						<Button
+							variant="outlined"
+							startIcon={<AddIcon />}
+							onClick={handleCreateBtn}
+						>
 							New DAO
 						</Button>
 					)}
@@ -558,15 +616,16 @@ export const Main = (props) => {
 			</Box>
 			<br />
 			{showCreateMode && <CreateDAO />}
-			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
+			{!showCreateMode && content && nonce !== 0 && (
+				<ItemList content={content} configs={configs} members={members} />
+			)}
 		</Container>
 	)
 }
 
 export default function Module(props) {
-	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoControl ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider && apiProvider.query.gameDaoControl ? <Main {...props} /> : null
 }
 //
 //

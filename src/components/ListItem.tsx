@@ -47,5 +47,3 @@ export const ListItem: React.FC<
 		</Card>
 	</>
 )
-
-export default ListItem

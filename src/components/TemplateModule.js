@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import faker from 'faker'
-import { useSubstrate } from '../substrate-lib'
 import { TxButton } from '../substrate-lib/components'
 import { Form, Grid, Card, Statistic } from 'semantic-ui-react'
+import { useApiProvider } from '@substra-hooks/core'
 
 function Main(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { accountPair } = props
 	const { finalized } = props
 
@@ -26,7 +26,9 @@ function Main(props) {
 		cid: '',
 	})
 
-	const bestBlock = finalized ? api.derive.chain.bestNumberFinalized : api.derive.chain.bestNumber
+	const bestBlock = finalized
+		? apiProvider.derive.chain.bestNumberFinalized
+		: apiProvider.derive.chain.bestNumber
 
 	useEffect(() => {
 		const data = {
@@ -59,10 +61,10 @@ function Main(props) {
 	}, [bestBlock])
 
 	useEffect(() => {
-		if (!api.query.gameDaoCrowdfunding.nonce) return
+		if (!apiProvider.query.gameDaoCrowdfunding.nonce) return
 		let unsubscribe
 
-		api.query.gameDaoCrowdfunding
+		apiProvider.query.gameDaoCrowdfunding
 			.nonce((n) => {
 				if (n.isNone) {
 					updateNonce('<None>')
@@ -76,7 +78,7 @@ function Main(props) {
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoCrowdfunding])
+	}, [apiProvider.query.gameDaoCrowdfunding])
 
 	return (
 		<Grid.Column width={8}>
@@ -124,8 +126,8 @@ function Main(props) {
 }
 
 export default function TemplateModule(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { accountPair } = props
 
-	return api.query.gameDaoCrowdfunding && accountPair ? <Main {...props} /> : null
+	return apiProvider.query.gameDaoCrowdfunding && accountPair ? <Main {...props} /> : null
 }

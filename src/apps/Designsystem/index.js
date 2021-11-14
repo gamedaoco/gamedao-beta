@@ -1,8 +1,7 @@
-import React from 'react'
-import { Box, Button, Card, Divider, FontIcon, Stack, Typography } from '../../components'
+import * as React from 'react'
+import { Card, Button, Divider, FontIcon, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Stack, Icon } from '../../components'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
-import ListTileSwitch from '../components/ListTileSwitch'
 
 export const Designsystem = (props) => (
 	<Stack>
@@ -14,29 +13,14 @@ export const Designsystem = (props) => (
 		<Divider />
 		<Buttons />
 
+		
 		<Typography variant="h3">Icons</Typography>
 		<Divider />
 		<Icons />
 
 		<Typography variant="h3">ListItem</Typography>
-		<ListTileSwitch />
-
 		<Divider />
-
-		<Typography variant="h3">ListItem</Typography>
-		<Divider />
-		<ListItem
-			imageURL="https://picsum.photos/200"
-			metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
-			headline={'Discovery of the Metaverse'}
-			progressValue={50}
-		>
-			<Typography>
-				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-				diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-				sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-			</Typography>
-		</ListItem>
+		<ListItem />
 
 		<Typography variant="h3">TileItem & TileItem Feature</Typography>
 		<Divider />
@@ -46,19 +30,8 @@ export const Designsystem = (props) => (
 				flexFlow: 'row wrap',
 			}}
 		>
-			<TileItem
-				imageURL="https://picsum.photos/200"
-				metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
-				headline={'Discovery of the Metaverse'}
-				progressValue={50}
-			/>
-			<TileItem
-				feature
-				imageURL="https://picsum.photos/200"
-				metaHeadline={'ipsum dolor sit amet Charivari i bin a woschechta Bayer '}
-				headline={'Discovery of the Metaverse'}
-				progressValue={50}
-			/>
+			<TileItem />
+			<TileItem feature />
 		</Box>
 
 		<Typography variant="h3">Tiles</Typography>
@@ -102,35 +75,35 @@ const Cards = () => (
 
 const Icons = () => (
 	<Stack direction="row">
-		<FontIcon fontSize="large" name="calendar" />
+		<FontIcon fontSize='large' name="calendar"/>
 		<br />
-		<FontIcon fontSize="large" name="arrowdown" />
+		<FontIcon fontSize='large' name="arrowdown"/>
 		<br />
-		<FontIcon fontSize="large" name="arrowup" />
+		<FontIcon fontSize='large' name="arrowup"/>
 		<br />
-		<FontIcon fontSize="large" name="campaign" />
+		<FontIcon fontSize='large' name="campaign"/>
 		<br />
-		<FontIcon fontSize="large" name="check" />
+		<FontIcon fontSize='large' name="check"/>
 		<br />
-		<FontIcon fontSize="large" name="dashboard" />
+		<FontIcon fontSize='large' name="dashboard"/>
 		<br />
-		<FontIcon fontSize="large" name="document" />
+		<FontIcon fontSize='large' name="document"/>
 		<br />
-		<FontIcon fontSize="large" name="howto" />
+		<FontIcon fontSize='large' name="howto"/>
 		<br />
-		<FontIcon fontSize="large" name="image" />
+		<FontIcon fontSize='large' name="image"/>
 		<br />
-		<FontIcon fontSize="large" name="organization" />
+		<FontIcon fontSize='large' name="organization"/>
 		<br />
-		<FontIcon fontSize="large" name="organization2" />
+		<FontIcon fontSize='large' name="organization2"/>
 		<br />
-		<FontIcon fontSize="large" name="store" />
+		<FontIcon fontSize='large' name="store"/>
 		<br />
-		<FontIcon fontSize="large" name="tangram" />
+		<FontIcon fontSize='large' name="tangram"/>
 		<br />
-		<FontIcon fontSize="large" name="voting" />
+		<FontIcon fontSize='large' name="voting"/>
 		<br />
-		<FontIcon fontSize="large" name="waööet" />
+		<FontIcon fontSize='large' name="waööet"/>
 		<br />
 	</Stack>
 )

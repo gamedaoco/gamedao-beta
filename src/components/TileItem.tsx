@@ -38,12 +38,12 @@ export const TileItem: React.FC<
 					{props.feature ? 'FEATURED:' : ''} {props.headline}
 				</Typography>
 				{props.children}
-				{typeof props.progressValue === 'number' ? <Slider disabled defaultValue={props.progressValue} /> : null}
+				{typeof props.progressValue === 'number' ? (
+					<Slider disabled defaultValue={props.progressValue} />
+				) : null}
 			</Stack>
 			<Box sx={{ flex: 1 }} />
 			<Box sx={{ padding: 2, flex: 1 }}>{props.metaContent}</Box>
 		</Stack>
 	</Card>
 )
-
-export default TileItem

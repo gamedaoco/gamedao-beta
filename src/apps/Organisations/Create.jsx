@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
-
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
@@ -12,6 +10,7 @@ import {
 	Box,
 	Button,
 	Divider,
+	Container,
 	Stepper,
 	Input,
 	Step,
@@ -21,6 +20,7 @@ import {
 	FormControl,
 	MenuItem,
 	TextareaAutosize,
+	useFormControl,
 } from '../../components'
 
 import faker from 'faker'
@@ -87,7 +87,7 @@ const random_state = (accountPair) => {
 }
 
 export const Main = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 
 	const { accountPair } = useWallet()
 	// const [ status, setStatus ] = useState('')
@@ -112,7 +112,7 @@ export const Main = (props) => {
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
 		}
@@ -212,7 +212,7 @@ export const Main = (props) => {
 				formData.member_limit,
 			]
 			const from = await getFromAcct()
-			const tx = api.tx.gameDaoControl.create(...payload)
+			const tx = apiProvider.tx.gameDaoControl.create(...payload)
 			const hash = await tx.signAndSend(from, ({ status, events }) => {
 				if (events.length) {
 					events.forEach((record) => {
@@ -273,8 +273,21 @@ export const Main = (props) => {
 					my: 2,
 				}}
 			>
-				<TextField label="Name" placeholder="Name" name="name" value={formData.name} onChange={handleOnChange} required />
-				<TextField label="Contact Email" placeholder="email" name="email" value={formData.email} onChange={handleOnChange} />
+				<TextField
+					label="Name"
+					placeholder="Name"
+					name="name"
+					value={formData.name}
+					onChange={handleOnChange}
+					required
+				/>
+				<TextField
+					label="Contact Email"
+					placeholder="email"
+					name="email"
+					value={formData.email}
+					onChange={handleOnChange}
+				/>
 				<FormControl fullWidth>
 					<InputLabel id="body-select-label">Organizational Body</InputLabel>
 					<Select
@@ -331,9 +344,21 @@ export const Main = (props) => {
 				}}
 			>
 				<InputLabel id="logo-label">Logo Graphic</InputLabel>
-				<Input labelId="logo-label" type="file" label="Logo Graphic" name="logo" onChange={onFileChange} />
+				<Input
+					labelId="logo-label"
+					type="file"
+					label="Logo Graphic"
+					name="logo"
+					onChange={onFileChange}
+				/>
 				<InputLabel id="header-gfx-label">Header Graphic</InputLabel>
-				<Input labelId="header-gfx-label" type="file" label="Header Graphic" name="header" onChange={onFileChange} />
+				<Input
+					labelId="header-gfx-label"
+					type="file"
+					label="Header Graphic"
+					name="header"
+					onChange={onFileChange}
+				/>
 			</FormGroup>
 
 			<FormGroup
@@ -373,7 +398,14 @@ export const Main = (props) => {
 					value={formData.website}
 					onChange={handleOnChange}
 				/>
-				<TextField label="Code Repository" placeholder="repo" id="repo" name="repo" value={formData.repo} onChange={handleOnChange} />
+				<TextField
+					label="Code Repository"
+					placeholder="repo"
+					id="repo"
+					name="repo"
+					value={formData.repo}
+					onChange={handleOnChange}
+				/>
 			</FormGroup>
 
 			<br />
@@ -382,7 +414,9 @@ export const Main = (props) => {
 			</Divider>
 			<br />
 
-			<Typography>Note: In case you want to create a DAO, the controller must be the organization.</Typography>
+			<Typography>
+				Note: In case you want to create a DAO, the controller must be the organization.
+			</Typography>
 
 			<FormGroup
 				sx={{
@@ -474,7 +508,15 @@ export const Main = (props) => {
 						))}
 					</Select>
 				</FormControl>
-				<TextField id="fee" name="fee" label="Membership Fee" placeholder="10" value={formData.fee} onChange={handleOnChange} required />
+				<TextField
+					id="fee"
+					name="fee"
+					label="Membership Fee"
+					placeholder="10"
+					value={formData.fee}
+					onChange={handleOnChange}
+					required
+				/>
 			</FormGroup>
 
 			<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
@@ -486,6 +528,8 @@ export const Main = (props) => {
 
 export default function Module(props) {
 	const { accountPair } = useWallet()
-	const { api } = useSubstrate()
-	return api && api.query.gameDaoControl && accountPair ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider && apiProvider.query.gameDaoControl && accountPair ? (
+		<Main {...props} />
+	) : null
 }

@@ -25,7 +25,13 @@ export const ListTileSwitch: React.FC<{
 			}}
 		>
 			<Stack
-				divider={<Divider sx={{ borderColor: 'text.disabled' }} orientation={'vertical'} flexItem />}
+				divider={
+					<Divider
+						sx={{ borderColor: 'text.disabled' }}
+						orientation={'vertical'}
+						flexItem
+					/>
+				}
 				direction={'row'}
 				justifyContent={'flex-end'}
 				spacing={1}
@@ -50,5 +56,3 @@ export const ListTileSwitch: React.FC<{
 		</Box>
 	)
 }
-
-export default ListTileSwitch

@@ -2,7 +2,6 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 
 import { data as d } from '../lib/data'
@@ -12,14 +11,14 @@ import config from '../../config'
 import { Button, Typography, Box, Stack, Grid } from 'src/components'
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
+import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 const ItemTable = lazy(() => import('./ItemTable'))
 const CreateProposal = lazy(() => import('./Create'))
 
 export const Component = (props) => {
-	const { api } = useSubstrate()
-	const { accountPair } = props
+	const apiProvider = useApiProvider()
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
 	const [content, setContent] = useState()
@@ -27,7 +26,7 @@ export const Component = (props) => {
 	useEffect(() => {
 		let unsubscribe = null
 
-		api.query.gameDaoGovernance
+		apiProvider.query.gameDaoGovernance
 			.nonce((n) => {
 				setNonce(n.toNumber())
 			})
@@ -37,7 +36,7 @@ export const Component = (props) => {
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoGovernance])
+	}, [apiProvider.query.gameDaoGovernance])
 
 	// hashes
 
@@ -45,23 +44,27 @@ export const Component = (props) => {
 		if (!nonce) return
 		const req = [...new Array(nonce)].map((a, i) => i)
 		const queryHashes = async (args) => {
-			const hashes = await api.query.gameDaoGovernance.proposalsArray.multi(args).then((_) => _.map((_h) => _h.toHuman()))
-			setHashes(hashes)
+			const hashes = await apiProvider.query.gameDaoGovernance.proposalsArray
+				.multi(args)
+				.then((_) => _.map((_h) => _h.toHuman()))
+			setHashes(hashes as any)
 		}
 		queryHashes(req)
-	}, [nonce, api.query.gameDaoGovernance])
+	}, [nonce, apiProvider.query.gameDaoGovernance])
 
 	// proposals
 
 	useEffect(() => {
 		if (!hashes) return
-		const query = api.query.gameDaoGovernance.proposals
+
 		const getContent = async (args) => {
-			const content = await api.query.gameDaoGovernance.proposals.multi(args).then((_) => _.map((_h) => _h.toHuman()))
-			setContent(content)
+			const content = await apiProvider.query.gameDaoGovernance.proposals
+				.multi(args)
+				.then((_) => _.map((_h) => _h.toHuman()))
+			setContent(content as any)
 		}
 		getContent(hashes)
-	}, [hashes, api.query.gameDaoGovernance])
+	}, [hashes, apiProvider.query.gameDaoGovernance])
 
 	// get organizations for hashes
 	// filter hashes where user is member
@@ -110,8 +113,8 @@ export const Component = (props) => {
 }
 
 export default function Module(props) {
-	const { api } = useSubstrate()
-	return api && api.query.gameDaoGovernance ? <Component {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider && apiProvider.query.gameDaoGovernance ? <Component {...props} /> : null
 }
 
 //

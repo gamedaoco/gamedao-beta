@@ -10,8 +10,8 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import React, { useEffect, useState } from 'react'
-import ListItem from '../../components/ListItem'
-import TileItem from '../../components/TileItem'
+import { ListItem } from '../../components/ListItem'
+import { TileItem } from '../../components/TileItem'
 import { useSubstrate } from '../../substrate-lib'
 import { ListTileEnum } from '../components/ListTileSwitch'
 // import { encodeAddress } from '@polkadot/util-crypto'
@@ -19,10 +19,10 @@ import { ListTileEnum } from '../components/ListTileSwitch'
 import { gateway } from '../lib/ipfs'
 
 const CampaignCard = ({ displayMode, item, index, accountPair }) => {
-	// console.log(item)
 	const { api } = useSubstrate()
 
-	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
+	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
+		item
 
 	// console.log(state)
 
@@ -51,7 +51,11 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 	useEffect(() => {
 		if (!metadata) return
 		// console.log('metadata',metadata)
-		setImageURL(metadata.logo ? gateway + metadata.logo : 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY')
+		setImageURL(
+			metadata.logo
+				? gateway + metadata.logo
+				: 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+		)
 	}, [metadata])
 
 	useEffect(() => {
@@ -139,7 +143,10 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 			if (events.length) {
 				events.forEach((record) => {
 					const { event } = record
-					if (event.section === 'gameDaoCrowdfunding' && event.method === 'CampaignContributed') {
+					if (
+						event.section === 'gameDaoCrowdfunding' &&
+						event.method === 'CampaignContributed'
+					) {
 						console.log('campaign contributed:', hash)
 						setLoading(false)
 					}
@@ -216,7 +223,9 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 				{state === '1' && (
 					<Stack direction={'row'} spacing={2}>
 						<TimeIcon />
-						<Typography>{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining</Typography>
+						<Typography>
+							{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
+						</Typography>
 					</Stack>
 				)}
 				{content?.identity ? (
