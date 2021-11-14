@@ -12,7 +12,6 @@ import { useWallet } from 'src/context/Wallet'
 import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
-console.log(dev)
 
 const random_state = (accountPair) => {
 	const name = faker.name.findName()

@@ -22,7 +22,14 @@ function Wrapper({ children }) {
 				<WalletProvider>
 					<BrowserRouter>
 						<ScrollToTop />
-						<IconContext.Provider value={{ color: darkmodeEnabled ? 'white' : 'black', className: 'react-icon' }}>{children}</IconContext.Provider>
+						<IconContext.Provider
+							value={{
+								color: darkmodeEnabled ? 'white' : 'black',
+								className: 'react-icon',
+							}}
+						>
+							{children}
+						</IconContext.Provider>
 					</BrowserRouter>
 				</WalletProvider>
 			</SubstrateContextProvider>

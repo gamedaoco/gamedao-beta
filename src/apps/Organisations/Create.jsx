@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
-
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
@@ -29,7 +28,6 @@ import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
-import { useApiProvider } from '@substra-hooks/core'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -90,6 +88,7 @@ const random_state = (accountPair) => {
 
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
+
 	const { accountPair } = useWallet()
 	// const [ status, setStatus ] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -530,7 +529,6 @@ export const Main = (props) => {
 export default function Module(props) {
 	const { accountPair } = useWallet()
 	const apiProvider = useApiProvider()
-
 	return apiProvider && apiProvider.query.gameDaoControl && accountPair ? (
 		<Main {...props} />
 	) : null

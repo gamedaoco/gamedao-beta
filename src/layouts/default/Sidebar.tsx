@@ -96,7 +96,11 @@ function Main({ showNavigation }: ComponentProps) {
 			}}
 		>
 			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 1.5 }}>
-				<Icons src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo} alt={'GameDAO'} sx={{ height: '45.4px' }} />
+				<Icons
+					src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo}
+					alt={'GameDAO'}
+					sx={{ height: '45.4px' }}
+				/>
 				<Box
 					sx={{
 						display: 'flex',
@@ -173,12 +177,28 @@ function Main({ showNavigation }: ComponentProps) {
 				</a>
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Social</NavHeader>
-				<Box sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}>
-					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r"><SiDiscord size={'20px'} /></a>
-					<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco"><SiTelegram size={'20px'} /></a>
-					<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco"><SiTwitter size={'20px'} /></a>
-					<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco"><SiGithub size={'20px'} /></a>
-					<a target="_blank" rel="noreferrer" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'20px'} /></a>
+				<Box
+					sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}
+				>
+					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
+						<SiDiscord size={'20px'} />
+					</a>
+					<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
+						<SiTelegram size={'20px'} />
+					</a>
+					<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
+						<SiTwitter size={'20px'} />
+					</a>
+					<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
+						<SiGithub size={'20px'} />
+					</a>
+					<a
+						target="_blank"
+						rel="noreferrer"
+						href="https://www.linkedin.com/company/gamedaoco"
+					>
+						<SiLinkedin size={'20px'} />
+					</a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
