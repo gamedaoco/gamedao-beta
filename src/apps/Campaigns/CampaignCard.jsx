@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSubstrate } from '../../substrate-lib'
+import { Link } from 'react-router-dom'
 
 import { web3FromSource } from '@polkadot/extension-dapp'
 // import { encodeAddress } from '@polkadot/util-crypto'
@@ -208,7 +209,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 					<Image label={governance === '1' && { as: 'a', corner: 'right', icon: 'heart', color: 'pink' }} src={imageURL} wrapped ui={true} />
 					<Card.Content>
 						<Card.Header color="black">
-							<a href={`/campaign/${id}`}>{name}</a>
+							<Link to={`/app/campaign/${id}`}>{name}</Link>
 						</Card.Header>
 						<Card.Meta>
 							{content.backers} backer{content.backers === 1 ? '' : 's'}.<br />

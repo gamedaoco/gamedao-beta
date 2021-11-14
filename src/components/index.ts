@@ -14,6 +14,8 @@ export { default as Divider } from '@mui/material/Divider'
 export { default as Slider } from '@mui/material/Slider'
 export { default as Card } from '@mui/material/Card'
 export { default as Paper } from '@mui/material/Paper'
+export { default as Badge } from '@mui/material/Badge'
+export { default as Chip } from '@mui/material/Chip'
 
 export { default as TextField } from '@mui/material/TextField'
 export { default as InputLabel } from '@mui/material/InputLabel'
@@ -50,3 +52,4 @@ export { styled } from '@mui/material/styles'
 // custom
 export * as Loader from './Loader'
 export * as Message from './Message'
+export { Image16to9, Box16to9 } from './Image16to9'
