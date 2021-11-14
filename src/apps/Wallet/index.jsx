@@ -49,9 +49,8 @@ const Component = (props) => {
 	)
 }
 
-export default function Dapp(props) {
+export default function Module(props) {
 	const { api } = useSubstrate()
-
 	return api ? <Component /> : null
 }
 

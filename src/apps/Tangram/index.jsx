@@ -74,7 +74,7 @@ const ItemGrid = ({ hashes }) => {
 	)
 }
 
-export const Content = (props) => {
+export const Component = (props) => {
 	const { api } = useSubstrate()
 
 	// every org runs on its own realm
@@ -128,8 +128,6 @@ export const Content = (props) => {
 }
 
 export default function Module(props) {
-	// const { accountPair } = useWallet()
 	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoTangram /*&& accountPair*/ ? <Content {...props} /> : null
+	return api ? <Component /> : null
 }

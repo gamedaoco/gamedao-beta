@@ -2,7 +2,7 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
@@ -119,6 +119,7 @@ const defaultContent = {}
 const Item = ({ content }) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
+	const navigate = useNavigate()
 
 	const [itemContent, setItemContent] = useState({})
 	const [metadata, setMetadata] = useState({})
@@ -229,8 +230,8 @@ const Item = ({ content }) => {
 		}
 	}
 
-	const handleAdmin = () => history.push('/app/organisations/admin/1234')
-	const handleDashboard = () => history.push('/app/organisations/dashboard/1234');
+	const handleAdmin = () => navigate('/app/organisations/admin/1234')
+	const handleDashboard = () => navigate('/app/organisations/dashboard/1234');
 
 	const buttonText = ['join', 'apply', 'leave']
 
@@ -382,7 +383,7 @@ const ItemList = (props) => {
 	)
 }
 
-export const Main = (props) => {
+export const Component = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 	const context = useWallet()
@@ -559,27 +560,24 @@ export const Main = (props) => {
 			</Typography>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Box>{
-					!content || nonce === 0
+					(!content || nonce === 0)
 					? <h4>No organizations yet. Create one!</h4>
 					: <h4>Total organizations: {nonce}</h4>
 				}</Box>
 				<Box>{
-					address && showCreateMode
+					(address && showCreateMode)
 					? <Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}> Close {address} </Button>
 					: <Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}> New DAO </Button>
 				}</Box>
 			</Stack>
 			<br />
-			{showCreateMode && <CreateDAO />}
-			{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
 		</Container>
 	)
 }
 
 export default function Module(props) {
 	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoControl ? <Main {...props} /> : null
+	return api ? <Component /> : null
 }
 //
 //
