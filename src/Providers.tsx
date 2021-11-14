@@ -9,57 +9,37 @@ import { ThemeProvider } from '@mui/material/styles'
 import { IconContext } from 'react-icons'
 import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
+import { StoreProvider } from './context/Store'
+import { ThemeStateProvider, useThemeState } from './context/ThemeState'
+import { NetworkProvider } from './context/Network'
 
-import { Box } from './components'
-
-export const Providers = (props) => {
-	const [isDarkMode, setDarkMode] = React.useState(false)
-	const toggleColorMode = () => {
-		localStorage.setItem('darkMode', JSON.stringify(!isDarkMode))
-		setDarkMode(!isDarkMode)
-	}
-
-	useEffect(() => {
-		const localStorageDarkMode = localStorage.getItem('darkMode') || 'false'
-		if (JSON.parse(localStorageDarkMode) === true) {
-			setDarkMode(true)
-		}
-	}, [])
-
+function Wrapper({ children }) {
+	const { darkmodeEnabled } = useThemeState()
 	return (
-		<>
-			<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-				<CssBaseline />
-				<SubstrateContextProvider>
-					<WalletProvider>
-						<BrowserRouter>
-							<ScrollToTop />
-							<IconContext.Provider value={{ color: isDarkMode ? 'white' : 'black', className: 'react-icon' }}>
-								{props.children}
-							</IconContext.Provider>
-						</BrowserRouter>
-					</WalletProvider>
-				</SubstrateContextProvider>
-			</ThemeProvider>
-			<ToastContainer theme={isDarkMode ? 'dark' : 'light'} />
-			<ThemeSwitcher isDarkMode={isDarkMode} onClick={toggleColorMode} />
-		</>
+		<ThemeProvider theme={darkmodeEnabled ? darkTheme : lightTheme}>
+			<CssBaseline />
+			<SubstrateContextProvider>
+				<WalletProvider>
+					<BrowserRouter>
+						<ScrollToTop />
+						<IconContext.Provider value={{ color: darkmodeEnabled ? 'white' : 'black', className: 'react-icon' }}>{children}</IconContext.Provider>
+					</BrowserRouter>
+				</WalletProvider>
+			</SubstrateContextProvider>
+			<ToastContainer theme={darkmodeEnabled ? 'dark' : 'light'} />
+		</ThemeProvider>
 	)
 }
 
-function ThemeSwitcher({ isDarkMode, onClick }) {
+export const Providers = ({ children }) => {
 	return (
-		<Box
-			onClick={onClick}
-			sx={{
-				position: 'fixed',
-				bottom: '1rem',
-				right: '1rem',
-				cursor: 'pointer',
-			}}
-		>
-			{isDarkMode ? '☀️' : '🌙'}
-		</Box>
+		<StoreProvider>
+			<ThemeStateProvider>
+				<NetworkProvider>
+					<Wrapper>{children}</Wrapper>
+				</NetworkProvider>
+			</ThemeStateProvider>
+		</StoreProvider>
 	)
 }
 

@@ -2,24 +2,20 @@ import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Stack from '@mui/material/Stack'
-import Button from '@mui/material/Button'
 import AccountSelector from 'src/components/AccountSelector'
 import NetInfo from 'src/components/NetInfo'
 
-interface ComponentProps {
-	showWallet?: boolean
-}
-
-function Main({ showWallet }: ComponentProps) {
+function Main() {
 	return (
 		<AppBar color="transparent" position="sticky" elevation={0}>
 			<Toolbar
 				sx={{
 					zIndex: '9000',
-					background: 'none',
+					background: 'rgba(255,255,255,0.6)',
+					backdropFilter: 'blur(10px)',
 					width: '100%',
-					// alignItems: 'right',
-					// justifyContent: 'end',
+					height: '5rem',
+					boxShadow: 2,
 				}}
 			>
 				<Stack
@@ -40,8 +36,6 @@ function Main({ showWallet }: ComponentProps) {
 						width: '50%',
 					}}
 				>
-					<Button>GameDAO</Button>
-					<Button>Store</Button>
 					<AccountSelector />
 				</Stack>
 			</Toolbar>
