@@ -199,11 +199,11 @@ const BalanceAnnotation = () => {
 				marginTop: '8px',
 			}}
 		>
-			{balanceZero}
+			{balanceZero || `0 ZERO`}
 			<br />
-			{balancePlay} PLAY
+			{balancePlay || 0} PLAY
 			<br />
-			{balanceGame} GAME
+			{balanceGame || 0} GAME
 		</div>
 	)
 }

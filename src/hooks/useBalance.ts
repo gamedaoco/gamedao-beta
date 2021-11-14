@@ -2,7 +2,6 @@ import { ApiPromise } from '@polkadot/api'
 import { useApiProvider } from '@substra-hooks/core'
 import { useState, useEffect } from 'react'
 import { useWallet } from 'src/context/Wallet'
-import { useIsMountedRef } from './useIsMountedRef'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 
@@ -13,9 +12,9 @@ export type BalanceState = {
 }
 
 const INITIAL_STATE: BalanceState = {
-	balanceZero: '0',
-	balancePlay: '0',
-	balanceGame: '0',
+	balanceZero: null,
+	balancePlay: null,
+	balanceGame: null,
 }
 
 async function queryAccountBalance(
@@ -53,23 +52,18 @@ async function queryAccountBalance(
 // Get Account Balance for Zero, Play and game
 export const useBalance = () => {
 	const [balanceState, setBalanceState] = useState<BalanceState>(INITIAL_STATE)
-	const [isLoadingState, setIsLoadingState] = useState<boolean>(false)
 	const [addressState, setAddressState] = useState<string>(null)
-	const isMountedRef = useIsMountedRef()
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 
 	useEffect(() => {
 		if (apiProvider && address && address !== addressState) {
-			setAddressState(address)
 			queryAccountBalance(apiProvider, address).then((state) => {
-				if (isMountedRef) {
-					setBalanceState(state)
-					setIsLoadingState(false)
-				}
+				setBalanceState(state)
+				setAddressState(address)
 			})
 		}
-	}, [address, apiProvider, isMountedRef])
+	}, [address, apiProvider])
 
 	return balanceState
 }
