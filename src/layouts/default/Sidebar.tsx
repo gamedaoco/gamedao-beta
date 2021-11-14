@@ -1,6 +1,8 @@
+import React from 'react'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
+import { useApiProvider } from '@substra-hooks/core'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubHeader from '@mui/material/ListSubheader'
 import { styled } from '@mui/material/styles'
@@ -12,6 +14,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { Divider, Paper, Typography, FontIcon } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { useThemeState } from 'src/context/ThemeState'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+
 interface ComponentProps {
 	showNavigation?: boolean
 }
@@ -82,6 +86,43 @@ function ThemeSwitcher() {
 
 function Main({ showNavigation }: ComponentProps) {
 	const { darkmodeEnabled } = useThemeState()
+	const { campaignsCount } = useCrowdfunding()
+	const [organisationCount, setOrganisationCount] = React.useState(0)
+	const [votingCount, setVotingCount] = React.useState(0)
+	const apiProvider = useApiProvider()
+
+	React.useEffect(() => {
+		let unsubscribe = null
+		if (!apiProvider) return
+		apiProvider?.query?.gameDaoControl
+			.nonce((n) => {
+				if (!n.isNone) {
+					setOrganisationCount(n.toNumber())
+				}
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
+		return () => unsubscribe && unsubscribe()
+	}, [apiProvider?.query?.gameDaoControl])
+
+	React.useEffect(() => {
+		let unsubscribe = null
+		if (!apiProvider) return
+		apiProvider?.query?.gameDaoGovernance
+			.nonce((n) => {
+				if (!n.isNone) {
+					setVotingCount(n.toNumber())
+				}
+			})
+			.then((unsub) => {
+				unsubscribe = unsub
+			})
+			.catch(console.error)
+		return () => unsubscribe && unsubscribe()
+	}, [apiProvider?.query?.gameDaoGovernance])
+
 	return (
 		<Box
 			sx={{
@@ -131,6 +172,12 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '4rem' }} name="organization" />
 						</ListItemIcon>
 						<Typography variant="h5">Organisations</Typography>
+						{organisationCount > 0 ? (
+							<>
+								<Box />
+								<NavBadge badgeContent={organisationCount} color={'primary'} />
+							</>
+						) : null}
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/governance">
@@ -139,8 +186,12 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
 						</ListItemIcon>
 						<Typography variant="h5">Votings</Typography>
-						<Box />
-						<NavBadge badgeContent={5} color={'primary'} />
+						{votingCount > 0 ? (
+							<>
+								<Box />
+								<NavBadge badgeContent={votingCount} color={'primary'} />
+							</>
+						) : null}
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/campaigns">
@@ -149,6 +200,12 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '4rem' }} name="campaign" />
 						</ListItemIcon>
 						<Typography variant="h5">Campaigns</Typography>
+						{campaignsCount > 0 ? (
+							<>
+								<Box />
+								<NavBadge badgeContent={campaignsCount} color={'primary'} />
+							</>
+						) : null}
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/tangram">
