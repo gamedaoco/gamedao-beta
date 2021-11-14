@@ -33,7 +33,7 @@ const WalletProvider = ({ children }) => {
 
 	useEffect(() => {
 		setState({ ...state, allowConnect: allowConnection })
-	}, [allowConnection])
+	}, [allowConnection, state])
 
 	return (
 		<WalletContext.Provider

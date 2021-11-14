@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSubstrate } from '../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
 import Typography from '@mui/material/Typography'
 
 const NetInfo = () => {
@@ -8,13 +7,13 @@ const NetInfo = () => {
 	const [version, setVersion] = useState('')
 	const [blockNumber, setBlockNumber] = useState(0)
 	const [blockNumberTimer, setBlockNumberTimer] = useState(0)
-	const [bestNumber, setBestNumber] = useState()
+	// const [bestNumber, setBestNumber] = useState()
 
 	useEffect(() => {
 		if (apiState !== 'READY' || !api) return
 		const versionString = `${api.runtimeVersion.implName.toString()} ${api.runtimeVersion.specVersion.toNumber()}.${api.runtimeVersion.implVersion.toNumber()}`
 		setVersion(versionString)
-	}, [apiState])
+	}, [api, apiState])
 
 	useEffect(() => {
 		if (apiState !== 'READY' || !api) return
@@ -31,7 +30,7 @@ const NetInfo = () => {
 			.catch(console.error)
 
 		return () => unsubscribeAll && unsubscribeAll()
-	}, [apiState])
+	}, [api, apiState])
 
 	const timer = () => {
 		setBlockNumberTimer((time) => time + 1)

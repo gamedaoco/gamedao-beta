@@ -5,7 +5,7 @@ import { useWallet } from 'src/context/Wallet'
 import { Button, Typography, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
+import { /*createErrorNotification, */createInfoNotification } from 'src/utils/notification'
 import { Icons, ICON_MAPPING } from './Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useStore } from 'src/context/Store'
@@ -64,21 +64,21 @@ const AccountComponent = () => {
 		} else if (w3Enabled && !allowConnect) {
 			updateWalletState({ address: null, account: null, allowConnect: false, connected: false })
 		}
-	}, [allowConnect])
+	}, [allowConnect, updateWalletState, w3enable, w3Enabled])
 
 	useEffect(() => {
 		// Set initial account => default account 0
 		if (accounts && allowConnect) {
 			updateWalletState({ account: accounts[0], address: accounts[0]?.address })
 		}
-	}, [accounts, allowConnect])
+	}, [accounts, allowConnect, updateWalletState])
 
 	useEffect(() => {
 		// Set selected account
 		if (accounts?.length > 0 && selectedIndex >= 0 && selectedIndex < accounts.length && address !== accounts?.[selectedIndex]?.address) {
 			updateWalletState({ account: accounts[selectedIndex], address: accounts[selectedIndex]?.address })
 		}
-	}, [selectedIndex])
+	}, [selectedIndex, updateWalletState, accounts, address])
 
 	return (
 		<>

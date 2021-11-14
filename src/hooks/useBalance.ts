@@ -67,7 +67,7 @@ export const useBalance = () => {
 				})
 			}
 		}
-	}, [address, apiProvider, isMountedRef])
+	}, [address, apiProvider, isMountedRef, isLoadingState])
 
 	return balanceState
 }

@@ -43,7 +43,7 @@ export const useIdentity = (address: string) => {
 				}
 			})
 		}
-	}, [address, apiProvider, isMountedRef])
+	}, [address, apiProvider, isMountedRef, identityState])
 
 	return (identityState ?? {})?.identities?.[address]
 }

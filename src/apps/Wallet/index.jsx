@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useSubstrate } from '../../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
 
-import { Button, Typography, Box, Stack } from 'src/components'
+import { Typography, Box, Stack } from 'src/components'
 
 const Component = (props) => {
 	// const { address, accountPair } = useWallet()

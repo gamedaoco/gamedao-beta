@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import * as React from 'react'
-import { Paper, Card, Box, Divider, Stack, Slider } from './index'
+import { Card, Box, Divider, Stack, Slider } from './index'
 
 export const ListItem = () => (
 	<>
@@ -18,7 +18,7 @@ export const ListItem = () => (
 				}}
 			>
 				<Box>
-					<img width="200px" height="100%" src="https://picsum.photos/200" />
+					<img alt="howdy" width="200px" height="100%" src="https://picsum.photos/200" />
 				</Box>
 				<Stack>
 					<Typography variant="h6">✅ Activions Blizzard</Typography>

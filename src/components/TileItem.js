@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import * as React from 'react'
-import { Paper, Card, Box, Divider, Stack, Slider } from './index'
+import { Card, Box, Stack, Slider } from './index'
 
 export const TileItem = ({ feature }) => (
 	<>
@@ -12,7 +12,7 @@ export const TileItem = ({ feature }) => (
 		>
 			<Stack>
 				<Box sx={{ maxHeight: feature ? '300px' : 'auto' }}>
-					<img width="100%" height="100%" src="https://picsum.photos/200" />
+					<img alt={'campaign.title'} width="100%" height="100%" src="https://picsum.photos/200" />
 				</Box>
 				<Stack
 					sx={{
