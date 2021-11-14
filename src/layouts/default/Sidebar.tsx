@@ -4,12 +4,12 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubHeader from '@mui/material/ListSubheader'
 import { styled } from '@mui/material/styles'
-import { SiDiscord, SiLinkedin, SiGithub, SiTelegram } from 'react-icons/si'
+import { SiDiscord, SiLinkedin, SiGithub, SiTelegram, SiTwitter } from 'react-icons/si'
 import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Divider, Paper, Typography, FontIcon, Stack } from 'src/components'
+import { Divider, Paper, Typography, FontIcon } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { useThemeState } from 'src/context/ThemeState'
 interface ComponentProps {
@@ -24,7 +24,7 @@ const SidebarButton = styled(ListItemButton)(({ theme }) => ({
 	marginBottom: theme.spacing(0.5),
 	borderRadius: '2rem',
 	color: theme.palette.text.secondary,
-	['&:hover']: {
+	'&:hover': {
 		color: theme.palette.text.primary,
 	},
 }))
@@ -36,7 +36,7 @@ const NavHeader = styled(ListSubHeader)(({ theme }) => ({
 }))
 
 const NavBadge = styled(Badge)(({ theme }) => ({
-	['& .MuiBadge-badge']: {
+	'& .MuiBadge-badge': {
 		color: theme.palette.background.default,
 		borderRadius: 6,
 		right: 'initial',
@@ -174,11 +174,11 @@ function Main({ showNavigation }: ComponentProps) {
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Social</NavHeader>
 				<Box sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}>
-					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiDiscord size={'28px'} /></a>
-					<a target="_blank" href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
-					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
-					<a target="_blank" href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
-					<a target="_blank" href="https://discord.gg/P7NHWGzJ7r"><SiDiscord size={'28px'} /></a>
+					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r"><SiDiscord size={'20px'} /></a>
+					<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco"><SiTelegram size={'20px'} /></a>
+					<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco"><SiTwitter size={'20px'} /></a>
+					<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco"><SiGithub size={'20px'} /></a>
+					<a target="_blank" rel="noreferrer" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'20px'} /></a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
