@@ -18,7 +18,10 @@ const INITIAL_STATE: BalanceState = {
 	balanceGame: '0',
 }
 
-async function queryAccountBalance(apiProvider: ApiPromise, address: string): Promise<BalanceState> {
+async function queryAccountBalance(
+	apiProvider: ApiPromise,
+	address: string
+): Promise<BalanceState> {
 	const context = apiProvider.query.assets.account
 	if (!context) return INITIAL_STATE
 
@@ -51,21 +54,20 @@ async function queryAccountBalance(apiProvider: ApiPromise, address: string): Pr
 export const useBalance = () => {
 	const [balanceState, setBalanceState] = useState<BalanceState>(INITIAL_STATE)
 	const [isLoadingState, setIsLoadingState] = useState<boolean>(false)
+	const [addressState, setAddressState] = useState<string>(null)
 	const isMountedRef = useIsMountedRef()
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 
 	useEffect(() => {
-		if (apiProvider && address) {
-			if (!isLoadingState) {
-				setIsLoadingState(true)
-				queryAccountBalance(apiProvider, address).then((state) => {
-					if (isMountedRef) {
-						setBalanceState(state)
-						setIsLoadingState(false)
-					}
-				})
-			}
+		if (apiProvider && address && address !== addressState) {
+			setAddressState(address)
+			queryAccountBalance(apiProvider, address).then((state) => {
+				if (isMountedRef) {
+					setBalanceState(state)
+					setIsLoadingState(false)
+				}
+			})
 		}
 	}, [address, apiProvider, isMountedRef])
 
