@@ -46,6 +46,8 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
+		// Reset selectedIndex to default
+		setSelectedIndex(0)
 		updateWalletState({ allowConnect: false })
 	}
 
@@ -90,6 +92,7 @@ const AccountComponent = () => {
 	useEffect(() => {
 		// Set selected account
 		if (
+			allowConnect &&
 			accounts?.length > 0 &&
 			selectedIndex >= 0 &&
 			selectedIndex < accounts.length &&
