@@ -10,7 +10,6 @@ import { IconContext } from 'react-icons'
 import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
 
-
 export type ThemeState = {
 	darkmodeEnabled: boolean
 	setDarkmodeEnabled: (enabled: boolean) => void

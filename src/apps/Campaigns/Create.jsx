@@ -12,7 +12,6 @@ import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 import { useWallet } from 'src/context/Wallet'
 
 const dev = config.dev
-console.log(dev)
 
 const random_state = (accountPair) => {
 	const name = faker.name.findName()

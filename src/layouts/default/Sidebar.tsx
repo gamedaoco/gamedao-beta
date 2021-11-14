@@ -39,7 +39,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	['& .MuiBadge-badge']: {
 		color: theme.palette.background.default,
 		borderRadius: 6,
-		right: "initial"
+		right: 'initial',
 	},
 }))
 
@@ -107,7 +107,9 @@ function Main({ showNavigation }: ComponentProps) {
 					}}
 				>
 					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ marginTop: '-10px' }} variant="h3">DAO</Typography>
+					<Typography sx={{ marginTop: '-10px' }} variant="h3">
+						DAO
+					</Typography>
 				</Box>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
@@ -133,7 +135,7 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
 						</ListItemIcon>
 						<Typography variant="h5">Votings</Typography>
-						<Box/>
+						<Box />
 						<NavBadge badgeContent={5} color={'primary'} />
 					</SidebarButton>
 				</NavLink>
@@ -172,11 +174,21 @@ function Main({ showNavigation }: ComponentProps) {
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Social</NavHeader>
 				<Box sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}>
-					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiDiscord size={'28px'} /></a>
-					<a target="_blank" href="https://github.com/gamedaoco"><SiGithub size={'28px'} /></a>
-					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco"><SiLinkedin size={'28px'} /></a>
-					<a target="_blank" href="https://t.me/gamedaoco"><SiTelegram size={'28px'} /></a>
-					<a target="_blank" href="https://discord.gg/P7NHWGzJ7r"><SiDiscord size={'28px'} /></a>
+					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco">
+						<SiDiscord size={'28px'} />
+					</a>
+					<a target="_blank" href="https://github.com/gamedaoco">
+						<SiGithub size={'28px'} />
+					</a>
+					<a target="_blank" href="https://www.linkedin.com/company/gamedaoco">
+						<SiLinkedin size={'28px'} />
+					</a>
+					<a target="_blank" href="https://t.me/gamedaoco">
+						<SiTelegram size={'28px'} />
+					</a>
+					<a target="_blank" href="https://discord.gg/P7NHWGzJ7r">
+						<SiDiscord size={'28px'} />
+					</a>
 				</Box>
 				<Box sx={{ height: '40px' }} />
 				<NavHeader>Settings</NavHeader>
