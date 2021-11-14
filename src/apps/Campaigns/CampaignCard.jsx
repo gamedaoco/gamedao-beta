@@ -65,13 +65,13 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			}
 		}
 		query()
-	}, [api, id, owner])
+	}, [api, id, owner, content])
 
 	useEffect(() => {
 		if (identity) {
 			setContent({ ...(content ?? {}), identity: identity.toHuman()?.info?.display?.Raw ?? null })
 		}
-	}, [identity])
+	}, [identity, content])
 
 	//
 
