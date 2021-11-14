@@ -288,7 +288,10 @@ const Item = ({ content, mode }) => {
 				spacing={1}
 			>
 				<Stack direction={'row'} spacing={1}>
-					<WebsiteIcon /> <a href={metadata.website}>{metadata.website}</a>
+					<WebsiteIcon />{' '}
+					<a target={'_blank'} href={metadata.website}>
+						{metadata.website}
+					</a>
 				</Stack>
 				{itemContent.access === '0' ? (
 					<Stack direction={'row'} spacing={1}>
