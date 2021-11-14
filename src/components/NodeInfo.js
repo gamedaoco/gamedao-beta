@@ -1,23 +1,26 @@
+import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { Card, Icon, Grid } from 'semantic-ui-react'
 
-import { useSubstrate } from '../substrate-lib'
-
 function Main(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const [nodeInfo, setNodeInfo] = useState({})
 
 	useEffect(() => {
 		const getInfo = async () => {
 			try {
-				const [chain, nodeName, nodeVersion] = await Promise.all([api.rpc.system.chain(), api.rpc.system.name(), api.rpc.system.version()])
+				const [chain, nodeName, nodeVersion] = await Promise.all([
+					apiProvider.rpc.system.chain(),
+					apiProvider.rpc.system.name(),
+					apiProvider.rpc.system.version(),
+				])
 				setNodeInfo({ chain, nodeName, nodeVersion })
 			} catch (e) {
 				console.error(e)
 			}
 		}
 		getInfo()
-	}, [api.rpc.system])
+	}, [apiProvider.rpc.system])
 
 	return (
 		<Grid.Column>
@@ -28,7 +31,10 @@ function Main(props) {
 						<span>{nodeInfo.chain}</span>
 					</Card.Meta>
 					<Card.Description>
-						Built using the <a href="https://github.com/substrate-developer-hub/substrate-front-end-template">Substrate Front End Template</a>
+						Built using the{' '}
+						<a href="https://github.com/substrate-developer-hub/substrate-front-end-template">
+							Substrate Front End Template
+						</a>
 					</Card.Description>
 				</Card.Content>
 				<Card.Content extra>
@@ -40,6 +46,12 @@ function Main(props) {
 }
 
 export default function NodeInfo(props) {
-	const { api } = useSubstrate()
-	return api.rpc && api.rpc.system && api.rpc.system.chain && api.rpc.system.name && api.rpc.system.version ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider.rpc &&
+		apiProvider.rpc.system &&
+		apiProvider.rpc.system.chain &&
+		apiProvider.rpc.system.name &&
+		apiProvider.rpc.system.version ? (
+		<Main {...props} />
+	) : null
 }

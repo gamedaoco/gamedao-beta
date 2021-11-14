@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
-
-import { Form, Icon, Accordion, List, Checkbox, Label, Header, Segment, Divider, Button } from 'semantic-ui-react'
-import { TxButton } from '../../substrate-lib/components'
+import React from 'react'
+import { Icon, Label, Header, Segment } from 'semantic-ui-react'
 
 const Invest = (props) => {
 	return (
@@ -17,7 +13,11 @@ const Invest = (props) => {
 			</Header>
 			<div style={{ paddingBottom: '1em' }}>
 				<div style={{ fontSize: 'small' }}>Funding Id</div>
-				<InputBond bond={this.fundingId} placeholder="Type the funding id" validator={(id) => id || null} />
+				<InputBond
+					bond={this.fundingId}
+					placeholder="Type the funding id"
+					validator={(id) => id || null}
+				/>
 			</div>
 			<div style={{ paddingBottom: '1em' }}>
 				<div style={{ fontSize: 'small' }}>invest amount</div>

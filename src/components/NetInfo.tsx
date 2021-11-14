@@ -1,26 +1,24 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { useSubstrate } from '../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
+import React, { useState, useEffect } from 'react'
 import Typography from '@mui/material/Typography'
+import { useApiProvider } from '@substra-hooks/core'
 
 const NetInfo = () => {
-	const { api, apiState } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const [version, setVersion] = useState('')
 	const [blockNumber, setBlockNumber] = useState(0)
 	const [blockNumberTimer, setBlockNumberTimer] = useState(0)
-	const [bestNumber, setBestNumber] = useState()
 
 	useEffect(() => {
-		if (apiState !== 'READY' || !api) return
-		const versionString = `${api.runtimeVersion.implName.toString()} ${api.runtimeVersion.specVersion.toNumber()}.${api.runtimeVersion.implVersion.toNumber()}`
+		if (!apiProvider) return
+		const versionString = `${apiProvider.runtimeVersion.implName.toString()} ${apiProvider.runtimeVersion.specVersion.toNumber()}.${apiProvider.runtimeVersion.implVersion.toNumber()}`
 		setVersion(versionString)
-	}, [apiState])
+	}, [apiProvider])
 
 	useEffect(() => {
-		if (apiState !== 'READY' || !api) return
+		if (!apiProvider) return
 		let unsubscribeAll
 
-		api.derive.chain
+		apiProvider.derive.chain
 			.bestNumberFinalized((number) => {
 				setBlockNumber(number.toNumber())
 				setBlockNumberTimer(0)
@@ -31,7 +29,7 @@ const NetInfo = () => {
 			.catch(console.error)
 
 		return () => unsubscribeAll && unsubscribeAll()
-	}, [apiState])
+	}, [apiProvider])
 
 	const timer = () => {
 		setBlockNumberTimer((time) => time + 1)
@@ -42,7 +40,7 @@ const NetInfo = () => {
 		return () => clearInterval(id)
 	}, [])
 
-	if (!api || blockNumber === 0) return null
+	if (!apiProvider || blockNumber === 0) return null
 
 	return (
 		<Typography variant="caption">

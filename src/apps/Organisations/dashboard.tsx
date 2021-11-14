@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from '../../context/Wallet'
-import {
-	Button,
-	Typography,
-	Box,
-	Container,
-	Paper,
-	styled,
-} from '../../components'
+import { Button, Typography, Box, Container, Paper, styled } from '../../components'
+import { useApiProvider } from '@substra-hooks/core'
 
 const Dashboard = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 	const { id } = useParams()
 
@@ -30,9 +23,10 @@ const Dashboard = (props) => {
 		let unsubscribe = null
 
 		if (address) {
-			api.queryMulti([
-				[api.query.identity.identityOf, address]
-			], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
+			apiProvider
+				.queryMulti([[apiProvider.query.identity.identityOf, address]], ([identity]) =>
+					setName((identity.toHuman() as any)?.info.display.Raw ?? '')
+				)
 				.then((unsub) => (unsubscribe = unsub))
 				.catch(console.error)
 		} else {
@@ -40,30 +34,37 @@ const Dashboard = (props) => {
 		}
 
 		return () => unsubscribe && unsubscribe()
-	}, [api, address])
+	}, [apiProvider, address])
 
 	useEffect(() => {
 		let unsubscribe = null
 
-		api.queryMulti(
-			[api.query.gameDaoControl.nonce, api.query.gameDaoCrowdfunding.nonce, api.query.gameDaoGovernance.nonce],
-			([bodies, campaigns, proposals]) => {
-				setBodies(bodies.toNumber())
-				setCampaigns(campaigns.toNumber())
-				setProposals(proposals.toNumber())
-			}
-		)
+		apiProvider
+			.queryMulti(
+				[
+					apiProvider.query.gameDaoControl.nonce,
+					apiProvider.query.gameDaoCrowdfunding.nonce,
+					apiProvider.query.gameDaoGovernance.nonce,
+				],
+				([bodies, campaigns, proposals]) => {
+					setBodies((bodies as any).toNumber())
+					setCampaigns((campaigns as any).toNumber())
+					setProposals((proposals as any).toNumber())
+				}
+			)
 			.then((unsub) => {
 				unsubscribe = unsub
 			})
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api, address])
+	}, [apiProvider, address])
 
 	return (
 		<React.Fragment>
-			<Typography component="h1" variant="h3">DAO Dashboard</Typography>
+			<Typography component="h1" variant="h3">
+				DAO Dashboard
+			</Typography>
 			<h2>DAOs: {bodies}</h2>
 			<h2>Campaigns: {campaigns}</h2>
 			<h2>Proposals: {proposals}</h2>
@@ -72,8 +73,7 @@ const Dashboard = (props) => {
 }
 
 export default function Dapp(props) {
-	const { api, apiState } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { allowConnect } = useWallet()
-	console.log('apiState', apiState)
-	return allowConnect && api && apiState === 'READY' ? <Dashboard {...props} /> : null
+	return allowConnect && apiProvider ? <Dashboard {...props} /> : null
 }

@@ -1,11 +1,10 @@
 import { web3FromSource } from '@polkadot/extension-dapp'
-import { useSubstrate } from '../../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
+import { useApiProvider } from '@substra-hooks/core'
 
 export * from './data'
 
 export const getFromAcct = async ({ accountPair }) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	// TODO:
 	// const { accountPair } = useWallet()
 	const {
@@ -16,7 +15,7 @@ export const getFromAcct = async ({ accountPair }) => {
 	if (isInjected) {
 		const injected = await web3FromSource(source)
 		fromAcct = address
-		api.setSigner(injected.signer)
+		apiProvider.setSigner(injected.signer)
 	} else {
 		fromAcct = accountPair
 	}

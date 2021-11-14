@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
 
 import { web3FromSource } from '@polkadot/extension-dapp'
 // import { encodeAddress } from '@polkadot/util-crypto'
@@ -13,11 +12,13 @@ import { Form } from 'semantic-ui-react'
 
 import { Button } from '../../components'
 import { useIdentity } from 'src/hooks/useIdentity'
+import { useApiProvider } from '@substra-hooks/core'
 
 const CampaignCard = ({ item, index, accountPair }) => {
 	// console.log(item)
-	const { api } = useSubstrate()
-	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
+	const apiProvider = useApiProvider()
+	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
+		item
 	const identity = useIdentity(owner)
 
 	// console.log(state)
@@ -45,15 +46,21 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	useEffect(() => {
 		if (!metadata) return
 		// console.log('metadata',metadata)
-		setImageURL(metadata.logo ? gateway + metadata.logo : 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY')
+		setImageURL(
+			metadata.logo
+				? gateway + metadata.logo
+				: 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+		)
 	}, [metadata])
 
 	useEffect(() => {
-		if (!id) return
+		if (!id || !apiProvider) return
 
 		const query = async () => {
 			try {
-				const [backers] = await Promise.all([api.query.gameDaoCrowdfunding.campaignContributorsCount(id)])
+				const [backers] = await Promise.all([
+					apiProvider.query.gameDaoCrowdfunding.campaignContributorsCount(id),
+				])
 				setContent({
 					...(content ?? {}),
 					backers: backers.toHuman(),
@@ -65,11 +72,14 @@ const CampaignCard = ({ item, index, accountPair }) => {
 			}
 		}
 		query()
-	}, [api, id, owner])
+	}, [apiProvider, id, owner])
 
 	useEffect(() => {
 		if (identity) {
-			setContent({ ...(content ?? {}), identity: identity.toHuman()?.info?.display?.Raw ?? null })
+			setContent({
+				...(content ?? {}),
+				identity: identity.toHuman()?.info?.display?.Raw ?? null,
+			})
 		}
 	}, [identity])
 
@@ -115,7 +125,7 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
 			fromAcct = accountPair
 		}
@@ -129,14 +139,17 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		const payload = [id, amount]
 		console.log('payload', payload)
 		const from = await getFromAcct()
-		const tx = api.tx.gameDaoCrowdfunding.contribute(...payload)
+		const tx = apiProvider.tx.gameDaoCrowdfunding.contribute(...payload)
 
 		const hash = await tx.signAndSend(from, ({ status, events }) => {
 			console.log(status, events)
 			if (events.length) {
 				events.forEach((record) => {
 					const { event } = record
-					if (event.section === 'gameDaoCrowdfunding' && event.method === 'CampaignContributed') {
+					if (
+						event.section === 'gameDaoCrowdfunding' &&
+						event.method === 'CampaignContributed'
+					) {
 						console.log('campaign contributed:', hash)
 						setLoading(false)
 					}
@@ -209,7 +222,19 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		<Grid.Column mobile={16} tablet={8} computer={4}>
 			<Segment vertical loading={loading}>
 				<Card href="" color={governance === '1' ? 'pink' : 'teal'}>
-					<Image label={governance === '1' && { as: 'a', corner: 'right', icon: 'heart', color: 'pink' }} src={imageURL} wrapped ui={true} />
+					<Image
+						label={
+							governance === '1' && {
+								as: 'a',
+								corner: 'right',
+								icon: 'heart',
+								color: 'pink',
+							}
+						}
+						src={imageURL}
+						wrapped
+						ui={true}
+					/>
 					<Card.Content>
 						<Card.Header color="black">
 							<a href={`/campaign/${id}`}>{name}</a>

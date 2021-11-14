@@ -18,10 +18,10 @@
 		"format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
 	},
 	"dependencies": {
-		"@emotion/cache": "^11.5.0",
-		"@emotion/react": "^11.5.0",
+		"@emotion/cache": "^11.6.0",
+		"@emotion/react": "^11.6.0",
 		"@emotion/server": "^11.4.0",
-		"@emotion/styled": "^11.3.0",
+		"@emotion/styled": "^11.6.0",
 		"@iconify/icons-ant-design": "^1.1.0",
 		"@iconify/icons-eva": "^1.1.0",
 		"@iconify/icons-ic": "^1.1.13",
@@ -101,7 +101,7 @@
 		"eslint-plugin-standard": "~5.0.0",
 		"gh-pages": "~3.2.3",
 		"husky": "^7.0.4",
-		"lint-staged": "^11.2.6",
+		"lint-staged": "^12.0.2",
 		"loglevel": "^1.7.1",
 		"loglevel-plugin-prefix": "^0.8.4",
 		"prettier": "^2.4.1",

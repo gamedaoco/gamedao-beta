@@ -1,23 +1,22 @@
+import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { Grid, Modal, Button, Card } from 'semantic-ui-react'
 
-import { useSubstrate } from '../substrate-lib'
-
 function Main(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const [metadata, setMetadata] = useState({ data: null, version: null })
 
 	useEffect(() => {
 		const getMetadata = async () => {
 			try {
-				const data = await api.rpc.state.getMetadata()
+				const data = await apiProvider.rpc.state.getMetadata()
 				setMetadata({ data, version: data.version })
 			} catch (e) {
 				console.error(e)
 			}
 		}
 		getMetadata()
-	}, [api.rpc.state])
+	}, [apiProvider.rpc.state])
 
 	return (
 		<Grid.Column>
@@ -46,6 +45,8 @@ function Main(props) {
 }
 
 export default function Metadata(props) {
-	const { api } = useSubstrate()
-	return api.rpc && api.rpc.state && api.rpc.state.getMetadata ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider.rpc && apiProvider.rpc.state && apiProvider.rpc.state.getMetadata ? (
+		<Main {...props} />
+	) : null
 }

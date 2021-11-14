@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useApiProvider } from '@substra-hooks/core'
 
 const Dashboard = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 	const [name, setName] = useState('')
 	const [bodies, setBodies] = useState(null)
@@ -18,23 +18,24 @@ const Dashboard = (props) => {
 	}, [identity])
 
 	useEffect(() => {
-		if (!api) return
+		if (!apiProvider) return
 		let unsubscribe = null
 
-		api.queryMulti(
-			[api.query.gameDaoControl.nonce, api.query.gameDaoGovernance.nonce],
-			([bodies, proposals]) => {
-				setBodies(bodies.toNumber())
-				setProposals(proposals.toNumber())
-			}
-		)
+		apiProvider
+			.queryMulti(
+				[apiProvider.query.gameDaoControl.nonce, apiProvider.query.gameDaoGovernance.nonce],
+				([bodies, proposals]) => {
+					setBodies((bodies as any).toNumber())
+					setProposals((proposals as any).toNumber())
+				}
+			)
 			.then((unsub) => {
 				unsubscribe = unsub
 			})
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api, address])
+	}, [apiProvider, address])
 
 	return (
 		<>
@@ -47,7 +48,6 @@ const Dashboard = (props) => {
 }
 
 export default function Dapp(props) {
-	const { apiState } = useSubstrate()
-	console.log('apiState', apiState)
-	return apiState === 'READY' ? <Dashboard {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Dashboard {...props} /> : null
 }

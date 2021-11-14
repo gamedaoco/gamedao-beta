@@ -10,19 +10,14 @@
 **/
 
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
-import { useWallet } from 'src/context/Wallet'
-import { TxButton } from '../../substrate-lib/components'
-import { Container, Segment, Tab, Form, Input, Grid, Card, Statistic, Divider } from 'semantic-ui-react'
-
+import { Segment, Grid, Statistic } from 'semantic-ui-react'
+import { useApiProvider } from '@substra-hooks/core'
 //
 //
 //
 
 export const Stats = (props) => {
-	const { api } = useSubstrate()
-	const { accountPair } = props
-	const [status, setStatus] = useState('')
+	const apiProvider = useApiProvider()
 
 	const [data, setData] = useState({
 		total_campaigns: 0, // all campaigns
@@ -34,9 +29,9 @@ export const Stats = (props) => {
 		const getStats = async () => {
 			try {
 				const [campaigns, contributions, contributors] = await Promise.all([
-					api.query.crowdfunding.allCampaignsCount(),
-					api.query.crowdfunding.nonce(),
-					api.query.crowdfunding.contributorAccountsCount(),
+					apiProvider.query.crowdfunding.allCampaignsCount(),
+					apiProvider.query.crowdfunding.nonce(),
+					apiProvider.query.crowdfunding.contributorAccountsCount(),
 				])
 
 				setData({
@@ -50,20 +45,35 @@ export const Stats = (props) => {
 		}
 
 		getStats()
-	}, [api.query.crowdfunding])
+	}, [apiProvider.query.crowdfunding])
 
 	return (
 		<Segment inverted>
 			<Grid stackable columns={3} divided>
 				<Grid.Row>
 					<Grid.Column textAlign="center">
-						<Statistic label="Total Campaigns" value={data.campaigns.toString()} color="green" inverted />
+						<Statistic
+							label="Total Campaigns"
+							value={data.campaigns.toString()}
+							color="green"
+							inverted
+						/>
 					</Grid.Column>
 					<Grid.Column textAlign="center">
-						<Statistic label="Contributions" value={data.contributions.toString()} color="purple" inverted />
+						<Statistic
+							label="Contributions"
+							value={data.contributions.toString()}
+							color="purple"
+							inverted
+						/>
 					</Grid.Column>
 					<Grid.Column textAlign="center">
-						<Statistic label="Contributors" value={data.contributors.toString()} color="orange" inverted />
+						<Statistic
+							label="Contributors"
+							value={data.contributors.toString()}
+							color="orange"
+							inverted
+						/>
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
