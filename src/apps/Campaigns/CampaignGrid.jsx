@@ -10,15 +10,9 @@ import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 
 const TileWrapper = styled(Box)(({ theme }) => ({
 	display: 'grid',
-	gridTemplateColumns: '1fr',
 	rowGap: theme.spacing(2),
 	columnGap: theme.spacing(2),
-	[theme.breakpoints.up('md')]: {
-		gridTemplateColumns: '1fr 1fr 1fr',
-	},
-	[theme.breakpoints.up('lg')]: {
-		gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-	},
+	gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )',
 }))
 
 const ListWrapper = styled(Box)(({ theme }) => ({

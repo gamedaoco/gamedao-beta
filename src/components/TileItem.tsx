@@ -25,7 +25,7 @@ export const TileItem: React.FC<
 		metaContent?: React.ReactNode
 	}>
 > = (props) => (
-	<Card sx={{ minHeight: '100%' }}>
+	<Card sx={{ minHeight: '100%', minWidth: '20%' }}>
 		<Stack sx={{ height: '100%' }}>
 			<Image sx={{ backgroundImage: `url(${props.imageURL})` }} />
 			<Stack

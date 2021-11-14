@@ -9,24 +9,27 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
+import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
+import { useWallet } from 'src/context/Wallet'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useIdentity } from 'src/hooks/useIdentity'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
-import { useSubstrate } from '../../substrate-lib'
 import { ListTileEnum } from '../components/ListTileSwitch'
-// import { encodeAddress } from '@polkadot/util-crypto'
-// import { data } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 
-const CampaignCard = ({ displayMode, item, index, accountPair }) => {
-	const { api } = useSubstrate()
-
+const CampaignCard = ({ displayMode, item, index }) => {
 	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
 		item
+	const apiProvider = useApiProvider()
+	const identity = useIdentity(owner)
+	const { campaignContributorsCount } = useCrowdfunding()
+	const { account } = useWallet()
 
 	// console.log(state)
 
-	const [metadata, setMetadata] = useState({})
+	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
 
@@ -49,36 +52,27 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 	}, [cid])
 
 	useEffect(() => {
-		if (!metadata) return
+		if (!metadata?.logo || imageURL) return
 		// console.log('metadata',metadata)
-		setImageURL(
-			metadata.logo
-				? gateway + metadata.logo
-				: 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
-		)
+
+		setImageURL(gateway + metadata.logo)
 	}, [metadata])
 
 	useEffect(() => {
-		if (!id) return
-
-		const query = async () => {
-			try {
-				const [backers, identity] = await Promise.all([
-					api.query.gameDaoCrowdfunding.campaignContributorsCount(id),
-					api.query.identity.identityOf(owner),
-				])
-				setContent({
-					backers: backers.toHuman(),
-					identity: identity.toHuman().info.display.Raw || null,
-				})
-				setLoading(false)
-				// console.log('identity',identity.toHuman().info.display.Raw)
-			} catch (err) {
-				console.error(err)
-			}
+		if (id && campaignContributorsCount) {
+			setContent({
+				...content,
+				backers: campaignContributorsCount[id] || null,
+			})
 		}
-		query()
-	}, [api, id, owner])
+	}, [id, campaignContributorsCount])
+
+	useEffect(() => {
+		setContent({
+			...content,
+			identity: identity?.toHuman()?.info?.display?.Raw || null,
+		})
+	}, [identity])
 
 	//
 
@@ -117,14 +111,14 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 		let fromAcct
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 		return fromAcct
 	}
@@ -136,7 +130,7 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 		const payload = [id, amount]
 		console.log('payload', payload)
 		const from = await getFromAcct()
-		const tx = api.tx.gameDaoCrowdfunding.contribute(...payload)
+		const tx = apiProvider.tx.gameDaoCrowdfunding.contribute(...payload)
 
 		const hash = await tx.signAndSend(from, ({ status, events }) => {
 			console.log(status, events)
@@ -163,55 +157,6 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 		setLoading(true)
 		sendTx(formData.amount * 1000000000000)
 	}
-
-	// const Buy = ({
-	// 	open,
-	// 	imageURL,
-	// 	handleOnChange,
-	// 	handlesubmit,
-	// 	formData
-	// }) => {
-
-	// 	return (
-	// 		<Modal
-	// 			onClose={() => setOpen(false)}
-	// 			onOpen={() => setOpen(true)}
-	// 			open={open}
-	// 			trigger={<Button color='green' fluid>Support Campaign</Button>}
-	// 		>
-	// 			<Modal.Header>Contribute to Campaign</Modal.Header>
-	// 			<Modal.Content image>
-	// 				<Image size='medium' src={imageURL} wrapped />
-	// 				<Modal.Description>
-	// 					<Header>Contribute to Campaign</Header>
-	// 					<p>{metadata.description}</p>
-	// 					<p>Disclaimer</p>
-	// 					<Form.Group widths='equal'>
-	// 						<Form.Input
-	// 							type='amount'
-	// 							label='amount'
-	// 							name='amount'
-	// 							value={formData.amount}
-	// 							onChange={handleOnChange}
-	// 							/>
-	// 					</Form.Group>
-	// 				</Modal.Description>
-	// 			</Modal.Content>
-	// 			<Modal.Actions>
-	// 				<Button color='black' onClick={() => setOpen(false)}>
-	// 					Cancel
-	// 				</Button>
-	// 				<Button
-	// 					content="Contribute Now"
-	// 					labelPosition='right'
-	// 					icon='checkmark'
-	// 					onClick={handleSubmit}
-	// 					positive
-	// 				/>
-	// 			</Modal.Actions>
-	// 		</Modal>
-	// 	)
-	// }
 
 	const metaInfo = React.useMemo(() => {
 		return (
@@ -285,7 +230,10 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 
 	return displayMode === ListTileEnum.TILE ? (
 		<TileItem
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={name}
 			metaHeadline={`${content.backers} backer(s)`}
 			metaContent={
@@ -301,7 +249,10 @@ const CampaignCard = ({ displayMode, item, index, accountPair }) => {
 		</TileItem>
 	) : (
 		<ListItem
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={name}
 			metaHeadline={`${content.backers} backer(s)`}
 			metaContent={

@@ -57,7 +57,13 @@ export const Campaigns = (props) => {
 
 	return (
 		<>
-			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
 				<Typography>Campaigns</Typography>
 				<Typography>
 					{!content || campaignsCount === 0 ? (
@@ -85,7 +91,7 @@ export const Campaigns = (props) => {
 						</Button>
 					)}
 				</Box>
-			</Stack>
+			</Box>
 			<br />
 			{showCreateMode && <CreateCampaign />}
 			{!showCreateMode && content && campaignsCount !== 0 && (
