@@ -208,14 +208,17 @@ function Main({ showNavigation }: ComponentProps) {
 						) : null}
 					</SidebarButton>
 				</NavLink>
-				<NavLink to="/app/tangram">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
-						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="tangram" />
-						</ListItemIcon>
-						<Typography variant="h5">Tangram</Typography>
-					</SidebarButton>
-				</NavLink>
+				{/* TODO: Activate as soon as we work on the Tangram page  */}
+				{false && (
+					<NavLink to="/app/tangram">
+						<SidebarButton sx={{ mx: 3, py: 0 }}>
+							<ListItemIcon>
+								<FontIcon sx={{ fontSize: '4rem' }} name="tangram" />
+							</ListItemIcon>
+							<Typography variant="h5">Tangram</Typography>
+						</SidebarButton>
+					</NavLink>
+				)}
 				<NavLink to="/app/wallet">
 					<SidebarButton sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
