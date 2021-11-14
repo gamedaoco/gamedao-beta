@@ -289,7 +289,7 @@ const Item = ({ content, mode }) => {
 			>
 				<Stack direction={'row'} spacing={1}>
 					<WebsiteIcon />{' '}
-					<a target={'_blank'} href={metadata.website}>
+					<a rel={'noreferrer'} target={'_blank'} href={metadata.website}>
 						{metadata.website}
 					</a>
 				</Stack>
