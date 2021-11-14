@@ -36,7 +36,7 @@ const Router = (props) => {
 			<Routes>
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route path="/app" element={<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />}></Route>
-				<Route path="/app/organisations" element={<LayoutRoute showSidebar showHeader showFooter element={Organisations} />}></Route>
+				<Route path="/app/organisations" element={<LayoutRoute showSidebar showHeader showFooter element={<Organisations />} />}></Route>
 				<Route path="/app/governance" element={<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />}></Route>
 				<Route path="/app/campaigns" element={<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />}></Route>
 				<Route path="/app/tangram" element={<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />}></Route>
