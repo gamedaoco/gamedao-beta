@@ -4,7 +4,7 @@ import { useWallet } from '../context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 
-const Dashboard = (props) => {
+const Component = (props) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 	const [name, setName] = useState('')
@@ -46,8 +46,7 @@ const Dashboard = (props) => {
 	)
 }
 
-export default function Dapp(props) {
+export default function Module(props) {
 	const { apiState } = useSubstrate()
-	console.log('apiState', apiState)
-	return apiState === 'READY' ? <Dashboard {...props} /> : null
+	return apiState === 'READY' ? <Component {...props} /> : null
 }

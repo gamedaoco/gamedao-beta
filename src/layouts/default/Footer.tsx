@@ -3,8 +3,8 @@ import { Box, Typography, Container, Link as MUILink, Grid } from '@mui/material
 
 const Link = ({ href, children }) => (
 	<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
-		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
 			{children}
+		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
 		</MUILink>
 		<br />
 	</Typography>
@@ -61,20 +61,16 @@ export const Footer = (props) => (
 							GameDAO. For the Creator and Player Economy.
 						</Typography>
 						<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
-							<p>
-								Community driven ownership and creation will be a vital part of how we see video games in the near future. The transition to
-								token driven economies is already in progress but is still in its early stages, only treating the symptoms of a broken,
-								financial incentive driven sales machine.
-							</p>
-							<p>
-								Tokenisation and community ownership need fair and transparent protocols to create safe environments for all participants
-								working and creating together. Proper game theory needs to disincentivize bad actors and reward the good vibes of the community.
-							</p>
-							<p>
-								From forging the initial idea over collaboration to fundraising and finally creating and operating game economies, we provide
-								open protocols enabling coordination, ownership, fundraising and much more to sustainably improve economics of videogames,
-								content creation and esports.
-							</p>
+							Community driven ownership and creation will be a vital part of how we see video games in the near future. The transition to
+							token driven economies is already in progress but is still in its early stages, only treating the symptoms of a broken,
+							financial incentive driven sales machine.
+							<br/><br/>
+							Tokenisation and community ownership need fair and transparent protocols to create safe environments for all participants
+							working and creating together. Proper game theory needs to disincentivize bad actors and reward the good vibes of the community.
+							<br/><br/>
+							From forging the initial idea over collaboration to fundraising and finally creating and operating game economies, we provide
+							open protocols enabling coordination, ownership, fundraising and much more to sustainably improve economics of videogames,
+							content creation and esports.
 						</Typography>
 					</Grid>
 				</Grid>

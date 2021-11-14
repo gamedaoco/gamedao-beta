@@ -18,7 +18,8 @@ import WebsiteIcon from '@mui/icons-material/Web'
 import MemberIcon from '@mui/icons-material/AccountBox'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import GroupIcon from '@mui/icons-material/Group'
-import ListItem from '../../components/ListItem'
+
+import { ListItem } from '../../components/ListItem'
 import ListTileSwitch, { ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'

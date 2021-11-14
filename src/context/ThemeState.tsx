@@ -20,7 +20,7 @@ export const ThemeStateProvider = ({ children }: { children: React.ReactNode }) 
 
 	useEffect(() => {
 		setState({ ...state, darkmodeEnabled: darkModeState })
-	}, [darkModeState, state])
+	}, [darkModeState])
 
 	function handleSetDarkModeEnabled(enabled: boolean) {
 		updateStore({ darkModeState: enabled })

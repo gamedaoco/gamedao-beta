@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSubstrate } from '../substrate-lib'
 import Typography from '@mui/material/Typography'
 
-const NetInfo = () => {
+const Component = () => {
 	const { api, apiState } = useSubstrate()
 	const [version, setVersion] = useState('')
 	const [blockNumber, setBlockNumber] = useState(0)
@@ -52,4 +52,7 @@ const NetInfo = () => {
 	)
 }
 
-export default NetInfo
+export default function Module(props) {
+	const { apiState } = useSubstrate()
+	return apiState === 'READY' ? <Component {...props} /> : null
+}

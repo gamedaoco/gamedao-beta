@@ -64,7 +64,7 @@ const AccountComponent = () => {
 		} else if (w3Enabled && !allowConnect) {
 			updateWalletState({ address: null, account: null, allowConnect: false, connected: false })
 		}
-	}, [allowConnect, updateWalletState, w3enable, w3Enabled])
+	}, [allowConnect, w3Enabled])
 
 	useEffect(() => {
 		// Set initial account => default account 0
@@ -78,7 +78,7 @@ const AccountComponent = () => {
 		if (accounts?.length > 0 && selectedIndex >= 0 && selectedIndex < accounts.length && address !== accounts?.[selectedIndex]?.address) {
 			updateWalletState({ account: accounts[selectedIndex], address: accounts[selectedIndex]?.address })
 		}
-	}, [selectedIndex, updateWalletState, accounts, address])
+	}, [selectedIndex, updateWalletState])
 
 	return (
 		<>
