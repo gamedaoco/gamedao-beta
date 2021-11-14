@@ -3,10 +3,12 @@ import faker from 'faker'
 import { TxButton } from '../substrate-lib/components'
 import { Form, Grid, Card, Statistic } from 'semantic-ui-react'
 import { useApiProvider } from '@substra-hooks/core'
+import { useWallet } from '../context/Wallet'
 
 function Main(props) {
 	const apiProvider = useApiProvider()
-	const { accountPair } = props
+	const { account } = useWallet()
+
 	const { finalized } = props
 
 	// The transaction submission status
@@ -32,7 +34,7 @@ function Main(props) {
 
 	useEffect(() => {
 		const data = {
-			address: accountPair.address,
+			address: account.address,
 			title: faker.commerce.productName(),
 			cap: Math.round(Math.random() * 100000) + 1000000000000,
 			deposit: Math.round(Math.random() * 10),
@@ -44,7 +46,7 @@ function Main(props) {
 
 		// console.log('data',data)
 		setTxData(data)
-	}, [nonce, accountPair])
+	}, [nonce, account])
 
 	useEffect(() => {
 		let unsubscribeAll = null
@@ -98,7 +100,6 @@ function Main(props) {
 			<Form>
 				<Form.Field style={{ textAlign: 'center' }}>
 					<TxButton
-						accountPair={accountPair}
 						label="Create Generic Campaign"
 						type="SIGNED-TX"
 						setStatus={setStatus}
@@ -127,7 +128,7 @@ function Main(props) {
 
 export default function TemplateModule(props) {
 	const apiProvider = useApiProvider()
-	const { accountPair } = props
+	const { account } = useWallet()
 
-	return apiProvider.query.gameDaoCrowdfunding && accountPair ? <Main {...props} /> : null
+	return apiProvider.query.gameDaoCrowdfunding && account ? <Main {...props} /> : null
 }

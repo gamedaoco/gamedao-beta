@@ -7,6 +7,7 @@ import { data } from '../lib/data'
 import CampaignCard from './CampaignCard'
 import { styled } from '../../components'
 import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
+import { useWallet } from 'src/context/Wallet'
 
 const TileWrapper = styled(Box)(({ theme }) => ({
 	display: 'grid',
@@ -54,12 +55,13 @@ const ScopeBar = ({ filter, setFilter }) => {
 	)
 }
 
-const CampaignGrid = ({ content, accountPair }) => {
+const CampaignGrid = ({ content }) => {
 	const [pageContent, setPageContent] = useState([])
 	const [page, setPage] = useState(0)
 	const [pageSize, setPageSize] = useState(12)
 	const [totalPages, setTotalPages] = useState(0)
 	const [displayMode, setDisplayMode] = useState(ListTileEnum.TILE)
+	const { account } = useWallet()
 
 	const [filter, setFilter] = useState('1')
 	const [scope, setScope] = useState(0) // 0 any 1 owned 2 contributed
@@ -97,8 +99,8 @@ const CampaignGrid = ({ content, accountPair }) => {
 				? filterByState
 				: filterByState.filter((item) => {
 						// owned / admin / controller
-						if (scope === 1) return accountPair.address === owner ? item : null
-						if (scope === 2) return accountPair.address === admin ? item : null
+						if (scope === 1) return account.address === owner ? item : null
+						if (scope === 2) return account.address === admin ? item : null
 				  })
 
 		// reset page
@@ -126,7 +128,6 @@ const CampaignGrid = ({ content, accountPair }) => {
 								key={index}
 								item={item}
 								index={index}
-								accountPair={accountPair}
 							/>
 						)
 						if (filter === '-1') return c

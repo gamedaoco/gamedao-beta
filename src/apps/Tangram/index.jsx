@@ -10,7 +10,7 @@ import { useApiProvider } from '@substra-hooks/core'
 const dev = config.dev
 
 const Item = ({ hash }) => {
-	// const { address, accountPair } = useWallet()
+	// const { address, } = useWallet()
 
 	const [content, setContent] = useState(null)
 
@@ -124,7 +124,7 @@ export const Content = (props) => {
 		<React.Fragment>
 			<h1>Tangram</h1>
 			<h3>Spawned: {total}</h3>
-			{/*<ItemGrid hashes={hashes} accountPair={accountPair} />*/}
+			{/*<ItemGrid hashes={hashes} />*/}
 		</React.Fragment>
 	)
 }

@@ -22,6 +22,7 @@ export const Component = (props) => {
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
 	const [content, setContent] = useState()
+	const { account } = useWallet()
 
 	useEffect(() => {
 		let unsubscribe = null
@@ -99,12 +100,12 @@ export const Component = (props) => {
 							{' '}
 							Cancel{' '}
 						</Button>
-					) : (
+					) : account ? (
 						<Button onClick={handleCreateBtn} startIcon={<Add />}>
 							{' '}
 							New Proposal{' '}
 						</Button>
-					)}
+					) : null}
 				</Box>
 			</Stack>
 			{showCreateMode ? <CreateProposal /> : <ItemTable content={content} />}

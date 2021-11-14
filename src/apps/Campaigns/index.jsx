@@ -18,13 +18,14 @@ import ClearIcon from '@mui/icons-material/Clear'
 import { Button, Typography, Box, Stack } from '../../components'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
+import { useWallet } from 'src/context/Wallet'
 
 const CampaignGrid = lazy(() => import('./CampaignGrid'))
 const CreateCampaign = lazy(() => import('./Create'))
 
 //
 // campaigns component
-// requires: api, accountpair
+// requires: api,
 // queries / subscribes to chain
 // TODO: subscriptions to event maybe more efficient
 // than watching the state
@@ -33,6 +34,8 @@ const CreateCampaign = lazy(() => import('./Create'))
 export const Campaigns = (props) => {
 	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
 		useCrowdfunding()
+
+	const { account } = useWallet()
 
 	const [content, setContent] = useState()
 
@@ -81,7 +84,7 @@ export const Campaigns = (props) => {
 						>
 							<Typography>Close</Typography>
 						</Button>
-					) : (
+					) : account ? (
 						<Button
 							variant="outlined"
 							startIcon={<AddIcon />}
@@ -89,7 +92,7 @@ export const Campaigns = (props) => {
 						>
 							<Typography>New Campaign</Typography>
 						</Button>
-					)}
+					) : null}
 				</Box>
 			</Box>
 			<br />

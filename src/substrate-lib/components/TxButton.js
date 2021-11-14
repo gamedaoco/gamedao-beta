@@ -5,9 +5,9 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 
 import utils from '../utils'
 import { useApiProvider } from '@substra-hooks/core'
+import { useWallet } from '../../context/Wallet'
 
 function TxButton({
-	accountPair = null,
 	label,
 	setStatus,
 	color = 'blue',
@@ -20,6 +20,7 @@ function TxButton({
 	const apiProvider = useApiProvider()
 	const [unsub, setUnsub] = useState(null)
 	const [sudoKey, setSudoKey] = useState(null)
+	const { account } = useWallet()
 
 	const { palletRpc, callable, inputParams, paramFields } = attrs
 
@@ -47,7 +48,7 @@ function TxButton({
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 
 		let fromAcct
 
@@ -57,7 +58,7 @@ function TxButton({
 			fromAcct = address
 			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 
 		return fromAcct
@@ -240,7 +241,7 @@ function TxButton({
 				!palletRpc ||
 				!callable ||
 				!allParamsFilled() ||
-				((isSudo() || isUncheckedSudo()) && !isSudoer(accountPair))
+				((isSudo() || isUncheckedSudo()) && !isSudoer(account))
 			}
 		>
 			{label}
@@ -250,7 +251,6 @@ function TxButton({
 
 // prop type checking
 TxButton.propTypes = {
-	accountPair: PropTypes.object,
 	setStatus: PropTypes.func.isRequired,
 	type: PropTypes.oneOf([
 		'QUERY',
