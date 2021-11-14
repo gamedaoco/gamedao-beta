@@ -13,13 +13,8 @@ import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import LanguageIcon from '@mui/icons-material/Language'
 import LockIcon from '@mui/icons-material/Lock'
-import OpenLockIcon from '@mui/icons-material/LockOpen'
-import WebsiteIcon from '@mui/icons-material/Web'
-import MemberIcon from '@mui/icons-material/AccountBox'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import GroupIcon from '@mui/icons-material/Group'
-import ListItem from '../../components/ListItem'
-import ListTileSwitch, { ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
@@ -43,29 +38,28 @@ import {
 } from '../../components'
 
 const CreateDAO = lazy(() => import('./Create'))
-const TileItem = lazy(() => import('../../components/TileItem'))
-
-const TileWrapper = styled(Box)(({ theme }) => ({
-	display: 'grid',
-	gridTemplateColumns: '1fr',
-	rowGap: theme.spacing(2),
-	columnGap: theme.spacing(2),
-	[theme.breakpoints.up('md')]: {
-		gridTemplateColumns: '1fr 1fr 1fr',
-	},
-	[theme.breakpoints.up('lg')]: {
-		gridTemplateColumns: '1fr 1fr 1fr 1fr',
-	},
-}))
-
-const ListWrapper = styled(Box)(({ theme }) => ({
-	display: 'grid',
-	gridTemplateColumns: '1fr',
-	rowGap: theme.spacing(2),
-	columnGap: theme.spacing(2),
-}))
 
 const dev = config.dev
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.MuiTableCell-head`]: {
+		backgroundColor: theme.palette.common.black,
+		color: theme.palette.common.white,
+	},
+	[`&.MuiTableCell-body`]: {
+		fontSize: 14,
+	},
+}))
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	'&:nth-of-type(odd)': {
+		backgroundColor: theme.palette.action.hover,
+	},
+	// hide last border
+	'&:last-child td, &:last-child th': {
+		border: 0,
+	},
+}))
 
 const getFromAcct = async (api, accountPair) => {
 	const {
@@ -122,7 +116,7 @@ const addMember = async (api, accountPair, id, target) => {
 
 const defaultContent = {}
 
-const Item = ({ content, mode }) => {
+const Item = ({ content }) => {
 	const { api } = useSubstrate()
 	const { address } = useWallet()
 
@@ -138,6 +132,7 @@ const Item = ({ content, mode }) => {
 	}, [content])
 
 	// get offchain data
+
 	useEffect(() => {
 		if (!itemContent.cid || itemContent.cid.length < 3) return
 		fetch(gateway + itemContent.cid)
@@ -246,13 +241,11 @@ const Item = ({ content, mode }) => {
 		const text = buttonText[itemContent.access]
 		return (
 			<>
-				{(isMember() || isAdmin()) && (
-					<Button variant={'outlined'} fullWidth onClick={handleDashboard} value={itemContent.access}>{`Dashboard`}</Button>
-				)}
-				{isMember() && !isAdmin() && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`leave`}</Button>}
-				{!isMember() && text && <Button variant={'outlined'} fullWidth onClick={handleMembership} value={itemContent.access}>{`${text}`}</Button>}
+				{(isMember() || isAdmin()) && <Button basic onClick={handleDashboard} value={itemContent.access} size="mini">{`Dashboard`}</Button>}
+				{isMember() && !isAdmin() && <Button basic onClick={handleMembership} value={itemContent.access} size="mini">{`leave`}</Button>}
+				{!isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size="mini">{`${text}`}</Button>}
 				{isAdmin() && (
-					<Button variant={'outlined'} fullWidth onClick={handleAdmin}>
+					<Button basic onClick={handleAdmin} size="mini">
 						Admin
 					</Button>
 				)}
@@ -262,41 +255,42 @@ const Item = ({ content, mode }) => {
 
 	const bodyToText = () => d.dao_bodies.filter((b) => b.value === Number(content.body))[0].text
 
-	const metaContent = React.useMemo(() => {
-		return (
-			<Stack sx={{ width: '100%', height: '100%' }} direction={'column'} justifyContent={mode === ListTileEnum.TILE ? 'flex-end' : 'inherit'} spacing={1}>
-				<Stack direction={'row'} spacing={1}>
-					<WebsiteIcon /> <a href={metadata.website}>{metadata.website}</a>
-				</Stack>
-				{itemContent.access === '0' ? (
-					<Stack direction={'row'} spacing={1}>
-						<LockIcon /> <Typography>Locked</Typography>
-					</Stack>
-				) : (
-					<Stack direction={'row'} spacing={1}>
-						<OpenLockIcon /> <Typography>Open</Typography>
-					</Stack>
-				)}
-				<Stack direction={'row'} spacing={1}>
-					<MemberIcon />
-					<Typography>{itemContent.memberCount || 0} Members</Typography>
-				</Stack>
-				{mode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
-				<Interactions />
-			</Stack>
-		)
-	}, [itemContent, metadata, mode])
-
 	if (!itemContent) return null
 
-	return mode === ListTileEnum.LIST ? (
-		<ListItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
-			<Typography>{metadata.description}</Typography>
-		</ListItem>
-	) : (
-		<TileItem imageURL={imageURL} headline={itemContent.name} metaHeadline={bodyToText()} metaContent={metaContent}>
-			<Typography>{metadata.description}</Typography>
-		</TileItem>
+	return (
+		<StyledTableRow hover>
+			<StyledTableCell>
+				<a onClick={() => console.log(itemContent, metadata)}>
+					<Stack spacing={2} direction="row">
+						<img style={{ maxHeight: '3rem' }} src={imageURL} />
+						<Box>
+							<Typography>{itemContent.name}</Typography>
+							<Typography>{bodyToText()}</Typography>
+						</Box>
+					</Stack>
+				</a>
+			</StyledTableCell>
+			<StyledTableCell>
+				<Typography>{metadata.description}</Typography>
+			</StyledTableCell>
+			<StyledTableCell>
+				{metadata.website && (
+					<a href={metadata.website} target="_blank">
+						<LanguageIcon />
+					</a>
+				)}
+			</StyledTableCell>
+			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon />}</StyledTableCell>
+			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
+			{/*
+			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.motions||0}</StyledTableCell>
+			<StyledTableCell>{itemContent.campaigns||0}</StyledTableCell>
+			*/}
+			<StyledTableCell>
+				<Interactions />
+			</StyledTableCell>
+		</StyledTableRow>
 	)
 }
 
@@ -321,7 +315,6 @@ const ItemList = (props) => {
 	const [totalPages, setTotalPages] = useState(0)
 	const [offset, setOffset] = useState(0)
 	const [itemsPerPage, setItemsPerPage] = useState(3)
-	const [displayMode, setDisplayMode] = useState(ListTileEnum.LIST)
 
 	const iPP = [3, 5, 9, 18, 36, 72]
 	const handleShowMoreItems = () => setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
@@ -338,33 +331,53 @@ const ItemList = (props) => {
 		setOffset((activePage - 1) * iPP[itemsPerPage])
 	}
 
-	const Wrapper = React.useMemo(() => (displayMode === ListTileEnum.LIST ? ListWrapper : TileWrapper), [displayMode])
-
 	if (!content) return null
 
 	// console.log(activePage,totalPages,offset,itemsPerPage)
 
 	return (
 		<Box>
-			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
-			<Wrapper>
-				{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
-					const _content = {
-						...d,
-					}
-					return <Item mode={displayMode} key={offset + i} content={_content} />
-				})}
-			</Wrapper>
-			<Box sx={{ my: 2 }} />
-			<TablePagination
-				rowsPerPageOptions={[10, 25, 100]}
-				component="div"
-				count={content.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-			/>
+			<Paper sx={{ width: '100%' }}>
+				<TableContainer sx={{ maxHeight: 512 }}>
+					<TableMUI stickyHeader aria-label="sticky table">
+						<TableHead>
+							<StyledTableRow>
+								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<Typography variant="h4">Description</Typography>
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<LanguageIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<LockIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}>
+									<GroupIcon />
+								</StyledTableCell>
+								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
+							</StyledTableRow>
+						</TableHead>
+						<TableBody>
+							{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
+								const _content = {
+									...d,
+								}
+								return <Item key={offset + i} content={_content} />
+							})}
+						</TableBody>
+					</TableMUI>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[10, 25, 100]}
+					component="div"
+					count={content.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+				/>
+			</Paper>
 		</Box>
 	)
 }

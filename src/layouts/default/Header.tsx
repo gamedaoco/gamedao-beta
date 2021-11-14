@@ -11,11 +11,10 @@ function Main() {
 			<Toolbar
 				sx={{
 					zIndex: '9000',
-					background: 'rgba(255,255,255,0.6)',
-					backdropFilter: 'blur(10px)',
+					background: 'none',
 					width: '100%',
 					height: '5rem',
-					boxShadow: 2,
+					borderBottom: '1px solid #33383F',
 				}}
 			>
 				<Stack
