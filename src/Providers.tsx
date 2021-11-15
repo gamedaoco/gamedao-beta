@@ -6,7 +6,7 @@ import { WalletProvider } from './context/Wallet'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { IconContext } from 'react-icons'
+import { IconContext } from '@react-icons/all-files' 	
 import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
 import { StoreProvider } from './context/Store'
