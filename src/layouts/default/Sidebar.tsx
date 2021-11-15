@@ -16,6 +16,7 @@ import { Divider, Paper, Typography, FontIcon } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import NetInfo from 'src/components/NetInfo'
 
 interface ComponentProps {
 	showNavigation?: boolean
@@ -241,6 +242,10 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</a>
 				<Box sx={{ flex: 1 }} />
+				<NavHeader>Network Info</NavHeader>
+				<Box sx={{ px: 2 }}>
+					<NetInfo />
+				</Box>
 				<NavHeader>Social</NavHeader>
 				<Box
 					sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}
