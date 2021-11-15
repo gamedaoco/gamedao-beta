@@ -43,6 +43,7 @@ export { Icons, FontIcon } from './Icons'
 
 //hooks
 export { useFormControl } from '@mui/material/FormControl'
+export { default as useMediaQuery } from '@mui/material/useMediaQuery';
 
 // styled
 export { styled } from '@mui/material/styles'
