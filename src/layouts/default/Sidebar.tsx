@@ -162,22 +162,22 @@ function Main({ showNavigation }: ComponentProps) {
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
 				<NavLink to="/app">
-					<SidebarButton active={pathname === '/app'} sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="dashboard" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="dashboard" />
 						</ListItemIcon>
-						<Typography variant="h5">Dashboard</Typography>
+						<Typography variant="h6">Dashboard</Typography>
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/organisations">
 					<SidebarButton
 						active={!!pathname.match(/organisations/gi)}
-						sx={{ mx: 3, py: 0 }}
+						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="organization" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="organization" />
 						</ListItemIcon>
-						<Typography variant="h5">Organisations</Typography>
+						<Typography variant="h6">Organisations</Typography>
 						{organisationCount > 0 ? (
 							<>
 								<Box />
@@ -187,11 +187,11 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/governance">
-					<SidebarButton active={!!pathname.match(/governance/gi)} sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/governance/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="voting" />
 						</ListItemIcon>
-						<Typography variant="h5">Votings</Typography>
+						<Typography variant="h6">Votings</Typography>
 						{votingCount > 0 ? (
 							<>
 								<Box />
@@ -201,11 +201,11 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/campaigns">
-					<SidebarButton active={!!pathname.match(/campaigns/gi)} sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/campaigns/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="campaign" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="campaign" />
 						</ListItemIcon>
-						<Typography variant="h5">Campaigns</Typography>
+						<Typography variant="h6">Campaigns</Typography>
 						{campaignsCount > 0 ? (
 							<>
 								<Box />
@@ -217,28 +217,28 @@ function Main({ showNavigation }: ComponentProps) {
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
 					<NavLink to="/app/tangram">
-						<SidebarButton active={!!pathname.match(/tangram/gi)} sx={{ mx: 3, py: 0 }}>
+						<SidebarButton active={!!pathname.match(/tangram/gi)} sx={{ mx: 4, py: 0 }}>
 							<ListItemIcon>
-								<FontIcon sx={{ fontSize: '4rem' }} name="tangram" />
+								<FontIcon sx={{ fontSize: '3.5rem' }} name="tangram" />
 							</ListItemIcon>
-							<Typography variant="h5">Tangram</Typography>
+							<Typography variant="h6">Tangram</Typography>
 						</SidebarButton>
 					</NavLink>
 				)}
 				<NavLink to="/app/wallet">
-					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="wallet" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="wallet" />
 						</ListItemIcon>
-						<Typography variant="h5">Wallet</Typography>
+						<Typography variant="h6">Wallet</Typography>
 					</SidebarButton>
 				</NavLink>
 				<a href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '4rem' }} name="document" />
+							<FontIcon sx={{ fontSize: '3.5rem' }} name="document" />
 						</ListItemIcon>
-						<Typography variant="h5">Documentation</Typography>
+						<Typography variant="h6">Documentation</Typography>
 					</SidebarButton>
 				</a>
 				<Box sx={{ flex: 1 }} />
