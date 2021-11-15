@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { useApiProvider } from '@substra-hooks/core'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubHeader from '@mui/material/ListSubheader'
+import { useLocation } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 import { SiDiscord, SiLinkedin, SiGithub, SiTelegram, SiTwitter } from 'react-icons/si'
 import { NavLink } from 'react-router-dom'
@@ -20,14 +21,14 @@ interface ComponentProps {
 	showNavigation?: boolean
 }
 
-const SidebarButton = styled(ListItemButton)(({ theme }) => ({
+const SidebarButton = styled(ListItemButton)<{ active?: boolean }>(({ theme, active }) => ({
 	padding: theme.spacing(1),
 	marginLeft: theme.spacing(1),
 	marginRight: theme.spacing(1),
 	marginTop: theme.spacing(0.5),
 	marginBottom: theme.spacing(0.5),
 	borderRadius: '2rem',
-	color: theme.palette.text.secondary,
+	color: active ? theme.palette.text.primary : theme.palette.text.secondary,
 	'&:hover': {
 		color: theme.palette.text.primary,
 	},
@@ -90,6 +91,7 @@ function Main({ showNavigation }: ComponentProps) {
 	const [organisationCount, setOrganisationCount] = React.useState(0)
 	const [votingCount, setVotingCount] = React.useState(0)
 	const apiProvider = useApiProvider()
+	const { pathname } = useLocation()
 
 	React.useEffect(() => {
 		let unsubscribe = null
@@ -159,7 +161,7 @@ function Main({ showNavigation }: ComponentProps) {
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
 				<NavLink to="/app">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={pathname === '/app'} sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="dashboard" />
 						</ListItemIcon>
@@ -167,7 +169,10 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/organisations">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton
+						active={!!pathname.match(/organisations/gi)}
+						sx={{ mx: 3, py: 0 }}
+					>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="organization" />
 						</ListItemIcon>
@@ -181,7 +186,7 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/governance">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/governance/gi)} sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="voting" />
 						</ListItemIcon>
@@ -195,7 +200,7 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</NavLink>
 				<NavLink to="/app/campaigns">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/campaigns/gi)} sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="campaign" />
 						</ListItemIcon>
@@ -211,7 +216,7 @@ function Main({ showNavigation }: ComponentProps) {
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
 					<NavLink to="/app/tangram">
-						<SidebarButton sx={{ mx: 3, py: 0 }}>
+						<SidebarButton active={!!pathname.match(/tangram/gi)} sx={{ mx: 3, py: 0 }}>
 							<ListItemIcon>
 								<FontIcon sx={{ fontSize: '4rem' }} name="tangram" />
 							</ListItemIcon>
@@ -220,7 +225,7 @@ function Main({ showNavigation }: ComponentProps) {
 					</NavLink>
 				)}
 				<NavLink to="/app/wallet">
-					<SidebarButton sx={{ mx: 3, py: 0 }}>
+					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 3, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ fontSize: '4rem' }} name="wallet" />
 						</ListItemIcon>
