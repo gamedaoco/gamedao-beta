@@ -81,8 +81,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	// on chain
 
 	// off chain
-	// const image_url = 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
-	// const json_url = 'https://gateway.pinata.cloud/ipfs/'+ cid
+	// const image_url = 'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+	// const json_url = 'https://ipfs.gamedao.co/ipfs/'+ cid
 	// console.log(json_url)
 
 	const blocksRemain = expiry
@@ -232,7 +232,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		<TileItem
 			imageURL={
 				imageURL ??
-				'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
 			headline={name}
 			metaHeadline={`${content.backers} backer(s)`}
@@ -251,7 +251,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		<ListItem
 			imageURL={
 				imageURL ??
-				'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
 			headline={name}
 			metaHeadline={`${content.backers} backer(s)`}
