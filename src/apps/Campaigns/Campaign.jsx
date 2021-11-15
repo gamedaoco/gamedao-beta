@@ -26,7 +26,7 @@ const Model = () => {
   const gltf = useLoader(GLTFLoader, "/assets/models/tangram/Tangram.gltf");
   return (
     <>
-      <primitive object={gltf.scene} scale={0.4} />
+      <primitive object={gltf.scene} scale={0.7} />
     </>
   );
 };
@@ -44,11 +44,11 @@ const Model2 = () => {
 
 function Renderer() {
   return (
-    <Box sx={{ zIndex: '100000 !important' }}>
+    <Box sx={{ zIndex: '100000 !important', height: '320px' }}>
       <Canvas invalidateFrameloop={true}>
         <Suspense fallback={null}>
-          <Model scale={1}/>
-          <OrbitControls zoom={2}  position={[-400,0,0]} rotateSpeed={1} autoRotate={true}/>
+          <Model/>
+          <OrbitControls zoom={1} position={[0,0,0]} rotateSpeed={1} autoRotate={true}/>
         </Suspense>
       </Canvas>
     </Box>
