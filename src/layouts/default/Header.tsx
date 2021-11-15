@@ -6,11 +6,11 @@ import AccountSelector from 'src/components/AccountSelector'
 
 function Main() {
 	return (
-		<AppBar color="transparent" position="sticky" elevation={0}>
+		<AppBar position="sticky" elevation={0}>
 			<Toolbar
 				sx={{
 					zIndex: '9000',
-					background: 'none',
+					backgroundColor: 'grey.900',
 					width: '100%',
 					height: '5rem',
 					borderBottom: '1px solid #33383F',

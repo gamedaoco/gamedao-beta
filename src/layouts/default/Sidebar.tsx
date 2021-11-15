@@ -12,7 +12,7 @@ import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Divider, Paper, Typography, FontIcon } from 'src/components'
+import { Divider, Paper, Typography, FontIcon, useMediaQuery } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
@@ -94,6 +94,8 @@ function Main({ showNavigation }: ComponentProps) {
 	const apiProvider = useApiProvider()
 	const { pathname } = useLocation()
 
+	const isMobile = useMediaQuery('(max-width:320px)');
+
 	React.useEffect(() => {
 		let unsubscribe = null
 		if (!apiProvider) return
@@ -131,7 +133,8 @@ function Main({ showNavigation }: ComponentProps) {
 			sx={{
 				position: 'sticky',
 				top: 0,
-				width: '275px',
+				width: isMobile ? '90px' : '275px',
+				overflow: 'hidden',
 				display: 'flex',
 				flexDirection: 'column',
 				flex: 1,
@@ -155,7 +158,7 @@ function Main({ showNavigation }: ComponentProps) {
 					}}
 				>
 					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ marginTop: '-10px' }} variant="h3">
+					<Typography sx={{ letterSpacing: '2px', marginTop: '-10px' }} variant="h3">
 						DAO
 					</Typography>
 				</Box>
