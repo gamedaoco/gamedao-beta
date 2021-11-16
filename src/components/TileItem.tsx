@@ -29,7 +29,7 @@ export const TileItem: React.FC<
 > = (props) => (
 	<Card sx={{ minHeight: '100%', minWidth: '20%' }}>
 		<Stack sx={{ height: '100%' }}>
-		<Link to={props.linkTo}>
+		<Link to={props.linkTo || ""}>
 			<Image sx={{ backgroundImage: `url(${props.imageURL})` }} />
 		</Link>
 			

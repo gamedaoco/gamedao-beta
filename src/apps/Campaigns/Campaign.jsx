@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Suspense, useState, useEffect } from "react";
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types';
+import { useApiProvider } from '@substra-hooks/core'
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { 
@@ -274,7 +276,7 @@ function Milestones(){
   return <Box sx={{ mt: 10 }}>
     <Typography variant="h4">PRE HEADLINE</Typography>
     <Typography variant="h2">MILESTONES</Typography>
-    <Typography>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
+    <Typography>Lorem ipsum dur sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
   </Box>
 }
 

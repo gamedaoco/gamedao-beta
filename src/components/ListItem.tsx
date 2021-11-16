@@ -27,7 +27,7 @@ export const ListItem: React.FC<
 				}}
 			>
 				<Box>
-					<Link to={props.linkTo}>
+					<Link to={props.linkTo || ""}>
 						<img width="200px" height="100%" src={props.imageURL} />
 					</Link>
 				</Box>

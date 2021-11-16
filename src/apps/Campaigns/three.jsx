@@ -1,6 +1,12 @@
+import * as React from 'react';
+import { Suspense, useState, useEffect } from "react";
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib/controls/OrbitControls'
 import { Canvas } from "@react-three/fiber";
 import { useLoader } from "@react-three/fiber";
+
+import { 
+    Box, 
+} from '../../components'
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { EventManager, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber'

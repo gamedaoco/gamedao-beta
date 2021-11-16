@@ -64,7 +64,7 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path="/app/campaign/:id"
+					path="/app/campaigns/:id"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Campaign />} />
 					}
