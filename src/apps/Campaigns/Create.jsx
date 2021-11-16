@@ -1,7 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { Container, Button, Divider, FormGroup, FormControl, MenuItem, Select, Checkbox, Box, TextField, Typography, InputLabel, TextareaAutosize } from '../../components'
+import {
+	Container,
+	Button,
+	Divider,
+	FormGroup,
+	FormControl,
+	MenuItem,
+	Select,
+	Checkbox,
+	Box,
+	TextField,
+	Typography,
+	InputLabel,
+	Grid,
+	TextareaAutosize,
+	FormControlLabel,
+} from '../../components'
 
 import { data, rnd } from '../lib/data'
 import config from '../../config'
@@ -165,7 +181,13 @@ export const Main = () => {
 
 	// handle form state
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = ({ target: { name, value } }) => {
+		updateFormData({ ...formData, [name]: value })
+	}
+
+	const handleCheckboxToggle = ({ target: { name } }) => {
+		updateFormData({ ...formData, [name]: !formData[name] })
+	}
 
 	useEffect(() => {
 		if (!formData) return
@@ -276,25 +298,24 @@ export const Main = () => {
 		setLoading(false)
 	}, [account, refresh])
 
+	const logoGraphicInputRef = React.useRef(null)
+	const headerGraphicInputRef = React.useRef(null)
+
 	if (!formData) return null
 
 	return (
-		<>
-			<Box
-				component="form"
-				sx={{
-					'& > *': { m: 1 },
-				}}
-			>
-				<Box sx={{ textAlign: 'center', width: '100%', my: 4 }}>
-					<Typography variant="h3">Create Campaign {nonce}</Typography>
-				</Box>
-				<br />
+		<Grid container spacing={2} component="form">
+			<Grid item xs={12}>
+				<Typography align={'center'} variant="h3">
+					Create Campaign {nonce}
+				</Typography>
+			</Grid>
+			<Grid item xs={12}>
 				<Divider clearing horizontal>
 					<Typography>General Information</Typography>
 				</Divider>
-				<br />
-
+			</Grid>
+			<Grid item xs={12}>
 				<FormControl fullWidth>
 					<InputLabel id="org-select-label">Organization</InputLabel>
 					<Select
@@ -314,9 +335,10 @@ export const Main = () => {
 						))}
 					</Select>
 				</FormControl>
-
+			</Grid>
+			<Grid item xs={12}>
 				<TextField
-					fluid
+					fullWidth
 					required
 					label="Campaign name"
 					placeholder="Campaign name"
@@ -324,273 +346,218 @@ export const Main = () => {
 					value={formData.title}
 					onChange={handleOnChange}
 				/>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<InputLabel id="short-descr-label">Short Description</InputLabel>
-				<TextareaAutosize
-					aria-label="Short Description"
-					minRows={3}
-					name="description"
+			</Grid>
+			<Grid item xs={12}>
+				<TextField
+					fullWidth
+					multiline
+					required
 					value={formData.description}
 					label="Campaign Description"
 					placeholder="Tell us more about your idea..."
 					name="description"
-					value={formData.description}
 					onChange={handleOnChange}
 				/>
-			</FormGroup>
-				<br />
-				<Divider clearing horizontal>
-					Content
-				</Divider>
-				<br />
+			</Grid>
+			<Grid item xs={12}>
+				<Divider>Content</Divider>
+			</Grid>
 
-				{fileCID && (
-					<Box size="tiny">
-						{fileCID.logo && (
-							<img alt={formData.title} src={gateway + fileCID.logo} />
-						)}
-						{fileCID.header && (
-							<img alt={formData.title} src={gateway + fileCID.header} />
-						)}
-					</Box>
-				)}
+			{fileCID && (
+				<Grid item xs={12}>
+					{fileCID.logo && <img alt={formData.title} src={gateway + fileCID.logo} />}
+					{fileCID.header && <img alt={formData.title} src={gateway + fileCID.header} />}
+				</Grid>
+			)}
 
-				<FormGroup widths="equal">
-					<TextField
-						type="file"
-						label="Logo Graphic"
-						name="logo"
-						onChange={onFileChange}
-					/>
-					<TextField
-						type="file"
-						label="Header Graphic"
-						name="header"
-						onChange={onFileChange}
-					/>
-				</FormGroup>
+			<Grid item xs={12} md={6}>
+				<input
+					type={'file'}
+					ref={logoGraphicInputRef}
+					onChange={onFileChange}
+					name={'logo'}
+					style={{ position: 'fixed', left: '-999999px' }}
+				/>
+				<Button
+					fullWidth
+					variant={'outlined'}
+					onClick={() => logoGraphicInputRef.current.click()}
+				>
+					Pick a logo graphic
+				</Button>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<input
+					type={'file'}
+					ref={headerGraphicInputRef}
+					onChange={onFileChange}
+					name={'header'}
+					style={{ position: 'fixed', left: '-999999px' }}
+				/>
+				<Button
+					fullWidth
+					variant={'outlined'}
+					onClick={() => headerGraphicInputRef.current.click()}
+				>
+					Pick a header graphic
+				</Button>
+			</Grid>
 
-				{/* legal body applying for the funding */}
+			{/* legal body applying for the funding */}
 
-				<br />
-				<Divider clearing horizontal>
-					Public Representative
-				</Divider>
-				<br />
+			<Grid item xs={12}>
+				<Divider>Public Representative</Divider>
+			</Grid>
 
-				<FormGroup widths="equal">
-					<TextField
-						fluid
-						label="Name"
-						placeholder="Name"
-						name="name"
-						value={formData.name}
-						onChange={handleOnChange}
-					/>
-					<TextField
-						fluid
-						label="Email"
-						placeholder="Email"
-						name="email"
-						value={formData.email}
-						onChange={handleOnChange}
-					/>
-				</FormGroup>
+			<Grid item xs={12} md={6}>
+				<TextField
+					fullWidth
+					label="Name"
+					placeholder="Name"
+					name="name"
+					value={formData.name}
+					onChange={handleOnChange}
+				/>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField
+					fullWidth
+					label="Email"
+					placeholder="Email"
+					name="email"
+					value={formData.email}
+					onChange={handleOnChange}
+				/>
+			</Grid>
 
-				<br />
+			<Grid item xs={12}>
 				<Divider clearing horizontal>
 					Campaign Settings
 				</Divider>
-				<br />
+			</Grid>
 
-				<Container>
-					This section is already covered during org creation, currently only a
-					placeholder / reminder.
-				</Container>
+			{/* usage of funding and protocol to initiate after successfully raising */}
 
-				<FormGroup
-					sx={{
-						display: 'grid',
-						gridTemplateColumns: { sm: '1fr 1fr' },
-						gap: 2,
-						my: 2,
-					}}
-				>
-					<FormControl>
-						<InputLabel id="entity-select-label">Legal Entity</InputLabel>
-						<Select
-							labelId="entity-select-label"
-							id="entity"
-							required
-							fluid
-							label="Legal Entity"
-							placeholder="Legal Entity"
-							name="entity"
-							value={formData.entity}
-							onChange={handleOnChange}
-						>
-							{data.project_entities.map((item) => (
-								<MenuItem key={item.key} value={item.value}>
-									{item.text}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-					<FormControl>
-						<InputLabel id="country-select-label">Country</InputLabel>
-						<Select
-							labelId="country-select-label"
-							id="country"
-							required
-							label="Country"
-							name="country"
-							placeholder="Country"
-							value={formData.country}
-							onChange={handleOnChange}
-						>
-							{data.countries.map((item) => (
-								<MenuItem key={item.key} value={item.value}>
-									{item.text}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-
-				</FormGroup>
-
-
-				<br />
-				<Divider clearing horizontal></Divider>
-				<br />
-				{/* usage of funding and protocol to initiate after successfully raising */}
-
-				<FormGroup widths="equal">
-					<TextField
-						fluid
-						label="Admin Account"
-						placeholder="Admin"
-						name="admin"
-						value={formData.admin}
-						onChange={handleOnChange}
+			<Grid item xs={12} md={6}>
+				<TextField
+					fullWidth
+					label="Admin Account"
+					placeholder="Admin"
+					name="admin"
+					value={formData.admin}
+					onChange={handleOnChange}
+					required
+				/>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<FormControl fullWidth>
+					<InputLabel id="usage-select-label">Usage of funds</InputLabel>
+					<Select
+						labelId="usage-select-label"
+						label={'Usage of funds'}
+						id="usage"
 						required
-					/>
-				</FormGroup>
-
-				<FormGroup
-					sx={{
-						display: 'grid',
-						gridTemplateColumns: { sm: '1fr 1fr' },
-						gap: 2,
-						my: 2,
-					}}
-				>
-					<FormControl>
-						<InputLabel id="usage-select-label">Usage of funds</InputLabel>
-						<Select
-							labelId="usage-select-label"
-							id="usage"
-							required
-							name="usage"
-							placeholder="Usage"
-							value={formData.usage}
-							onChange={handleOnChange}
-						>
-							{data.project_types.map((item) => (
-								<MenuItem key={item.key} value={item.value}>
-									{item.text}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-					<FormControl>
-						<InputLabel id="protocol-select-label">Protocol</InputLabel>
-						<Select
-							labelId="protocol-select-label"
-							id="protocol"
-							required
-							fluid
-							name="protocol"
-							placeholder="Protocol"
-							value={formData.protocol}
-							onChange={handleOnChange}
-						>
-							{data.protocol_types.map((item) => (
-								<MenuItem key={item.key} value={item.value}>
-									{item.text}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-
-				</FormGroup>
-
-				<FormGroup widths="equal">
-					<TextField
-						fluid
-						label="Deposit (PLAY)"
-						placeholder="Deposit"
-						name="deposit"
-						value={formData.deposit}
+						name="usage"
+						placeholder="Usage"
+						value={formData.usage}
 						onChange={handleOnChange}
-					/>
+					>
+						{data.project_types.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</Grid>
 
-					<TextField
-						fluid
-						label="Funding Target (PLAY)"
-						placeholder="Cap"
-						name="cap"
-						value={formData.cap}
+			<Grid item xs={12}>
+				<FormControl fullWidth>
+					<InputLabel id="protocol-select-label">Protocol</InputLabel>
+					<Select
+						labelId="protocol-select-label"
+						id="protocol"
+						required
+						fullWidth
+						name="protocol"
+						label={'protocol'}
+						placeholder="Protocol"
+						value={formData.protocol}
 						onChange={handleOnChange}
-					/>
+					>
+						{data.protocol_types.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</Grid>
 
-					<FormControl>
-						<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
-						<Select
-							labelId="duration-select-label"
-							id="duration"
-							required
-							label="Campaign Duration"
-							options={data.project_durations}
-							placeholder="Campaign Duration"
-							name="duration"
-							value={formData.duration}
-							onChange={handleOnChange}
-						>
-							{data.project_durations.map((item) => (
-								<MenuItem key={item.key} value={item.value}>
-									{item.text}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-				</FormGroup>
+			<Grid item xs={12} md={6}>
+				<TextField
+					fullWidth
+					label="Funding Target (PLAY)"
+					placeholder="Cap"
+					name="cap"
+					value={formData.cap}
+					onChange={handleOnChange}
+				/>
+			</Grid>
 
-				<Checkbox
+			<Grid item xs={12} md={6}>
+				<FormControl fullWidth>
+					<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
+					<Select
+						labelId="duration-select-label"
+						id="duration"
+						required
+						label="Campaign Duration"
+						options={data.project_durations}
+						placeholder="Campaign Duration"
+						name="duration"
+						value={formData.duration}
+						onChange={handleOnChange}
+					>
+						{data.project_durations.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</Grid>
+
+			<Grid item xs={12}>
+				<FormControlLabel
 					label="DAO Governance"
-					name="governance"
-					checked={formData.governance}
-					onChange={handleOnChange}
+					control={
+						<Checkbox
+							name="governance"
+							checked={formData.governance}
+							onChange={handleCheckboxToggle}
+						/>
+					}
 				/>
-				<Checkbox
+			</Grid>
+			<Grid item xs={12}>
+				<FormControlLabel
 					label="I agree to the Terms and Conditions"
-					name="accept"
-					checked={formData.accept}
-					onChange={handleOnChange}
+					control={
+						<Checkbox
+							name="accept"
+							checked={formData.accept}
+							onChange={handleCheckboxToggle}
+						/>
+					}
 				/>
-
-				<Container textAlign="right">
-					<Button onClick={handleSubmit}>Create Campaign</Button>
-				</Container>
-			</Box>
-		</>
+			</Grid>
+			<Grid item xs={12}>
+				<Button variant={'contained'} fullWidth onClick={handleSubmit}>
+					Create Campaign
+				</Button>
+			</Grid>
+		</Grid>
 	)
 }
 
