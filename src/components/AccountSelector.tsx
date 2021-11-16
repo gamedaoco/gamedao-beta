@@ -1,6 +1,21 @@
 import React, { useEffect } from 'react'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useWallet } from 'src/context/Wallet'
+import {
+	Button,
+	Typography,
+	ButtonGroup,
+	ClickAwayListener,
+	Grow,
+	Paper,
+	Popper,
+	MenuItem,
+	MenuList,
+} from '@mui/material'
+
 import IconButton from '@mui/material/IconButton'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import { useStore } from 'src/context/Store'
@@ -187,6 +202,7 @@ const AccountComponent = () => {
 
 const BalanceAnnotation = () => {
 	const { balanceZero, balancePlay, balanceGame } = useBalance()
+	const theme = useTheme()
 
 	return (
 		<Stack direction={'column'}>

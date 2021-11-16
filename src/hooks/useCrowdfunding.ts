@@ -106,8 +106,9 @@ async function queryCampaignBalance(apiProvider: ApiPromise, hashes: any): Promi
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -127,8 +128,9 @@ async function queryCampaignState(apiProvider: ApiPromise, hashes: any): Promise
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -153,8 +155,9 @@ async function queryCampaignContributorsCount(
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -163,6 +166,7 @@ async function queryCampaignContributorsCount(
 export const useCrowdfunding = () => {
 	const [state, setState] = useState<CrowdfundingState>(INITIAL_STATE)
 	const [lastCampaignsCount, setLastCampaignsCount] = useState<number>(null)
+	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
 
@@ -248,9 +252,9 @@ export const useCrowdfunding = () => {
 	// Fetch campaigns and details
 	useEffect(() => {
 		const keys = Object.keys(state?.campaignsHash ?? {})
-		if (apiProvider && keys.length > 0) {
+		if (apiProvider && keys.length > 0 && !isDataLoading) {
 			const newHashes = keys.filter((key) => !(state.campaigns ?? {})[key])
-
+			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
 					queryCampaigns(apiProvider, newHashes),
@@ -258,6 +262,8 @@ export const useCrowdfunding = () => {
 					queryCampaignState(apiProvider, newHashes),
 					queryCampaignContributorsCount(apiProvider, newHashes),
 				])
+
+				setIsDataLoading(false)
 
 				if (isMountedRef) {
 					setState({
@@ -283,6 +289,8 @@ export const useCrowdfunding = () => {
 			})()
 		}
 	}, [state.campaignsHash])
+
+	console.log('🚀 ~ file: useCrowdfunding.ts ~ line 292 ~ useCrowdfunding ~ state', state)
 
 	return state
 }

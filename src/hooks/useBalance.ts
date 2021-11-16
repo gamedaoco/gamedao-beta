@@ -65,5 +65,7 @@ export const useBalance = () => {
 		}
 	}, [address, apiProvider])
 
+	console.log('🚀 ~ file: useBalance.ts ~ line 70 ~ useBalance ~ balanceState', balanceState)
+
 	return balanceState
 }
