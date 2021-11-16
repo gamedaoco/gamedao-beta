@@ -73,38 +73,35 @@ export function Campaign(){
       setValue(newValue);
     };
 
-    const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } = useCrowdfunding()
+    const [content, setContent] = React.useState()
 
-      const wallet = useWallet()
+    const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
-      const [content, setContent] = useState()
+    // const wallet = useWallet()
 
-      useEffect(() => {
-        if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
+    useEffect(() => {
+      if (!campaignBalance || !campaignState || !campaigns) return
 
-        const content = Object.keys(campaignsIndex).map((index) => {
-          const itemHash = campaignsIndex[index]
+      const content = {
+        ...(campaigns[id] ?? {}),
+        state: campaignState[id],
+        balance: campaignBalance[id],
+      }
+      
+      setContent(content)
+    }, [campaignBalance, campaignState, campaigns])
 
-          return {
-            ...(campaigns[itemHash] ?? {}),
-            state: campaignState[itemHash],
-            balance: campaignBalance[itemHash],
-          }
-        })
-        setContent(content)
-      }, [campaignsIndex, campaignBalance, campaignState, campaigns])
+    console.log(content)
 
-      console.log(campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex)
-      console.log(wallet)
-  
+    if(!content) return '...'
+
     return <Box>
         <Box16to9 sx={{
             zIndex: '-1',
             background: 'url(https://picsum.photos/1240)',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            height: '33vw',
-            maxHeight: '1400px',
+            height: '66vh',
             minHeight: '450px'  
         }}>
             <Container
@@ -115,7 +112,7 @@ export function Campaign(){
             >
                 <Box sx={{display: 'flex'}}>
                     <Box sx={{ flexBasis: '50%' }}>
-                        <Typography variant='h1'>CLOUD IMPERIUM</Typography>
+                        <Typography variant='h1'>{content.name}</Typography>
                         <Typography variant='h3'>クラウドインペリアム</Typography>
 
                         <Box>

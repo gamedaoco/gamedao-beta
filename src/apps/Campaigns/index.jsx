@@ -32,12 +32,13 @@ const CreateCampaign = lazy(() => import('./Create'))
 //
 
 export const Campaigns = (props) => {
-	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
-		useCrowdfunding()
+	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } = useCrowdfunding()
 
 	const { account } = useWallet()
 
 	const [content, setContent] = useState()
+
+	console.log(campaignsIndex)
 
 	useEffect(() => {
 		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return

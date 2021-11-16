@@ -23,13 +23,15 @@ export interface ComponentProps {
 	showHeader?: boolean
 	showSidebar?: boolean
 	element?: React.ReactNode
+	noContainer?: boolean
 }
 
-const LayoutRoute = ({ showFooter, showHeader, showSidebar, element }: ComponentProps) => (
+const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer }: ComponentProps) => (
 	<Layout
 		showHeader={showHeader ? showHeader : null}
 		showFooter={showFooter ? showFooter : null}
 		showSidebar={showSidebar ? showSidebar : null}
+		noContainer={noContainer ? noContainer : null}
 	>
 		{element}
 	</Layout>
@@ -66,7 +68,7 @@ const Router = (props) => {
 				<Route
 					path="/app/campaigns/:id"
 					element={
-						<LayoutRoute showSidebar showHeader showFooter element={<Campaign />} />
+						<LayoutRoute showSidebar noContainer showFooter element={<Campaign />} />
 					}
 				></Route>
 				<Route
