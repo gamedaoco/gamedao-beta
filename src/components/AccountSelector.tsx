@@ -1,8 +1,8 @@
+import React, { useEffect } from 'react'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
-import React, { useEffect } from 'react'
 import { useStore } from 'src/context/Store'
 import { useThemeState } from 'src/context/ThemeState'
 import { useWallet } from 'src/context/Wallet'
@@ -18,10 +18,10 @@ function accountString(account) {
 const AccountBox = styled(Box)(({ theme }) => ({
 	borderRadius: '50px',
 	backgroundColor: theme.palette.background.neutral,
-	paddingLeft: theme.spacing(2),
 	paddingRight: theme.spacing(2),
-	paddingTop: theme.spacing(1),
-	paddingBottom: theme.spacing(1),
+	paddingLeft: '2px',
+	paddingTop: '2px',
+	paddingBottom: '2px',
 	color: theme.palette.text.primary,
 }))
 
@@ -37,9 +37,11 @@ const ConnectButton = styled(Button)(({ theme }) => ({
 const AccountSelect = styled(Select)(({ theme }) => ({
 	margin: 0,
 	backgroundColor: theme.palette.background.default,
-	padding: theme.spacing(1),
+	display: 'block',
 	borderRadius: '50px',
+	height: '100%',
 	['& .MuiSelect-select']: {
+		height: '100%',
 		padding: 0,
 		margin: 0,
 		border: 0,
@@ -112,22 +114,52 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'}>
-							<HeartIcon />
-
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
 							<AccountSelect
 								renderValue={(value) => {
 									const account = accounts.find((a) => a.address === value)
 									if (!account) return 'n/a'
-									return accountString(account)
+									return (
+										<Box
+											sx={{
+												display: 'flex',
+												height: '100%',
+												alignItems: 'center',
+											}}
+										>
+											<Box
+												sx={{
+													display: 'flex',
+													alignItems: 'center',
+													justifyContent: 'center',
+													backgroundColor: '#292B2D',
+													borderRadius: '50%',
+													marginLeft: '4px',
+													marginTop: '4px',
+													marginBottom: '4px',
+													height: '2.5rem',
+													width: '2.5rem',
+												}}
+											>
+												<HeartIcon />
+											</Box>
+											<Box
+												sx={{
+													marginLeft: '1rem',
+												}}
+											>
+												{accountString(account)}
+											</Box>
+										</Box>
+									)
 								}}
 								value={account?.address}
 								name={'account'}
 								onChange={(e) => handleAccountChange(e.target.value as string)}
 							>
 								{accounts?.map((a, index) => (
-									<MenuItem key={index} value={a?.address}>
-										{a?.address}
+									<MenuItem key={index} value={a?.address} title={a?.address}>
+										{accountString(a)}
 									</MenuItem>
 								))}
 							</AccountSelect>
@@ -159,7 +191,7 @@ const BalanceAnnotation = () => {
 	return (
 		<Stack direction={'column'}>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
-				{balanceZero || 0} ZERO
+				{balanceZero || '0 Zero'}
 			</Typography>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
 				{balancePlay || 0} PLAY
