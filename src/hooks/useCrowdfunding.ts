@@ -220,8 +220,9 @@ export const useCrowdfunding = () => {
 	// Fetch new campaign hashes
 	useEffect(() => {
 		if (
-			(state?.campaignsCount >= 0 && lastCampaignsCount) ??
-			(0 !== state.campaignsCount && apiProvider)
+			state?.campaignsCount >= 0 &&
+			(lastCampaignsCount ?? 0 !== state.campaignsCount) &&
+			apiProvider
 		) {
 			queryCampaignsHash(apiProvider, lastCampaignsCount ?? 0, state.campaignsCount).then(
 				(opt) => {
