@@ -18,7 +18,7 @@ import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Divider, Paper, Typography, FontIcon, useMediaQuery } from 'src/components'
+import { Divider, Paper, Typography, FontIcon, useMediaQuery, Link } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { useThemeState } from 'src/context/ThemeState'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
@@ -164,29 +164,29 @@ function Main({ showNavigation }: ComponentProps) {
 					}}
 				>
 					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ letterSpacing: '2px', marginTop: '-10px' }} variant="h3">
+					<Typography sx={{ letterSpacing: '2px', marginTop: '-18px' }} variant="h3">
 						DAO
 					</Typography>
 				</Box>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
-				<NavLink to="/app">
+				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="dashboard" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="dashboard" />
 						</ListItemIcon>
-						<Typography variant="h6">Dashboard</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Dashboard</Typography>
 					</SidebarButton>
-				</NavLink>
-				<NavLink to="/app/organisations">
+				</Link>
+				<Link component={NavLink} to="/app/organisations">
 					<SidebarButton
 						active={!!pathname.match(/organisations/gi)}
 						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="organization" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="organization" />
 						</ListItemIcon>
-						<Typography variant="h6">Organisations</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Organisations</Typography>
 						{organisationCount > 0 ? (
 							<>
 								<Box />
@@ -194,13 +194,13 @@ function Main({ showNavigation }: ComponentProps) {
 							</>
 						) : null}
 					</SidebarButton>
-				</NavLink>
-				<NavLink to="/app/governance">
+				</Link>
+				<Link component={NavLink} to="/app/governance">
 					<SidebarButton active={!!pathname.match(/governance/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="voting" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="voting" />
 						</ListItemIcon>
-						<Typography variant="h6">Votings</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Votings</Typography>
 						{votingCount > 0 ? (
 							<>
 								<Box />
@@ -208,13 +208,13 @@ function Main({ showNavigation }: ComponentProps) {
 							</>
 						) : null}
 					</SidebarButton>
-				</NavLink>
-				<NavLink to="/app/campaigns">
+				</Link>
+				<Link component={NavLink} to="/app/campaigns">
 					<SidebarButton active={!!pathname.match(/campaigns/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="campaign" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="campaign" />
 						</ListItemIcon>
-						<Typography variant="h6">Campaigns</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Campaigns</Typography>
 						{campaignsCount > 0 ? (
 							<>
 								<Box />
@@ -222,34 +222,34 @@ function Main({ showNavigation }: ComponentProps) {
 							</>
 						) : null}
 					</SidebarButton>
-				</NavLink>
+				</Link>
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
-					<NavLink to="/app/tangram">
+					<Link component={NavLink} to="/app/tangram">
 						<SidebarButton active={!!pathname.match(/tangram/gi)} sx={{ mx: 4, py: 0 }}>
 							<ListItemIcon>
-								<FontIcon sx={{ fontSize: '3.5rem' }} name="tangram" />
+								<FontIcon sx={{ fontSize: '3rem' }} name="tangram" />
 							</ListItemIcon>
-							<Typography variant="h6">Tangram</Typography>
+							<Typography sx={{ fontSize: '1rem' }}>Tangram</Typography>
 						</SidebarButton>
-					</NavLink>
+					</Link>
 				)}
-				<NavLink to="/app/wallet">
+				<Link component={NavLink} to="/app/wallet">
 					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="wallet" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="wallet" />
 						</ListItemIcon>
-						<Typography variant="h6">Wallet</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Wallet</Typography>
 					</SidebarButton>
-				</NavLink>
-				<a href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
+				</Link>
+				<Link href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
 					<SidebarButton sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3.5rem' }} name="document" />
+							<FontIcon sx={{ fontSize: '3rem' }} name="document" />
 						</ListItemIcon>
-						<Typography variant="h6">Documentation</Typography>
+						<Typography sx={{ fontSize: '1rem' }}>Documentation</Typography>
 					</SidebarButton>
-				</a>
+				</Link>
 				<Box sx={{ flex: 1 }} />
 				<NavHeader>Network Info</NavHeader>
 				<Box sx={{ px: 2 }}>

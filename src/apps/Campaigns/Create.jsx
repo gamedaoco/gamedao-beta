@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
-import { Container, Button, Form, Segment, Divider, Image /*Dimmer*/ } from 'semantic-ui-react'
+import { Container, Button, Divider, FormGroup, FormControl, MenuItem, Select, Checkbox, Box, TextField, Typography, InputLabel, TextareaAutosize } from '../../components'
 
-import faker from 'faker'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
 
@@ -14,10 +13,10 @@ import { useApiProvider } from '@substra-hooks/core'
 const dev = config.dev
 
 const random_state = (account) => {
-	const name = faker.name.findName()
-	const email = faker.internet.email()
-	const title = faker.commerce.productName()
-	const description = faker.company.catchPhrase()
+	const name = 'Examplename'
+	const email = 'mail@example.com'
+	const title = 'Cool Prductname'
+	const description = 'Even cooler catchphrase (very funny)'
 	const country = data.countries[rnd(data.countries.length)].value
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
@@ -280,28 +279,43 @@ export const Main = () => {
 	if (!formData) return null
 
 	return (
-		<Segment vertical loading={loading}>
-			<h1>Create Campaign {nonce}</h1>
-
-			<Form>
+		<>
+			<Box
+				component="form"
+				sx={{
+					'& > *': { m: 1 },
+				}}
+			>
+				<Box sx={{ textAlign: 'center', width: '100%', my: 4 }}>
+					<Typography variant="h3">Create Campaign {nonce}</Typography>
+				</Box>
 				<br />
 				<Divider clearing horizontal>
-					General
+					<Typography>General Information</Typography>
 				</Divider>
 				<br />
 
-				<Form.Select
-					fluid
-					required
-					label="Organization"
-					placeholder="Organization"
-					name="org"
-					options={orgs}
-					value={formData.org}
-					onChange={handleOnChange}
-				/>
+				<FormControl fullWidth>
+					<InputLabel id="org-select-label">Organization</InputLabel>
+					<Select
+						labelId="org-select-label"
+						id="org"
+						required
+						label="Organization"
+						placeholder="Organization"
+						name="org"
+						value={formData.org}
+						onChange={handleOnChange}
+					>
+						{orgs.map((item) => (
+							<MenuItem key={item.key} value={item.value}>
+								{item.text}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 
-				<Form.Input
+				<TextField
 					fluid
 					required
 					label="Campaign name"
@@ -311,14 +325,27 @@ export const Main = () => {
 					onChange={handleOnChange}
 				/>
 
-				<Form.TextArea
+			<FormGroup
+				sx={{
+					display: 'grid',
+					gridTemplateColumns: { sm: '1fr 1fr' },
+					gap: 2,
+					my: 2,
+				}}
+			>
+				<InputLabel id="short-descr-label">Short Description</InputLabel>
+				<TextareaAutosize
+					aria-label="Short Description"
+					minRows={3}
+					name="description"
+					value={formData.description}
 					label="Campaign Description"
 					placeholder="Tell us more about your idea..."
 					name="description"
 					value={formData.description}
 					onChange={handleOnChange}
 				/>
-
+			</FormGroup>
 				<br />
 				<Divider clearing horizontal>
 					Content
@@ -326,30 +353,30 @@ export const Main = () => {
 				<br />
 
 				{fileCID && (
-					<Image.Group size="tiny">
+					<Box size="tiny">
 						{fileCID.logo && (
-							<Image alt={formData.title} src={gateway + fileCID.logo} />
+							<img alt={formData.title} src={gateway + fileCID.logo} />
 						)}
 						{fileCID.header && (
-							<Image alt={formData.title} src={gateway + fileCID.header} />
+							<img alt={formData.title} src={gateway + fileCID.header} />
 						)}
-					</Image.Group>
+					</Box>
 				)}
 
-				<Form.Group widths="equal">
-					<Form.Input
+				<FormGroup widths="equal">
+					<TextField
 						type="file"
 						label="Logo Graphic"
 						name="logo"
 						onChange={onFileChange}
 					/>
-					<Form.Input
+					<TextField
 						type="file"
 						label="Header Graphic"
 						name="header"
 						onChange={onFileChange}
 					/>
-				</Form.Group>
+				</FormGroup>
 
 				{/* legal body applying for the funding */}
 
@@ -359,8 +386,8 @@ export const Main = () => {
 				</Divider>
 				<br />
 
-				<Form.Group widths="equal">
-					<Form.Input
+				<FormGroup widths="equal">
+					<TextField
 						fluid
 						label="Name"
 						placeholder="Name"
@@ -368,7 +395,7 @@ export const Main = () => {
 						value={formData.name}
 						onChange={handleOnChange}
 					/>
-					<Form.Input
+					<TextField
 						fluid
 						label="Email"
 						placeholder="Email"
@@ -376,7 +403,7 @@ export const Main = () => {
 						value={formData.email}
 						onChange={handleOnChange}
 					/>
-				</Form.Group>
+				</FormGroup>
 
 				<br />
 				<Divider clearing horizontal>
@@ -389,34 +416,64 @@ export const Main = () => {
 					placeholder / reminder.
 				</Container>
 
-				<Form.Group widths="equal">
-					<Form.Select
-						fluid
-						label="Legal Entity"
-						placeholder="Legal Entity"
-						name="entity"
-						options={data.project_entities}
-						value={formData.entity}
-						onChange={handleOnChange}
-					/>
-					<Form.Select
-						fluid
-						label="Country"
-						name="country"
-						placeholder="Country"
-						options={data.countries}
-						value={formData.country}
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
+				<FormGroup
+					sx={{
+						display: 'grid',
+						gridTemplateColumns: { sm: '1fr 1fr' },
+						gap: 2,
+						my: 2,
+					}}
+				>
+					<FormControl>
+						<InputLabel id="entity-select-label">Legal Entity</InputLabel>
+						<Select
+							labelId="entity-select-label"
+							id="entity"
+							required
+							fluid
+							label="Legal Entity"
+							placeholder="Legal Entity"
+							name="entity"
+							value={formData.entity}
+							onChange={handleOnChange}
+						>
+							{data.project_entities.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl>
+						<InputLabel id="country-select-label">Country</InputLabel>
+						<Select
+							labelId="country-select-label"
+							id="country"
+							required
+							label="Country"
+							name="country"
+							placeholder="Country"
+							value={formData.country}
+							onChange={handleOnChange}
+						>
+							{data.countries.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+
+				</FormGroup>
+
 
 				<br />
 				<Divider clearing horizontal></Divider>
 				<br />
 				{/* usage of funding and protocol to initiate after successfully raising */}
 
-				<Form.Group widths="equal">
-					<Form.Input
+				<FormGroup widths="equal">
+					<TextField
 						fluid
 						label="Admin Account"
 						placeholder="Admin"
@@ -425,31 +482,58 @@ export const Main = () => {
 						onChange={handleOnChange}
 						required
 					/>
-				</Form.Group>
+				</FormGroup>
 
-				<Form.Group widths="equal">
-					<Form.Select
-						fluid
-						label="Use of funds"
-						name="usage"
-						placeholder="Usage"
-						options={data.project_types}
-						value={formData.usage}
-						onChange={handleOnChange}
-					/>
-					<Form.Select
-						fluid
-						label="Protocol"
-						name="protocol"
-						placeholder="Protocol"
-						options={data.protocol_types}
-						value={formData.protocol}
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
+				<FormGroup
+					sx={{
+						display: 'grid',
+						gridTemplateColumns: { sm: '1fr 1fr' },
+						gap: 2,
+						my: 2,
+					}}
+				>
+					<FormControl>
+						<InputLabel id="usage-select-label">Usage of funds</InputLabel>
+						<Select
+							labelId="usage-select-label"
+							id="usage"
+							required
+							name="usage"
+							placeholder="Usage"
+							value={formData.usage}
+							onChange={handleOnChange}
+						>
+							{data.project_types.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl>
+						<InputLabel id="protocol-select-label">Protocol</InputLabel>
+						<Select
+							labelId="protocol-select-label"
+							id="protocol"
+							required
+							fluid
+							name="protocol"
+							placeholder="Protocol"
+							value={formData.protocol}
+							onChange={handleOnChange}
+						>
+							{data.protocol_types.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 
-				<Form.Group widths="equal">
-					<Form.Input
+				</FormGroup>
+
+				<FormGroup widths="equal">
+					<TextField
 						fluid
 						label="Deposit (PLAY)"
 						placeholder="Deposit"
@@ -458,7 +542,7 @@ export const Main = () => {
 						onChange={handleOnChange}
 					/>
 
-					<Form.Input
+					<TextField
 						fluid
 						label="Funding Target (PLAY)"
 						placeholder="Cap"
@@ -467,24 +551,35 @@ export const Main = () => {
 						onChange={handleOnChange}
 					/>
 
-					<Form.Select
-						fluid
-						label="Campaign Duration"
-						options={data.project_durations}
-						placeholder="Campaign Duration"
-						name="duration"
-						value={formData.duration}
-						onChange={handleOnChange}
-					/>
-				</Form.Group>
+					<FormControl>
+						<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
+						<Select
+							labelId="duration-select-label"
+							id="duration"
+							required
+							label="Campaign Duration"
+							options={data.project_durations}
+							placeholder="Campaign Duration"
+							name="duration"
+							value={formData.duration}
+							onChange={handleOnChange}
+						>
+							{data.project_durations.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</FormGroup>
 
-				<Form.Checkbox
+				<Checkbox
 					label="DAO Governance"
 					name="governance"
 					checked={formData.governance}
 					onChange={handleOnChange}
 				/>
-				<Form.Checkbox
+				<Checkbox
 					label="I agree to the Terms and Conditions"
 					name="accept"
 					checked={formData.accept}
@@ -494,8 +589,8 @@ export const Main = () => {
 				<Container textAlign="right">
 					<Button onClick={handleSubmit}>Create Campaign</Button>
 				</Container>
-			</Form>
-		</Segment>
+			</Box>
+		</>
 	)
 }
 

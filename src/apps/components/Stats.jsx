@@ -10,8 +10,9 @@
 **/
 
 import React, { useEffect, useState } from 'react'
-import { Segment, Grid, Statistic } from 'semantic-ui-react'
+import { Container, Box, Stack } from '.'
 import { useApiProvider } from '@substra-hooks/core'
+import { Typography } from '@mui/material'
 //
 //
 //
@@ -48,36 +49,36 @@ export const Stats = (props) => {
 	}, [apiProvider.query.crowdfunding])
 
 	return (
-		<Segment inverted>
-			<Grid stackable columns={3} divided>
-				<Grid.Row>
-					<Grid.Column textAlign="center">
-						<Statistic
+		<Container>
+			<Box>
+				<Stack>
+					<Box textAlign="center">
+						<Typography
 							label="Total Campaigns"
 							value={data.campaigns.toString()}
 							color="green"
 							inverted
-						/>
-					</Grid.Column>
-					<Grid.Column textAlign="center">
-						<Statistic
+						>{data.campaigns.toString()}</Typography>
+					</Box>
+					<Box textAlign="center">
+						<Typography
 							label="Contributions"
 							value={data.contributions.toString()}
 							color="purple"
 							inverted
-						/>
-					</Grid.Column>
-					<Grid.Column textAlign="center">
-						<Statistic
+						>{data.contributions.toString()}</Typography>
+					</Box>
+					<Box textAlign="center">
+						<Typography
 							label="Contributors"
 							value={data.contributors.toString()}
 							color="orange"
 							inverted
-						/>
-					</Grid.Column>
-				</Grid.Row>
-			</Grid>
-		</Segment>
+						>{data.contributors.toString()}</Typography>
+					</Box>
+				</Stack>
+			</Box>
+		</Container>
 	)
 }
 

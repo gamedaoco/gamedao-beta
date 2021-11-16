@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'semantic-ui-react'
+import { Button, Stack } from '../../components'
 import { web3FromSource } from '@polkadot/extension-dapp'
 
 import utils from '../utils'
@@ -271,13 +271,11 @@ TxButton.propTypes = {
 
 function TxGroupButton(props) {
 	return (
-		<Button.Group>
+		<Stack>
 			<TxButton label="Unsigned" type="UNSIGNED-TX" color="grey" {...props} />
-			<Button.Or />
 			<TxButton label="Signed" type="SIGNED-TX" color="blue" {...props} />
-			<Button.Or />
 			<TxButton label="SUDO" type="SUDO-TX" color="red" {...props} />
-		</Button.Group>
+		</Stack>
 	)
 }
 
