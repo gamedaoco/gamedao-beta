@@ -39,11 +39,16 @@ export const useIdentity = (address: string) => {
 		if (apiProvider && address && !(identityState ?? {})?.identities?.[address]) {
 			queryAccountIdentity(apiProvider, address).then((identity) => {
 				if (isMountedRef) {
-					setIdentityState({ ...identityState, identities: { ...identityState.identities, [address]: identity } })
+					setIdentityState({
+						...identityState,
+						identities: { ...identityState.identities, [address]: identity },
+					})
 				}
 			})
 		}
 	}, [address, apiProvider, isMountedRef])
+
+	console.log('🚀 ~ file: useIdentity.ts ~ line 52 ~ useIdentity ~ identityState', identityState)
 
 	return (identityState ?? {})?.identities?.[address]
 }
