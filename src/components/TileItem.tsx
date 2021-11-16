@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { Paper, Card, Box, Divider, Stack, Slider } from './index'
 import { styled } from '../components'
 
@@ -23,11 +24,15 @@ export const TileItem: React.FC<
 		headline: string
 		progressValue?: number
 		metaContent?: React.ReactNode
+		linkTo?: string
 	}>
 > = (props) => (
 	<Card sx={{ minHeight: '100%', minWidth: '20%' }}>
 		<Stack sx={{ height: '100%' }}>
+		<Link to={props.linkTo || ""}>
 			<Image sx={{ backgroundImage: `url(${props.imageURL})` }} />
+		</Link>
+			
 			<Stack
 				sx={{
 					p: 2,

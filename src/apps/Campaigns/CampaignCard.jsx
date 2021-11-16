@@ -230,6 +230,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 
 	return displayMode === ListTileEnum.TILE ? (
 		<TileItem
+			linkTo={`/app/campaigns/${id}`}
 			imageURL={
 				imageURL ??
 				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
@@ -249,6 +250,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		</TileItem>
 	) : (
 		<ListItem
+			linkTo={`/app/campaigns/${id}`}
 			imageURL={
 				imageURL ??
 				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'

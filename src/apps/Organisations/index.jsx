@@ -316,6 +316,7 @@ const Item = ({ content, mode }) => {
 
 	return mode === ListTileEnum.LIST ? (
 		<ListItem
+			linkTo={`/app/organisations/${itemContent.id}`}
 			imageURL={imageURL}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
@@ -325,6 +326,7 @@ const Item = ({ content, mode }) => {
 		</ListItem>
 	) : (
 		<TileItem
+			linkTo={`/app/organisations/${itemContent.id}`}
 			imageURL={imageURL}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
