@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
-import { web3FromSource } from '@polkadot/extension-dapp'
+import { createErrorNotification, createSuccessNotification } from '../../utils/notification'
 
 import {
 	Typography,
@@ -89,7 +89,7 @@ const random_state = (account) => {
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
 
-	const { account } = useWallet()
+	const { account, address, signer } = useWallet()
 	// const [ status, setStatus ] = useState('')
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -102,22 +102,6 @@ export const Main = (props) => {
 	// const [ submitState, setSubmitState ] = useState(0)
 
 	// this is taken from txbutton
-
-	const getFromAcct = async () => {
-		const {
-			address,
-			meta: { source, isInjected },
-		} = account
-		let fromAcct
-		if (isInjected) {
-			const injected = await web3FromSource(source)
-			fromAcct = address
-			apiProvider.setSigner(injected.signer)
-		} else {
-			fromAcct = account
-		}
-		return fromAcct
-	}
 
 	// generator for the demo
 
@@ -196,9 +180,12 @@ export const Main = (props) => {
 
 		const sendTX = async (cid) => {
 			if (dev) console.log('2. send tx')
+			if (!signer || !address) {
+				return createErrorNotification('No valid signer was found')
+			}
 
 			const payload = [
-				account.address,
+				address,
 				formData.controller,
 				formData.treasury,
 				formData.name,
@@ -211,9 +198,9 @@ export const Main = (props) => {
 				0,
 				formData.member_limit,
 			]
-			const from = await getFromAcct()
+
 			const tx = apiProvider.tx.gameDaoControl.create(...payload)
-			const hash = await tx.signAndSend(from, ({ status, events }) => {
+			const hash = await tx.signAndSend(address, { signer }, ({ events }) => {
 				if (events.length) {
 					events.forEach((record) => {
 						const { event } = record
@@ -221,6 +208,7 @@ export const Main = (props) => {
 						if (event.section === 'gameDaoControl' && event.method === 'BodyCreated') {
 							console.log('body created:', hash)
 							setRefresh(true)
+							createSuccessNotification('Dao was created successfully')
 						}
 					})
 				}
