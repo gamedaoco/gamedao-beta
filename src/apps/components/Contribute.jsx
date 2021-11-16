@@ -1,6 +1,7 @@
 import React from 'react'
-import { Icon, Label, Header, Segment } from 'semantic-ui-react'
+//import { Icon, Label, Header, Segment } from 'semantic-ui-react'
 
+/*
 const Invest = (props) => {
 	return (
 		<Segment style={{ margin: '1em' }} padded>
@@ -59,3 +60,4 @@ const Invest = (props) => {
 		</Segment>
 	)
 }
+*/

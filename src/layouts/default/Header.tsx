@@ -10,7 +10,7 @@ function Main() {
 			<Toolbar
 				sx={{
 					zIndex: '9000',
-					backgroundColor: 'grey.900',
+					backgroundColor: 'background.default',
 					width: '100%',
 					height: '5rem',
 					borderBottom: '1px solid #33383F',

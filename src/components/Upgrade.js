@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Grid } from 'semantic-ui-react'
+import { Box } from '.'
 import { TxButton } from '../substrate-lib/components'
 
 export default function Main(props) {
@@ -23,19 +23,19 @@ export default function Main(props) {
 	}
 
 	return (
-		<Grid.Column width={8}>
+		<>
 			<h1>Upgrade Runtime</h1>
-			<Form>
-				<Form.Field>
-					<Input
+			<form>
+				<Box>
+					<input
 						type="file"
 						id="file"
 						label="Wasm File"
 						accept=".wasm"
 						onChange={(e) => handleFileChosen(e.target.files[0])}
 					/>
-				</Form.Field>
-				<Form.Field style={{ textAlign: 'center' }}>
+				</Box>
+				<Box style={{ textAlign: 'center' }}>
 					<TxButton
 						label="Upgrade"
 						type="UNCHECKED-SUDO-TX"
@@ -47,9 +47,9 @@ export default function Main(props) {
 							paramFields: [true],
 						}}
 					/>
-				</Form.Field>
+				</Box>
 				<div style={{ overflowWrap: 'break-word' }}>{status}</div>
-			</Form>
-		</Grid.Column>
+			</form>
+		</>
 	)
 }

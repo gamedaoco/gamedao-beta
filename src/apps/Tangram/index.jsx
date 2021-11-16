@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 
 import { useWallet } from 'src/context/Wallet'
 
-import { Grid, Segment, Card, Button, Icon, Image, Transition } from 'semantic-ui-react'
+// import { Grid, Segment, Card, Button, Icon, Image, Transition } from 'semantic-ui-react'
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
 import { useApiProvider } from '@substra-hooks/core'
 const dev = config.dev
 
+
+// seems not to be used 
+/*
 const Item = ({ hash }) => {
 	// const { address, } = useWallet()
 
@@ -66,15 +69,16 @@ const ItemGrid = ({ hashes }) => {
 
 	return (
 		<Container>
-			<Grid stackable colums={8}>
+			<Box stackable colums={8}>
 				{hashes &&
 					hashes.map((itemHash, index) => {
 						return <CampaignCard hash={itemHash} />
 					})}
-			</Grid>
+			</Box>
 		</Container>
 	)
 }
+*/
 
 export const Content = (props) => {
 	const apiProvider = useApiProvider()
