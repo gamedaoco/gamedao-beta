@@ -8,7 +8,6 @@ import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { useApiProvider } from '@substra-hooks/core'
-import faker from 'faker'
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import config from '../../config'
@@ -41,8 +40,8 @@ const random_state = (account, campaigns = []) => {
 	// voting without withdrawal ==> amount == 0
 
 	const id = campaigns[campaigns.length]
-	const purpose = faker.company.catchPhrase()
-	const description = faker.company.catchPhrase()
+	const purpose = 'nice purpose'
+	const description = 'cool description'
 	const cid = ''
 	const amount = rnd(10) * 100
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)

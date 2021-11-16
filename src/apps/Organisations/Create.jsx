@@ -23,7 +23,6 @@ import {
 	useFormControl,
 } from '../../components'
 
-import faker from 'faker'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
 
@@ -34,11 +33,11 @@ const dev = config.dev
 if (dev) console.log('dev mode')
 
 const random_state = (account) => {
-	const name = faker.commerce.productName()
-	const email = faker.internet.email()
-	const website = faker.internet.url()
-	const repo = faker.internet.url()
-	const description = faker.company.catchPhrase()
+	const name = "cool productname"
+	const email = 'mail@cool.com'
+	const website = 'http://coolurl.com'
+	const repo = 'github repo link'
+	const description = 'nice description'
 
 	const creator = account.address
 	const controller = account.address

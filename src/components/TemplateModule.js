@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import faker from 'faker'
 import { TxButton } from '../substrate-lib/components'
-import { Form, Grid, Card, Statistic } from 'semantic-ui-react'
+import { Box, Card  } from '.'
 import { useApiProvider } from '@substra-hooks/core'
 import { useWallet } from '../context/Wallet'
 
@@ -35,7 +34,7 @@ function Main(props) {
 	useEffect(() => {
 		const data = {
 			address: account.address,
-			title: faker.commerce.productName(),
+			title: 'cool productname',
 			cap: Math.round(Math.random() * 100000) + 1000000000000,
 			deposit: Math.round(Math.random() * 10),
 			duration: 1000000 + Math.round(Math.random() * 10) * 14400,
@@ -83,22 +82,22 @@ function Main(props) {
 	}, [apiProvider.query.gameDaoCrowdfunding])
 
 	return (
-		<Grid.Column width={8}>
+		<>
 			<h1>Generate Campaign</h1>
 
-			<Grid.Column>
+			<Box>
 				<Card centered>
-					<Card.Content textAlign="center">
-						<Statistic label="Nonce" value={nonce} />
-					</Card.Content>
-					<Card.Content textAlign="center">
-						<Statistic label="Block" value={block} />
-					</Card.Content>
+					<Box textAlign="center">
+						{nonce}
+					</Box>
+					<Box textAlign="center">
+						{block}
+					</Box>
 				</Card>
-			</Grid.Column>
+			</Box>
 
-			<Form>
-				<Form.Field style={{ textAlign: 'center' }}>
+			<form>
+				<Box style={{ textAlign: 'center' }}>
 					<TxButton
 						label="Create Generic Campaign"
 						type="SIGNED-TX"
@@ -119,10 +118,10 @@ function Main(props) {
 							paramFields: [true, true, true, true, true, true, true, true],
 						}}
 					/>
-				</Form.Field>
+				</Box>
 				<div style={{ overflowWrap: 'break-word' }}>{status}</div>
-			</Form>
-		</Grid.Column>
+			</form>
+		</>
 	)
 }
 

@@ -6,7 +6,7 @@ export default function Link(theme: Theme) {
 	return {
 		MuiLink: {
 			defaultProps: {
-				underline: 'hover',
+				underline: 'none',
 			},
 
 			styleOverrides: {

@@ -16,7 +16,7 @@ module.exports = {
 
 		config.plugins.push(
 			new BundleAnalyzerPlugin({
-				analyzerMode: "disabled"
+				analyzerMode: "server"
 			})
 		);
 		

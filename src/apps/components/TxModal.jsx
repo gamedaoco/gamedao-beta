@@ -1,4 +1,4 @@
-import { Button, Modal } from 'semantic-ui-react'
+import { Button, Modal, Box, Card, Typography } from '.'
 
 //
 // modal component
@@ -29,18 +29,18 @@ const TransactionModal = (props) => {
 
 	return (
 		<Modal open={visible} onClose={() => dispatch({ type: 'CLOSE_MODAL' })}>
-			<Modal.Header>Support {campaign_name}</Modal.Header>
-			<Modal.Content>
-				Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-			</Modal.Content>
-			<Modal.Actions>
-				<Button negative onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
-					Disagree
-				</Button>
-				<Button positive onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
-					Agree
-				</Button>
-			</Modal.Actions>
+			<Box>
+				<Typography>Support {campaign_name}</Typography>
+				<Card>
+					Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+					<Button negative onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
+						Disagree
+					</Button>
+					<Button positive onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
+						Agree
+					</Button>
+				</Card>
+			</Box>
 		</Modal>
 	)
 }
