@@ -100,7 +100,7 @@ function Main({ showNavigation }: ComponentProps) {
 	const apiProvider = useApiProvider()
 	const { pathname } = useLocation()
 
-	const isMobile = useMediaQuery('(max-width:320px)');
+	const isMobile = useMediaQuery('(max-width:320px)')
 
 	React.useEffect(() => {
 		let unsubscribe = null
@@ -242,18 +242,39 @@ function Main({ showNavigation }: ComponentProps) {
 						<Typography sx={{ fontSize: '1rem' }}>Wallet</Typography>
 					</SidebarButton>
 				</Link>
-				<Link href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
-					<SidebarButton sx={{ mx: 4, py: 0 }}>
-						<ListItemIcon>
-							<FontIcon sx={{ fontSize: '3rem' }} name="document" />
-						</ListItemIcon>
-						<Typography sx={{ fontSize: '1rem' }}>Documentation</Typography>
-					</SidebarButton>
-				</Link>
+				<List
+					sx={{ display: 'flex', flex: 1, flexDirection: 'column', margin: '2.5rem 0' }}
+				>
+					<a
+						target="_blank"
+						rel="noreferrer"
+						href="https://discord.gg/P7NHWGzJ7r"
+						style={{
+							color: 'transparent',
+						}}
+					>
+						<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
+							<ListItemIcon>
+								<FontIcon sx={{ fontSize: '3rem' }} name="store" />
+							</ListItemIcon>
+							<Typography sx={{ fontSize: '1rem' }}>Faucet</Typography>
+						</SidebarButton>
+					</a>
+					<Link href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
+						<SidebarButton sx={{ mx: 4, py: 0 }}>
+							<ListItemIcon>
+								<FontIcon sx={{ fontSize: '3rem' }} name="document" />
+							</ListItemIcon>
+							<Typography sx={{ fontSize: '1rem' }}>Documentation</Typography>
+						</SidebarButton>
+					</Link>
+				</List>
 				<Box sx={{ flex: 1 }} />
-				<NavHeader>Network Info</NavHeader>
-				<Box sx={{ px: 2 }}>
-					<NetInfo />
+				<Box sx={{ margin: '2.5rem 0' }}>
+					<NavHeader>Network Info</NavHeader>
+					<Box sx={{ px: 2 }}>
+						<NetInfo />
+					</Box>
 				</Box>
 				<NavHeader>Social</NavHeader>
 				<Box

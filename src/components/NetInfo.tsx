@@ -43,7 +43,7 @@ const NetInfo = () => {
 	if (!apiProvider || blockNumber === 0) return null
 
 	return (
-		<Typography variant="caption">
+		<Typography variant="body2">
 			{version && `Network ${version}`}
 			<br />
 			{blockNumber && `Blocktime ${blockNumber} / ${blockNumberTimer}s`}
