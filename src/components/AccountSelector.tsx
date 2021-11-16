@@ -11,6 +11,7 @@ import {
 	Popper,
 	MenuItem,
 	MenuList,
+	useTheme,
 } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -188,15 +189,15 @@ const AccountComponent = () => {
 
 const BalanceAnnotation = () => {
 	const { balanceZero, balancePlay, balanceGame } = useBalance()
+	const theme = useTheme()
 
 	return (
-		<div
+		<Typography
+			variant="caption"
+			color={theme?.palette?.text?.primary}
 			style={{
-				fontSize: '8px',
-				lineHeight: '10px',
-				marginRight: '10px',
-				marginLeft: '10px',
-				marginTop: '8px',
+				margin: 'auto',
+				padding: '0.5rem',
 			}}
 		>
 			{balanceZero || `0 ZERO`}
@@ -204,7 +205,7 @@ const BalanceAnnotation = () => {
 			{balancePlay || 0} PLAY
 			<br />
 			{balanceGame || 0} GAME
-		</div>
+		</Typography>
 	)
 }
 
