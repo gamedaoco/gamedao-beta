@@ -1,7 +1,6 @@
 {
 	"Address": "MultiAddress",
 	"LookupSource": "MultiAddress",
-
 	"AccountInfo": "AccountInfoWithDualRefCount",
 	"AccountInfoWithDualRefCount": {
 		"nonce": "Index",
@@ -9,7 +8,6 @@
 		"providers": "RefCount",
 		"data": "AccountData"
 	},
-
 	"Body": {
 		"id": "Hash",
 		"index": "u128",
@@ -33,7 +31,6 @@
 	"ItemIndex": "u64",
 	"TotalIndex": "u128",
 	"BurnedIndex": "u128",
-
 	"TangramRealm": {
 		"id": "Hash",
 		"org": "Hash",
@@ -71,7 +68,6 @@
 	},
 	"TangramId": "Hash",
 	"TangramItemOf": "Tangram",
-
 	"Space": {
 		"id": "H256",
 		"dna": "H256",
@@ -92,7 +88,6 @@
 		"dob": "u64",
 		"dna": "Hash"
 	},
-
 	"Campaign": {
 		"id": "Hash",
 		"org": "Hash",
@@ -109,15 +104,11 @@
 		"token_name": "Vec<u8>",
 		"created": "Timestamp"
 	},
-
 	"campaign_id": "Hash",
 	"contribution": "Balance",
-
 	"Timestamp": "Moment",
-
 	"EventMessage": "Vec<u8>",
 	"Nonce": "u64",
-
 	"Proposal": {
 		"proposal_id": "Hash",
 		"campaign_id": "Hash",
@@ -127,7 +118,16 @@
 		"expiry": "BlockNumber",
 		"status": "u8"
 	},
-
+	"ProposalMetadata": {
+		"title": "Vec<u8>",
+		"cid": "Vec<u8>",
+		"amount": "Balance"
+	},
+	"TitleText": "Vec<u8>",
+	"CID": "Vec<u8>",
+	"ProposalType": "u8",
+	"ProposalState": "u8",
+	"VotingType": "u8",
 	"Entity": {
 		"account": "AccountId",
 		"index": "u128",
@@ -135,7 +135,6 @@
 		"created": "BlockNumber",
 		"mutated": "BlockNumber"
 	},
-
 	"EntityProperty": {
 		"value": "u64",
 		"mutated": "BlockNumber"

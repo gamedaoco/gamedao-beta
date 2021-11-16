@@ -1,63 +1,50 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate-lib'
 import { useWallet } from '../context/Wallet'
+import { useIdentity } from 'src/hooks/useIdentity'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 
 const Dashboard = (props) => {
-	const { api } = useSubstrate()
-	const { address, allowConnect } = useWallet()
-
+	const apiProvider = useApiProvider()
+	const { address } = useWallet()
 	const [name, setName] = useState('')
-	const [bodies, setBodies] = useState(0)
-	const [campaigns, setCampaigns] = useState(0)
-	const [proposals, setProposals] = useState(0)
+	const [proposals, setProposals] = useState(null)
+	const identity = useIdentity(address)
+	const { campaignsCount } = useCrowdfunding()
+	const { nonce } = useGameDaoControl()
 
 	useEffect(() => {
-		if (!api) return
-		let unsubscribe = null
-
-		if (address && allowConnect) {
-			api.queryMulti([[api.query.identity.identityOf, address]], ([identity]) => setName(identity.toHuman()?.info.display.Raw ?? ''))
-				.then((unsub) => (unsubscribe = unsub))
-				.catch(console.error)
-		} else {
-			setName('')
-		}
-
-		return () => unsubscribe && unsubscribe()
-	}, [api, address, allowConnect])
+		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
+	}, [identity])
 
 	useEffect(() => {
-		if (!api) return
+		if (!apiProvider) return
 		let unsubscribe = null
 
-		api.queryMulti(
-			[api.query.gameDaoControl.nonce, api.query.gameDaoCrowdfunding.nonce, api.query.gameDaoGovernance.nonce],
-			([bodies, campaigns, proposals]) => {
-				setBodies(bodies.toNumber())
-				setCampaigns(campaigns.toNumber())
-				setProposals(proposals.toNumber())
-			}
-		)
+		apiProvider
+			.queryMulti([apiProvider.query.gameDaoGovernance.nonce], ([proposals]) => {
+				setProposals((proposals as any).toNumber())
+			})
 			.then((unsub) => {
 				unsubscribe = unsub
 			})
 			.catch(console.error)
 
 		return () => unsubscribe && unsubscribe()
-	}, [api, address])
+	}, [apiProvider, address])
 
 	return (
 		<>
-			<h1>Hello {name}</h1>
-			<h2>DAOs: {bodies}</h2>
-			<h2>Campaigns: {campaigns}</h2>
-			<h2>Proposals: {proposals}</h2>
+			<h1>Hello {name ?? 'Loading...'}</h1>
+			<h2>DAOs: {nonce ?? 'Loading...'}</h2>
+			<h2>Campaigns: {campaignsCount ?? 'Loading...'}</h2>
+			<h2>Proposals: {proposals ?? 'Loading...'}</h2>
 		</>
 	)
 }
 
 export default function Dapp(props) {
-	const { apiState } = useSubstrate()
-	console.log('apiState', apiState)
-	return apiState === 'READY' ? <Dashboard {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Dashboard {...props} /> : null
 }

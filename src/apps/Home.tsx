@@ -2,19 +2,6 @@ import * as React from 'react'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Avatar, Button, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '../components'
 
-function Copyright(props: any) {
-	return (
-		<Typography variant="body2" color="text.secondary" align="center" {...props}>
-			{'Copyright © '}
-			<Link color="inherit" href="https://material-ui.com/">
-				GameDAO
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	)
-}
-
 export default function SignIn() {
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -37,14 +24,6 @@ export default function SignIn() {
 						alignItems: 'center',
 					}}
 				>
-					<Typography component="h2" variant="h5">
-						Connect Wallet
-					</Typography>
-					<Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-						Connect with Polkadot-JS extension
-					</Button>
-
-					<hr />
 
 					<Typography component="h2" variant="h5">
 						Sign in
@@ -78,8 +57,12 @@ export default function SignIn() {
 							</Grid>
 						</Grid>
 					</Box>
+
+					<hr/>
+
+					<Link href="/app" variant="body2"> app </Link>
+
 				</Box>
-				<Copyright sx={{ mt: 8, mb: 4 }} />
 			</Container>
 		</>
 	)

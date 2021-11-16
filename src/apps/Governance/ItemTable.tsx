@@ -2,7 +2,6 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 
 import { data as d } from '../lib/data'
@@ -43,7 +42,8 @@ export default function ItemTable({ content }) {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{content && content.map((item, i) => <ItemRow key={i} content={item} />)}
+								{content &&
+									content.map((item, i) => <ItemRow key={i} content={item} />)}
 								<ItemRow
 									key={0}
 									content={{

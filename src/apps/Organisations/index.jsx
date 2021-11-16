@@ -2,8 +2,6 @@
 // invoke and manage organisations on chain
 
 import React, { useEffect, useState, lazy } from 'react'
-
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
@@ -12,8 +10,14 @@ import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import LanguageIcon from '@mui/icons-material/Language'
 import LockIcon from '@mui/icons-material/Lock'
+import OpenLockIcon from '@mui/icons-material/LockOpen'
+import WebsiteIcon from '@mui/icons-material/Web'
+import MemberIcon from '@mui/icons-material/AccountBox'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import GroupIcon from '@mui/icons-material/Group'
+import { ListItem } from '../../components/ListItem'
+import { TileItem } from '../../components/TileItem'
+import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
@@ -35,55 +39,56 @@ import {
 	TableRow,
 	styled,
 } from '../../components'
+import { useApiProvider } from '@substra-hooks/core'
 
 const CreateDAO = lazy(() => import('./Create'))
 
+const TileWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	gridTemplateColumns: '1fr',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+	[theme.breakpoints.up('md')]: {
+		gridTemplateColumns: '1fr 1fr 1fr',
+	},
+	[theme.breakpoints.up('lg')]: {
+		gridTemplateColumns: '1fr 1fr 1fr 1fr',
+	},
+}))
+
+const ListWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	gridTemplateColumns: '1fr',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+}))
+
 const dev = config.dev
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-	[`&.MuiTableCell-head`]: {
-		backgroundColor: theme.palette.common.black,
-		color: theme.palette.common.white,
-	},
-	[`&.MuiTableCell-body`]: {
-		fontSize: 14,
-	},
-}))
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-	'&:nth-of-type(odd)': {
-		backgroundColor: theme.palette.action.hover,
-	},
-	// hide last border
-	'&:last-child td, &:last-child th': {
-		border: 0,
-	},
-}))
-
-const getFromAcct = async (api, accountPair) => {
+const getFromAcct = async (api, account) => {
 	const {
 		address,
 		meta: { source, isInjected },
-	} = accountPair
+	} = account
 	let fromAcct
 	if (isInjected) {
 		const injected = await web3FromSource(source)
 		fromAcct = address
 		api.setSigner(injected.signer)
 	} else {
-		fromAcct = accountPair
+		fromAcct = account
 	}
 	return fromAcct
 }
 
-const addMember = async (api, accountPair, id, target) => {
-	console.log(accountPair.address, id)
+const addMember = async (api, account, id, target) => {
+	console.log(account.address, id)
 
 	target.disabled = true
 
-	const payload = [id, accountPair.address]
+	const payload = [id, account.address]
 
-	const from = await getFromAcct(api, accountPair)
+	const from = await getFromAcct(api, account)
 	const tx = api.tx.gameDaoControl.addMember(...payload)
 	const hash = await tx.signAndSend(from, ({ status, events }) => {
 		console.log('Transaction status:', status.type)
@@ -115,9 +120,9 @@ const addMember = async (api, accountPair, id, target) => {
 
 const defaultContent = {}
 
-const Item = ({ content }) => {
-	const { api } = useSubstrate()
-	const { address } = useWallet()
+const Item = ({ content, mode }) => {
+	const apiProvider = useApiProvider()
+	const { address, account } = useWallet()
 
 	const [itemContent, setItemContent] = useState({})
 	const [metadata, setMetadata] = useState({})
@@ -131,7 +136,6 @@ const Item = ({ content }) => {
 	}, [content])
 
 	// get offchain data
-
 	useEffect(() => {
 		if (!itemContent.cid || itemContent.cid.length < 3) return
 		fetch(gateway + itemContent.cid)
@@ -161,12 +165,12 @@ const Item = ({ content }) => {
 					memberCount,
 					treasury,
 				] = await Promise.all([
-					// api.query.gameDaoControl.bodyConfig(content.id),
-					api.query.gameDaoControl.bodyController(content.id),
-					api.query.gameDaoControl.bodyAccess(content.id),
-					api.query.gameDaoControl.bodyMemberState([content.id, address]),
-					api.query.gameDaoControl.bodyMemberCount(content.id),
-					api.query.gameDaoControl.bodyTreasury(content.id),
+					// apiProvider.query.gameDaoControl.bodyConfig(content.id),
+					apiProvider.query.gameDaoControl.bodyController(content.id),
+					apiProvider.query.gameDaoControl.bodyAccess(content.id),
+					apiProvider.query.gameDaoControl.bodyMemberState([content.id, address]),
+					apiProvider.query.gameDaoControl.bodyMemberCount(content.id),
+					apiProvider.query.gameDaoControl.bodyTreasury(content.id),
 				])
 				updateContent({
 					// ...config.toHuman(),
@@ -181,15 +185,15 @@ const Item = ({ content }) => {
 			}
 		}
 		query()
-	}, [api, content])
+	}, [apiProvider, content])
 
 	// useEffect(() => {
 
 	// 	if (!content.treasury) return
 
 	// 	const query = async () => {
-	// 		const unsub = await api.queryMulti([
-	// 			[api.query.system.account, content.treasury],
+	// 		const unsub = await apiProvider.queryMulti([
+	// 			[apiProvider.query.system.account, content.treasury],
 	// 		], ([{ data: balance }]) => {
 	// 			console.log(`----> treasury of ${balance.free}`);
 	// 			setItemContent({
@@ -200,7 +204,7 @@ const Item = ({ content }) => {
 	// 	}
 	// 	query()
 
-	// }, [content, api.query.system.account])
+	// }, [content, apiProvider.query.system.account])
 
 	//
 	//
@@ -212,7 +216,7 @@ const Item = ({ content }) => {
 		switch (op) {
 			case '0':
 				console.log('join')
-				await addMember(api, accountPair, itemContent.id, e.target)
+				await addMember(apiProvider, account, itemContent.id, e.target)
 				// join
 				return
 			case '1':
@@ -240,11 +244,32 @@ const Item = ({ content }) => {
 		const text = buttonText[itemContent.access]
 		return (
 			<>
-				{(isMember() || isAdmin()) && <Button basic onClick={handleDashboard} value={itemContent.access} size="mini">{`Dashboard`}</Button>}
-				{isMember() && !isAdmin() && <Button basic onClick={handleMembership} value={itemContent.access} size="mini">{`leave`}</Button>}
-				{!isMember() && text && <Button primary onClick={handleMembership} value={itemContent.access} size="mini">{`${text}`}</Button>}
+				{(isMember() || isAdmin()) && (
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleDashboard}
+						value={itemContent.access}
+					>{`Dashboard`}</Button>
+				)}
+				{isMember() && !isAdmin() && (
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleMembership}
+						value={itemContent.access}
+					>{`leave`}</Button>
+				)}
+				{!isMember() && text && (
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={handleMembership}
+						value={itemContent.access}
+					>{`${text}`}</Button>
+				)}
 				{isAdmin() && (
-					<Button basic onClick={handleAdmin} size="mini">
+					<Button variant={'outlined'} fullWidth onClick={handleAdmin}>
 						Admin
 					</Button>
 				)}
@@ -254,42 +279,59 @@ const Item = ({ content }) => {
 
 	const bodyToText = () => d.dao_bodies.filter((b) => b.value === Number(content.body))[0].text
 
+	const metaContent = React.useMemo(() => {
+		return (
+			<Stack
+				sx={{ width: '100%', height: '100%' }}
+				direction={'column'}
+				justifyContent={mode === ListTileEnum.TILE ? 'flex-end' : 'inherit'}
+				spacing={1}
+			>
+				<Stack direction={'row'} spacing={1}>
+					<WebsiteIcon />{' '}
+					<a rel={'noreferrer'} target={'_blank'} href={metadata.website}>
+						{metadata.website}
+					</a>
+				</Stack>
+				{itemContent.access === '0' ? (
+					<Stack direction={'row'} spacing={1}>
+						<LockIcon /> <Typography>Locked</Typography>
+					</Stack>
+				) : (
+					<Stack direction={'row'} spacing={1}>
+						<OpenLockIcon /> <Typography>Open</Typography>
+					</Stack>
+				)}
+				<Stack direction={'row'} spacing={1}>
+					<MemberIcon />
+					<Typography>{itemContent.memberCount || 0} Members</Typography>
+				</Stack>
+				{mode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
+				<Interactions />
+			</Stack>
+		)
+	}, [itemContent, metadata, mode])
+
 	if (!itemContent) return null
 
-	return (
-		<StyledTableRow hover>
-			<StyledTableCell>
-				<a onClick={() => console.log(itemContent, metadata)}>
-					<Stack spacing={2} direction="row">
-						<img style={{ maxHeight: '3rem' }} src={imageURL} />
-						<Box>
-							<Typography>{itemContent.name}</Typography>
-							<Typography>{bodyToText()}</Typography>
-						</Box>
-					</Stack>
-				</a>
-			</StyledTableCell>
-			<StyledTableCell>
-				<Typography>{metadata.description}</Typography>
-			</StyledTableCell>
-			<StyledTableCell>
-				{metadata.website && (
-					<a href={metadata.website} target="_blank">
-						<LanguageIcon />
-					</a>
-				)}
-			</StyledTableCell>
-			<StyledTableCell textAlign="center">{itemContent.access === '0' ? 'open' : <LockIcon />}</StyledTableCell>
-			<StyledTableCell>{itemContent.memberCount || 0}</StyledTableCell>
-			{/*
-			<StyledTableCell>{itemContent.treasuryBalance||0}</StyledTableCell>
-			<StyledTableCell>{itemContent.motions||0}</StyledTableCell>
-			<StyledTableCell>{itemContent.campaigns||0}</StyledTableCell>
-			*/}
-			<StyledTableCell>
-				<Interactions />
-			</StyledTableCell>
-		</StyledTableRow>
+	return mode === ListTileEnum.LIST ? (
+		<ListItem
+			imageURL={imageURL}
+			headline={itemContent.name}
+			metaHeadline={bodyToText()}
+			metaContent={metaContent}
+		>
+			<Typography>{metadata.description}</Typography>
+		</ListItem>
+	) : (
+		<TileItem
+			imageURL={imageURL}
+			headline={itemContent.name}
+			metaHeadline={bodyToText()}
+			metaContent={metaContent}
+		>
+			<Typography>{metadata.description}</Typography>
+		</TileItem>
 	)
 }
 
@@ -314,9 +356,11 @@ const ItemList = (props) => {
 	const [totalPages, setTotalPages] = useState(0)
 	const [offset, setOffset] = useState(0)
 	const [itemsPerPage, setItemsPerPage] = useState(3)
+	const [displayMode, setDisplayMode] = useState(ListTileEnum.LIST)
 
 	const iPP = [3, 5, 9, 18, 36, 72]
-	const handleShowMoreItems = () => setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
+	const handleShowMoreItems = () =>
+		setItemsPerPage(itemsPerPage < iPP.length - 1 ? itemsPerPage + 1 : itemsPerPage)
 	const handleShowLessItems = () => setItemsPerPage(itemsPerPage > 0 ? itemsPerPage - 1 : 0)
 
 	useEffect(() => {
@@ -330,61 +374,44 @@ const ItemList = (props) => {
 		setOffset((activePage - 1) * iPP[itemsPerPage])
 	}
 
+	const Wrapper = React.useMemo(
+		() => (displayMode === ListTileEnum.LIST ? ListWrapper : TileWrapper),
+		[displayMode]
+	)
+
 	if (!content) return null
 
 	// console.log(activePage,totalPages,offset,itemsPerPage)
 
 	return (
 		<Box>
-			<Paper sx={{ width: '100%' }}>
-				<TableContainer sx={{ maxHeight: 512 }}>
-					<TableMUI stickyHeader aria-label="sticky table">
-						<TableHead>
-							<StyledTableRow>
-								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<Typography variant="h4">Description</Typography>
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<LanguageIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<LockIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}>
-									<GroupIcon />
-								</StyledTableCell>
-								<StyledTableCell align="center" colSpan={1}></StyledTableCell>
-							</StyledTableRow>
-						</TableHead>
-						<TableBody>
-							{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
-								const _content = {
-									...d,
-								}
-								return <Item key={offset + i} content={_content} />
-							})}
-						</TableBody>
-					</TableMUI>
-				</TableContainer>
-				<TablePagination
-					rowsPerPageOptions={[10, 25, 100]}
-					component="div"
-					count={content.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>
-			</Paper>
+			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
+			<Wrapper>
+				{content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((d, i) => {
+					const _content = {
+						...d,
+					}
+					return <Item mode={displayMode} key={offset + i} content={_content} />
+				})}
+			</Wrapper>
+			<Box sx={{ my: 2 }} />
+			<TablePagination
+				rowsPerPageOptions={[10, 25, 100]}
+				component="div"
+				count={content.length}
+				rowsPerPage={rowsPerPage}
+				page={page}
+				onPageChange={handleChangePage}
+				onRowsPerPageChange={handleChangeRowsPerPage}
+			/>
 		</Box>
 	)
 }
 
 export const Main = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 	const { address } = useWallet()
-	const context = useWallet()
+	const { account } = useWallet()
 
 	const [nonce, setNonce] = useState()
 	const [hashes, setHashes] = useState()
@@ -401,7 +428,7 @@ export const Main = (props) => {
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoControl
+		apiProvider.query.gameDaoControl
 			.nonce((n) => {
 				if (n.isNone) {
 					setNonce('<None>')
@@ -414,7 +441,7 @@ export const Main = (props) => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoControl])
+	}, [apiProvider.query.gameDaoControl])
 
 	// on nonce change get hashes
 
@@ -422,11 +449,13 @@ export const Main = (props) => {
 		if (nonce === 0) return
 		const req = [...new Array(nonce)].map((a, i) => i)
 		const queryHashes = async (args) => {
-			const hashes = await api.query.gameDaoControl.bodyByNonce.multi(req).then((_) => _.map((_h) => _h.toHuman()))
+			const hashes = await apiProvider.query.gameDaoControl.bodyByNonce
+				.multi(req)
+				.then((_) => _.map((_h) => _h.toHuman()))
 			setHashes(hashes)
 		}
 		queryHashes()
-	}, [nonce, api.query.gameDaoControl])
+	}, [nonce, apiProvider.query.gameDaoControl])
 
 	// on hashes get content
 
@@ -435,7 +464,8 @@ export const Main = (props) => {
 		const getContent = async (args) => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodies(args[i]))
+				for (var i = 0; i < args.length; i++)
+					_req.push(apiProvider.query.gameDaoControl.bodies(args[i]))
 				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
 				setContent(res)
 			} catch (err) {
@@ -443,7 +473,7 @@ export const Main = (props) => {
 			}
 		}
 		getContent(hashes)
-	}, [hashes, api.query.gameDaoControl])
+	}, [hashes, apiProvider.query.gameDaoControl])
 
 	// on hashes get config
 
@@ -452,7 +482,8 @@ export const Main = (props) => {
 		const getContent = async (args) => {
 			let _req = []
 			try {
-				for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyConfig(args[i]))
+				for (var i = 0; i < args.length; i++)
+					_req.push(apiProvider.query.gameDaoControl.bodyConfig(args[i]))
 				const res = await Promise.all(_req).then((_) =>
 					_.map((_c, _i) => {
 						const _res = { id: args[_i], ..._c.toHuman() }
@@ -460,92 +491,12 @@ export const Main = (props) => {
 					})
 				)
 				setConfigs(res)
-				// console.log('configs', res)
 			} catch (err) {
 				console.error(err)
 			}
 		}
 		getContent(hashes)
-	}, [hashes, api.query.gameDaoControl])
-
-	// useEffect(() => {
-
-	// 	if ( !hashes ) return
-
-	// 	const getMemberCount = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyMemberCount(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=> {
-	// 				// console.log( 'members',_c.toHuman() )
-	// 				return { id: args[_i], count: _c.toHuman() }
-	// 			}))
-	// 			setMembers(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getMemberCount(hashes)
-
-	// }, [hashes, api.query.gameDaoControl])
-
-	// useEffect(() => {
-
-	// 	if ( !hashes ) return
-
-	// 	const getMembershipState = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push( api.query.gameDaoControl.bodyMemberState( ( args[i], accountPair ) ) )
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				const _res = { id: args[_i], state: _c.toHuman() }
-	// 				// console.log(_res)
-	// 				return _res
-	// 			}))
-	// 			setMembers(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getMembershipState(hashes)
-
-	// }, [hashes, api.query.gameDaoControl, accountPair])
-
-	// useEffect(() => {
-	// 	if ( !hashes ) return
-	// 	const getContent = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyTreasury(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				return { id: args[_i], treasury: _c.toHuman(), balance: 1 }
-	// 			}))
-	// 			setBalances(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getContent(hashes)
-	// }, [hashes, api.query.gameDaoControl])
-
-	// useEffect(() => {
-	// 	if ( !hashes ) return
-	// 	const getContent = async args => {
-	// 		let _req = []
-	// 		try {
-	// 			for (var i = 0; i < args.length; i++) _req.push(api.query.gameDaoControl.bodyAccess(args[i]))
-	// 			const res = await Promise.all(_req).then(_=>_.map((_c,_i)=>{
-	// 				const _res = { id: args[_i], access: _c.toHuman() }
-	// 				// console.log(_res)
-	// 				return _res
-	// 			}))
-	// 			setAccess(res)
-	// 		} catch ( err ) {
-	// 			console.error( err )
-	// 		}
-	// 	}
-	// 	getContent(hashes)
-	// }, [hashes, api.query.gameDaoControl])
+	}, [hashes, apiProvider.query.gameDaoControl])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
@@ -559,32 +510,45 @@ export const Main = (props) => {
 					justifyContent: 'space-between',
 				}}
 			>
-				<Box>{!content || nonce === 0 ? <h4>No organizations yet. Create one!</h4> : <h4>Total organizations: {nonce}</h4>}</Box>
+				<Box>
+					{!content || nonce === 0 ? (
+						<h4>No organizations yet. Create one!</h4>
+					) : (
+						<h4>Total organizations: {nonce}</h4>
+					)}
+				</Box>
 				<Box>
 					{address && showCreateMode ? (
-						<Button variant="outlined" startIcon={<ClearIcon />} onClick={handleCloseBtn}>
+						<Button
+							variant="outlined"
+							startIcon={<ClearIcon />}
+							onClick={handleCloseBtn}
+						>
 							Close {address}
 						</Button>
-					) : (
-						<Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreateBtn}>
+					) : account ? (
+						<Button
+							variant="outlined"
+							startIcon={<AddIcon />}
+							onClick={handleCreateBtn}
+						>
 							New DAO
 						</Button>
-					)}
+					) : null}
 				</Box>
 			</Box>
 			<br />
-			<Container maxWidth="md">
-				{showCreateMode && <CreateDAO />}
-				{!showCreateMode && content && nonce !== 0 && <ItemList content={content} configs={configs} members={members} />}
-			</Container>
+			{showCreateMode && <CreateDAO />}
+			{!showCreateMode && content && nonce !== 0 && (
+				<ItemList content={content} configs={configs} members={members} />
+			)}
 		</Container>
 	)
 }
 
 export default function Module(props) {
-	const { api } = useSubstrate()
-
-	return api && api.query.gameDaoControl ? <Main {...props} /> : null
+	const apiProvider = useApiProvider()
+	return apiProvider && apiProvider.query.gameDaoControl ? <Main {...props} /> : null
 }
 //
 //

@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 
-import { useSubstrate } from '../../substrate-lib'
 import { useWallet } from 'src/context/Wallet'
 
 import { Grid, Segment, Card, Button, Icon, Image, Transition } from 'semantic-ui-react'
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
 import config from '../../config'
+import { useApiProvider } from '@substra-hooks/core'
 const dev = config.dev
 
 const Item = ({ hash }) => {
-	const { api } = useSubstrate()
-	// const { address, accountPair } = useWallet()
+	// const { address, } = useWallet()
 
 	const [content, setContent] = useState(null)
 
@@ -39,7 +38,10 @@ const Item = ({ hash }) => {
 	return (
 		<Grid.Column mobile={16} tablet={8} computer={2}>
 			<Segment vertical loading={isLoading}>
-				<Card href={`https://ryse.exchange/${content.id}`} color={content.owned === true ? 'pink' : 'white'}>
+				<Card
+					href={`https://ryse.exchange/${content.id}`}
+					color={content.owned === true ? 'pink' : 'white'}
+				>
 					<Image src={content.imageURL} wrapped ui={false} />
 					<Card.Content>
 						<Card.Header>{content.name}</Card.Header>
@@ -75,7 +77,7 @@ const ItemGrid = ({ hashes }) => {
 }
 
 export const Content = (props) => {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 
 	// every org runs on its own realm
 	// classes exist in realms, where
@@ -91,7 +93,7 @@ export const Content = (props) => {
 
 	useEffect(() => {
 		let unsubscribe = null
-		api.query.gameDaoTangram
+		apiProvider.query.gameDaoTangram
 			.total((n) => {
 				setTotal(n.toNumber())
 			})
@@ -100,18 +102,18 @@ export const Content = (props) => {
 			})
 			.catch(console.error)
 		return () => unsubscribe && unsubscribe()
-	}, [api.query.gameDaoTangram])
+	}, [apiProvider.query.gameDaoTangram])
 
 	// useEffect(() => {
 	// 	if ( !nonce ) return
 	// 	const req = [...new Array(nonce)].map((a,i)=>i)
 	// 	const queryHashes = async args => {
-	// 		const hashes = await api.query.gameDaoTangram.creatureByNonce
+	// 		const hashes = await apiProvider.query.gameDaoTangram.creatureByNonce
 	// 			.multi( args ).then( _ => _.map( _h => _h.toHuman() ))
 	// 		setHashes(hashes)
 	// 	}
 	// 	queryHashes(req)
-	// }, [nonce, api.query.gameDaoTangram])
+	// }, [nonce, apiProvider.query.gameDaoTangram])
 
 	return !total || total === 0 ? (
 		<React.Fragment>
@@ -122,14 +124,13 @@ export const Content = (props) => {
 		<React.Fragment>
 			<h1>Tangram</h1>
 			<h3>Spawned: {total}</h3>
-			{/*<ItemGrid hashes={hashes} accountPair={accountPair} />*/}
+			{/*<ItemGrid hashes={hashes} />*/}
 		</React.Fragment>
 	)
 }
 
 export default function Module(props) {
-	// const { accountPair } = useWallet()
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 
-	return api && api.query.gameDaoTangram /*&& accountPair*/ ? <Content {...props} /> : null
+	return apiProvider && apiProvider.query.gameDaoTangram ? <Content {...props} /> : null
 }

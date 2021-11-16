@@ -1,28 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
-import { Link } from 'react-router-dom'
-
+import RocketIcon from '@mui/icons-material/Launch'
+import TimeIcon from '@mui/icons-material/LockClock'
+import IdentityIcon from '@mui/icons-material/PermIdentity'
+import SendIcon from '@mui/icons-material/Send'
+import TagIcon from '@mui/icons-material/Tag'
+import WarningIcon from '@mui/icons-material/Warning'
+import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
-// import { encodeAddress } from '@polkadot/util-crypto'
-// import { data } from '../lib/data'
+import { useApiProvider } from '@substra-hooks/core'
+import React, { useEffect, useState } from 'react'
+import { useWallet } from 'src/context/Wallet'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useIdentity } from 'src/hooks/useIdentity'
+import { ListItem } from '../../components/ListItem'
+import { TileItem } from '../../components/TileItem'
+import { ListTileEnum } from '../components/ListTileSwitch'
 import { gateway } from '../lib/ipfs'
-// import config from '../../config'
-// const dev = config.dev
 
-import { Grid, Card, Icon, Image, Segment } from 'semantic-ui-react'
-import { Form } from 'semantic-ui-react'
-
-import { Button } from '../../components'
-
-const CampaignCard = ({ item, index, accountPair }) => {
-	// console.log(item)
-	const { api } = useSubstrate()
-
-	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } = item
+const CampaignCard = ({ displayMode, item, index }) => {
+	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
+		item
+	const apiProvider = useApiProvider()
+	const identity = useIdentity(owner)
+	const { campaignContributorsCount } = useCrowdfunding()
+	const { account } = useWallet()
 
 	// console.log(state)
 
-	const [metadata, setMetadata] = useState({})
+	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
 
@@ -31,7 +38,9 @@ const CampaignCard = ({ item, index, accountPair }) => {
 
 	const [formData, updateFormData] = useState({ amount: 0 })
 
-	const handleOnChange = (e, { name, value }) => updateFormData({ ...formData, [name]: value })
+	const handleOnChange = (e) => {
+		updateFormData({ ...formData, [e.target.name]: e.target.value })
+	}
 
 	useEffect(() => {
 		if (!cid || cid.length < 4) return
@@ -43,32 +52,27 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	}, [cid])
 
 	useEffect(() => {
-		if (!metadata) return
+		if (!metadata?.logo || imageURL) return
 		// console.log('metadata',metadata)
-		setImageURL(metadata.logo ? gateway + metadata.logo : 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY')
+
+		setImageURL(gateway + metadata.logo)
 	}, [metadata])
 
 	useEffect(() => {
-		if (!id) return
-
-		const query = async () => {
-			try {
-				const [backers, identity] = await Promise.all([
-					api.query.gameDaoCrowdfunding.campaignContributorsCount(id),
-					api.query.identity.identityOf(owner),
-				])
-				setContent({
-					backers: backers.toHuman(),
-					identity: identity.toHuman().info.display.Raw || null,
-				})
-				setLoading(false)
-				// console.log('identity',identity.toHuman().info.display.Raw)
-			} catch (err) {
-				console.error(err)
-			}
+		if (id && campaignContributorsCount) {
+			setContent({
+				...content,
+				backers: campaignContributorsCount[id] || null,
+			})
 		}
-		query()
-	}, [api, id, owner])
+	}, [id, campaignContributorsCount])
+
+	useEffect(() => {
+		setContent({
+			...content,
+			identity: identity?.toHuman()?.info?.display?.Raw || null,
+		})
+	}, [identity])
 
 	//
 
@@ -77,8 +81,8 @@ const CampaignCard = ({ item, index, accountPair }) => {
 	// on chain
 
 	// off chain
-	// const image_url = 'https://gateway.pinata.cloud/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
-	// const json_url = 'https://gateway.pinata.cloud/ipfs/'+ cid
+	// const image_url = 'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+	// const json_url = 'https://ipfs.gamedao.co/ipfs/'+ cid
 	// console.log(json_url)
 
 	const blocksRemain = expiry
@@ -107,14 +111,14 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		const {
 			address,
 			meta: { source, isInjected },
-		} = accountPair
+		} = account
 		let fromAcct
 		if (isInjected) {
 			const injected = await web3FromSource(source)
 			fromAcct = address
-			api.setSigner(injected.signer)
+			apiProvider.setSigner(injected.signer)
 		} else {
-			fromAcct = accountPair
+			fromAcct = account
 		}
 		return fromAcct
 	}
@@ -126,14 +130,17 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		const payload = [id, amount]
 		console.log('payload', payload)
 		const from = await getFromAcct()
-		const tx = api.tx.gameDaoCrowdfunding.contribute(...payload)
+		const tx = apiProvider.tx.gameDaoCrowdfunding.contribute(...payload)
 
 		const hash = await tx.signAndSend(from, ({ status, events }) => {
 			console.log(status, events)
 			if (events.length) {
 				events.forEach((record) => {
 					const { event } = record
-					if (event.section === 'gameDaoCrowdfunding' && event.method === 'CampaignContributed') {
+					if (
+						event.section === 'gameDaoCrowdfunding' &&
+						event.method === 'CampaignContributed'
+					) {
 						console.log('campaign contributed:', hash)
 						setLoading(false)
 					}
@@ -151,180 +158,114 @@ const CampaignCard = ({ item, index, accountPair }) => {
 		sendTx(formData.amount * 1000000000000)
 	}
 
-	// const Buy = ({
-	// 	open,
-	// 	imageURL,
-	// 	handleOnChange,
-	// 	handlesubmit,
-	// 	formData
-	// }) => {
+	const metaInfo = React.useMemo(() => {
+		return (
+			<Stack direction={'column'} spacing={1}>
+				<Stack direction={'row'} spacing={1}>
+					<RocketIcon />
+					<Typography>{date}</Typography>
+				</Stack>
+				{state === '1' && (
+					<Stack direction={'row'} spacing={2}>
+						<TimeIcon />
+						<Typography>
+							{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
+						</Typography>
+					</Stack>
+				)}
+				{content?.identity ? (
+					<Stack direction={'row'} spacing={2}>
+						<IdentityIcon />
+						<a href={`/id/${owner}`}>{content.identity}</a>
+						<br />
+					</Stack>
+				) : (
+					<Stack direction={'row'} spacing={2}>
+						<WarningIcon />
+						<a href="/faq#unknown_entity">unknown entity</a>
+					</Stack>
+				)}
+				<Stack direction={'row'} spacing={2}>
+					<TagIcon />
+					<Typography>{tags.join(', ')}</Typography>
+				</Stack>
+			</Stack>
+		)
+	}, [content])
 
-	// 	return (
-	// 		<Modal
-	// 			onClose={() => setOpen(false)}
-	// 			onOpen={() => setOpen(true)}
-	// 			open={open}
-	// 			trigger={<Button color='green' fluid>Support Campaign</Button>}
-	// 		>
-	// 			<Modal.Header>Contribute to Campaign</Modal.Header>
-	// 			<Modal.Content image>
-	// 				<Image size='medium' src={imageURL} wrapped />
-	// 				<Modal.Description>
-	// 					<Header>Contribute to Campaign</Header>
-	// 					<p>{metadata.description}</p>
-	// 					<p>Disclaimer</p>
-	// 					<Form.Group widths='equal'>
-	// 						<Form.Input
-	// 							type='amount'
-	// 							label='amount'
-	// 							name='amount'
-	// 							value={formData.amount}
-	// 							onChange={handleOnChange}
-	// 							/>
-	// 					</Form.Group>
-	// 				</Modal.Description>
-	// 			</Modal.Content>
-	// 			<Modal.Actions>
-	// 				<Button color='black' onClick={() => setOpen(false)}>
-	// 					Cancel
-	// 				</Button>
-	// 				<Button
-	// 					content="Contribute Now"
-	// 					labelPosition='right'
-	// 					icon='checkmark'
-	// 					onClick={handleSubmit}
-	// 					positive
-	// 				/>
-	// 			</Modal.Actions>
-	// 		</Modal>
-	// 	)
-	// }
+	const metaActions = React.useMemo(() => {
+		switch (state) {
+			case '1': {
+				return (
+					<TextField
+						InputLabelProps={{ shrink: true }}
+						placeholder="amount"
+						name="amount"
+						value={formData.amount}
+						onChange={handleOnChange}
+						fullWidth
+						type="number"
+						label={'Contribute to this campaign'}
+						InputProps={{
+							endAdornment: (
+								<IconButton onClick={() => handleSubmit()}>
+									<SendIcon />
+								</IconButton>
+							),
+						}}
+					/>
+				)
+			}
+
+			case '3': {
+				return <Typography>Campaign successful</Typography>
+			}
+			case '4': {
+				return <Typography>Campaign failed</Typography>
+			}
+		}
+	}, [content, state, formData])
 
 	if (!content) return null
 
-	return (
-		<Grid.Column mobile={16} tablet={8} computer={4}>
-			<Segment vertical loading={loading}>
-				<Card href="" color={governance === '1' ? 'pink' : 'teal'}>
-					<Image label={governance === '1' && { as: 'a', corner: 'right', icon: 'heart', color: 'pink' }} src={imageURL} wrapped ui={true} />
-					<Card.Content>
-						<Card.Header color="black">
-							<Link to={`/app/campaign/${id}`}>{name}</Link>
-						</Card.Header>
-						<Card.Meta>
-							{content.backers} backer{content.backers === 1 ? '' : 's'}.<br />
-							{balance}/{cap} contributed.
-						</Card.Meta>
-						{/*					<Card.Description>
-					</Card.Description>*/}
-					</Card.Content>
-					<Card.Content extra>
-						{state === '1' && (
-							<>
-								Contribute to this campaign
-								<Form.Input
-									action={{
-										color: 'green',
-										icon: 'check',
-										onClick: handleSubmit,
-									}}
-									placeholder="amount"
-									size="mini"
-									name="amount"
-									value={formData.amount}
-									onChange={handleOnChange}
-									fluid
-									type="number"
-								/>
-							</>
-						)}
-
-						{state === '3' && (
-							<>
-								Campaign Successful
-								<Button color="green" size="small">
-									Project Page
-								</Button>
-							</>
-						)}
-
-						{state === '4' && (
-							<>
-								Campaign Failed
-								<Button color="orange" size="tiny">
-									Project Page
-								</Button>
-							</>
-						)}
-
-						{/*
-						<Form.Group widths='equal'>
-							<Form.Input
-								type='amount'
-								label='amount'
-								name='amount'
-								value={formData.amount}
-								onChange={handleOnChange}
-								size='small'
-								/>
-							<Button
-								content="Contribute Now"
-								labelPosition='right'
-								icon='checkmark'
-								onClick={handleSubmit}
-								positive
-								size = 'small'
-							/>
-						</Form.Group>
-				{ accountPair &&
-					<Buy
-						open={open}
-						imageURL={imageURL}
-						handleOnChange={handleOnChange}
-						handleSubmit={handleSubmit}
-						formData={formData}
-					/>
-				}
-*/}
-					</Card.Content>
-					<Card.Content extra>
-						{/*
-					<Icon name='eye' />{views} views.<br/>
-					<br/>
-*/}
-						<Icon name="rocket" />
-						{date}
-						<br />
-						{state === '1' && (
-							<>
-								<Icon name="time" />
-								{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
-								<br />
-							</>
-						)}
-						{content.identity ? (
-							<>
-								<a href={`/id/${owner}`}>
-									<Icon color="green" name="certificate" />
-									{content.identity}
-								</a>
-								<br />
-							</>
-						) : (
-							<>
-								<a href="/faq#unknown_entity">
-									<Icon color="orange" name="warning" />
-									unknown entity
-								</a>
-								<br />
-							</>
-						)}
-						<Icon name="tag" />
-						{tags.join(', ')} <br />
-					</Card.Content>
-				</Card>
-			</Segment>
-		</Grid.Column>
+	return displayMode === ListTileEnum.TILE ? (
+		<TileItem
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
+			headline={name}
+			metaHeadline={`${content.backers} backer(s)`}
+			metaContent={
+				<Stack direction={'column'} spacing={2}>
+					{metaInfo}
+					{metaActions}
+				</Stack>
+			}
+		>
+			<Typography>
+				{balance} / {cap} contributed
+			</Typography>
+		</TileItem>
+	) : (
+		<ListItem
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
+			headline={name}
+			metaHeadline={`${content.backers} backer(s)`}
+			metaContent={
+				<Stack direction={'column'} spacing={2}>
+					{metaInfo}
+					{metaActions}
+				</Stack>
+			}
+		>
+			<Typography>
+				{balance} / {cap} contributed
+			</Typography>
+		</ListItem>
 	)
 }
 

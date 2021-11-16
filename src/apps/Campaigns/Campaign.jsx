@@ -101,6 +101,27 @@ export default function Campaign(){
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } = useCrowdfunding()
+
+      const { account } = useWallet()
+
+      const [content, setContent] = useState()
+
+      useEffect(() => {
+        if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
+
+        const content = Object.keys(campaignsIndex).map((index) => {
+          const itemHash = campaignsIndex[index]
+
+          return {
+            ...(campaigns[itemHash] ?? {}),
+            state: campaignState[itemHash],
+            balance: campaignBalance[itemHash],
+          }
+        })
+        setContent(content)
+      }, [campaignsIndex, campaignBalance, campaignState, campaigns])
   
     return <Box>
         <Box16to9 sx={{

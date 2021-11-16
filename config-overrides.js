@@ -1,3 +1,6 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+
 module.exports = {
 
 	webpack: function(config,env) {
@@ -6,6 +9,17 @@ module.exports = {
 			include: /node_modules/,
 			type: "javascript/auto"
 		})
+
+		if (!config.plugins) {
+			config.plugins = [];
+		}
+
+		config.plugins.push(
+			new BundleAnalyzerPlugin({
+				analyzerMode: "disabled"
+			})
+		);
+		
 		return config;
 	},
 

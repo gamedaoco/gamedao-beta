@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate-lib'
+
 import { useWallet } from 'src/context/Wallet'
 
 import { Button, Typography, Box, Stack } from 'src/components'
+import { useApiProvider } from '@substra-hooks/core'
 
 const Component = (props) => {
-	// const { address, accountPair } = useWallet()
-	// const { api } = useSubstrate()
+	// const { address } = useWallet()
 
 	// const [bodies, setBodies] = useState(0)
 	// const [campaigns, setCampaigns] = useState(0)
@@ -51,9 +51,9 @@ const Component = (props) => {
 }
 
 export default function Dapp(props) {
-	const { api } = useSubstrate()
+	const apiProvider = useApiProvider()
 
-	return api ? <Component /> : null
+	return apiProvider ? <Component /> : null
 }
 
 //

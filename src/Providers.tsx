@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
 
 import { SubstrateContextProvider } from './substrate-lib'
@@ -6,63 +6,47 @@ import { WalletProvider } from './context/Wallet'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { IconContext } from 'react-icons'
+import { IconContext } from '@react-icons/all-files' 	
 import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
+import { StoreProvider } from './context/Store'
+import { ThemeStateProvider, useThemeState } from './context/ThemeState'
+import { NetworkProvider } from './context/Network'
 
-
-export type ThemeState = {
-	darkmodeEnabled: boolean
-	setDarkmodeEnabled: (enabled: boolean) => void
-}
-
-const INITIAL_STATE: ThemeState = {
-	darkmodeEnabled: false,
-	setDarkmodeEnabled: (enabled: boolean) => {},
-}
-
-const ThemeContext = createContext<ThemeState>(INITIAL_STATE)
-export const useThemeState = () => useContext(ThemeContext)
-
-export const Providers = (props) => {
-	const [state, setState] = React.useState(INITIAL_STATE)
-
-	useEffect(() => {
-		const localStorageDarkMode = localStorage.getItem('darkMode') || 'false'
-		if (JSON.parse(localStorageDarkMode) === true) {
-			setState({ ...state, darkmodeEnabled: true })
-		}
-	}, [])
-
-	function handleSetDarkModeEnabled(enabled: boolean) {
-		setState({ ...state, darkmodeEnabled: enabled })
-		localStorage.setItem('darkMode', enabled.toString())
-	}
-
+function Wrapper({ children }) {
+	const { darkmodeEnabled } = useThemeState()
 	return (
-		<>
-			<ThemeProvider theme={state.darkmodeEnabled ? darkTheme : lightTheme}>
-				<CssBaseline />
-				<SubstrateContextProvider>
-					<WalletProvider>
-						<ThemeContext.Provider
+		<ThemeProvider theme={darkmodeEnabled ? darkTheme : lightTheme}>
+			<CssBaseline />
+			<SubstrateContextProvider>
+				<WalletProvider>
+					<BrowserRouter>
+						<ScrollToTop />
+						<IconContext.Provider
 							value={{
-								...state,
-								setDarkmodeEnabled: handleSetDarkModeEnabled,
+								color: darkmodeEnabled ? 'white' : 'black',
+								className: 'react-icon',
 							}}
 						>
-							<BrowserRouter>
-								<ScrollToTop />
-								<IconContext.Provider value={{ color: state.darkmodeEnabled ? 'white' : 'black', className: 'react-icon' }}>
-									{props.children}
-								</IconContext.Provider>
-							</BrowserRouter>
-						</ThemeContext.Provider>
-					</WalletProvider>
-				</SubstrateContextProvider>
-			</ThemeProvider>
-			<ToastContainer theme={state.darkmodeEnabled ? 'dark' : 'light'} />
-		</>
+							{children}
+						</IconContext.Provider>
+					</BrowserRouter>
+				</WalletProvider>
+			</SubstrateContextProvider>
+			<ToastContainer theme={darkmodeEnabled ? 'dark' : 'light'} />
+		</ThemeProvider>
+	)
+}
+
+export const Providers = ({ children }) => {
+	return (
+		<StoreProvider>
+			<ThemeStateProvider>
+				<NetworkProvider>
+					<Wrapper>{children}</Wrapper>
+				</NetworkProvider>
+			</ThemeStateProvider>
+		</StoreProvider>
 	)
 }
 

@@ -1,43 +1,74 @@
-import React, { useState, useEffect } from 'react'
-import { Container, Grid, Form, Pagination, Button, Icon, Menu } from 'semantic-ui-react'
-import CampaignCard from './CampaignCard'
+import MenuItem from '@mui/material/MenuItem'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Select from '@mui/material/Select'
+import React, { useEffect, useState } from 'react'
 import { data } from '../lib/data'
+import CampaignCard from './CampaignCard'
+import { styled } from '../../components'
+import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
+import { useWallet } from 'src/context/Wallet'
+
+const TileWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+	gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )',
+}))
+
+const ListWrapper = styled(Box)(({ theme }) => ({
+	display: 'grid',
+	gridTemplateColumns: '1fr',
+	rowGap: theme.spacing(2),
+	columnGap: theme.spacing(2),
+}))
 
 const FilterBar = ({ filter, setFilter }) => {
-	const handleOnChange = (e, { value }) => setFilter(value)
+	const handleOnChange = (e) => setFilter(e.target.value)
 
 	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.campaign_states)
 
 	return (
-		<Form>
-			<Form.Select floating placeholder="State" name="state" options={options} value={filter} onChange={handleOnChange} />
-		</Form>
+		<Select value={filter} fullWidth onChange={handleOnChange}>
+			{options.map((o) => (
+				<MenuItem key={o.key} value={o.value}>
+					{o.text}
+				</MenuItem>
+			))}
+		</Select>
 	)
 }
 
 const ScopeBar = ({ filter, setFilter }) => {
-	const handleOnChange = (e, { value }) => setFilter(value)
+	const handleOnChange = (e) => setFilter(e.target.value)
 
 	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.protocol_types)
 
 	return (
-		<Form>
-			<Form.Select floating placeholder="Type" name="type" options={options} value={filter} onChange={handleOnChange} />
-		</Form>
+		<Select value={filter} fullWidth onChange={handleOnChange}>
+			{options.map((o) => (
+				<MenuItem key={o.key} value={o.value}>
+					{o.text}
+				</MenuItem>
+			))}
+		</Select>
 	)
 }
 
-const CampaignGrid = ({ content, accountPair }) => {
+const CampaignGrid = ({ content }) => {
 	const [pageContent, setPageContent] = useState([])
 	const [page, setPage] = useState(0)
 	const [pageSize, setPageSize] = useState(12)
 	const [totalPages, setTotalPages] = useState(0)
+	const [displayMode, setDisplayMode] = useState(ListTileEnum.TILE)
+	const { account } = useWallet()
 
 	const [filter, setFilter] = useState('1')
 	const [scope, setScope] = useState(0) // 0 any 1 owned 2 contributed
 
 	const iPP = [3, 5, 9, 18, 36, 72]
-	const handleShowMoreItems = () => setPageSize(pageSize < iPP.length - 1 ? pageSize + 1 : pageSize)
+	const handleShowMoreItems = () =>
+		setPageSize(pageSize < iPP.length - 1 ? pageSize + 1 : pageSize)
 	const handleShowLessItems = () => setPageSize(pageSize > 0 ? pageSize - 1 : 0)
 
 	const handlePaginationChange = (e, { activePage }) => setPage(activePage - 1)
@@ -55,7 +86,10 @@ const CampaignGrid = ({ content, accountPair }) => {
 		if (!content) return
 
 		// filter by campaign state
-		const filterByState = filter === '-1' ? content : content.filter((item) => (item.state === filter ? item : null))
+		const filterByState =
+			filter === '-1'
+				? content
+				: content.filter((item) => (item.state === filter ? item : null))
 
 		// filter by protocol
 
@@ -65,45 +99,42 @@ const CampaignGrid = ({ content, accountPair }) => {
 				? filterByState
 				: filterByState.filter((item) => {
 						// owned / admin / controller
-						if (scope === 1) return accountPair.address === owner ? item : null
-						if (scope === 2) return accountPair.address === admin ? item : null
+						if (scope === 1) return account.address === owner ? item : null
+						if (scope === 2) return account.address === admin ? item : null
 				  })
 
 		// reset page
 		setPage(0)
 	}, [content, filter, scope])
 
+	const Wrapper = React.useMemo(
+		() => (displayMode === ListTileEnum.TILE ? TileWrapper : ListWrapper),
+		[displayMode]
+	)
+
 	return (
-		<Container>
-			<Menu secondary>
-				<Button.Group color="teal">
-					<FilterBar filter={filter} setFilter={setFilter} />
-					<ScopeBar filter={scope} setFilter={setScope} />
-				</Button.Group>
-				<Menu.Menu position="right">
-					<Button.Group>
-						<Button icon onClick={handleShowLessItems}>
-							<Icon name="block layout" />
-						</Button>
-						<Button icon onClick={handleShowMoreItems}>
-							<Icon name="grid layout" />
-						</Button>
-					</Button.Group>
-				</Menu.Menu>
-			</Menu>
-			<Grid stackable colums={5}>
+		<Stack direction={'column'} spacing={2}>
+			<Stack direction={'row'} spacing={2}>
+				<FilterBar filter={filter} setFilter={setFilter} />
+				<ScopeBar filter={scope} setFilter={setScope} />
+				<ListTileSwitch mode={displayMode} onSwitch={(mode) => setDisplayMode(mode)} />
+			</Stack>
+			<Wrapper>
 				{pageContent &&
 					pageContent.map((item, index) => {
-						const c = <CampaignCard key={index} item={item} index={index} accountPair={accountPair} />
+						const c = (
+							<CampaignCard
+								displayMode={displayMode}
+								key={index}
+								item={item}
+								index={index}
+							/>
+						)
 						if (filter === '-1') return c
 						return item.state === filter ? c : null
 					})}
-
-				<Grid.Column mobile={16} tablet={16} computer={16}>
-					<Pagination activePage={page + 1} totalPages={totalPages} onPageChange={handlePaginationChange} firstItem={null} lastItem={null} />
-				</Grid.Column>
-			</Grid>
-		</Container>
+			</Wrapper>
+		</Stack>
 	)
 }
 

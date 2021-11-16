@@ -4,7 +4,7 @@
 	"API_URL": "ipfs.infura.io",
 	"API_PROTOCOL": "https",
 	"API_PORT": 5001,
-	"GATEWAY_URL": "ipfs.infura.io",
+	"GATEWAY_URL": "ipfs.gamedao.co",
 	"GATEWAY_PROTOCOL": "https",
 	"GATEWAY_PORT": ""
 }
