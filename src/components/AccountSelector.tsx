@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
-import React, { useState, useEffect } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useWallet } from 'src/context/Wallet'
 import {
