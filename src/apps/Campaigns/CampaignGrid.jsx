@@ -112,6 +112,7 @@ const CampaignGrid = ({ content }) => {
 		[displayMode]
 	)
 
+
 	return (
 		<Stack direction={'column'} spacing={2}>
 			<Stack direction={'row'} spacing={2}>
@@ -122,6 +123,7 @@ const CampaignGrid = ({ content }) => {
 			<Wrapper>
 				{pageContent &&
 					pageContent.map((item, index) => {
+						// console.log(item)
 						const c = (
 							<CampaignCard
 								displayMode={displayMode}

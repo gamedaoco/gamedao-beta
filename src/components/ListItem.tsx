@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Typography } from '@mui/material'
+import { Link } from 'react-router-dom'
 import { Card, Box, Divider, Stack, Slider } from './index'
 
 export const ListItem: React.FC<
@@ -9,6 +10,7 @@ export const ListItem: React.FC<
 		headline: string
 		progressValue?: number
 		metaContent?: React.ReactNode
+		linkTo?: string
 	}>
 > = (props) => (
 	<>
@@ -25,7 +27,9 @@ export const ListItem: React.FC<
 				}}
 			>
 				<Box>
-					<img width="200px" height="100%" src={props.imageURL} />
+					<Link to={props.linkTo}>
+						<img width="200px" height="100%" src={props.imageURL} />
+					</Link>
 				</Box>
 				<Stack>
 					<Typography variant="h6">{props.metaHeadline}</Typography>

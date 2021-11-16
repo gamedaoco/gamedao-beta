@@ -16,108 +16,13 @@ import {
     Image16to9
 } from '../../components'
 
-import { Canvas } from "@react-three/fiber";
-import { useLoader } from "@react-three/fiber";
-
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TileReward } from "./TileReward"
 
-import { EventManager, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber'
-
-import { OrbitControls as OrbitControlsImpl } from 'three-stdlib/controls/OrbitControls'
+import { Renderer } from './three';
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding';
 import { useWallet } from 'src/context/Wallet';
 
-
-
-export const OrbitControls = React.forwardRef(
-  ({ makeDefault, camera, regress, domElement, enableDamping = true, onChange, onStart, onEnd, ...restProps }, ref) => {
-    const invalidate = useThree(({ invalidate }) => invalidate)
-    const defaultCamera = useThree(({ camera }) => camera)
-    const gl = useThree(({ gl }) => gl)
-    const events = useThree(({ events }) => events)
-    const set = useThree(({ set }) => set)
-    const get = useThree(({ get }) => get)
-    const performance = useThree(({ performance }) => performance)
-    const explCamera = camera || defaultCamera
-    const explDomElement = domElement || (typeof events.connected !== 'boolean' ? events.connected : gl.domElement)
-    const controls = React.useMemo(() => new OrbitControlsImpl(explCamera), [explCamera])
-
-    useFrame(() => {
-      if (controls.enabled) controls.update()
-    })
-
-    React.useEffect(() => {
-      const callback = (e) => {
-        invalidate()
-        if (regress) performance.regress()
-        if (onChange) onChange(e)
-      }
-
-      controls.connect(explDomElement)
-      controls.addEventListener('change', callback)
-
-      if (onStart) controls.addEventListener('start', onStart)
-      if (onEnd) controls.addEventListener('end', onEnd)
-
-      return () => {
-        controls.removeEventListener('change', callback)
-        if (onStart) controls.removeEventListener('start', onStart)
-        if (onEnd) controls.removeEventListener('end', onEnd)
-        controls.dispose()
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [explDomElement, onChange, onStart, onEnd, regress, controls, invalidate])
-
-    React.useEffect(() => {
-      if (makeDefault) {
-        // @ts-expect-error new in @react-three/fiber@7.0.5
-        const old = get().controls
-        // @ts-expect-error new in @react-three/fiber@7.0.5
-        set({ controls })
-        // @ts-expect-error new in @react-three/fiber@7.0.5
-        return () => set({ controls: old })
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [makeDefault, controls])
-
-    return <primitive ref={ref} object={controls} enableDamping={enableDamping} {...restProps} />
-  }
-)
-
-const Model = () => {
-  const gltf = useLoader(GLTFLoader, "/assets/models/tangram/Tangram.gltf");
-  return (
-    <>
-      <primitive object={gltf.scene} scale={0.7} />
-    </>
-  );
-};
-
-const Model2 = () => {
-  const gltf = useLoader(GLTFLoader, "/assets/models/binas_house/scene.gltf");
-  return (
-    <>
-      <primitive object={gltf.scene} scale={0.4} />
-    </>
-  );
-};
-
-
-
-function Renderer() {
-  return (
-    <Box sx={{ zIndex: '100000 !important', height: '320px' }}>
-      <Canvas invalidateFrameloop={true}>
-        <Suspense fallback={null}>
-          <Model/>
-          <OrbitControls zoom={1} position={[0,0,0]} rotateSpeed={1} autoRotate={true}/>
-        </Suspense>
-      </Canvas>
-    </Box>
-  );
-}
 
 
 
@@ -156,7 +61,7 @@ function a11yProps(index) {
 
 
 
-export default function Campaign(){
+export function Campaign(){
     const id = useParams().id
     const t = ['Open World', 'Trending', 'Survivial']
 
@@ -168,7 +73,7 @@ export default function Campaign(){
 
     const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } = useCrowdfunding()
 
-      const { account } = useWallet()
+      const wallet = useWallet()
 
       const [content, setContent] = useState()
 
@@ -186,6 +91,9 @@ export default function Campaign(){
         })
         setContent(content)
       }, [campaignsIndex, campaignBalance, campaignState, campaigns])
+
+      console.log(campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex)
+      console.log(wallet)
   
     return <Box>
         <Box16to9 sx={{
@@ -376,4 +284,13 @@ function Funding(){
     <Typography variant="h2">FUNDING</Typography>
     <Typography>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.</Typography>
   </Box>
+}
+
+
+
+
+
+export default function Component(props) {
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Campaign /> : null
 }
