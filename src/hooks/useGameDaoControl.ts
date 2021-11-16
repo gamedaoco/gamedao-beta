@@ -89,8 +89,9 @@ async function queryBodies(apiProvider: ApiPromise, hashes: Array<string>): Prom
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -108,8 +109,9 @@ async function queryBodyAccess(apiProvider: ApiPromise, hashes: Array<string>): 
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -127,8 +129,9 @@ async function queryBodyConfig(apiProvider: ApiPromise, hashes: Array<string>): 
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -146,8 +149,9 @@ async function queryBodyController(apiProvider: ApiPromise, hashes: Array<string
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -165,8 +169,9 @@ async function queryBodyCreator(apiProvider: ApiPromise, hashes: Array<string>):
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -184,8 +189,9 @@ async function queryBodyTreasury(apiProvider: ApiPromise, hashes: Array<string>)
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -203,8 +209,9 @@ async function queryBodyMemberCount(apiProvider: ApiPromise, hashes: Array<strin
 	}
 
 	const mapping = {}
-	data.map((c) => c.toHuman()).forEach((c: any, i) => {
-		mapping[hashes[i]] = c
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
 	})
 
 	return mapping
@@ -237,6 +244,7 @@ async function queryControllerdBodies(apiProvider: ApiPromise, accountId: string
 export const useGameDaoControl = (): GameDaoControlState => {
 	const [state, setState] = useState<GameDaoControlState>(INITIAL_STATE)
 	const [lastBodyCount, setLastBodyCount] = useState<number>(null)
+	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
 
@@ -303,7 +311,8 @@ export const useGameDaoControl = (): GameDaoControlState => {
 	// Fetch bodie and details
 	useEffect(() => {
 		const keys = Object.keys(state.bodyHash ?? {})
-		if (keys.length > 0 && apiProvider) {
+		if (keys.length > 0 && apiProvider && !isDataLoading) {
+			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
 					queryBodies(
@@ -335,6 +344,8 @@ export const useGameDaoControl = (): GameDaoControlState => {
 						keys.filter((hash) => !(state.bodyTreasury ?? {})[hash])
 					),
 				])
+
+				setIsDataLoading(false)
 
 				if (isMountedRef) {
 					setState({
@@ -372,6 +383,7 @@ export const useGameDaoControl = (): GameDaoControlState => {
 			})()
 		}
 	}, [state.bodyHash])
+	console.log('🚀 ~ file: useGameDaoControl.ts ~ line 386 ~ useGameDaoControl ~ state', state)
 
 	return state
 }
