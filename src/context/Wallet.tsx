@@ -2,9 +2,10 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useStore } from './Store'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import { web3FromSource } from '@polkadot/extension-dapp'
-import { Signer } from '@polkadot/types/types'
-
-// TODO: Add easy function for transactions
+import { ISubmittableResult, Signer } from '@polkadot/types/types'
+import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { to } from 'await-to-js'
+import { createErrorNotification, createPromiseNotification } from 'src/utils/notification'
 
 export type WalletState = {
 	allowConnect: boolean
@@ -13,6 +14,17 @@ export type WalletState = {
 	connected: boolean
 	signer: Signer
 	updateWalletState: Function
+	signAndNotify: (
+		tx: SubmittableExtrinsic<'promise', ISubmittableResult>,
+		msg: SignMSG,
+		callback?: Function
+	) => void
+}
+
+export type SignMSG = {
+	success: string
+	error: string
+	pending: string
 }
 
 const INITIAL_STATE: WalletState = {
@@ -22,6 +34,7 @@ const INITIAL_STATE: WalletState = {
 	connected: false,
 	signer: null,
 	updateWalletState: () => {},
+	signAndNotify: () => {},
 }
 
 const WalletContext = createContext<WalletState>(INITIAL_STATE)
@@ -33,6 +46,36 @@ const WalletProvider = ({ children }) => {
 
 	const handleUpdateWalletState = (stateData) => {
 		setState({ ...state, ...stateData })
+	}
+
+	const handleSignAndNotify = (
+		tx: SubmittableExtrinsic<'promise', ISubmittableResult>,
+		msg: SignMSG,
+		callback?: Function
+	) => {
+		const promise = new Promise(async (resolve, reject) => {
+			if (!state.address || !state.signer) {
+				createErrorNotification('No valid signer was found')
+				if (callback) callback(false)
+				return reject()
+			}
+			const [error] = await to(
+				tx.signAndSend(state.address, { signer: state.signer }, ({ status }) => {
+					if (status.isInBlock) {
+						if (callback) callback(true)
+						return resolve('')
+					}
+				})
+			)
+
+			if (error) {
+				console.log('Transaction failing with', error)
+				if (callback) callback(false)
+				return reject()
+			}
+		})
+
+		createPromiseNotification(promise, msg.pending, msg.success, msg.error)
 	}
 
 	useEffect(() => {
@@ -57,6 +100,7 @@ const WalletProvider = ({ children }) => {
 			value={{
 				...state,
 				updateWalletState: handleUpdateWalletState,
+				signAndNotify: handleSignAndNotify,
 			}}
 		>
 			{children}
