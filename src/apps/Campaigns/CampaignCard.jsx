@@ -18,6 +18,8 @@ import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
 import { ListTileEnum } from '../components/ListTileSwitch'
 import { gateway } from '../lib/ipfs'
+import { BigNumber } from 'bignumber.js'
+import { useBalance } from 'src/hooks/useBalance'
 
 const CampaignCard = ({ displayMode, item, index }) => {
 	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
@@ -26,14 +28,12 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const identity = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
 	const { account, signAndNotify } = useWallet()
-
 	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
-
 	const [loading, setLoading] = useState(true)
-
 	const [formData, updateFormData] = useState({ amount: 0 })
+	const { updateBalance } = useBalance()
 
 	const handleOnChange = (e) => {
 		updateFormData({ ...formData, [e.target.name]: e.target.value })
@@ -78,24 +78,6 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
 	const date = new Date(epoch * 1).toLocaleDateString(undefined, options)
 
-	// const handleContribute = () => setOpen(true)
-
-	const getFromAcct = async () => {
-		const {
-			address,
-			meta: { source, isInjected },
-		} = account
-		let fromAcct
-		if (isInjected) {
-			const injected = await web3FromSource(source)
-			fromAcct = address
-			apiProvider.setSigner(injected.signer)
-		} else {
-			fromAcct = account
-		}
-		return fromAcct
-	}
-
 	const sendTx = async (amount) => {
 		if (!amount) return
 		setLoading(true)
@@ -109,6 +91,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 			},
 			(state) => {
 				setLoading(false)
+				updateBalance()
+
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
@@ -117,10 +101,12 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	}
 
 	const handleSubmit = () => {
-		console.log('submit', formData.amount * 1000000000000)
 		if (!formData.amount > 0) return
+		let amount = new BigNumber(formData.amount)
+		amount = amount.multipliedBy(new BigNumber(10).pow(18))
+		console.log('submit', amount.toString())
 		setLoading(true)
-		sendTx(formData.amount * 1000000000000)
+		sendTx(amount.toString())
 	}
 
 	const metaInfo = React.useMemo(() => {
