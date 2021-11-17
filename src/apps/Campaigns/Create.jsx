@@ -18,6 +18,8 @@ import config from '../../config'
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 import { useWallet } from 'src/context/Wallet'
 import { useApiProvider } from '@substra-hooks/core'
+import { formatZero } from 'src/utils/helper'
+import { useBalance } from 'src/hooks/useBalance'
 
 const dev = config.dev
 
@@ -73,6 +75,7 @@ export const Main = () => {
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState()
+	const { updateBalance } = useBalance()
 
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -225,16 +228,13 @@ export const Main = () => {
 				: formData.duration * data.blockFactor + block // take current block as offset
 			console.log('campaign_end', campaign_end)
 
-			const target = formData.cap + 1000000000000
-			const deposit = formData.deposit + 1000000000000
-
 			const payload = [
 				address,
 				formData.org,
 				formData.admin,
 				formData.title,
-				target,
-				deposit,
+				formatZero(formData.cap),
+				formatZero(formData.deposit),
 				campaign_end,
 				formData.protocol,
 				formData.governance === true ? 1 : 0,
@@ -253,6 +253,7 @@ export const Main = () => {
 				(state) => {
 					setLoading(false)
 					setRefresh(true)
+					updateBalance()
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
