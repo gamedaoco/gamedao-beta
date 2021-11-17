@@ -4,23 +4,23 @@ import { useState, useEffect } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
+import { useHookState } from 'src/context/Hook'
 
 export type BalanceState = {
 	balanceZero: String
 	balancePlay: String
 	balanceGame: String
+	updateBalance: Function
 }
 
 const INITIAL_STATE: BalanceState = {
 	balanceZero: null,
 	balancePlay: null,
 	balanceGame: null,
+	updateBalance: () => {},
 }
 
-async function queryAccountBalance(
-	apiProvider: ApiPromise,
-	address: string
-): Promise<BalanceState> {
+async function queryAccountBalance(apiProvider: ApiPromise, address: string): Promise<any> {
 	const context = apiProvider.query.assets.account
 	if (!context) return INITIAL_STATE
 
@@ -50,22 +50,32 @@ async function queryAccountBalance(
 }
 
 // Get Account Balance for Zero, Play and game
-export const useBalance = () => {
-	const [balanceState, setBalanceState] = useState<BalanceState>(INITIAL_STATE)
+export function useBalance(): BalanceState {
 	const [addressState, setAddressState] = useState<string>(null)
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
+	const { balance, updateState } = useHookState()
+
+	function handleUpdateBalance() {
+		queryAccountBalance(apiProvider, address).then((state) => {
+			updateState({ balance: state })
+			setAddressState(address)
+		})
+	}
 
 	useEffect(() => {
 		if (apiProvider && address && address !== addressState) {
 			queryAccountBalance(apiProvider, address).then((state) => {
-				setBalanceState(state)
+				updateState({ balance: state })
 				setAddressState(address)
 			})
 		}
 	}, [address, apiProvider])
 
-	console.log('🚀 ~ file: useBalance.ts ~ line 70 ~ useBalance ~ balanceState', balanceState)
+	console.log('🚀 ~ file: useBalance.ts ~ line 70 ~ useBalance ~ balanceState')
 
-	return balanceState
+	return {
+		...balance,
+		updateBalance: handleUpdateBalance,
+	} as any
 }

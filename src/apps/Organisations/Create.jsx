@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
-import { createErrorNotification, createSuccessNotification } from '../../utils/notification'
-
 import {
 	Typography,
 	TextField,
