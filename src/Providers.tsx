@@ -13,6 +13,9 @@ import { StoreProvider } from './context/Store'
 import { ThemeStateProvider, useThemeState } from './context/ThemeState'
 import { NetworkProvider } from './context/Network'
 
+// Toastify css
+import './Toastify.css'
+
 function Wrapper({ children }) {
 	const { darkmodeEnabled } = useThemeState()
 	return (
