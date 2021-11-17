@@ -4,6 +4,8 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { Signer } from '@polkadot/types/types'
 
+// TODO: Add easy function for transactions
+
 export type WalletState = {
 	allowConnect: boolean
 	address: string
