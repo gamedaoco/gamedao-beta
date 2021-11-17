@@ -6,6 +6,7 @@ import Layout from './layouts/default'
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
+const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
 const Organisations = lazy(() => import('./apps/Organisations'))
 const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
 const DAODashboard = lazy(() => import('./apps/Organisations/dashboard'))
@@ -22,13 +23,15 @@ export interface ComponentProps {
 	showHeader?: boolean
 	showSidebar?: boolean
 	element?: React.ReactNode
+	noContainer?: boolean
 }
 
-const LayoutRoute = ({ showFooter, showHeader, showSidebar, element }: ComponentProps) => (
+const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer }: ComponentProps) => (
 	<Layout
 		showHeader={showHeader ? showHeader : null}
 		showFooter={showFooter ? showFooter : null}
 		showSidebar={showSidebar ? showSidebar : null}
+		noContainer={noContainer ? noContainer : null}
 	>
 		{element}
 	</Layout>
@@ -60,6 +63,12 @@ const Router = (props) => {
 					path="/app/governance"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />
+					}
+				></Route>
+				<Route
+					path="/app/campaigns/:id"
+					element={
+						<LayoutRoute showSidebar noContainer showFooter element={<Campaign />} />
 					}
 				></Route>
 				<Route

@@ -8,6 +8,7 @@ interface ComponentProps {
 	showFooter?: boolean
 	showSidebar?: boolean
 	showNavigation?: boolean
+	noContainer?: boolean
 	children?: React.ReactNode
 }
 
@@ -17,6 +18,7 @@ const Layout = ({
 	showSidebar,
 	children,
 	showNavigation,
+	noContainer
 }: ComponentProps) => {
 	return (
 		<>
@@ -35,10 +37,7 @@ const Layout = ({
 
 				<Box flexGrow={1}>
 					{showHeader && <Header />}
-
-					<Box sx={{ minHeight: '95vh', padding: '2rem', margin: '0 2vw' }}>
-						{children}
-					</Box>
+					{noContainer ? <Box>{children}</Box> : <Container><Box sx={{ minHeight: '95vh', padding: '2rem' }}>{children}</Box></Container>}
 				</Box>
 			</Box>
 			<Box flexGrow={1}>{showFooter && <Footer />}</Box>
