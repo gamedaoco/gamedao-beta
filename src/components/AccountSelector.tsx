@@ -1,41 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
+import HeartIcon from '@mui/icons-material/FavoriteBorder'
+import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useWallet } from 'src/context/Wallet'
-import {
-	Button,
-	Typography,
-	ButtonGroup,
-	ClickAwayListener,
-	Grow,
-	Paper,
-	Popper,
-	MenuItem,
-	MenuList,
-	useTheme,
-} from '@mui/material'
 import IconButton from '@mui/material/IconButton'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
-import { Icons, ICON_MAPPING } from './Icons'
-import { useThemeState } from 'src/context/ThemeState'
-import { useStore } from 'src/context/Store'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
+import { useStore } from 'src/context/Store'
+import { useThemeState } from 'src/context/ThemeState'
 import { useBalance } from 'src/hooks/useBalance'
+import { styled } from '../components'
+import { Icons, ICON_MAPPING } from './Icons'
 
 function accountString(account) {
 	const text = account?.meta?.name || account?.address || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
 
+const AccountBox = styled(Box)(({ theme }) => ({
+	borderRadius: '50px',
+	backgroundColor: theme.palette.background.neutral,
+	paddingRight: theme.spacing(2),
+	paddingLeft: '2px',
+	paddingTop: '2px',
+	paddingBottom: '2px',
+	color: theme.palette.text.primary,
+}))
+
+const ConnectButton = styled(Button)(({ theme }) => ({
+	borderRadius: '50px',
+	color: theme.palette.text.primary,
+	backgroundColor: theme.palette.background.neutral,
+	['&:hover']: {
+		backgroundColor: theme.palette.background.neutral,
+	},
+}))
+
+const AccountSelect = styled(Select)(({ theme }) => ({
+	margin: 0,
+	backgroundColor: theme.palette.background.default,
+	display: 'block',
+	borderRadius: '50px',
+	height: '100%',
+	['& .MuiSelect-select']: {
+		height: '100%',
+		padding: 0,
+		margin: 0,
+		border: 0,
+	},
+	['& .MuiOutlinedInput-notchedOutline']: {
+		border: 0,
+	},
+}))
+
 const AccountComponent = () => {
 	const { darkmodeEnabled } = useThemeState()
 	const { updateStore, allowConnection } = useStore()
-	const [open, setOpen] = useState(false)
 	const { accounts, w3enable, w3Enabled } = usePolkadotExtension()
-	const [selectedIndex, setSelectedIndex] = useState(0)
 	const { allowConnect, updateWalletState, account, address } = useWallet()
-
-	const anchorRef = useRef<HTMLDivElement>(null)
 
 	const handleConnect = (e) => {
 		e.stopPropagation()
@@ -47,26 +68,7 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
-		// Reset selectedIndex to default
-		setSelectedIndex(0)
 		updateWalletState({ allowConnect: false })
-	}
-
-	const handleMenuItemClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
-		e.stopPropagation()
-		setSelectedIndex(index)
-		setOpen(false)
-	}
-
-	const handleToggle = () => {
-		setOpen((prevOpen) => !prevOpen)
-	}
-
-	const handleClose = (event: Event) => {
-		if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-			return
-		}
-		setOpen(false)
 	}
 
 	useEffect(() => {
@@ -90,122 +92,115 @@ const AccountComponent = () => {
 		}
 	}, [accounts, allowConnect])
 
-	useEffect(() => {
-		// Set selected account
-		if (
-			allowConnect &&
-			accounts?.length > 0 &&
-			selectedIndex >= 0 &&
-			selectedIndex < accounts.length &&
-			address !== accounts?.[selectedIndex]?.address
-		) {
+	const handleAccountChange = React.useCallback(
+		(address: string) => {
+			const account = accounts.find((a) => a.address === address)
+			if (!account) return
+
 			updateWalletState({
-				account: accounts[selectedIndex],
-				address: accounts[selectedIndex]?.address,
+				account,
+				address: account.address,
 			})
-		}
-	}, [selectedIndex])
+		},
+		[allowConnect, accounts]
+	)
 
 	return (
 		<>
 			{!allowConnect || !accounts ? (
-				<Button size="small" variant="outlined" onClick={handleConnect}>{`connect`}</Button>
+				<ConnectButton variant={'text'} onClick={handleConnect} startIcon={<HeartIcon />}>
+					Connect
+				</ConnectButton>
 			) : (
 				account &&
 				address && (
-					<ButtonGroup variant="contained" ref={anchorRef} aria-label="account-selector">
-						<CopyToClipboard
-							text={address}
-							onCopy={() => createInfoNotification('Address copied')}
-						>
-							<Button
-								title={address}
-								size="small"
-								color={address ? 'success' : 'error'}
-							>{`${accountString(account)}`}</Button>
-						</CopyToClipboard>
+					<AccountBox>
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
+							<AccountSelect
+								renderValue={(value) => {
+									const account = accounts.find((a) => a.address === value)
+									if (!account) return 'n/a'
+									return (
+										<Box
+											sx={{
+												display: 'flex',
+												height: '100%',
+												alignItems: 'center',
+											}}
+										>
+											<Box
+												sx={{
+													display: 'flex',
+													alignItems: 'center',
+													justifyContent: 'center',
+													backgroundColor: '#292B2D',
+													borderRadius: '50%',
+													marginLeft: '4px',
+													marginTop: '4px',
+													marginBottom: '4px',
+													height: '2.5rem',
+													width: '2.5rem',
+												}}
+											>
+												<HeartIcon />
+											</Box>
+											<Box
+												sx={{
+													marginLeft: '1rem',
+												}}
+											>
+												{accountString(account)}
+											</Box>
+										</Box>
+									)
+								}}
+								value={account?.address}
+								name={'account'}
+								onChange={(e) => handleAccountChange(e.target.value as string)}
+							>
+								{accounts?.map((a, index) => (
+									<MenuItem key={index} value={a?.address} title={a?.address}>
+										{accountString(a)}
+									</MenuItem>
+								))}
+							</AccountSelect>
 
-						<IconButton
-							size="small"
-							aria-controls={open ? 'account-menu' : undefined}
-							aria-expanded={open ? 'true' : undefined}
-							aria-label="select account"
-							aria-haspopup="menu"
-							onClick={handleToggle}
-						>
-							<KeyboardArrowDownIcon fontSize="inherit" />
-						</IconButton>
-						<BalanceAnnotation />
-						<IconButton size="small" aria-label="disconnect" onClick={handleDisconnect}>
-							<Icons
-								src={ICON_MAPPING.logout}
-								alt={'logout'}
-								sx={{ filter: darkmodeEnabled ? 'invert(0)' : 'invert(1)' }}
-							/>
-						</IconButton>
-					</ButtonGroup>
+							<BalanceAnnotation />
+
+							<IconButton
+								size="small"
+								aria-label="disconnect"
+								onClick={handleDisconnect}
+							>
+								<Icons
+									src={ICON_MAPPING.logout}
+									alt={'logout'}
+									sx={{ filter: darkmodeEnabled ? 'invert(0)' : 'invert(1)' }}
+								/>
+							</IconButton>
+						</Stack>
+					</AccountBox>
 				)
 			)}
-			<Popper
-				open={open}
-				anchorEl={anchorRef.current}
-				placement={'bottom-start'}
-				role={undefined}
-				transition
-				disablePortal
-			>
-				{({ TransitionProps, placement }) => (
-					<Grow
-						{...TransitionProps}
-						style={{
-							transformOrigin: placement === 'bottom-end' ? 'end top' : 'end bottom',
-						}}
-					>
-						<Paper>
-							<ClickAwayListener onClickAway={handleClose}>
-								<MenuList id="account-menu">
-									{accounts?.map((option, index) => (
-										<MenuItem
-											key={index}
-											disabled={index === 2}
-											selected={index === selectedIndex}
-											onClick={(event) => handleMenuItemClick(event, index)}
-											title={option?.address}
-										>
-											<Typography variant="subtitle1">
-												{accountString(option)}
-											</Typography>
-										</MenuItem>
-									))}
-								</MenuList>
-							</ClickAwayListener>
-						</Paper>
-					</Grow>
-				)}
-			</Popper>
 		</>
 	)
 }
 
 const BalanceAnnotation = () => {
 	const { balanceZero, balancePlay, balanceGame } = useBalance()
-	const theme = useTheme()
 
 	return (
-		<Typography
-			variant="caption"
-			color={theme?.palette?.text?.primary}
-			style={{
-				margin: 'auto',
-				padding: '0.5rem',
-			}}
-		>
-			{balanceZero || `0 ZERO`}
-			<br />
-			{balancePlay || 0} PLAY
-			<br />
-			{balanceGame || 0} GAME
-		</Typography>
+		<Stack direction={'column'}>
+			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
+				{balanceZero || '0 Zero'}
+			</Typography>
+			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
+				{balancePlay || 0} PLAY
+			</Typography>
+			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
+				{balanceGame || 0} GAME
+			</Typography>
+		</Stack>
 	)
 }
 
