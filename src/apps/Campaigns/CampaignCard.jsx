@@ -25,15 +25,12 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const apiProvider = useApiProvider()
 	const identity = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
-	const { account } = useWallet()
-
-	// console.log(state)
+	const { account, signAndNotify } = useWallet()
 
 	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
 
-	// const [open, setOpen] = useState(false)
 	const [loading, setLoading] = useState(true)
 
 	const [formData, updateFormData] = useState({ amount: 0 })
@@ -74,32 +71,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		})
 	}, [identity])
 
-	//
-
-	// if (!item) return null
-
-	// on chain
-
-	// off chain
-	// const image_url = 'https://ipfs.gamedao.co/ipfs/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
-	// const json_url = 'https://ipfs.gamedao.co/ipfs/'+ cid
-	// console.log(json_url)
-
 	const blocksRemain = expiry
-
-	// const remaining = blocksToTime(data.expiry) - new Date().now()
-	// console.log('update',Date.now())
-
 	const tags = ['game', '2d', 'pixel', 'steam']
-	// const views = 1//Math.floor(Math.random()*10000)
-
-	// icon type based on supporters
-	// const icon = backers => {
-	// 	if (backers > 10000) return 'fire'
-	// 	if (backers > 1000) return 'heart'
-	// 	if (backers > 100) return 'peace'
-	// 	return 'plus circle'
-	// }
 
 	const epoch = created.replaceAll(',', '')
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -126,30 +99,22 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const sendTx = async (amount) => {
 		if (!amount) return
 		setLoading(true)
-
 		const payload = [id, amount]
-		console.log('payload', payload)
-		const from = await getFromAcct()
-		const tx = apiProvider.tx.gameDaoCrowdfunding.contribute(...payload)
-
-		const hash = await tx.signAndSend(from, ({ status, events }) => {
-			console.log(status, events)
-			if (events.length) {
-				events.forEach((record) => {
-					const { event } = record
-					if (
-						event.section === 'gameDaoCrowdfunding' &&
-						event.method === 'CampaignContributed'
-					) {
-						console.log('campaign contributed:', hash)
-						setLoading(false)
-					}
-				})
+		signAndNotify(
+			apiProvider.tx.gameDaoCrowdfunding.contribute(...payload),
+			{
+				pending: 'Contribute to campaign',
+				success: 'Successfully contributed',
+				error: 'Contribute to campaign failed',
+			},
+			(state) => {
+				setLoading(false)
+				if (!state) {
+					// TODO: 2075 Do we need error handling here?
+				}
 			}
-		})
+		)
 	}
-
-	// sendTx(id,1000000000000)
 
 	const handleSubmit = () => {
 		console.log('submit', formData.amount * 1000000000000)
