@@ -12,7 +12,7 @@ const Dashboard = (props) => {
 	const { address, signAndNotify } = useWallet()
 	const [name, setName] = useState('')
 	const identity = useIdentity(address)
-	const { campaignsCount } = useCrowdfunding()
+	const crowdfunding = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 
@@ -20,13 +20,16 @@ const Dashboard = (props) => {
 		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
+	console.log(identity)
+	console.log(crowdfunding)
+
 	return (
 		<>
 			<h1>Hello {name ?? 'Loading...'}</h1>
 			<h2>DAOs: {nonce ?? 'Loading...'}</h2>
-			<h2>Campaigns: {campaignsCount ?? 'Loading...'}</h2>
+			<h2>Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}</h2>
 			<h2>Proposals: {proposalsCount ?? 'Loading...'}</h2>
-			<Button
+			{/*<Button
 				onClick={() => {
 					const tx = apiProvider.tx.balances.transfer(
 						'3RaiU4xRF24Q2qwc3H1TWYXrh11po34WoSaQAADszHshRbYJ',
@@ -60,7 +63,7 @@ const Dashboard = (props) => {
 				}}
 			>
 				Send MY Money To Andre
-			</Button>
+			</Button>*/}
 		</>
 	)
 }
