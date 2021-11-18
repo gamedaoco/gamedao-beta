@@ -45,6 +45,7 @@
 		"@polkadot/util-crypto": "~7.8.2",
 		"@ramp-network/ramp-instant-sdk": "^2.5.1",
 		"@react-icons/all-files": "4.1.0",
+		"@react-three/drei": "7.22.0",
 		"@react-three/fiber": "7.0.19",
 		"@substra-hooks/core": "^0.0.27",
 		"@zeroio/type-definitions": "^0.0.12",
