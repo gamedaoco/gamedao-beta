@@ -6,7 +6,6 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
-import { web3FromSource } from '@polkadot/extension-dapp'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
@@ -76,7 +75,7 @@ const random_state = (account, campaigns = []) => {
 
 export const Main = () => {
 	const apiProvider = useApiProvider()
-	const { account, address } = useWallet()
+	const { account, address, signAndNotify } = useWallet()
 	const [block, setBlock] = useState(0)
 
 	const [loading, setLoading] = useState(false)
@@ -114,26 +113,6 @@ export const Main = () => {
 		}
 		query()
 	}, [apiProvider, address])
-
-	//
-	//
-	//
-
-	const getFromAcct = async (account) => {
-		const {
-			address,
-			meta: { source, isInjected },
-		} = account
-		let fromAcct
-		if (isInjected) {
-			const injected = await web3FromSource(source)
-			fromAcct = address
-			apiProvider.setSigner(injected.signer)
-		} else {
-			fromAcct = account
-		}
-		return fromAcct
-	}
 
 	// form fields
 
@@ -180,29 +159,28 @@ export const Main = () => {
 
 		const sendTX = async (args) => {
 			if (dev) console.log('2. send tx')
+			setLoading(true)
 
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
 			const { voting_type, id, purpose, cid, amount } = formData
 
 			const payload = [voting_type, id, purpose, cid, amount, expiry]
-			const from = await getFromAcct(account)
-			// TODO: refactor to have unified method name on module...
-			const tx = apiProvider.tx.gameDaoGovernance.createProposal(...payload)
-			const hash = await tx.signAndSend(from, ({ status, events }) => {
-				if (events.length) {
-					events.forEach((record) => {
-						const { event } = record
-						// const types = event.typeDef
-						if (
-							event.section === 'gameDaoGovernance' &&
-							event.method === 'ProposalCreated'
-						) {
-							console.log('proposal created:', hash)
-							setRefresh(true)
-						}
-					})
+
+			signAndNotify(
+				apiProvider.tx.gameDaoGovernance.createProposal(...payload),
+				{
+					pending: 'Proposal creation in progress',
+					success: 'Proposal creation successfully',
+					error: 'Proposal creation failed',
+				},
+				(state) => {
+					setLoading(false)
+					setRefresh(true)
+					if (!state) {
+						// TODO: 2075 Do we need error handling here?
+					}
 				}
-			})
+			)
 		}
 	}
 

@@ -39,7 +39,7 @@ const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer
 
 const Router = (props) => {
 	return (
-		<Suspense fallback={<Loader text="Loading..."></Loader>}>
+		<Suspense fallback={<LayoutRoute showSidebar showHeader showFooter element={<Loader text="Loading..."/>} />}>
 			<Routes>
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route

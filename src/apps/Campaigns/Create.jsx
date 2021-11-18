@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { web3FromSource } from '@polkadot/extension-dapp'
-
 import {
-	Container,
 	Button,
 	Divider,
-	FormGroup,
 	FormControl,
 	MenuItem,
 	Select,
 	Checkbox,
-	Box,
 	TextField,
 	Typography,
 	InputLabel,
 	Grid,
-	TextareaAutosize,
 	FormControlLabel,
 } from '../../components'
-
 import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 import { useWallet } from 'src/context/Wallet'
 import { useApiProvider } from '@substra-hooks/core'
+import { formatZero } from 'src/utils/helper'
+import { useBalance } from 'src/hooks/useBalance'
 
 const dev = config.dev
 
@@ -71,7 +66,7 @@ const random_state = (account) => {
 
 export const Main = () => {
 	const apiProvider = useApiProvider()
-	const { account, finalized } = useWallet()
+	const { address, account, finalized, signAndNotify } = useWallet()
 	const [block, setBlock] = useState(0)
 	const [nonce, updateNonce] = useState(0)
 	const [orgHashes, updateOrgHashes] = useState([])
@@ -80,25 +75,10 @@ export const Main = () => {
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState()
+	const { updateBalance } = useBalance()
 
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
-
-	const getFromAcct = async () => {
-		const {
-			address,
-			meta: { source, isInjected },
-		} = account
-		let fromAcct
-		if (isInjected) {
-			const injected = await web3FromSource(source)
-			fromAcct = address
-			apiProvider.setSigner(injected.signer)
-		} else {
-			fromAcct = account
-		}
-		return fromAcct
-	}
 
 	const bestBlock = finalized
 		? apiProvider.derive.chain.bestNumberFinalized
@@ -242,22 +222,19 @@ export const Main = () => {
 		//
 
 		const sendTX = async (cid) => {
+			setLoading(true)
 			const campaign_end = dev
 				? block + 100 // 100 blocks = 300 seconds = 5 mins
 				: formData.duration * data.blockFactor + block // take current block as offset
 			console.log('campaign_end', campaign_end)
 
-			console.log()
-			const target = formData.cap + 1000000000000
-			const deposit = formData.deposit + 1000000000000
-
 			const payload = [
-				// account.address,
+				address,
 				formData.org,
 				formData.admin,
 				formData.title,
-				target,
-				deposit,
+				formatZero(formData.cap),
+				formatZero(formData.deposit),
 				campaign_end,
 				formData.protocol,
 				formData.governance === true ? 1 : 0,
@@ -265,25 +242,23 @@ export const Main = () => {
 				'PLAY',
 				'Play Coin',
 			]
-			console.log('payload', payload)
 
-			const from = await getFromAcct()
-			const tx = apiProvider.tx.gameDaoCrowdfunding.create(...payload)
-			const hash = await tx.signAndSend(from, ({ status, events }) => {
-				if (events.length) {
-					events.forEach((record) => {
-						const { event } = record
-						// const types = event.typeDef
-						if (
-							event.section === 'gameDaoCrowdfunding' &&
-							event.method === 'CampaignCreated'
-						) {
-							console.log('campaign created:', hash)
-							setRefresh(true)
-						}
-					})
+			signAndNotify(
+				apiProvider.tx.gameDaoCrowdfunding.create(...payload),
+				{
+					pending: 'Campaign creation in progress',
+					success: 'Campaign creation successfully',
+					error: 'Campaign creation failed',
+				},
+				(state) => {
+					setLoading(false)
+					setRefresh(true)
+					updateBalance()
+					if (!state) {
+						// TODO: 2075 Do we need error handling here?
+					}
 				}
-			})
+			)
 		}
 
 		getCID()

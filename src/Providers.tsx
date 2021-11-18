@@ -8,12 +8,16 @@ import { styled } from './components'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { IconContext } from '@react-icons/all-files' 	
+import { IconContext } from '@react-icons/all-files'
 import { darkTheme, lightTheme } from './themes/minimal'
 import { ToastContainer } from 'react-toastify'
 import { StoreProvider } from './context/Store'
 import { ThemeStateProvider, useThemeState } from './context/ThemeState'
 import { NetworkProvider } from './context/Network'
+import { HookProvider } from './context/Hook'
+
+// Toastify css
+import './Toastify.css'
 
 const StyledToastContainer = styled(ToastContainer)`
 	.Toastify__progress-bar {
@@ -49,7 +53,7 @@ function Wrapper({ children }) {
 								className: 'react-icon',
 							}}
 						>
-							{children}
+							<HookProvider>{children}</HookProvider>
 						</IconContext.Provider>
 					</BrowserRouter>
 				</WalletProvider>

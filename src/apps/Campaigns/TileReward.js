@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import * as React from 'react'
-import { Paper, Card, Box, Divider, Stack, Slider,Image16to9 } from '../../components'
+import { Paper, Card, Box, Divider, Stack, Slider, Image16to9 } from '../../components'
 
 export const TileReward = ({ disabled, feature }) => (
 	<>
@@ -10,7 +10,7 @@ export const TileReward = ({ disabled, feature }) => (
 				width: feature ? 'calc( ( ( 100% / 3 ) * 2) - 20px )' : 'calc( (100% / 3) - 20px )',
 				my: 1,
 				mx: 1,
-				backgroundColor: "primary.main"
+				backgroundColor: 'background.neutral',
 			}}
 		>
 			<Stack>
@@ -23,10 +23,7 @@ export const TileReward = ({ disabled, feature }) => (
 					}}
 				>
 					<Typography variant="h6">Reward #1</Typography>
-					<Typography>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</Typography>
-					<Slider disabled defaultValue={30} />
-					<Typography variant="subtext1">100/1000</Typography>
-
+					<Typography>At vero eos et accusam et justo.</Typography>
 				</Stack>
 			</Stack>
 		</Card>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
-import { createErrorNotification, createSuccessNotification } from '../../utils/notification'
-
 import {
 	Typography,
 	TextField,
@@ -33,7 +31,7 @@ const dev = config.dev
 if (dev) console.log('dev mode')
 
 const random_state = (account) => {
-	const name = "cool productname"
+	const name = 'cool productname'
 	const email = 'mail@cool.com'
 	const website = 'http://coolurl.com'
 	const repo = 'github repo link'
@@ -88,22 +86,12 @@ const random_state = (account) => {
 
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
-
-	const { account, address, signer } = useWallet()
-	// const [ status, setStatus ] = useState('')
+	const { account, address, signAndNotify } = useWallet()
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
-
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState()
-	// const [ contentCID, setContentCID ] = useState()
-
-	// const [ submitState, setSubmitState ] = useState(0)
-
-	// this is taken from txbutton
-
-	// generator for the demo
 
 	useEffect(() => {
 		if (!account) return
@@ -125,7 +113,6 @@ export const Main = (props) => {
 			repo: formData.repo,
 			...fileCID,
 		}
-		// if (dev) console.log(contentJSON)
 		setContent(contentJSON)
 	}, [fileCID, formData])
 
@@ -159,8 +146,6 @@ export const Main = (props) => {
 		console.log('submit')
 		setLoading(true)
 
-		//
-
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
 			try {
@@ -176,14 +161,9 @@ export const Main = (props) => {
 			}
 		}
 
-		// send it
-
 		const sendTX = async (cid) => {
+			setLoading(true)
 			if (dev) console.log('2. send tx')
-			if (!signer || !address) {
-				return createErrorNotification('No valid signer was found')
-			}
-
 			const payload = [
 				address,
 				formData.controller,
@@ -199,20 +179,21 @@ export const Main = (props) => {
 				formData.member_limit,
 			]
 
-			const tx = apiProvider.tx.gameDaoControl.create(...payload)
-			const hash = await tx.signAndSend(address, { signer }, ({ events }) => {
-				if (events.length) {
-					events.forEach((record) => {
-						const { event } = record
-						// const types = event.typeDef
-						if (event.section === 'gameDaoControl' && event.method === 'BodyCreated') {
-							console.log('body created:', hash)
-							setRefresh(true)
-							createSuccessNotification('Dao was created successfully')
-						}
-					})
+			signAndNotify(
+				apiProvider.tx.gameDaoControl.create(...payload),
+				{
+					pending: 'Dao creation in progress',
+					success: 'Dao creation successfully',
+					error: 'Dao creation failed',
+				},
+				(state) => {
+					setLoading(false)
+					setRefresh(true)
+					if (!state) {
+						// TODO: 2075 Do we need error handling here?
+					}
 				}
-			})
+			)
 		}
 
 		getCID()
