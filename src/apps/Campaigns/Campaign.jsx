@@ -24,7 +24,7 @@ import {
 import { TileReward } from './TileReward'
 
 import Koijam from './Koijam'
-import Pixzoo from './Pixzoo'
+import Pixzoo from './PixZoo'
 import Feanor from './Feanor'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
