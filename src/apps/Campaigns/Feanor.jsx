@@ -3,6 +3,7 @@ import { Suspense, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
+import { useSpring, animated, config } from 'react-spring'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -23,7 +24,8 @@ import {
 
 import { TileReward } from './TileReward'
 
-import { Renderer } from './koijam/three'
+import Renderer from './koijam/Render'
+
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
@@ -94,6 +96,24 @@ function a11yProps(index) {
 	}
 }
 
+
+function AnimatedRender() {
+	const props = useSpring({ loop: true, marginTop: "100px", from: { marginTop: "0px" } });
+	return (
+	  <animated.div style={{ ...props }}>
+		<h1 style={{ color: "white" }}>C1</h1>
+	  </animated.div>
+	);
+  }
+  
+  const c1Style = {
+	marginTop: "0px",
+	background: "steelblue",
+	color: "white",
+	padding: "1.5rem"
+  };
+
+
 export function Campaign() {
 	const id = useParams().id
 	const t = ['Open World', 'Trending', 'Survivial']
@@ -108,7 +128,7 @@ export function Campaign() {
 
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
-	// const wallet = useWallet()
+	// const wallet = useWallet()h
 
 	useEffect(() => {
 		if (!campaignBalance || !campaignState || !campaigns) return
@@ -142,8 +162,8 @@ export function Campaign() {
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
-								<Grid item xs={12}>
-									<img src={'/assets/campaign-logo.png'} alt={'Era of Chaos'} />
+								<Grid item xs={12} sx={{ marginTop: '22vh'}}>
+									<img width="640px" src={'/assets/campaigns/pixzoo/pixzoologo.png'} alt={'Koi Jam'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
@@ -157,10 +177,8 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Typography>
-										From the developer of Virgo Versus The Zodiac and
-										Osteoblasts comes a Tactical Rhythm JRPG in which you play
-										as the Singer who fights the oppressive government to bring
-										back Music to a melodyless world.
+										Manage a Pond Ecosystem Breed colorful koi and Bring Life back to the valley in
+										this 0-99 all ages adventure.
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
@@ -255,10 +273,9 @@ export function Campaign() {
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<img
-								src={'/assets/campaign-model.png'}
-								style={{ maxWidth: '80%', marginBottom: '-10rem' }}
-							/>
+							<Box sx={{ position: 'absolute', marginTop: 12, right: 12 }}>
+							  <img width="640px" src={'/assets/campaigns/feanor/.png'} alt={'Feanor'} />
+							</Box>
 						</Grid>
 					</Grid>
 				</Container>
@@ -345,63 +362,22 @@ function Description() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">LEVEL UP &</Typography>
-				<Typography variant="h2">BE LEGENDARY</Typography>
+				<Typography variant="h4">RPG &</Typography>
+				<Typography variant="h2">TOWER DEFENSE</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
 				<Typography>
-					From the developer of Virgo Versus The Zodiac and Osteoblasts comes a Tactical
-					Rhythm JRPG in which you play as the Singer who fights the oppressive government
-					to bring back Music to a melodyless world. Play as Ailuri, a small hero set on
-					an adventure to protect the world from environmental destruction. Complete vast
-					levels, rescue animals.
+				You can attract over 100 Animals by building your Island with lava, saltwater, ice and others.
+				Collect their droppings to make your Island Bigger.
+				But be careful they might starve if the environment is not in balance.
 				</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h4">CHOOSE YOUR</Typography>
-				<Typography variant="h2">CHAMPION</Typography>
+				<img height='100%' width="100%" src="/assets/campaigns/feanor/Feanor2.png"/>
 			</Grid>
 
-			<Grid item xs={12}>
-				<Stack direction="row" sx={{ width: '100%' }}>
-					{[0, 1, 2, 3, 4].map((x) => (
-						<TileReward />
-					))}
-				</Stack>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Typography variant="h4">SOME CATCHY</Typography>
-				<Typography variant="h2">HEADLINE</Typography>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Typography>
-					From the developer of Virgo Versus The Zodiac and Osteoblasts comes a Tactical
-					Rhythm JRPG in which you play as the Singer who fights the oppressive government
-					to bring back Music to a melodyless world. Play as Ailuri, a small hero set on
-					an adventure to protect the world from environmental destruction. Complete vast
-					levels, rescue animals.
-				</Typography>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Typography variant="h4">STUNNING &</Typography>
-				<Typography variant="h2">MYSTICAL WORLDS</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Image16to9 />
-			</Grid>
-			<Grid item xs={12}>
-				<Stack direction="row" spacing={2}>
-					<Image16to9 />
-					<Image16to9 />
-					<Image16to9 />
-					<Image16to9 />
-				</Stack>
-			</Grid>
 		</Grid>
 	)
 }

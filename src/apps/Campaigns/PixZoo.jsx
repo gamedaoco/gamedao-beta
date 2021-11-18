@@ -379,6 +379,14 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
+				<Stack direction="row" spacing={2}>
+					<img height="640px" width="33%" src="/assets/campaigns/pixzoo/deernom.jpg"/>
+					<img height="640px" width="33%" src="/assets/campaigns/pixzoo/edit.jpg"/>
+					<img height="640px" width="33%" src="/assets/campaigns/pixzoo/bathdeer.jpg"/>
+				</Stack>
+			</Grid>
+
+			<Grid item xs={12}>
 				<img height='100%' width="100%" src="/assets/campaigns/pixzoo/androidmock.png"/>
 			</Grid>
 		</Grid>
