@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
@@ -19,11 +19,11 @@ import {
 	Stack,
 	Slider,
 	Image16to9,
-} from '../../components'
+} from '../../../components'
 
-import { TileReward } from './TileReward'
+import { TileReward } from '../TileReward'
 
-import Renderer from './koijam/Render'
+import Renderer from './Render'
 
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
