@@ -148,26 +148,12 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid #33383F',
 			}}
 		>
-			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 1.5 }}>
+			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 2 }}>
 				<Icons
 					src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo}
 					alt={'GameDAO'}
 					sx={{ height: '45.4px' }}
 				/>
-				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'center',
-						alignItems: 'center',
-						marginLeft: '1rem',
-					}}
-				>
-					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ letterSpacing: '2px', marginTop: '-18px' }} variant="h3">
-						DAO
-					</Typography>
-				</Box>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
 				<Link component={NavLink} to="/app">
