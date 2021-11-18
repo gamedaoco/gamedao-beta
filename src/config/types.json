@@ -111,7 +111,7 @@
 	"Nonce": "u64",
 	"Proposal": {
 		"proposal_id": "Hash",
-		"campaign_id": "Hash",
+		"context_id": "Hash",
 		"purpose": "Vec<u8>",
 		"cid": "Vec<u8>",
 		"amount": "Balance",

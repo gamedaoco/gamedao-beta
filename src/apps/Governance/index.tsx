@@ -4,74 +4,28 @@
 import React, { useEffect, useState, lazy } from 'react'
 import { useWallet } from 'src/context/Wallet'
 
-import { data as d } from '../lib/data'
-import { gateway } from '../lib/ipfs'
-import config from '../../config'
-
 import { Button, Typography, Box, Stack, Grid } from 'src/components'
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
 import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-const dev = config.dev
 const ItemTable = lazy(() => import('./ItemTable'))
 const CreateProposal = lazy(() => import('./Create'))
 
 export const Component = (props) => {
-	const apiProvider = useApiProvider()
-	const [nonce, setNonce] = useState()
-	const [hashes, setHashes] = useState()
 	const [content, setContent] = useState()
 	const { account } = useWallet()
+	const { proposalsIndex, proposals, proposalsCount } = useGameDaoGovernance()
 
 	useEffect(() => {
-		let unsubscribe = null
-
-		apiProvider.query.gameDaoGovernance
-			.nonce((n) => {
-				setNonce(n.toNumber())
+		if (proposalsIndex && proposals) {
+			const data = Object.keys(proposalsIndex).map((key) => {
+				return proposals[key]
 			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-
-		return () => unsubscribe && unsubscribe()
-	}, [apiProvider.query.gameDaoGovernance])
-
-	// hashes
-
-	useEffect(() => {
-		if (!nonce) return
-		const req = [...new Array(nonce)].map((a, i) => i)
-		const queryHashes = async (args) => {
-			const hashes = await apiProvider.query.gameDaoGovernance.proposalsArray
-				.multi(args)
-				.then((_) => _.map((_h) => _h.toHuman()))
-			setHashes(hashes as any)
+			setContent(data as any)
 		}
-		queryHashes(req)
-	}, [nonce, apiProvider.query.gameDaoGovernance])
-
-	// proposals
-
-	useEffect(() => {
-		if (!hashes) return
-
-		const getContent = async (args) => {
-			const content = await apiProvider.query.gameDaoGovernance.proposals
-				.multi(args)
-				.then((_) => _.map((_h) => _h.toHuman()))
-			setContent(content as any)
-		}
-		getContent(hashes)
-	}, [hashes, apiProvider.query.gameDaoGovernance])
-
-	// get organizations for hashes
-	// filter hashes where user is member
-
-	// group by organization
-	// dropdown to select organization
+	}, [proposalsIndex, proposals])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
@@ -84,13 +38,13 @@ export const Component = (props) => {
 			</Typography>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={12}>
 				<Box>
-					{!content || nonce === 0 ? (
+					{!content || proposalsCount === 0 ? (
 						<Typography component="h2" variant="h5">
 							No proposals yet. Create one!
 						</Typography>
 					) : (
 						<Typography component="h2" variant="h5">
-							Total proposals: {nonce}
+							Total proposals: {proposalsCount ?? 0}
 						</Typography>
 					)}
 				</Box>
@@ -117,7 +71,3 @@ export default function Module(props) {
 	const apiProvider = useApiProvider()
 	return apiProvider && apiProvider.query.gameDaoGovernance ? <Component {...props} /> : null
 }
-
-//
-//
-//
