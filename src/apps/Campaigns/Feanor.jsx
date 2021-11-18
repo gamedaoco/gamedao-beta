@@ -23,9 +23,7 @@ import {
 
 import { TileReward } from './TileReward'
 
-import Koijam from './Koijam'
-import Pixzoo from './Pixzoo'
-import Feanor from './Feanor'
+import { Renderer } from './koijam/three'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
@@ -100,14 +98,6 @@ export function Campaign() {
 	const id = useParams().id
 	const t = ['Open World', 'Trending', 'Survivial']
 
-	// MOCKS
-	if(id === "koijam") return <Koijam/>
-	if(id === "pixzoo") return <Pixzoo/>
-	if(id === "feanor") return <Feanor/>
-
-
-	//
-
 	const [value, setValue] = React.useState(0)
 
 	const handleChange = (event, newValue) => {
@@ -138,7 +128,7 @@ export function Campaign() {
 		<Box>
 			<Box
 				sx={{
-					background: 'url(/assets/campaign-bg.png)',
+					background: 'url(/assets/campaigns/feanor/Feanor.png)',
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',

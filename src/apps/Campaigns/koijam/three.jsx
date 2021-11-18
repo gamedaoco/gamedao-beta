@@ -6,7 +6,7 @@ import { useLoader } from "@react-three/fiber";
 
 import { 
     Box, 
-} from '../../components'
+} from '../../../components'
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { EventManager, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber'
