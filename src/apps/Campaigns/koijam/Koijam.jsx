@@ -23,12 +23,11 @@ import {
 
 import { TileReward } from './TileReward'
 
-import { Renderer } from './three'
+import Renderer from './koijam/Render'
+
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
-
-const Koijam = lazy(() => import('./koijam/Koijam'))
 
 const Headline = styled(Typography)(({ theme }) => {
 	return {
@@ -98,10 +97,7 @@ function a11yProps(index) {
 
 export function Campaign() {
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survivial']
-
-		// MOCKS
-		if(id === "koijam") return <Koijam/>
+	const t = ['Sandbox', '0 - 99', 'Adventure', 'Animals']
 
 	const [value, setValue] = React.useState(0)
 
@@ -133,7 +129,7 @@ export function Campaign() {
 		<Box>
 			<Box
 				sx={{
-					background: 'url(/assets/campaign-bg.png)',
+					background: 'url(/assets/campaigns/koijam/steg2.jpg)',
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',
@@ -147,11 +143,14 @@ export function Campaign() {
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
-								<Grid item xs={12}>
-									<img src={'/assets/campaign-logo.png'} alt={'Era of Chaos'} />
+								<Grid item xs={12} sx={{ marginTop: '10vh'}}>
+									<img width="640px" src={'/assets/campaigns/koijam/koijamlogo.png'} alt={'Koi Jam'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
+								</Grid>
+								<Grid item xs={12}>
+									<Typography variant='h2'>ALL THE KOI</Typography>
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction="row" spacing={2}>
@@ -162,10 +161,8 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Typography>
-										From the developer of Virgo Versus The Zodiac and
-										Osteoblasts comes a Tactical Rhythm JRPG in which you play
-										as the Singer who fights the oppressive government to bring
-										back Music to a melodyless world.
+										Manage a Pond Ecosystem Breed colorful koi and Bring Life back to the valley in
+										this 0-99 all ages adventure.
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
@@ -260,10 +257,7 @@ export function Campaign() {
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<img
-								src={'/assets/campaign-model.png'}
-								style={{ maxWidth: '80%', marginBottom: '-10rem' }}
-							/>
+							<Box sx={{ width: '66vw', height: '66vh', position: 'absolute', right: "0px", overflow: 'hidden' }}><Renderer/></Box>
 						</Grid>
 					</Grid>
 				</Container>
@@ -350,30 +344,32 @@ function Description() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">LEVEL UP &</Typography>
-				<Typography variant="h2">BE LEGENDARY</Typography>
+				<Typography variant="h4">MAKE KOI &</Typography>
+				<Typography variant="h2">MAKE FRIENDS</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
 				<Typography>
-					From the developer of Virgo Versus The Zodiac and Osteoblasts comes a Tactical
-					Rhythm JRPG in which you play as the Singer who fights the oppressive government
-					to bring back Music to a melodyless world. Play as Ailuri, a small hero set on
-					an adventure to protect the world from environmental destruction. Complete vast
-					levels, rescue animals.
+				You hatch from an egg as a DRAGON, at the bottom of a mountain lake. Here you find your first money. As you explore the Lake and the sourrounding area, you encounter some animals. one gives you a Handheld Computer, which will be your Interface. It has a Translator program, which enables you to understand and interact with the Animals. 
+First, you help the CRANE rebuild his shop. 
 				</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h4">CHOOSE YOUR</Typography>
-				<Typography variant="h2">CHAMPION</Typography>
+				<video autoplay="true" controls width="100%" height="100%">
+					<source src="https://ipfs.gamedao.co/ipfs/QmceZKtSB4TJdCbcmsG7EARBzQGJhSLyga6WHPWSf4ck4n" type="video/mp4" />
+				</video>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Stack direction="row" sx={{ width: '100%' }}>
-					{[0, 1, 2, 3, 4].map((x) => (
-						<TileReward />
-					))}
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmV1Tx2Mwfbkk2YrGQKtnoavCjtUzGpn8wBEzsQTBVjnED"/>
+			</Grid>
+			<Grid item xs={12}>
+				<Stack direction="row" spacing={2}>
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmUsbJDYF3xQAVH6oYTr6uSQTgzecER8fqHmD9BgCASv61"/>
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmccBBLNtHPXz8ciLU87wB6L3PLsWWDJABX9pas3SYNTga"/>
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmRfeBhnHWhbhJsKiNmn1ACSWSWStVbCa289rWkEDESNo5"/>
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt"/>
 				</Stack>
 			</Grid>
 
@@ -391,21 +387,20 @@ function Description() {
 					levels, rescue animals.
 				</Typography>
 			</Grid>
-
 			<Grid item xs={12}>
-				<Typography variant="h4">STUNNING &</Typography>
-				<Typography variant="h2">MYSTICAL WORLDS</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Image16to9 />
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmTSnyrJr9JRj1uZB999ai5fGu9TjoyJskaM2vqK3h4gt1"/>
 			</Grid>
 			<Grid item xs={12}>
 				<Stack direction="row" spacing={2}>
-					<Image16to9 />
-					<Image16to9 />
-					<Image16to9 />
-					<Image16to9 />
+					<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmQXakkDJWic7XNizVrTzMKD7d77RjAyN9xhHyuYjehX9t"/>
+					<Image16to9 src="https://ipfs.gamedao.co/ipfs/Qme1ExJMUvkHVxgtvuFJX7ET1owJ3bmydTTtJ6Vd5FFfP7"/>
+					<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmT8ey3ZSUHfkR9AfxSZdGTXJH3ALykyawvpPrT59QgjNM"/>
+					<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmS6pFs8qh7tYFAnix6jPqj8mwt54YVVVQHRhpfwhGQSve"/>
 				</Stack>
+			</Grid>
+
+			<Grid item xs={12}>
+				<Image16to9 src="https://ipfs.gamedao.co/ipfs/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt"/>
 			</Grid>
 		</Grid>
 	)

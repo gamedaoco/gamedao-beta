@@ -38,7 +38,7 @@ export const Campaigns = (props) => {
 
 	const [content, setContent] = useState()
 
-	console.log(campaignsIndex)
+	
 
 	useEffect(() => {
 		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
