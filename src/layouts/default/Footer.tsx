@@ -32,8 +32,8 @@ export const Footer = (props) => (
 						<a href="#top">
 							<img
 								alt="GameDAO"
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`}
-								width={48}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao-logo-color.svg`}
+								width={128}
 							/>
 						</a>
 					</Grid>
