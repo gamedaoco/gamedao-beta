@@ -129,7 +129,7 @@ export function Campaign() {
 		<Box>
 			<Box
 				sx={{
-					background: 'url(/assets/campaigns/koijam/steg2.jpg)',
+					backgroundImage: 'linear-gradient(to left, rgba(245, 246, 252, 0.0), rgba(22, 28, 36, 0.8)), url(/assets/campaigns/koijam/steg2.jpg)',
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',
