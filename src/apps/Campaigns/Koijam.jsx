@@ -357,7 +357,7 @@ First, you help the CRANE rebuild his shop.
 
 			<Grid item xs={12}>
 				<video autoplay="true" controls width="100%" height="100%">
-					<source src="/assets/campaigns/koijam/koijam_preview.mp4" type="video/mp4" />
+					<source src="https://ipfs.gamedao.co/ipfs/QmceZKtSB4TJdCbcmsG7EARBzQGJhSLyga6WHPWSf4ck4n" type="video/mp4" />
 				</video>
 			</Grid>
 
