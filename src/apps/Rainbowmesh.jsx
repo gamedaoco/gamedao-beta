@@ -296,7 +296,7 @@ export function Anim() {
             colorOfXYZT={colorOfXYZT}
             anim={{
                 init: 0,
-                update: (t) => t + 0.005
+                update: (t) => t + 0.003
             }}
         />
     );

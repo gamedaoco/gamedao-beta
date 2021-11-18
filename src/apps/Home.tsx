@@ -16,7 +16,7 @@ export default function SignIn() {
 
 	return (
 		<>
-			<Box sx={{ zIndex: "-1", position: "absolute", width: "100vw", height: "100vh", top: "0px", left: "0px" }}>
+			<Box sx={{ zIndex: "-1", position: "absolute", width: "100%", height: "100vh", top: "0px", left: "0px" }}>
 				<Rainbowmesh/>
 			</Box>
 			<Container component="main" maxWidth="xs">
