@@ -118,12 +118,14 @@ export const Main = (props) => {
 
 	// handle file uploads to ipfs
 
-	async function onFileChange(e, { name }) {
+	async function onFileChange(e) {
 		const file = e.target.files[0]
+		if (!file) return
+
 		if (dev) console.log('upload image')
 		try {
 			const cid = await pinFileToIPFS(file)
-			updateFileCID({ ...fileCID, [name]: cid })
+			updateFileCID({ ...fileCID, [file.name]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
 			console.log('Error uploading file: ', error)
