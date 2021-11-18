@@ -7,7 +7,7 @@ import { Icons, ICON_MAPPING } from 'src/components/Icons'
 export default function SignIn() {
 	return (
 		<>
-			<Box sx={{ zIndex: "-1", position: "absolute", width: "100%", height: "100vh", top: "0px", left: "0px" }}>
+			<Box sx={{ backgroundColor: "#161C24", zIndex: "-1", position: "absolute", width: "100%", height: "100vh", top: "0px", left: "0px" }}>
 				<Rainbowmesh/>
 			</Box>
 			<Container component="main" maxWidth="xs">
