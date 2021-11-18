@@ -32,7 +32,7 @@ export const Footer = (props) => (
 						<a href="#top">
 							<img
 								alt="GameDAO"
-								src={`${process.env.PUBLIC_URL}/assets/gamedao-logo-color.svg`}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
 								width={128}
 							/>
 						</a>
