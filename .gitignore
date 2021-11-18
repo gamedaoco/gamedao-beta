@@ -8,3 +8,4 @@ build
 *-error.log
 vendors
 *.local*
+.next
