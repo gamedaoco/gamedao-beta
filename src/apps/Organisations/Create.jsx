@@ -19,7 +19,7 @@ import {
 	MenuItem,
 	TextareaAutosize,
 	useFormControl,
-	Grid
+	Grid,
 } from '../../components'
 
 import { data, rnd } from '../lib/data'
@@ -119,14 +119,14 @@ export const Main = (props) => {
 
 	// handle file uploads to ipfs
 
-	async function onFileChange(e) {
+	async function onFileChange(e, type) {
 		const file = e.target.files[0]
 		if (!file) return
 
 		if (dev) console.log('upload image')
 		try {
 			const cid = await pinFileToIPFS(file)
-			updateFileCID({ ...fileCID, [file.name]: cid })
+			updateFileCID({ ...fileCID, [type]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
 			console.log('Error uploading file: ', error)
@@ -323,7 +323,7 @@ export const Main = (props) => {
 					type="file"
 					label="Logo Graphic"
 					name="logo"
-					onChange={onFileChange}
+					onChange={(e) => onFileChange(e, 'logo')}
 				/>
 				<InputLabel id="header-gfx-label">Header Graphic</InputLabel>
 				<Input
@@ -331,7 +331,7 @@ export const Main = (props) => {
 					type="file"
 					label="Header Graphic"
 					name="header"
-					onChange={onFileChange}
+					onChange={(e) => onFileChange(e, 'header')}
 				/>
 			</FormGroup>
 
