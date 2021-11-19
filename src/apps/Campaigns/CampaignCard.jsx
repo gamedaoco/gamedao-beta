@@ -11,12 +11,16 @@ import Typography from '@mui/material/Typography'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
+import { NavLink } from "react-router-dom"
+
+
 import { useWallet } from 'src/context/Wallet'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
 import { ListTileEnum } from '../components/ListTileSwitch'
+import { Link } from "../../components"
 import { gateway } from '../lib/ipfs'
 import { BigNumber } from 'bignumber.js'
 import { useBalance } from 'src/hooks/useBalance'
@@ -127,13 +131,13 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				{content?.identity ? (
 					<Stack direction={'row'} spacing={2}>
 						<IdentityIcon />
-						<a href={`/id/${owner}`}>{content.identity}</a>
+						<Link component={NavLink}  to={`/id/${owner}`}>{content.identity}</Link>
 						<br />
 					</Stack>
 				) : (
 					<Stack direction={'row'} spacing={2}>
 						<WarningIcon />
-						<a href="/faq#unknown_entity">unknown entity</a>
+						<Link component={NavLink} to="/faq#unknown_entity">unknown entity</Link>
 					</Stack>
 				)}
 				<Stack direction={'row'} spacing={2}>
