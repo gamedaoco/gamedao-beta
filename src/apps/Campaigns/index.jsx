@@ -38,7 +38,7 @@ export const Campaigns = (props) => {
 	const { account } = useWallet()
 
 	const [content, setContent] = useState()
-	
+
 	useEffect(() => {
 		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
 
