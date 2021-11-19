@@ -58,7 +58,7 @@ const ScopeBar = ({ filter, setFilter }) => {
 const CampaignGrid = ({ content }) => {
 	const [pageContent, setPageContent] = useState([])
 	const [page, setPage] = useState(0)
-	const [pageSize, setPageSize] = useState(12)
+	const [pageSize, setPageSize] = useState(30)
 	const [totalPages, setTotalPages] = useState(0)
 	const [displayMode, setDisplayMode] = useState(ListTileEnum.TILE)
 	const { account } = useWallet()
@@ -79,7 +79,10 @@ const CampaignGrid = ({ content }) => {
 
 	useEffect(() => {
 		if (totalPages === 0) return
-		setPageContent(content.slice(page * pageSize, page * pageSize + pageSize))
+		// TODO: WTF is this?
+		// @2075 Fix paging
+		// setPageContent(content.slice(page * pageSize, page * pageSize + pageSize))
+		setPageContent(content)
 	}, [content, page, pageSize, totalPages])
 
 	useEffect(() => {
@@ -111,7 +114,6 @@ const CampaignGrid = ({ content }) => {
 		() => (displayMode === ListTileEnum.TILE ? TileWrapper : ListWrapper),
 		[displayMode]
 	)
-
 
 	return (
 		<Stack direction={'column'} spacing={2}>
