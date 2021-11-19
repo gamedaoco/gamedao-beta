@@ -151,8 +151,6 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		)
 	}, [content])
 
-	console.log('ASDASDASDASD', metadata)
-
 	const metaActions = React.useMemo(() => {
 		switch (state) {
 			case '1': {
