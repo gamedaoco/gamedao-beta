@@ -10,24 +10,31 @@ import {
 	Typography,
 	InputLabel,
 	Grid,
-	FormControlLabel,
+	FormControlLabel
 } from '../../components'
+import Loader from "src/components/Loader"
 import { data, rnd } from '../lib/data'
 import config from '../../config'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
-import { useWallet } from 'src/context/Wallet'
-import { useApiProvider } from '@substra-hooks/core'
+
 import { formatZero } from 'src/utils/helper'
+
 import { useBalance } from 'src/hooks/useBalance'
+import { useWallet } from 'src/context/Wallet'
+import { useIdentity } from 'src/hooks/useIdentity'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 const dev = config.dev
 
 const random_state = (account) => {
-	const name = 'Examplename'
-	const email = 'mail@example.com'
-	const title = 'Cool Prductname'
-	const description = 'Even cooler catchphrase (very funny)'
+	const name = 'Dao Jones'
+	const email = 'daojones@gamedao.co'
+	const title = 'Great Campaign Title'
+	const description = 'Awesome Description'
 	const country = data.countries[rnd(data.countries.length)].value
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
@@ -65,12 +72,14 @@ const random_state = (account) => {
 }
 
 export const Main = () => {
-	const apiProvider = useApiProvider()
 	const { address, account, finalized, signAndNotify } = useWallet()
+	const apiProvider = useApiProvider()	
+	const identity = useIdentity(address)
+	const crowdfunding = useCrowdfunding()
+	const daoControl = useGameDaoControl()
+	const gov = useGameDaoGovernance()
+
 	const [block, setBlock] = useState(0)
-	const [nonce, updateNonce] = useState(0)
-	const [orgHashes, updateOrgHashes] = useState([])
-	const [orgs, updateOrgs] = useState([])
 
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
@@ -86,23 +95,6 @@ export const Main = () => {
 
 	useEffect(() => {
 		let unsubscribe = null
-		apiProvider.query.gameDaoCrowdfunding
-			.nonce((n) => {
-				if (n.isNone) {
-					updateNonce(0)
-				} else {
-					updateNonce(n.toNumber())
-				}
-			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [apiProvider.query.gameDaoCrowdfunding])
-
-	useEffect(() => {
-		let unsubscribe = null
 		bestBlock((number) => {
 			setBlock(number.toNumber())
 		})
@@ -113,61 +105,11 @@ export const Main = () => {
 		return () => unsubscribe && unsubscribe()
 	}, [bestBlock])
 
-	//
-
 	useEffect(() => {
-		let unsubscribe = null
-		apiProvider.query.gameDaoControl
-			.controlledBodies(account.address, (b) => {
-				if (b.isNone || b.length === 0) return
-				const hashes = [...new Set(b.toHuman().map((_) => _))]
-				updateOrgHashes(hashes)
-				console.log(hashes)
-			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [account, apiProvider.query.gameDaoControl])
-
-	//
-
-	useEffect(() => {
-		if (orgHashes.length === 0) return
-		const req = [...orgHashes]
-		const query = async (args) => {
-			const res = await apiProvider.query.gameDaoControl.bodies
-				.multi(req)
-				.then((_) => _.map((_h) => _h.toHuman()))
-			const _ = res.map((body, i) => {
-				const org = {
-					key: i,
-					value: body.id,
-					text: body.name,
-				}
-				return org
-			})
-			updateOrgs(_)
-		}
-		query()
-	}, [orgHashes, account, apiProvider.query.gameDaoControl])
-
-	useEffect(() => {
-		if (orgs.length === 0) return
+		//if (orgs.length === 0) return
 		const initial_state = random_state(account)
 		updateFormData(initial_state)
-	}, [orgs, account])
-
-	// handle form state
-
-	const handleOnChange = ({ target: { name, value } }) => {
-		updateFormData({ ...formData, [name]: value })
-	}
-
-	const handleCheckboxToggle = ({ target: { name } }) => {
-		updateFormData({ ...formData, [name]: !formData[name] })
-	}
+	}, [account])
 
 	useEffect(() => {
 		if (!formData) return
@@ -182,6 +124,24 @@ export const Main = () => {
 		// if (dev) console.log(contentJSON)
 		setContent(contentJSON)
 	}, [fileCID, formData])
+
+	useEffect(() => {
+		if (!refresh) return
+		if (dev) console.log('refresh signal')
+		updateFileCID(null)
+		updateFormData(random_state(account))
+		setRefresh(false)
+		setLoading(false)
+	}, [account, refresh])
+
+	// handle form state
+	const handleOnChange = ({ target: { name, value } }) => {
+		updateFormData({ ...formData, [name]: value })
+	}
+
+	const handleCheckboxToggle = ({ target: { name } }) => {
+		updateFormData({ ...formData, [name]: !formData[name] })
+	}
 
 	async function onFileChange(e) {
 		const file = e.target.files[0]
@@ -202,8 +162,6 @@ export const Main = () => {
 		e.preventDefault()
 		console.log('submit')
 		setLoading(true)
-
-		//
 
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
@@ -227,7 +185,8 @@ export const Main = () => {
 			const campaign_end = dev
 				? block + 100 // 100 blocks = 300 seconds = 5 mins
 				: formData.duration * data.blockFactor + block // take current block as offset
-			console.log('campaign_end', campaign_end)
+			
+				console.log('campaign_end', campaign_end)
 
 			const payload = [
 				address,
@@ -243,6 +202,8 @@ export const Main = () => {
 				'PLAY',
 				'Play Coin',
 			]
+
+			console.log(payload)
 
 			signAndNotify(
 				apiProvider.tx.gameDaoCrowdfunding.create(...payload),
@@ -265,19 +226,16 @@ export const Main = () => {
 		getCID()
 	}
 
-	useEffect(() => {
-		if (!refresh) return
-		if (dev) console.log('refresh signal')
-		updateFileCID(null)
-		updateFormData(random_state(account))
-		setRefresh(false)
-		setLoading(false)
-	}, [account, refresh])
-
 	const logoGraphicInputRef = React.useRef(null)
 	const headerGraphicInputRef = React.useRef(null)
 
+	if(!daoControl || !daoControl.bodies) return <Loader text=""/>
 	if (!formData) return null
+
+	const nonce = daoControl.nonce
+	const orgs =  Object.keys(daoControl.bodies).map( key => daoControl.bodies[key])
+
+	console.log(orgs)
 
 	return (
 		<Grid container spacing={2} component="form">
@@ -304,9 +262,9 @@ export const Main = () => {
 						value={formData.org}
 						onChange={handleOnChange}
 					>
-						{orgs.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
+						{orgs.map((item, index) => (
+							<MenuItem key={index} value={item.id}>
+								{item.name}
 							</MenuItem>
 						))}
 					</Select>

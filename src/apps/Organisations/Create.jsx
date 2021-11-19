@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
+//const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
 import {
 	Typography,
@@ -19,6 +19,7 @@ import {
 	MenuItem,
 	TextareaAutosize,
 	useFormControl,
+	Grid
 } from '../../components'
 
 import { data, rnd } from '../lib/data'
@@ -31,11 +32,11 @@ const dev = config.dev
 if (dev) console.log('dev mode')
 
 const random_state = (account) => {
-	const name = 'cool productname'
-	const email = 'mail@cool.com'
-	const website = 'http://coolurl.com'
-	const repo = 'github repo link'
-	const description = 'nice description'
+	const name = 'Mighty Organization Name'
+	const email = 'dao@gamedao.co'
+	const website = 'http://bestdaoever.com'
+	const repo = ''
+	const description = 'Informative Description and Usecases...'
 
 	const creator = account.address
 	const controller = account.address
@@ -222,6 +223,7 @@ export const Main = (props) => {
 				<Typography variant="h3">Create Organization</Typography>
 			</Box>
 
+			{/*
 			<Box sx={{ width: '100%' }}>
 				<Stepper activeStep={1} alternativeLabel>
 					{steps.map((label) => (
@@ -231,6 +233,7 @@ export const Main = (props) => {
 					))}
 				</Stepper>
 			</Box>
+			*/}
 
 			<br />
 			<Divider clearing horizontal>
@@ -300,10 +303,10 @@ export const Main = (props) => {
 			</FormGroup>
 
 			{fileCID && (
-				<>
+				<Grid item xs={12}>
 					{fileCID.logo && <img alt={formData.name} src={gateway + fileCID.logo} />}
 					{fileCID.header && <img alt={formData.name} src={gateway + fileCID.header} />}
-				</>
+				</Grid>
 			)}
 
 			<FormGroup

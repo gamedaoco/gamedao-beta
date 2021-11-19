@@ -5,28 +5,80 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { Button } from 'src/components'
+import { Button, Grid, Typography } from 'src/components'
+
+import MiniStats from "./components/MiniStats"
+import AppWebsiteVisits from "./components/dashboard/AppWebsiteVisits"
+import AppCurrentVisits from "./components/dashboard/AppCurrentVisits"
+import AppConversionRates from "./components/dashboard/AppConversionRates"
+import AppCurrentSubject from "./components/dashboard/AppCurrentSubject"
+import AppNewsUpdate from "./components/dashboard/AppNewsUpdate"
+import AppOrderTimeline from "./components/dashboard/AppOrderTimeline"
+
+import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
 	const { address, signAndNotify } = useWallet()
-	const [name, setName] = useState('')
 	const identity = useIdentity(address)
-	const { campaignsCount } = useCrowdfunding()
+	const crowdfunding = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
+	const [name, setName] = useState('')
 
 	useEffect(() => {
 		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
+	console.log(identity)
+	console.log(crowdfunding)
+
 	return (
 		<>
-			<h1>Hello {name ?? 'Loading...'}</h1>
-			<h2>DAOs: {nonce ?? 'Loading...'}</h2>
-			<h2>Campaigns: {campaignsCount ?? 'Loading...'}</h2>
-			<h2>Proposals: {proposalsCount ?? 'Loading...'}</h2>
-			<Button
+			<Grid container spacing={3}>
+
+				<Grid item xs={12}>
+					<MiniStats>					
+						<Icons
+						src={ICON_MAPPING.logo}
+						alt={'GameDAO'}
+						sx={{ height: '256px' }}
+					/></MiniStats>
+				</Grid>
+
+				<Grid item xs={12} sm={4} md={4}>
+					<MiniStats><Typography variant='h3'>DAOs: {nonce ?? 'Loading...'}</Typography></MiniStats>
+				</Grid>
+				<Grid item xs={12} sm={4} md={4}>
+					<MiniStats><Typography variant='h3'>Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}</Typography></MiniStats>
+				</Grid>
+				<Grid item xs={12} sm={4} md={4}>
+					<MiniStats><Typography variant='h3'>Proposals: {proposalsCount ?? 'Loading...'}</Typography></MiniStats>
+				</Grid>
+	
+
+				<Grid item xs={12} md={6} lg={4}>
+					<AppCurrentVisits />
+				</Grid>
+
+				<Grid item xs={12} md={6} lg={4}>
+					<AppOrderTimeline />
+				</Grid>
+
+				<Grid item xs={12} md={6} lg={4}>
+					<AppCurrentSubject />
+				</Grid>
+
+				<Grid item xs={12}>
+					<AppWebsiteVisits />
+				</Grid>
+
+				<Grid item xs={12}>
+					<AppConversionRates />
+				</Grid>
+
+		 	</Grid>
+			{/*<Button
 				onClick={() => {
 					const tx = apiProvider.tx.balances.transfer(
 						'3RaiU4xRF24Q2qwc3H1TWYXrh11po34WoSaQAADszHshRbYJ',
@@ -60,7 +112,7 @@ const Dashboard = (props) => {
 				}}
 			>
 				Send MY Money To Andre
-			</Button>
+			</Button>*/}
 		</>
 	)
 }

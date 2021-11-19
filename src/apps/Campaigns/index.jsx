@@ -15,6 +15,7 @@ import React, { useEffect, useState, lazy } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 
+import Loader from '../../components/Loader'
 import { Button, Typography, Box, Stack } from '../../components'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
@@ -37,9 +38,7 @@ export const Campaigns = (props) => {
 	const { account } = useWallet()
 
 	const [content, setContent] = useState()
-
-	console.log(campaignsIndex)
-
+	
 	useEffect(() => {
 		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
 
@@ -71,9 +70,11 @@ export const Campaigns = (props) => {
 				<Typography>Campaigns</Typography>
 				<Typography>
 					{!content || campaignsCount === 0 ? (
-						<h4>No campaigns yet. Create one!</h4>
+						<>
+							<Loader text=""/>
+						</>
 					) : (
-						<h4>Total campaigns: {campaignsCount ?? 'Loading...'}</h4>
+						<h4>Total campaigns: {campaignsCount ?? <Loader text=""/>}</h4>
 					)}
 				</Typography>
 				<Box>
