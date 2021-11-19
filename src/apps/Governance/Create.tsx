@@ -167,7 +167,7 @@ export const Main = () => {
 			const payload = [id, purpose, cid, expiry]
 
 			signAndNotify(
-				apiProvider.tx.gameDaoGovernance.generalProposa(...payload),
+				apiProvider.tx.gameDaoGovernance.generalProposal(...payload),
 				{
 					pending: 'Proposal creation in progress',
 					success: 'Proposal creation successfully',
