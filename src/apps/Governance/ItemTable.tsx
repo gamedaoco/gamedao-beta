@@ -22,7 +22,8 @@ import Paper from '@mui/material/Paper'
 import ItemRow from './ItemRow'
 
 export default function ItemTable({ content }) {
-	// if (!content) return null
+	if (!content) return null
+	console.log('ItemTable', content)
 
 	return (
 		<React.Fragment>
@@ -44,28 +45,6 @@ export default function ItemTable({ content }) {
 							<TableBody>
 								{content &&
 									content.map((item, i) => <ItemRow key={i} content={item} />)}
-								<ItemRow
-									key={0}
-									content={{
-										name: 'Test',
-										body: 'Hybrid DAO',
-										purpose: '',
-										amount: 123,
-										expiry: 1230,
-										status: 'open',
-									}}
-								/>
-								<ItemRow
-									key={1}
-									content={{
-										name: 'Bongo Klan',
-										body: 'DAO',
-										purpose: '',
-										amount: 123,
-										expiry: 1230,
-										status: 'open',
-									}}
-								/>
 							</TableBody>
 						</Table>
 					</TableContainer>

@@ -109,25 +109,13 @@
 	"Timestamp": "Moment",
 	"EventMessage": "Vec<u8>",
 	"Nonce": "u64",
-<<<<<<< HEAD
 	"Proposal": {
 		"proposal_id": "Hash",
 		"context_id": "Hash",
-		"purpose": "Vec<u8>",
-		"cid": "Vec<u8>",
-		"amount": "Balance",
-		"expiry": "BlockNumber",
-		"status": "u8"
+		"proposal_type": "u8",
+		"voting_type": "u8",
+		"expiry": "BlockNumber"
 	},
-=======
-  "Proposal": {
-    "proposal_id": "Hash",
-    "context_id": "Hash",
-    "proposal_type": "u8",
-    "voting_type": "u8",
-    "expiry": "BlockNumber"
-  },
->>>>>>> origin/main
 	"ProposalMetadata": {
 		"title": "Vec<u8>",
 		"cid": "Vec<u8>",

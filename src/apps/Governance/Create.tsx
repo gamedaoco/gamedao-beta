@@ -162,12 +162,12 @@ export const Main = () => {
 			setLoading(true)
 
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
-			const { voting_type, id, purpose, cid, amount } = formData
+			const { id, purpose, cid } = formData
 
-			const payload = [voting_type, id, purpose, cid, amount, expiry]
+			const payload = [id, purpose, cid, expiry]
 
 			signAndNotify(
-				apiProvider.tx.gameDaoGovernance.createProposal(...payload),
+				apiProvider.tx.gameDaoGovernance.generalProposa(...payload),
 				{
 					pending: 'Proposal creation in progress',
 					success: 'Proposal creation successfully',

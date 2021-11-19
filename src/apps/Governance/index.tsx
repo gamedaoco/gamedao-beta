@@ -9,6 +9,7 @@ import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import { voting_types } from '../lib'
 
 const ItemTable = lazy(() => import('./ItemTable'))
 const CreateProposal = lazy(() => import('./Create'))
@@ -16,16 +17,32 @@ const CreateProposal = lazy(() => import('./Create'))
 export const Component = (props) => {
 	const [content, setContent] = useState()
 	const { account } = useWallet()
-	const { proposalsIndex, proposals, proposalsCount } = useGameDaoGovernance()
+	const { proposalsIndex, metadata, proposals, proposalStates, proposalsCount } =
+		useGameDaoGovernance()
 
 	useEffect(() => {
-		if (proposalsIndex && proposals) {
+		if (proposalsIndex && proposals && metadata) {
 			const data = Object.keys(proposalsIndex).map((key) => {
-				return proposals[key]
+				const ptData = proposals[proposalsIndex[key]]
+				const meta = metadata[proposalsIndex[key]]
+				const state = proposalStates[proposalsIndex[key]]
+				console.log('🚀 ~ file: index.tsx ~ line 28 ~ data ~ state', state)
+
+				// TODO: Fix states
+				// @2075 TODO fix data mappings
+				return {
+					name: meta?.title,
+					body: voting_types.find((v) => v.key == ptData?.voting_type)?.text ?? '',
+					// ipfs meta description
+					purpose: meta?.title,
+					amount: meta?.amount,
+					expiry: ptData?.expiry,
+					status: state == 1 ? 'open' : 'closed',
+				}
 			})
 			setContent(data as any)
 		}
-	}, [proposalsIndex, proposals])
+	}, [proposalsIndex, metadata, proposals])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
