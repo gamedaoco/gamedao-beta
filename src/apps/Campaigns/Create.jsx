@@ -32,8 +32,8 @@ const random_state = (account) => {
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
 	const accept = false
-	const cap = rnd(100000)
-	const deposit = rnd(100)
+	const cap = rnd(1000)
+	const deposit = rnd(10)
 	const duration = data.project_durations[rnd(data.project_durations.length)].value
 	const protocol = data.protocol_types[rnd(data.protocol_types.length)].value
 	const governance = rnd(2) === 0 ? false : true
@@ -470,7 +470,17 @@ export const Main = () => {
 				</FormControl>
 			</Grid>
 
-			<Grid item xs={12} md={6}>
+			<Grid item xs={12} md={4}>
+				<TextField
+					fullWidth
+					label="Deposit (GAME)"
+					placeholder="Deposit"
+					name="deposit"
+					value={formData.deposit}
+					onChange={handleOnChange}
+				/>
+			</Grid>
+						<Grid item xs={12} md={4}>
 				<TextField
 					fullWidth
 					label="Funding Target (PLAY)"
@@ -481,7 +491,7 @@ export const Main = () => {
 				/>
 			</Grid>
 
-			<Grid item xs={12} md={6}>
+			<Grid item xs={12} md={4}>
 				<FormControl fullWidth>
 					<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
 					<Select
