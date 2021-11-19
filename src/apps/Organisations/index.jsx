@@ -324,7 +324,10 @@ const Item = ({ content, mode }) => {
 	return mode === ListTileEnum.LIST ? (
 		<ListItem
 			linkTo={`/app/organisations/${itemContent.id}`}
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
 			metaContent={metaContent}
@@ -334,7 +337,10 @@ const Item = ({ content, mode }) => {
 	) : (
 		<TileItem
 			linkTo={`/app/organisations/${itemContent.id}`}
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
 			metaContent={metaContent}
