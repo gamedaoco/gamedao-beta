@@ -23,12 +23,12 @@ export default function SignIn() {
 					<Icons
 						src={ICON_MAPPING.logoWhite}
 						alt={'GameDAO'}
-						sx={{ height: '256px' }}
+						sx={{ height: '128px' }}
 					/>
 
 					<hr/>
 
-					<Box style={{ position: "absolute", bottom: '16vh' }}><Link href="/app" variant="body2"><Button size="large" variant="contained">Enter App</Button></Link></Box>
+					<Box style={{ position: "absolute", bottom: '16vh' }}><Link href="/app" variant="body2"><Button size="large" variant="contained">Enter Beta</Button></Link></Box>
 
 				</Box>
 			</Container>
