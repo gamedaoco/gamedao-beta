@@ -37,23 +37,22 @@ const Dashboard = (props) => {
 		<>
 			<Grid container spacing={3}>
 
-				<Grid item xs={12}>
-					<MiniStats>					
-						<Icons
+				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
+					<Icons
 						src={ICON_MAPPING.logo}
 						alt={'GameDAO'}
 						sx={{ height: '256px' }}
-					/></MiniStats>
+					/>
 				</Grid>
 
-				<Grid item xs={12} sm={4} md={4}>
-					<MiniStats><Typography variant='h3'>DAOs: {nonce ?? 'Loading...'}</Typography></MiniStats>
+				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
+					<Typography variant='h3'>DAOs: {nonce ?? 'Loading...'}</Typography>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4}>
-					<MiniStats><Typography variant='h3'>Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}</Typography></MiniStats>
+				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
+					<Typography variant='h3'>Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}</Typography>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4}>
-					<MiniStats><Typography variant='h3'>Proposals: {proposalsCount ?? 'Loading...'}</Typography></MiniStats>
+				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
+					<Typography variant='h3'>Proposals: {proposalsCount ?? 'Loading...'}</Typography>
 				</Grid>
 	
 
