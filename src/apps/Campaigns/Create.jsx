@@ -10,9 +10,9 @@ import {
 	Typography,
 	InputLabel,
 	Grid,
-	FormControlLabel
+	FormControlLabel,
 } from '../../components'
-import Loader from "src/components/Loader"
+import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
 
@@ -73,7 +73,7 @@ const random_state = (account) => {
 
 export const Main = () => {
 	const { address, account, finalized, signAndNotify } = useWallet()
-	const apiProvider = useApiProvider()	
+	const apiProvider = useApiProvider()
 	const identity = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
 	const daoControl = useGameDaoControl()
@@ -185,11 +185,8 @@ export const Main = () => {
 			const campaign_end = dev
 				? block + 100 // 100 blocks = 300 seconds = 5 mins
 				: formData.duration * data.blockFactor + block // take current block as offset
-			
-				console.log('campaign_end', campaign_end)
 
 			const payload = [
-				address,
 				formData.org,
 				formData.admin,
 				formData.title,
@@ -229,11 +226,11 @@ export const Main = () => {
 	const logoGraphicInputRef = React.useRef(null)
 	const headerGraphicInputRef = React.useRef(null)
 
-	if(!daoControl || !daoControl.bodies) return <Loader text=""/>
+	if (!daoControl || !daoControl.bodies) return <Loader text="" />
 	if (!formData) return null
 
 	const nonce = daoControl.nonce
-	const orgs =  Object.keys(daoControl.bodies).map( key => daoControl.bodies[key])
+	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
 	console.log(orgs)
 
@@ -438,7 +435,7 @@ export const Main = () => {
 					onChange={handleOnChange}
 				/>
 			</Grid>
-						<Grid item xs={12} md={4}>
+			<Grid item xs={12} md={4}>
 				<TextField
 					fullWidth
 					label="Funding Target (PLAY)"
