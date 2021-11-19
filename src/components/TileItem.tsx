@@ -6,7 +6,7 @@ import { styled } from '../components'
 
 const Image = styled(Box)(({ theme }) => ({
 	width: '100%',
-	backgroundSize: 'cover',
+	backgroundSize: 'contain',
 	backgroundRepeat: 'no-repeat',
 	backgroundPosition: 'center center',
 	['&:after']: {
@@ -29,10 +29,10 @@ export const TileItem: React.FC<
 > = (props) => (
 	<Card sx={{ minHeight: '100%', minWidth: '20%' }}>
 		<Stack sx={{ height: '100%' }}>
-		<Link to={props.linkTo || ""}>
-			<Image sx={{ backgroundImage: `url(${props.imageURL})` }} />
-		</Link>
-			
+			<Link to={props.linkTo || ''}>
+				<Image sx={{ backgroundImage: `url(${props.imageURL})` }} />
+			</Link>
+
 			<Stack
 				sx={{
 					p: 2,
