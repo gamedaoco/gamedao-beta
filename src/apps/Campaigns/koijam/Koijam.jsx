@@ -143,7 +143,7 @@ export function Campaign() {
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
-								<Grid item xs={12} sx={{ marginTop: '10vh'}}>
+								<Grid item xs={12} sx={{ marginTop: '15vh'}}>
 									<img width="640px" src={'/assets/campaigns/koijam/koijamlogo.png'} alt={'Koi Jam'} />
 								</Grid>
 								<Grid item xs={12}>
