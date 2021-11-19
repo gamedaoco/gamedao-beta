@@ -143,13 +143,13 @@ export const Main = () => {
 		updateFormData({ ...formData, [name]: !formData[name] })
 	}
 
-	async function onFileChange(e) {
+	async function onFileChange(e, type) {
 		const file = e.target.files[0]
 		if (!file) return
 		if (dev) console.log('upload image')
 		try {
 			const cid = await pinFileToIPFS(file)
-			updateFileCID({ ...fileCID, [file.name]: cid })
+			updateFileCID({ ...fileCID, [type]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
 			console.log('Error uploading file: ', error)
@@ -305,7 +305,7 @@ export const Main = () => {
 				<input
 					type={'file'}
 					ref={logoGraphicInputRef}
-					onChange={onFileChange}
+					onChange={(e) => onFileChange(e, 'logo')}
 					name={'logo'}
 					style={{ position: 'fixed', left: '-999999px' }}
 				/>
@@ -321,7 +321,7 @@ export const Main = () => {
 				<input
 					type={'file'}
 					ref={headerGraphicInputRef}
-					onChange={onFileChange}
+					onChange={(e) => onFileChange(e, 'header')}
 					name={'header'}
 					style={{ position: 'fixed', left: '-999999px' }}
 				/>

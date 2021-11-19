@@ -99,15 +99,6 @@ const Dashboard = (props) => {
 							}
 						}
 					)
-					// tx.signAndSend(address, { signer }, ({ status }) => {
-					// 	if (status.isInBlock) {
-					// 		console.log(`Completed at block hash #${status.asInBlock.toString()}`)
-					// 	} else {
-					// 		console.log(`Current status: ${status.type}`)
-					// 	}
-					// }).catch((error: any) => {
-					// 	console.log(':( transaction failed', error)
-					// })
 				}}
 			>
 				Send MY Money To Andre
