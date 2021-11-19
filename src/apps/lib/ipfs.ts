@@ -10,13 +10,13 @@ import { create } from 'ipfs-http-client'
 const API_URL = config.API_URL
 const API_PROTOCOL = config.API_PROTOCOL
 const API_PORT = config.API_PORT
-
 // get
 const GATEWAY_URL = config.GATEWAY_URL
 const GATEWAY_PROTOCOL = config.GATEWAY_PROTOCOL
 const GATEWAY_PORT = config.GATEWAY_PORT
 
-export const gateway = GATEWAY_PROTOCOL + '://' + GATEWAY_URL + (GATEWAY_PORT ? ':' + GATEWAY_PORT : '') + '/ipfs/'
+export const gateway =
+	GATEWAY_PROTOCOL + '://' + GATEWAY_URL + (GATEWAY_PORT ? ':' + GATEWAY_PORT : '') + '/gateway/'
 
 //
 //	init ipfs client
@@ -30,8 +30,7 @@ export const gateway = GATEWAY_PROTOCOL + '://' + GATEWAY_URL + (GATEWAY_PORT ? 
 
 export const ipfs = create({
 	protocol: API_PROTOCOL,
-	host: API_URL,
-	port: API_PORT,
+	url: 'https://' + API_URL + '/api/v0',
 	// headers: (dev) ? null : headers,
 	timeout: '2m',
 })

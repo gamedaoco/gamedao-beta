@@ -148,26 +148,14 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid #33383F',
 			}}
 		>
-			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 1.5 }}>
-				<Icons
-					src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo}
-					alt={'GameDAO'}
-					sx={{ height: '45.4px' }}
-				/>
-				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'center',
-						alignItems: 'center',
-						marginLeft: '1rem',
-					}}
-				>
-					<Typography variant="h4">GAME</Typography>
-					<Typography sx={{ letterSpacing: '2px', marginTop: '-18px' }} variant="h3">
-						DAO
-					</Typography>
-				</Box>
+			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 2 }}>
+				<Link component={NavLink} to="/">
+					<Icons
+						src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo}
+						alt={'GameDAO'}
+						sx={{ height: '45.4px' }}
+					/>
+				</Link>
 			</Box>
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
 				<Link component={NavLink} to="/app">
@@ -278,7 +266,7 @@ function Main({ showNavigation }: ComponentProps) {
 				</Box>
 				<NavHeader>Social</NavHeader>
 				<Box
-					sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex' }}
+					sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex', justifyContent: "space-between" }}
 				>
 					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
 						<SiDiscord size={'20px'} />

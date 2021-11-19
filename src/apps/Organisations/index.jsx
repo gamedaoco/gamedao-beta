@@ -5,6 +5,7 @@ import React, { useEffect, useState, lazy } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/util-crypto'
+import { NavLink } from 'react-router-dom'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -38,6 +39,7 @@ import {
 	TablePagination,
 	TableRow,
 	styled,
+	Link,
 } from '../../components'
 import { useApiProvider } from '@substra-hooks/core'
 
@@ -289,9 +291,14 @@ const Item = ({ content, mode }) => {
 			>
 				<Stack direction={'row'} spacing={1}>
 					<WebsiteIcon />{' '}
-					<a rel={'noreferrer'} target={'_blank'} href={metadata.website}>
+					<Link
+						component={NavLink}
+						rel={'noreferrer'}
+						target={'_blank'}
+						to={metadata.website || ''}
+					>
 						{metadata.website}
-					</a>
+					</Link>
 				</Stack>
 				{itemContent.access === '0' ? (
 					<Stack direction={'row'} spacing={1}>
@@ -317,7 +324,10 @@ const Item = ({ content, mode }) => {
 	return mode === ListTileEnum.LIST ? (
 		<ListItem
 			linkTo={`/app/organisations/${itemContent.id}`}
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
 			metaContent={metaContent}
@@ -327,7 +337,10 @@ const Item = ({ content, mode }) => {
 	) : (
 		<TileItem
 			linkTo={`/app/organisations/${itemContent.id}`}
-			imageURL={imageURL}
+			imageURL={
+				imageURL ??
+				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
+			}
 			headline={itemContent.name}
 			metaHeadline={bodyToText()}
 			metaContent={metaContent}

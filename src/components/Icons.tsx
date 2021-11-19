@@ -3,8 +3,8 @@ import { Box } from '.'
 import Icon from '@mui/material/Icon'
 
 export const ICON_MAPPING = {
-	logo: `${process.env.PUBLIC_URL}/assets/gamedao_tangram.svg`,
-	logoWhite: `${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`,
+	logo: `${process.env.PUBLIC_URL}/assets/gamedao-logo-color.svg`,
+	logoWhite: `${process.env.PUBLIC_URL}/assets/gamedao-logo-white.svg`,
 	campains: `${process.env.PUBLIC_URL}/assets/icon_campaigns.svg`,
 	dashboard: `${process.env.PUBLIC_URL}/assets/icon_dashboard.svg`,
 	documentation: `${process.env.PUBLIC_URL}/assets/icon_documentation.svg`,
