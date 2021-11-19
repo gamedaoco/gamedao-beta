@@ -18,22 +18,22 @@ import { fDateTime } from '../../../utils/formatTime';
 const TIMELINES = [
   {
     title: 'koijam',
-    time: Date.now(),
+    time: Date.now() + 1000 * 60 * 60 * 24 * 1,
     type: 'order1'
   },
   {
     title: 'pixzoo',
-    time: Date.now(),
+    time: Date.now() + 1000 * 60 * 60 * 5 * 2,
     type: 'order2'
   },
   {
     title: 'chaos league',
-    time: Date.now(),
+    time: Date.now() + 1000 * 60 * 60 * 8 * 3,
     type: 'order3'
   },
   {
     title: 'dark souls 6',
-    time: Date.now(),
+    time: Date.now() + 1000 * 60 * 60 * 13 * 5,
     type: 'order4'
   }
 ];
@@ -81,7 +81,7 @@ export default function AppOrderTimeline() {
         }
       }}
     >
-      <CardHeader title="Expiring Campaigns:" />
+      <CardHeader title="Ending Soon:" />
       <CardContent>
         <Timeline>
           {TIMELINES.map((item, index) => (

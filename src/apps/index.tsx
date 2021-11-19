@@ -37,13 +37,13 @@ const Dashboard = (props) => {
 		<>
 			<Grid container spacing={3}>
 
-				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
+{/*				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
 					<Icons
 						src={ICON_MAPPING.logo}
 						alt={'GameDAO'}
-						sx={{ height: '256px' }}
+						sx={{ height: '64px' }}
 					/>
-				</Grid>
+				</Grid>*/}
 
 				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
 					<Typography variant='h3'>DAOs: {nonce ?? 'Loading...'}</Typography>
@@ -54,7 +54,7 @@ const Dashboard = (props) => {
 				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
 					<Typography variant='h3'>Proposals: {proposalsCount ?? 'Loading...'}</Typography>
 				</Grid>
-	
+
 
 				<Grid item xs={12} md={6} lg={4}>
 					<AppCurrentVisits />
