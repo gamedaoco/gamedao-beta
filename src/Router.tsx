@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Loader from './components/Loader'
+import { Loader } from './components/Loader'
 import Layout from './layouts/default'
 
 const Home = lazy(() => import('./apps/Home'))
@@ -39,7 +39,7 @@ const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer
 
 const Router = (props) => {
 	return (
-		<Suspense fallback={<LayoutRoute showSidebar showHeader showFooter element={<Loader text="Loading..."/>} />}>
+		<Suspense fallback={<LayoutRoute showSidebar showHeader showFooter element={<Loader text=""/>} />}>
 			<Routes>
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route
