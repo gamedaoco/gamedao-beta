@@ -28,6 +28,8 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
+
 const dev = config.dev
 
 const random_state = (account) => {
@@ -289,6 +291,7 @@ export const Main = () => {
 					name="description"
 					onChange={handleOnChange}
 				/>
+				<MarkdownEditor/>
 			</Grid>
 			<Grid item xs={12}>
 				<Divider>Content</Divider>

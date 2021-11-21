@@ -3,6 +3,8 @@ import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
+import MarkdownIt from 'markdown-it';
+
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -114,6 +116,9 @@ export function Campaign() {
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
 	// const wallet = useWallet()
+
+	// const mdParser = new MarkdownIt(/* Markdown-it options */);
+	// mdParser.render(text)
 
 	useEffect(() => {
 		if (!campaignBalance || !campaignState || !campaigns) return
