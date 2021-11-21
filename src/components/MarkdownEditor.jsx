@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactDOM from 'react-dom';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
+import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
+
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
 
@@ -15,7 +17,7 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 function handleEditorChange({ html, text }) {
   console.log('handleEditorChange', html, text);
 }
-export default props => {
+export const MarkdownEditor = props => {
   return (
     <MdEditor style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
   );
