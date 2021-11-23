@@ -36,6 +36,7 @@ const SidebarButton = styled(ListItemButton)<{ active?: boolean }>(({ theme, act
 	marginBottom: theme.spacing(0.5),
 	borderRadius: '2rem',
 	color: active ? theme.palette.text.primary : theme.palette.text.secondary,
+	backgroundColor: active ? theme.palette.background.neutral : 'transparent',
 	'&:hover': {
 		color: theme.palette.text.primary,
 	},
