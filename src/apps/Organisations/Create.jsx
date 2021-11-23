@@ -1,32 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import { useApiProvider } from '@substra-hooks/core'
+import React, { useRef, useEffect, useState } from 'react'
 //const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
 import {
-	Typography,
-	TextField,
-	FormGroup,
 	Box,
 	Button,
 	Divider,
-	Container,
-	Stepper,
-	Input,
-	Step,
-	Select,
-	StepLabel,
-	InputLabel,
 	FormControl,
-	MenuItem,
-	TextareaAutosize,
-	useFormControl,
 	Grid,
+	Input,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	Typography,
 } from '../../components'
-
-import { data, rnd } from '../lib/data'
 import config from '../../config'
-
-import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
-import { useApiProvider } from '@substra-hooks/core'
+import { data, rnd } from '../lib/data'
+import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -211,6 +202,9 @@ export const Main = (props) => {
 		setLoading(false)
 	}, [account, refresh])
 
+	const logoInputRef = useRef(null)
+	const headerInputRef = useRef(null)
+
 	if (!formData) return null
 	return (
 		<Box
@@ -219,285 +213,283 @@ export const Main = (props) => {
 				'& > *': { m: 1 },
 			}}
 		>
-			<Box sx={{ textAlign: 'center', width: '100%', my: 4 }}>
-				<Typography variant="h3">Create Organization</Typography>
-			</Box>
-
-			{/*
-			<Box sx={{ width: '100%' }}>
-				<Stepper activeStep={1} alternativeLabel>
-					{steps.map((label) => (
-						<Step key={label}>
-							<StepLabel>{label}</StepLabel>
-						</Step>
-					))}
-				</Stepper>
-			</Box>
-			*/}
-
-			<br />
-			<Divider clearing horizontal>
-				<Typography>General Information</Typography>
-			</Divider>
-			<br />
-
-			<FormGroup
-				sx={{
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<TextField
-					label="Name"
-					placeholder="Name"
-					name="name"
-					value={formData.name}
-					onChange={handleOnChange}
-					required
-				/>
-				<TextField
-					label="Contact Email"
-					placeholder="email"
-					name="email"
-					value={formData.email}
-					onChange={handleOnChange}
-				/>
-				<FormControl fullWidth>
-					<InputLabel id="body-select-label">Organizational Body</InputLabel>
-					<Select
-						label="Organizational Body"
-						name="body"
-						placeholder="Organizational Body"
-						labelId="body-select-label"
-						id="body"
-						value={formData.body}
-						onChange={handleOnChange}
-						required
-					>
-						{data.dao_bodies.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl fullWidth>
-					<InputLabel id="country-select-label">Country</InputLabel>
-					<Select
-						label="Country"
-						name="country"
-						placeholder="Country"
-						labelId="country-select-label"
-						id="country"
-						value={formData.country}
-						onChange={handleOnChange}
-						required
-					>
-						{data.countries.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</FormGroup>
-
-			{fileCID && (
+			<Grid container spacing={2}>
 				<Grid item xs={12}>
-					{fileCID.logo && <img alt={formData.name} src={gateway + fileCID.logo} />}
-					{fileCID.header && <img alt={formData.name} src={gateway + fileCID.header} />}
+					<Typography align={'center'} variant="h3">
+						Create Organization
+					</Typography>
 				</Grid>
-			)}
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<InputLabel id="logo-label">Logo Graphic</InputLabel>
-				<Input
-					labelId="logo-label"
-					type="file"
-					label="Logo Graphic"
-					name="logo"
-					onChange={(e) => onFileChange(e, 'logo')}
-				/>
-				<InputLabel id="header-gfx-label">Header Graphic</InputLabel>
-				<Input
-					labelId="header-gfx-label"
-					type="file"
-					label="Header Graphic"
-					name="header"
-					onChange={(e) => onFileChange(e, 'header')}
-				/>
-			</FormGroup>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<InputLabel id="short-descr-label">Short Description</InputLabel>
-				<TextareaAutosize
-					aria-label="Short Description"
-					minRows={3}
-					placeholder="Minimum 3 rows"
-					label="Short Description"
-					name="description"
-					value={formData.description}
-					placeholder="Tell us more"
-					onChange={handleOnChange}
-				/>
-			</FormGroup>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<TextField
-					label="Website"
-					placeholder="https://your.website.xyz"
-					isInjected="website"
-					name="website"
-					value={formData.website}
-					onChange={handleOnChange}
-				/>
-				<TextField
-					label="Code Repository"
-					placeholder="repo"
-					id="repo"
-					name="repo"
-					value={formData.repo}
-					onChange={handleOnChange}
-				/>
-			</FormGroup>
-
-			<br />
-			<Divider clearing horizontal>
-				<Typography>Controller Settings</Typography>
-			</Divider>
-			<br />
-
-			<Typography>
-				Note: In case you want to create a DAO, the controller must be the organization.
-			</Typography>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<TextField
-					id="controller"
-					name="controller"
-					placeholder="Controller"
-					label="Controller Account"
-					value={formData.controller}
-					onChange={handleOnChange}
-					required
-				/>
-				<TextField
-					id="treasury"
-					name="treasury"
-					placeholder="Treasury"
-					label="Treasury Account"
-					value={formData.treasury}
-					onChange={handleOnChange}
-					required
-				/>
-			</FormGroup>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-					my: 2,
-				}}
-			>
-				<FormControl fullWidth>
-					<InputLabel id="member-select-label">Member Access Control</InputLabel>
-					<Select
-						labelId="member-select-label"
-						id="member-select"
-						label="Member Access Control"
-						name="access"
-						value={formData.access}
+				<Grid item xs={12}>
+					<Divider clearing horizontal>
+						<Typography>General Information</Typography>
+					</Divider>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						label="Name"
+						fullWidth
+						placeholder="Name"
+						name="name"
+						value={formData.name}
 						onChange={handleOnChange}
 						required
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						label="Contact Email"
+						fullWidth
+						placeholder="email"
+						name="email"
+						value={formData.email}
+						onChange={handleOnChange}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<FormControl fullWidth>
+						<InputLabel id="body-select-label">Organizational Body</InputLabel>
+						<Select
+							label="Organizational Body"
+							name="body"
+							placeholder="Organizational Body"
+							labelId="body-select-label"
+							id="body"
+							value={formData.body}
+							onChange={handleOnChange}
+							required
+						>
+							{data.dao_bodies.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid item xs={12}>
+					<FormControl fullWidth>
+						<InputLabel id="country-select-label">Country</InputLabel>
+						<Select
+							label="Country"
+							name="country"
+							placeholder="Country"
+							labelId="country-select-label"
+							id="country"
+							value={formData.country}
+							onChange={handleOnChange}
+							required
+						>
+							{data.countries.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid item xs={12}>
+					<Divider>
+						<Typography>Logos</Typography>
+					</Divider>
+				</Grid>
+				{fileCID && (
+					<Grid item xs={12}>
+						{fileCID.logo && <img alt={formData.name} src={gateway + fileCID.logo} />}
+						{fileCID.header && (
+							<img alt={formData.name} src={gateway + fileCID.header} />
+						)}
+					</Grid>
+				)}
+				<Grid item xs={12} md={6}>
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={() => {
+							logoInputRef.current.click()
+						}}
 					>
-						{data.dao_member_governance.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<TextField
-					id="member_limit"
-					name="member_limit"
-					placeholder="100"
-					label="Member Limit"
-					value={formData.member_limit}
-					onChange={handleOnChange}
-					required
-				/>
-			</FormGroup>
-
-			<FormGroup
-				sx={{
-					display: 'grid',
-					gridTemplateColumns: { sm: '1fr 1fr' },
-					gap: 2,
-				}}
-			>
-				<FormControl fullWidth>
-					<InputLabel id="fee_model-label">Fee Model</InputLabel>
-					<Select
-						labelId="fee_model-label"
-						id="fee_model"
-						label="Fee Model"
-						name="fee_model"
-						value={formData.fee_model}
+						Pick a Logo Graphic
+					</Button>
+					<input
+						labelId="logo-label"
+						fullWidth
+						type="file"
+						ref={logoInputRef}
+						label="Logo Graphic"
+						name="logo"
+						onChange={(e) => onFileChange(e, 'logo')}
+						style={{ position: 'fixed', left: '-99999px' }}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<Button
+						variant={'outlined'}
+						fullWidth
+						onClick={() => {
+							headerInputRef.current.click()
+						}}
+					>
+						Pick a Header Graphic
+					</Button>
+					<input
+						labelId="header-gfx-label"
+						fullWidth
+						ref={headerInputRef}
+						type="file"
+						label="Header Graphic"
+						name="header"
+						onChange={(e) => onFileChange(e, 'header')}
+						style={{ position: 'fixed', left: '-99999px' }}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<Divider>
+						<Typography>Meta Information</Typography>
+					</Divider>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						multiline
+						aria-label="Short Description"
+						minRows={3}
+						placeholder="Minimum 3 rows"
+						fullWidth
+						label="Short Description"
+						name="description"
+						value={formData.description}
+						placeholder="Tell us more"
+						onChange={handleOnChange}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						label="Website"
+						placeholder="https://your.website.xyz"
+						isInjected="website"
+						fullWidth
+						name="website"
+						value={formData.website}
+						onChange={handleOnChange}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						label="Code Repository"
+						placeholder="repo"
+						id="repo"
+						fullWidth
+						name="repo"
+						value={formData.repo}
+						onChange={handleOnChange}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<Divider clearing horizontal>
+						<Typography>Controller Settings</Typography>
+					</Divider>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant={'caption'}>
+						Note: In case you want to create a DAO, the controller must be the
+						organization.
+					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						id="controller"
+						fullWidth
+						name="controller"
+						placeholder="Controller"
+						label="Controller Account"
+						value={formData.controller}
 						onChange={handleOnChange}
 						required
-					>
-						{data.dao_fee_model.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<TextField
-					id="fee"
-					name="fee"
-					label="Membership Fee"
-					placeholder="10"
-					value={formData.fee}
-					onChange={handleOnChange}
-					required
-				/>
-			</FormGroup>
-
-			{account && (
-				<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
-					Create Organization
-				</Button>
-			)}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						id="treasury"
+						name="treasury"
+						placeholder="Treasury"
+						fullWidth
+						label="Treasury Account"
+						value={formData.treasury}
+						onChange={handleOnChange}
+						required
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<FormControl fullWidth>
+						<InputLabel id="member-select-label">Member Access Control</InputLabel>
+						<Select
+							labelId="member-select-label"
+							id="member-select"
+							label="Member Access Control"
+							name="access"
+							value={formData.access}
+							onChange={handleOnChange}
+							required
+						>
+							{data.dao_member_governance.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid item xs={12} md={4}>
+					<TextField
+						id="member_limit"
+						name="member_limit"
+						placeholder="100"
+						label="Member Limit"
+						value={formData.member_limit}
+						onChange={handleOnChange}
+						fullWidth
+						required
+					/>
+				</Grid>
+				<Grid item xs={12} md={4}>
+					<FormControl fullWidth>
+						<InputLabel id="fee_model-label">Fee Model</InputLabel>
+						<Select
+							labelId="fee_model-label"
+							id="fee_model"
+							label="Fee Model"
+							name="fee_model"
+							value={formData.fee_model}
+							onChange={handleOnChange}
+							required
+						>
+							{data.dao_fee_model.map((item) => (
+								<MenuItem key={item.key} value={item.value}>
+									{item.text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid item xs={12} md={4}>
+					<TextField
+						id="fee"
+						name="fee"
+						label="Membership Fee"
+						placeholder="10"
+						fullWidth
+						value={formData.fee}
+						onChange={handleOnChange}
+						required
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					{account && (
+						<Button fullWidth variant={'outlined'} onClick={handleSubmit}>
+							Create Organization
+						</Button>
+					)}
+				</Grid>
+			</Grid>
 		</Box>
 	)
 }
