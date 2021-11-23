@@ -41,7 +41,13 @@ class FormikPersistor extends PureComponent {
 const FormikPersist = ({ name }) => (
 	<FormikConsumer>
 		{({ values, errors, setValues, setErrors }) => (
-			<FormikPersistor name={name} setValues={setValues} setErrors={setErrors} values={values} errors={errors} />
+			<FormikPersistor
+				name={name}
+				setValues={setValues}
+				setErrors={setErrors}
+				values={values}
+				errors={errors}
+			/>
 		)}
 	</FormikConsumer>
 )

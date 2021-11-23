@@ -32,7 +32,8 @@ const TransactionModal = (props) => {
 			<Box>
 				<Typography>Support {campaign_name}</Typography>
 				<Card>
-					Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+					Let Google help apps determine location. This means sending anonymous location
+					data to Google, even when no apps are running.
 					<Button negative onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>
 						Disagree
 					</Button>

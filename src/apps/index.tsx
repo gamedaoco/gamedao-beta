@@ -7,13 +7,13 @@ import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { Button, Grid, Typography } from 'src/components'
 
-import MiniStats from "./components/MiniStats"
-import AppWebsiteVisits from "./components/dashboard/AppWebsiteVisits"
-import AppCurrentVisits from "./components/dashboard/AppCurrentVisits"
-import AppConversionRates from "./components/dashboard/AppConversionRates"
-import AppCurrentSubject from "./components/dashboard/AppCurrentSubject"
-import AppNewsUpdate from "./components/dashboard/AppNewsUpdate"
-import AppOrderTimeline from "./components/dashboard/AppOrderTimeline"
+import MiniStats from './components/MiniStats'
+import AppWebsiteVisits from './components/dashboard/AppWebsiteVisits'
+import AppCurrentVisits from './components/dashboard/AppCurrentVisits'
+import AppConversionRates from './components/dashboard/AppConversionRates'
+import AppCurrentSubject from './components/dashboard/AppCurrentSubject'
+import AppNewsUpdate from './components/dashboard/AppNewsUpdate'
+import AppOrderTimeline from './components/dashboard/AppOrderTimeline'
 
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
@@ -36,8 +36,7 @@ const Dashboard = (props) => {
 	return (
 		<>
 			<Grid container spacing={3}>
-
-{/*				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
+				{/*				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
 					<Icons
 						src={ICON_MAPPING.logo}
 						alt={'GameDAO'}
@@ -45,16 +44,19 @@ const Dashboard = (props) => {
 					/>
 				</Grid>*/}
 
-				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
-					<Typography variant='h3'>DAOs: {nonce ?? 'Loading...'}</Typography>
+				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+					<Typography variant="h3">DAOs: {nonce ?? 'Loading...'}</Typography>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
-					<Typography variant='h3'>Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}</Typography>
+				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+					<Typography variant="h3">
+						Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}
+					</Typography>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{display: "flex", justifyContent: "center"}}>
-					<Typography variant='h3'>Proposals: {proposalsCount ?? 'Loading...'}</Typography>
+				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+					<Typography variant="h3">
+						Proposals: {proposalsCount ?? 'Loading...'}
+					</Typography>
 				</Grid>
-
 
 				<Grid item xs={12} md={6} lg={4}>
 					<AppCurrentVisits />
@@ -75,8 +77,7 @@ const Dashboard = (props) => {
 				<Grid item xs={12}>
 					<AppConversionRates />
 				</Grid>
-
-		 	</Grid>
+			</Grid>
 			{/*<Button
 				onClick={() => {
 					const tx = apiProvider.tx.balances.transfer(

@@ -266,7 +266,13 @@ function Main({ showNavigation }: ComponentProps) {
 				</Box>
 				<NavHeader>Social</NavHeader>
 				<Box
-					sx={{ paddingLeft: 2, paddingRight: 2, flexDirection: 'row', display: 'flex', justifyContent: "space-between" }}
+					sx={{
+						paddingLeft: 2,
+						paddingRight: 2,
+						flexDirection: 'row',
+						display: 'flex',
+						justifyContent: 'space-between',
+					}}
 				>
 					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
 						<SiDiscord size={'20px'} />

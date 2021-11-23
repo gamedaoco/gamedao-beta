@@ -15,7 +15,14 @@ export default function TreeView(theme: Theme) {
 			defaultProps: {
 				defaultCollapseIcon: <Icon icon={minusSquareOutline} {...ICON_SIZE} />,
 				defaultExpandIcon: <Icon icon={plusSquareOutline} {...ICON_SIZE} />,
-				defaultEndIcon: <Box component={Icon} icon={closeSquareOutline} {...ICON_SIZE} sx={{ color: 'text.secondary' }} />,
+				defaultEndIcon: (
+					<Box
+						component={Icon}
+						icon={closeSquareOutline}
+						{...ICON_SIZE}
+						sx={{ color: 'text.secondary' }}
+					/>
+				),
 			},
 		},
 		MuiTreeItem: {

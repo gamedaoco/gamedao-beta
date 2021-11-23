@@ -33,7 +33,8 @@ const CreateCampaign = lazy(() => import('./Create'))
 //
 
 export const Campaigns = (props) => {
-	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } = useCrowdfunding()
+	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
+		useCrowdfunding()
 
 	const { account } = useWallet()
 
@@ -71,10 +72,10 @@ export const Campaigns = (props) => {
 				<Typography>
 					{!content || campaignsCount === 0 ? (
 						<>
-							<Loader text=""/>
+							<Loader text="" />
 						</>
 					) : (
-						<h4>Total campaigns: {campaignsCount ?? <Loader text=""/>}</h4>
+						<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
 					)}
 				</Typography>
 				<Box>

@@ -18,7 +18,7 @@ const Layout = ({
 	showSidebar,
 	children,
 	showNavigation,
-	noContainer
+	noContainer,
 }: ComponentProps) => {
 	return (
 		<>
@@ -37,7 +37,13 @@ const Layout = ({
 
 				<Box flexGrow={1}>
 					{showHeader && <Header />}
-					{noContainer ? <Box>{children}</Box> : <Container><Box sx={{ minHeight: '95vh', padding: '2rem' }}>{children}</Box></Container>}
+					{noContainer ? (
+						<Box>{children}</Box>
+					) : (
+						<Container>
+							<Box sx={{ minHeight: '100vh', padding: '2rem' }}>{children}</Box>
+						</Container>
+					)}
 				</Box>
 			</Box>
 			<Box flexGrow={1}>{showFooter && <Footer />}</Box>
