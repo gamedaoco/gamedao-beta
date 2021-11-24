@@ -9,8 +9,7 @@ import config from '../../config'
 import { useApiProvider } from '@substra-hooks/core'
 const dev = config.dev
 
-
-// seems not to be used 
+// seems not to be used
 /*
 const Item = ({ hash }) => {
 	// const { address, } = useWallet()

@@ -38,7 +38,10 @@ export const NetworkProvider = ({ children }) => {
 	}
 
 	return (
-		<SubstraHooksProvider apiProviderConfig={API_PROVIDER_CONFIG} defaultApiProviderId={ENetworks.zero}>
+		<SubstraHooksProvider
+			apiProviderConfig={API_PROVIDER_CONFIG}
+			defaultApiProviderId={ENetworks.zero}
+		>
 			<NetworkStateContext.Provider
 				value={{
 					...networkState,

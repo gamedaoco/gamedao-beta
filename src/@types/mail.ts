@@ -1,6 +1,17 @@
 // ----------------------------------------------------------------------
 
-export type MailLabelId = 'all' | 'inbox' | 'sent' | 'drafts' | 'trash' | 'spam' | 'important' | 'starred' | 'id_social' | 'id_promotions' | 'id_forums'
+export type MailLabelId =
+	| 'all'
+	| 'inbox'
+	| 'sent'
+	| 'drafts'
+	| 'trash'
+	| 'spam'
+	| 'important'
+	| 'starred'
+	| 'id_social'
+	| 'id_promotions'
+	| 'id_forums'
 
 export type MailLabel = {
 	id: MailLabelId

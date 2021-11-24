@@ -102,8 +102,8 @@ export function Campaign() {
 	const id = useParams().id
 	const t = ['Open World', 'Trending', 'Survivial']
 
-		// MOCKS
-		if(id === "koijam") return <Koijam/>
+	// MOCKS
+	if (id === 'koijam') return <Koijam />
 
 	const [value, setValue] = React.useState(0)
 
@@ -138,7 +138,8 @@ export function Campaign() {
 		<Box>
 			<Box
 				sx={{
-					backgroundImage: 'linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(/assets/campaign-bg.png)',
+					backgroundImage:
+						'linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(/assets/campaign-bg.png)',
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',

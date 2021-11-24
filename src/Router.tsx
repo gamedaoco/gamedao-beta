@@ -26,7 +26,13 @@ export interface ComponentProps {
 	noContainer?: boolean
 }
 
-const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer }: ComponentProps) => (
+const LayoutRoute = ({
+	showFooter,
+	showHeader,
+	showSidebar,
+	element,
+	noContainer,
+}: ComponentProps) => (
 	<Layout
 		showHeader={showHeader ? showHeader : null}
 		showFooter={showFooter ? showFooter : null}
@@ -39,7 +45,11 @@ const LayoutRoute = ({ showFooter, showHeader, showSidebar, element, noContainer
 
 const Router = (props) => {
 	return (
-		<Suspense fallback={<LayoutRoute showSidebar showHeader showFooter element={<Loader text=""/>} />}>
+		<Suspense
+			fallback={
+				<LayoutRoute showSidebar showHeader showFooter element={<Loader text="" />} />
+			}
+		>
 			<Routes>
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route

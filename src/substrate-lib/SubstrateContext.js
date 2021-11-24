@@ -100,7 +100,10 @@ const loadAccounts = (state, dispatch) => {
 		try {
 			await web3Enable(config.APP_NAME)
 			let allAccounts = await web3Accounts()
-			allAccounts = allAccounts.map(({ address, meta }) => ({ address, meta: { ...meta, name: `${meta.name} (${meta.source})` } }))
+			allAccounts = allAccounts.map(({ address, meta }) => ({
+				address,
+				meta: { ...meta, name: `${meta.name} (${meta.source})` },
+			}))
 			keyring.loadAll(
 				{
 					isDevelopment: config.DEVELOPMENT_KEYRING,
@@ -143,7 +146,13 @@ const SubstrateContextProvider = (props) => {
 
 	const handleLoadAccounts = () => loadAccounts(state, dispatch)
 	const handleLogout = () => dispatch({ type: 'RESET_KEYRING' })
-	return <SubstrateContext.Provider value={{ ...state, loadAccounts: handleLoadAccounts, logout: handleLogout }}>{props.children}</SubstrateContext.Provider>
+	return (
+		<SubstrateContext.Provider
+			value={{ ...state, loadAccounts: handleLoadAccounts, logout: handleLogout }}
+		>
+			{props.children}
+		</SubstrateContext.Provider>
+	)
 }
 
 // prop typechecking

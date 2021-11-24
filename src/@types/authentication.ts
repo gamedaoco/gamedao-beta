@@ -25,7 +25,12 @@ export type JWTContextType = {
 	user: AuthUser
 	method: 'jwt'
 	login: (email: string, password: string) => Promise<void>
-	register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
+	register: (
+		email: string,
+		password: string,
+		firstName: string,
+		lastName: string
+	) => Promise<void>
 	logout: () => Promise<void>
 	resetPassword: (email: string) => void
 	updateProfile: VoidFunction
@@ -37,7 +42,12 @@ export type AWSCognitoContextType = {
 	user: AuthUser
 	method: 'cognito'
 	login: (email: string, password: string) => Promise<unknown>
-	register: (email: string, password: string, firstName: string, lastName: string) => Promise<unknown>
+	register: (
+		email: string,
+		password: string,
+		firstName: string,
+		lastName: string
+	) => Promise<unknown>
 	logout: VoidFunction
 	resetPassword: (email: string) => void
 	updateProfile: VoidFunction

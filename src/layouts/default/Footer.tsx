@@ -26,51 +26,58 @@ export const Footer = (props) => (
 		}}
 	>
 		<Container>
-			<Grid columns={16}>
-				<Grid container direction="row" mb={4}>
-					<Grid width={16}>
+			<Grid columns={12}>
+
+				<Grid container direction="row" mt={4} mb={4}>
+
+					<Grid item xs={4} md={3} mb={4}>
 						<a href="#top">
 							<img
 								alt="GameDAO"
 								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
-								width={128}
+								width={32}
 							/>
 						</a>
 					</Grid>
-				</Grid>
 
-				<Grid container direction="row" mb={4}>
-					<Grid item md={4} mb={4}>
-						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
+					<Grid item xs={4} md={3} mb={4}>
+						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
 							About
 						</Typography>
-						<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca">
-							short paper
-						</Link>
-						<Link href="https://blog.gamedao.co">blog</Link>
-						<Link href="https://discord.gg/rhwtr7p">discord</Link>
-						<Link href="https://twitter.com/gamedaoco">twitter</Link>
-						<br />
-						<Link href="https://gamedao.co">gamedao.co</Link>
+						<Typography sx={{ fontSize: '10px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+							<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca"> pinky paper </Link>
+							<Link href="https://blog.gamedao.co">blog</Link>
+							<Link href="https://gamedao.co">gamedao.co</Link>
+							<br />
+							<Link href="https://discord.gg/rhwtr7p">discord</Link>
+							<Link href="https://t.me/gamedaoco">telegram</Link>
+							<Link href="https://twitter.com/gamedaoco">twitter</Link>
+							<Link href="https://www.linkedin.com/company/gamedaoco">linkedin</Link>
+						</Typography>
 					</Grid>
-					<Grid item md={4} mb={4}>
-						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
+					<Grid item xs={4} md={3} mb={4}>
+						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
 							How we build
 						</Typography>
-						<Link href="https://zero.io">zero.io</Link>
-						<Link href="https://substrate.dev">substrate.dev</Link>
-						<Link href="https://kilt.io">kilt protocol</Link>
-						<br />
-						<Link href="https://github.com/gamedaoco">github</Link>
-						<Link href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">
-							Polkadot Explorer
-						</Link>
-					</Grid>
-					<Grid item md={8} mb={4}>
-						<Typography variant="h3" sx={{ fontSize: '1.5em', mb: '1em' }}>
-							GameDAO. For the Creator and Player Economy.
+						<Typography sx={{ fontSize: '10px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+							<Link href="https://zero.io">zero.io</Link>
+							<Link href="https://acala.network">acala.network</Link>
+							<Link href="https://substrate.dev">substrate.dev</Link>
+							<Link href="https://kilt.io">kilt protocol</Link>
+							<Link href="https://fractal.id">fractal id</Link>
+							<br />
+							<Link href="https://github.com/gamedaoco">github</Link>
+							<Link href="https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer">
+								Polkadot Explorer
+							</Link>
 						</Typography>
-						<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
+					</Grid>
+					<Grid item xs={12} md={3} mb={4}>
+						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
+							GameDAO.<br />
+							For the Creator and Player Economy.
+						</Typography>
+						<Typography sx={{ fontSize: '12px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
 							Community driven ownership and creation will be a vital part of how we
 							see video games in the near future. The transition to token driven
 							economies is already in progress but is still in its early stages, only
@@ -108,6 +115,7 @@ export const Footer = (props) => (
 						{`© 2019-${new Date().getFullYear()} `}GAMEDAO CO. Powered by ZERO.IO
 					</Typography>
 				</Grid>
+
 			</Grid>
 		</Container>
 	</Box>

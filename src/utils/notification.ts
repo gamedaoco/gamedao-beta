@@ -16,7 +16,12 @@ export function createInfoNotification(message: string) {
 	return toast.info(message)
 }
 
-export async function createPromiseNotification(promise: Promise<any>, pendingMessage: string, successMessage: string, errorMessage: string) {
+export async function createPromiseNotification(
+	promise: Promise<any>,
+	pendingMessage: string,
+	successMessage: string,
+	errorMessage: string
+) {
 	return await toast.promise(promise, {
 		pending: pendingMessage,
 		success: successMessage,
