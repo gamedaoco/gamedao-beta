@@ -4,25 +4,20 @@
 import React, { useEffect, useState, lazy } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { web3FromSource } from '@polkadot/extension-dapp'
-import { encodeAddress } from '@polkadot/util-crypto'
 import { NavLink } from 'react-router-dom'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-import LanguageIcon from '@mui/icons-material/Language'
 import LockIcon from '@mui/icons-material/Lock'
 import OpenLockIcon from '@mui/icons-material/LockOpen'
 import WebsiteIcon from '@mui/icons-material/Web'
 import MemberIcon from '@mui/icons-material/AccountBox'
-import LockOpenIcon from '@mui/icons-material/LockOpen'
-import GroupIcon from '@mui/icons-material/Group'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
 import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 
 import { data as d } from '../lib/data'
 import { gateway } from '../lib/ipfs'
-import config from '../../config'
 
 import {
 	Button,
@@ -30,18 +25,13 @@ import {
 	Box,
 	Stack,
 	Container,
-	Paper,
-	Table as TableMUI,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
 	TablePagination,
-	TableRow,
 	styled,
 	Link,
 } from '../../components'
 import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { ItemList } from './modules/ItemList'
 
 const CreateDAO = lazy(() => import('./Create'))
 
@@ -64,8 +54,6 @@ const ListWrapper = styled(Box)(({ theme }) => ({
 	rowGap: theme.spacing(2),
 	columnGap: theme.spacing(2),
 }))
-
-const dev = config.dev
 
 const getFromAcct = async (api, account) => {
 	const {
@@ -188,29 +176,6 @@ const Item = ({ content, mode }) => {
 		}
 		query()
 	}, [apiProvider, content])
-
-	// useEffect(() => {
-
-	// 	if (!content.treasury) return
-
-	// 	const query = async () => {
-	// 		const unsub = await apiProvider.queryMulti([
-	// 			[apiProvider.query.system.account, content.treasury],
-	// 		], ([{ data: balance }]) => {
-	// 			console.log(`----> treasury of ${balance.free}`);
-	// 			setItemContent({
-	// 				...itemContent,
-	// 				treasuryBalance: balance.free
-	// 			})
-	// 		});
-	// 	}
-	// 	query()
-
-	// }, [content, apiProvider.query.system.account])
-
-	//
-	//
-	//
 
 	const handleMembership = async (e) => {
 		const op = e.target.value
@@ -350,7 +315,7 @@ const Item = ({ content, mode }) => {
 	)
 }
 
-const ItemList = (props) => {
+const ItemListOld = (props) => {
 	const { content } = props
 
 	///
@@ -396,8 +361,6 @@ const ItemList = (props) => {
 
 	if (!content) return null
 
-	// console.log(activePage,totalPages,offset,itemsPerPage)
-
 	return (
 		<Box>
 			<ListTileSwitch mode={displayMode} onSwitch={setDisplayMode} />
@@ -424,98 +387,69 @@ const ItemList = (props) => {
 }
 
 export const Main = (props) => {
-	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 	const { account } = useWallet()
-
-	const [nonce, setNonce] = useState()
-	const [hashes, setHashes] = useState()
-	// eslint-disable-next-line
-	const [configs, setConfigs] = useState([])
-	// eslint-disable-next-line
-	const [balances, setBalances] = useState([])
-	// eslint-disable-next-line
-	const [members, setMembers] = useState([])
-	const [content, setContent] = useState()
-	const [access, setAccess] = useState([])
-
-	// nonce
+	const [dataState, setDataState] = useState()
+	const {
+		nonce,
+		bodyIndex,
+		bodyConfig,
+		bodyMemberCount,
+		bodies,
+		bodyController,
+		bodyAccess,
+		bodyTreasury,
+	} = useGameDaoControl()
 
 	useEffect(() => {
-		let unsubscribe = null
-		apiProvider.query.gameDaoControl
-			.nonce((n) => {
-				if (n.isNone) {
-					setNonce('<None>')
-				} else {
-					setNonce(n.toNumber())
+		if (
+			nonce &&
+			bodyIndex &&
+			bodyConfig &&
+			bodyMemberCount &&
+			bodies &&
+			bodyController &&
+			bodyAccess &&
+			bodyTreasury
+		) {
+			const data = Object.keys(bodyIndex).map((index) => {
+				const hash = bodyIndex[index]
+				const config = bodyConfig[hash]
+				const members = bodyMemberCount[hash]
+				const body = bodies[hash]
+				const controller = bodyController[hash]
+				const access = bodyAccess[hash]
+				const treasury = bodyTreasury[hash]
+
+				return {
+					hash,
+					config,
+					members,
+					body,
+					controller,
+					access,
+					treasury,
 				}
 			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [apiProvider.query.gameDaoControl])
 
-	// on nonce change get hashes
-
-	useEffect(() => {
-		if (nonce === 0) return
-		const req = [...new Array(nonce)].map((a, i) => i)
-		const queryHashes = async (args) => {
-			const hashes = await apiProvider.query.gameDaoControl.bodyByNonce
-				.multi(req)
-				.then((_) => _.map((_h) => _h.toHuman()))
-			setHashes(hashes)
+			setDataState(data)
 		}
-		queryHashes()
-	}, [nonce, apiProvider.query.gameDaoControl])
-
-	// on hashes get content
-
-	useEffect(() => {
-		if (!hashes) return
-		const getContent = async (args) => {
-			let _req = []
-			try {
-				for (var i = 0; i < args.length; i++)
-					_req.push(apiProvider.query.gameDaoControl.bodies(args[i]))
-				const res = await Promise.all(_req).then((_) => _.map((_c, _i) => _c.toHuman()))
-				setContent(res)
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		getContent(hashes)
-	}, [hashes, apiProvider.query.gameDaoControl])
-
-	// on hashes get config
-
-	useEffect(() => {
-		if (!hashes) return
-		const getContent = async (args) => {
-			let _req = []
-			try {
-				for (var i = 0; i < args.length; i++)
-					_req.push(apiProvider.query.gameDaoControl.bodyConfig(args[i]))
-				const res = await Promise.all(_req).then((_) =>
-					_.map((_c, _i) => {
-						const _res = { id: args[_i], ..._c.toHuman() }
-						return _res
-					})
-				)
-				setConfigs(res)
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		getContent(hashes)
-	}, [hashes, apiProvider.query.gameDaoControl])
+	}, [
+		nonce,
+		bodyIndex,
+		bodyConfig,
+		bodyMemberCount,
+		bodies,
+		bodyController,
+		bodyAccess,
+		bodyTreasury,
+	])
 
 	const [showCreateMode, setCreateMode] = useState(false)
 	const handleCreateBtn = (e) => setCreateMode(true)
 	const handleCloseBtn = (e) => setCreateMode(false)
+
+	const content = 0
 
 	return (
 		<Container maxWidth="lg">
@@ -554,17 +488,12 @@ export const Main = (props) => {
 			</Box>
 			<br />
 			{showCreateMode && <CreateDAO />}
-			{!showCreateMode && content && nonce !== 0 && (
-				<ItemList content={content} configs={configs} members={members} />
-			)}
+			{!showCreateMode && dataState && <ItemList data={dataState} />}
 		</Container>
 	)
 }
 
 export default function Module(props) {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoControl ? <Main {...props} /> : null
+	return apiProvider ? <Main {...props} /> : null
 }
-//
-//
-//
