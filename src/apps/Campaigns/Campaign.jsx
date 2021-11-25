@@ -3,7 +3,7 @@ import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
-import MarkdownIt from 'markdown-it';
+
 
 
 import Tabs from '@mui/material/Tabs'
@@ -105,10 +105,16 @@ export function Campaign() {
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
+
 	const [value, setValue] = React.useState(0)
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
+	}
+
+	// markdown editor
+	function handleEditorChange({ html, text }) {
+		console.log('handleEditorChange', html, text);
 	}
 
 	const [content, setContent] = React.useState()

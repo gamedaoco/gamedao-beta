@@ -1,0 +1,12 @@
+.editor_html_dark {
+    background-color: #161C24;
+}
+
+.editor_html_dark > * {
+    color: white;
+}
+
+
+.editor_html_dark table th {
+    color: black !important;
+}

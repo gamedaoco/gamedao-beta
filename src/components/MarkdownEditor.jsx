@@ -1,24 +1,54 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
-import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
+import MarkdownIt from 'markdown-it';
+
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
+import { useThemeState } from 'src/context/ThemeState'
 
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
+import './MarkdownEditor.css';
+
+
+import config from 'src/config'
+
+const dev = config.dev
 
 // Register plugins if required
 // MdEditor.use(YOUR_PLUGINS_HERE);
 
-// Initialize a markdown parser
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
-// Finish!
-function handleEditorChange({ html, text }) {
-  console.log('handleEditorChange', html, text);
+async function onImageUpload(file) {
+  if (!file) return
+  if (dev) console.log('upload image')
+  
+  try {
+    const cid = await pinFileToIPFS(file)
+    if (dev) console.log('file cid', `${gateway}${cid}`)
+    return `${gateway}${cid}`
+  } catch (error) {
+    console.log('Error uploading file: ', error)
+  }
 }
-export const MarkdownEditor = props => {
+
+
+export const MarkdownEditor = ({onChange, value}) => {
+  const { darkmodeEnabled } = useThemeState()
+
   return (
-    <MdEditor style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
+    <MdEditor 
+      value={value}
+      style={{ height: '500px' }} 
+      id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
+      htmlClass={darkmodeEnabled ? 'editor_html_dark custom-html-style' : 'editor_html_light custom-html-style'}
+      markdownClass={darkmodeEnabled ? 'editor_markdown_dark' : 'editor_markdown_light'}
+      onImageUpload={onImageUpload}
+      onChange={onChange}
+      renderHTML={text => mdParser.render(text)}
+    />
   );
 };
+
+// https://github.com/HarryChen0506/react-markdown-editor-lite/blob/master/docs/configure.md

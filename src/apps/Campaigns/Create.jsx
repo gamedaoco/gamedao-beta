@@ -73,6 +73,16 @@ const random_state = (account) => {
 	}
 }
 
+const defaultMarkdown = `
+# gameDAO
+| Head | Head | Head |
+| --- | --- | --- |
+| Data | Data | Data |
+| Data | Data | Data |
+| Data | Data | Data |
+![unknown (1).png](https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix)
+`
+
 export const Main = () => {
 	const { address, account, finalized, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
@@ -82,6 +92,13 @@ export const Main = () => {
 	const gov = useGameDaoGovernance()
 
 	const [block, setBlock] = useState(0)
+
+	// markdown editor & state
+	const [markdownValue, setMarkdownValue] = useState(defaultMarkdown)
+
+	function handleEditorChange({ html, text }) {
+		setMarkdownValue(text)
+	}
 
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
@@ -291,8 +308,14 @@ export const Main = () => {
 					name="description"
 					onChange={handleOnChange}
 				/>
-				<MarkdownEditor/>
 			</Grid>
+
+			<Grid item xs={12}>
+				<Divider>Campaign Description (Markdown)</Divider>
+				<hr/>
+				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
+			</Grid>
+
 			<Grid item xs={12}>
 				<Divider>Content</Divider>
 			</Grid>
