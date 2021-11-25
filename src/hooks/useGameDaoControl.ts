@@ -18,8 +18,10 @@ type GameDaoControlState = {
 	bodyTreasury: object
 	memberships: object
 	controlledBodies: object
+	bodyMemberState: object
 
 	queryControlledBodies: Function
+	queryBodyMemberState: Function
 	queryMemberships: Function
 }
 
@@ -36,7 +38,9 @@ const INITIAL_STATE: GameDaoControlState = {
 	bodyTreasury: null,
 	memberships: null,
 	controlledBodies: null,
+	bodyMemberState: null,
 	queryMemberships: (accountId) => {},
+	queryBodyMemberState(hash, accountId) {},
 	queryControlledBodies: (accountId) => {},
 }
 
@@ -241,6 +245,24 @@ async function queryControllerdBodies(apiProvider: ApiPromise, accountId: string
 	return data.toHuman()
 }
 
+async function queryBodyMemberState(
+	apiProvider: ApiPromise,
+	hash: string,
+	accountId: string
+): Promise<any> {
+	const [error, data] = await to(
+		apiProvider.query.gameDaoControl.bodyMemberState(hash, accountId)
+	)
+
+	if (error) {
+		console.error(error)
+		createErrorNotification('Error while querying the gameDaoControl bodyMemberState')
+		return null
+	}
+
+	return data.toHuman()
+}
+
 export const useGameDaoControl = (): GameDaoControlState => {
 	const [state, setState] = useState<GameDaoControlState>(INITIAL_STATE)
 	const [lastBodyCount, setLastBodyCount] = useState<number>(null)
@@ -261,12 +283,25 @@ export const useGameDaoControl = (): GameDaoControlState => {
 		})
 	}
 
+	async function handleQueryBodyMemberState(hash: string, accoutId: string): Promise<void> {
+		const data = queryBodyMemberState(apiProvider, hash, accoutId)
+		setState({
+			...state,
+			controlledBodies: { ...(state.controlledBodies ?? {}), [accoutId]: data },
+			bodyMemberState: {
+				...(state.bodyMemberState ?? {}),
+				[hash]: { ...((state.bodyMemberState ?? {})[hash] || {}), [accoutId]: data },
+			},
+		})
+	}
+
 	// Connect functions
 	useEffect(() => {
 		setState({
 			...state,
 			queryMemberships: handleQueryMemberships,
 			queryControlledBodies: handleQueryControlledBodies,
+			queryBodyMemberState: handleQueryBodyMemberState,
 		})
 	}, [])
 

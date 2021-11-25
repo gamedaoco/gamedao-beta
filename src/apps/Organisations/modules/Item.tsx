@@ -12,6 +12,7 @@ import { Typography, Box, Stack, Link } from '../../../components'
 import { ListItem } from '../../../components/ListItem'
 import { TileItem } from '../../../components/TileItem'
 import { dao_bodies } from '../../lib/data'
+import { Interactions } from './Interactions'
 
 async function fetchMetaData(cid, setMetaData) {
 	// Invalid ipfs hash
@@ -97,7 +98,7 @@ export function Item({ data, displayMode }) {
 					<Typography>{data.members || 0} Members</Typography>
 				</Stack>
 				{displayMode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
-				{/* <Interactions /> */}
+				<Interactions data={data} />
 			</Stack>
 		)
 	}, [data, metaDataState, displayMode])
