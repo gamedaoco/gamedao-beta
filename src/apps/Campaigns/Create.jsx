@@ -15,7 +15,7 @@ import {
 import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
-import { useThemeState } from 'src/context/ThemeState'
+
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 
 import { formatZero } from 'src/utils/helper'
@@ -37,7 +37,7 @@ const random_state = (account) => {
 	const name = 'Dao Jones'
 	const email = 'daojones@gamedao.co'
 	const title = 'Great Campaign Title'
-	const description = 'Awesome Description'
+	const description = 'Awesome Short Description'
 	const country = data.countries[rnd(data.countries.length)].value
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
@@ -103,8 +103,6 @@ export const Main = () => {
 		setMarkdownValue(text)
 	}
 
-	const { darkmodeEnabled } = useThemeState()
-
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState()
@@ -143,6 +141,7 @@ export const Main = () => {
 			email: formData.email,
 			title: formData.title,
 			description: formData.description,
+			markdown: markdownValue,
 			...fileCID,
 		}
 		// if (dev) console.log(contentJSON)
@@ -256,8 +255,6 @@ export const Main = () => {
 	const nonce = daoControl.nonce
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
-	console.log(orgs)
-
 	return (
 		<Grid container spacing={2} component="form">
 			<Grid item xs={12}>
@@ -316,9 +313,9 @@ export const Main = () => {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Divider>Campaign Description (Markdown)</Divider>
+				<Divider>Campaign Page Custom Content Description (Markdown)</Divider>
 				<hr/>
-				<MarkdownEditor darkmode={darkmodeEnabled} value={markdownValue} onChange={handleEditorChange} />
+				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
 			</Grid>
 
 			<Grid item xs={12}>
@@ -539,7 +536,3 @@ export default function Module() {
 
 	return apiProvider && account ? <Main /> : null
 }
-
-//
-//
-//

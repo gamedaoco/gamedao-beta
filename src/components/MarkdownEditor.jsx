@@ -2,9 +2,10 @@ import React from 'react';
 import * as ReactDOM from 'react-dom';
 import MdEditor from 'react-markdown-editor-lite';
 import MarkdownIt from 'markdown-it';
+import { useThemeState } from 'src/context/ThemeState'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
-import { useThemeState } from 'src/context/ThemeState'
+
 
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
@@ -34,14 +35,15 @@ async function onImageUpload(file) {
 }
 
 
-export const MarkdownEditor = ({onChange, value, darkmode}) => {
+export const MarkdownEditor = ({onChange, value}) => {
+  const { darkmodeEnabled } = useThemeState()
   return (
     <MdEditor 
       value={value}
       style={{ height: '500px' }} 
-      id={darkmode ? 'editor_dark' : 'editor_light'}
-      htmlClass={darkmode ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
-      markdownClass={darkmode ? 'editor_dark_markdown' : 'editor_light_markdown'}
+      id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
+      htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
+      markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}
       onImageUpload={onImageUpload}
       onChange={onChange}
       renderHTML={text => mdParser.render(text)}
