@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
-import { useHookState } from 'src/context/Hook'
+import { useDispatch, useSelector } from 'react-redux'
+import { balanceStateSelector, updateBalanceAction } from 'src/redux/duck/balance.duck'
 
 export type BalanceState = {
 	balanceZero: String
@@ -52,13 +53,14 @@ async function queryAccountBalance(apiProvider: ApiPromise, address: string): Pr
 // Get Account Balance for Zero, Play and game
 export function useBalance(): BalanceState {
 	const [addressState, setAddressState] = useState<string>(null)
+	const balanceState = useSelector(balanceStateSelector)
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
-	const { balance, updateState } = useHookState()
+	const dispatch = useDispatch()
 
 	function handleUpdateBalance() {
 		queryAccountBalance(apiProvider, address).then((state) => {
-			updateState({ balance: state })
+			dispatch(updateBalanceAction(state))
 			setAddressState(address)
 		})
 	}
@@ -66,7 +68,7 @@ export function useBalance(): BalanceState {
 	useEffect(() => {
 		if (apiProvider && address && address !== addressState) {
 			queryAccountBalance(apiProvider, address).then((state) => {
-				updateState({ balance: state })
+				dispatch(updateBalanceAction(state))
 				setAddressState(address)
 			})
 		}
@@ -75,7 +77,7 @@ export function useBalance(): BalanceState {
 	console.log('🚀 ~ file: useBalance.ts ~ line 70 ~ useBalance ~ balanceState')
 
 	return {
-		...balance,
+		...balanceState,
 		updateBalance: handleUpdateBalance,
 	} as any
 }
