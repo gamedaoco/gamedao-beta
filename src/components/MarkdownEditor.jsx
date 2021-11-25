@@ -42,8 +42,8 @@ export const MarkdownEditor = ({onChange, value}) => {
       value={value}
       style={{ height: '500px' }} 
       id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
-      htmlClass={darkmodeEnabled ? 'editor_html_dark custom-html-style' : 'editor_html_light custom-html-style'}
-      markdownClass={darkmodeEnabled ? 'editor_markdown_dark' : 'editor_markdown_light'}
+      htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
+      markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}
       onImageUpload={onImageUpload}
       onChange={onChange}
       renderHTML={text => mdParser.render(text)}
