@@ -15,7 +15,7 @@ import {
 import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
 import config from '../../config'
-
+import { useThemeState } from 'src/context/ThemeState'
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
 
 import { formatZero } from 'src/utils/helper'
@@ -29,6 +29,7 @@ import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 import { MarkdownEditor } from 'src/components/MarkdownEditor'
+
 
 const dev = config.dev
 
@@ -101,6 +102,8 @@ export const Main = () => {
 	function handleEditorChange({ html, text }) {
 		setMarkdownValue(text)
 	}
+
+	const { darkmodeEnabled } = useThemeState()
 
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
@@ -315,7 +318,7 @@ export const Main = () => {
 			<Grid item xs={12}>
 				<Divider>Campaign Description (Markdown)</Divider>
 				<hr/>
-				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
+				<MarkdownEditor darkmode={darkmodeEnabled} value={markdownValue} onChange={handleEditorChange} />
 			</Grid>
 
 			<Grid item xs={12}>

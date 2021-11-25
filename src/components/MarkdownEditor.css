@@ -1,11 +1,15 @@
-#editor_dark_html {
+#editor_dark {
     background-color: #161C24 !important;
 }
 
-.editor_dark_html > * {
+#editor_dark_html > * {
     color: white;
 }
 
 .editor_dark_html table th {
     color: black !important;
+}
+
+#editor_light_html > * {
+    color: black;
 }
