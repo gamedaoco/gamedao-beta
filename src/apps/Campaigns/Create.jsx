@@ -11,6 +11,7 @@ import {
 	InputLabel,
 	Grid,
 	FormControlLabel,
+	Image16to9
 } from '../../components'
 import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
@@ -322,11 +323,24 @@ export const Main = () => {
 				<Divider>Content</Divider>
 			</Grid>
 
+			{!fileCID && (
+				[<Grid item xs={12} md={6}>
+					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+				</Grid>,
+				<Grid item xs={12} md={6}>
+					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+				</Grid>]
+			)}
+
 			{fileCID && (
-				<Grid item xs={12}>
-					{fileCID.logo && <img alt={formData.title} src={gateway + fileCID.logo} />}
-					{fileCID.header && <img alt={formData.title} src={gateway + fileCID.header} />}
-				</Grid>
+				[<Grid item xs={12} md={6}>
+					{!fileCID.logo && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+					{fileCID.logo && <Image16to9 alt={formData.title} src={gateway + fileCID.logo} />}
+				</Grid>,
+				<Grid item xs={12} md={6}>
+					{!fileCID.header && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+					{fileCID.header && <Image16to9 alt={formData.title} src={gateway + fileCID.header} />}
+				</Grid>]
 			)}
 
 			<Grid item xs={12} md={6}>
