@@ -314,12 +314,6 @@ export const Main = () => {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Divider>Campaign Page Custom Content Description (Markdown)</Divider>
-				<hr/>
-				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
-			</Grid>
-
-			<Grid item xs={12}>
 				<Divider>Content</Divider>
 			</Grid>
 
@@ -374,6 +368,12 @@ export const Main = () => {
 				>
 					Pick a header graphic
 				</Button>
+			</Grid>
+
+			<Grid item xs={12}>
+				<Divider>Campaign Page Custom Content Description (Markdown)</Divider>
+				<hr/>
+				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
 			</Grid>
 
 			{/* legal body applying for the funding */}
