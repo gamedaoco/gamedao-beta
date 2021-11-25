@@ -10,6 +10,7 @@ import Close from '@mui/icons-material/Close'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { voting_types } from '../lib'
+import { GovernancePage } from './modules'
 
 const ItemTable = lazy(() => import('./ItemTable'))
 const CreateProposal = lazy(() => import('./Create'))
@@ -86,5 +87,5 @@ export const Component = (props) => {
 
 export default function Module(props) {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoGovernance ? <Component {...props} /> : null
+	return apiProvider && apiProvider.query.gameDaoGovernance ? <GovernancePage {...props} /> : null
 }

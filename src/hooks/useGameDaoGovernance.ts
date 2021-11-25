@@ -202,9 +202,7 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 	useEffect(() => {
 		if (apiProvider) {
 			queryProposalsCount(apiProvider).then((proposalsCount) => {
-				if (isMountedRef) {
-					setState({ ...state, proposalsCount: proposalsCount ?? 0 })
-				}
+				setState({ ...state, proposalsCount: proposalsCount ?? 0 })
 			})
 		}
 	}, [apiProvider, isMountedRef])

@@ -157,14 +157,15 @@ export const Main = () => {
 
 		// send it
 
-		const sendTX = async (args) => {
+		const sendTX = async (cid) => {
 			if (dev) console.log('2. send tx')
 			setLoading(true)
 
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
-			const { id, purpose, cid } = formData
+			const { entity, purpose } = formData
+			console.log('🚀 ~ file: Create.tsx ~ line 166 ~ sendTX ~ formData', formData)
 
-			const payload = [id, purpose, cid, expiry]
+			const payload = [entity, purpose, cid, expiry]
 
 			signAndNotify(
 				apiProvider.tx.gameDaoGovernance.generalProposal(...payload),

@@ -191,10 +191,7 @@ function Main({ showNavigation }: ComponentProps) {
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Votings</Typography>
 						{votingCount > 0 ? (
-							<>
-								<Box />
-								<NavBadge badgeContent={votingCount} color={'primary'} />
-							</>
+							<NavBadge badgeContent={votingCount} color={'primary'} />
 						) : null}
 					</SidebarButton>
 				</Link>
