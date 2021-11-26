@@ -239,7 +239,7 @@ function Main({ showNavigation }: ComponentProps) {
 							color: 'transparent',
 						}}
 					>
-						<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
+						<SidebarButton sx={{ mx: 4, py: 0 }}>
 							<ListItemIcon>
 								<FontIcon sx={{ fontSize: '3rem' }} name="store" />
 							</ListItemIcon>

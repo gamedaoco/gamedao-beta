@@ -4,6 +4,11 @@ import { useIsMountedRef } from './useIsMountedRef'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { ApiPromise } from '@polkadot/api'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+	crowdfundingStateSelector,
+	updateCrowdfundingAction,
+} from 'src/redux/duck/crowdfunding.duck'
 
 // Todo: Logic for subscribing to changes
 // Todo: Max initial load. Currently all are loaded
@@ -164,11 +169,16 @@ async function queryCampaignContributorsCount(
 }
 
 export const useCrowdfunding = () => {
-	const [state, setState] = useState<CrowdfundingState>(INITIAL_STATE)
 	const [lastCampaignsCount, setLastCampaignsCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
+	const crowdfundingState = useSelector(crowdfundingStateSelector)
+	const dispatch = useDispatch()
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
+
+	function setState(data) {
+		dispatch(updateCrowdfundingAction(data))
+	}
 
 	// Update campaigns by querying the blockchain
 	const handleUpdateCampaigns = async (hashes: Array<string>) => {
@@ -181,41 +191,32 @@ export const useCrowdfunding = () => {
 
 		if (isMountedRef) {
 			setState({
-				...state,
 				campaigns: {
-					...(state.campaigns ?? {}),
+					...(crowdfundingState.campaigns ?? {}),
 					...(data[0] ?? {}),
 				},
 				campaignBalance: {
-					...(state.campaignBalance ?? {}),
+					...(crowdfundingState.campaignBalance ?? {}),
 					...(data[1] ?? {}),
 				},
 				campaignState: {
-					...(state.campaignState ?? {}),
+					...(crowdfundingState.campaignState ?? {}),
 					...(data[2] ?? {}),
 				},
 				campaignContributorsCount: {
-					...(state.campaignContributorsCount ?? {}),
+					...(crowdfundingState.campaignContributorsCount ?? {}),
 					...(data[3] ?? {}),
 				},
 			})
 		}
 	}
 
-	// Set updateCampaigns function to be more like our context
-	useEffect(() => {
-		setState({
-			...state,
-			updateCampaigns: handleUpdateCampaigns,
-		})
-	}, [])
-
 	// Fetch campaignsCount
 	useEffect(() => {
 		if (apiProvider) {
 			queryCampaignsCount(apiProvider).then((campaignsCount) => {
 				if (isMountedRef) {
-					setState({ ...state, campaignsCount: campaignsCount ?? 0 })
+					setState({ campaignsCount: campaignsCount ?? 0 })
 				}
 			})
 		}
@@ -224,36 +225,37 @@ export const useCrowdfunding = () => {
 	// Fetch new campaign hashes
 	useEffect(() => {
 		if (
-			state?.campaignsCount >= 0 &&
-			(lastCampaignsCount ?? 0 !== state.campaignsCount) &&
+			crowdfundingState?.campaignsCount >= 0 &&
+			(lastCampaignsCount ?? 0 !== crowdfundingState.campaignsCount) &&
 			apiProvider
 		) {
-			queryCampaignsHash(apiProvider, lastCampaignsCount ?? 0, state.campaignsCount).then(
-				(opt) => {
-					if (isMountedRef) {
-						setState({
-							...state,
-							campaignsHash: {
-								...(state.campaignsHash ?? {}),
-								...(opt?.campaignsHash ?? {}),
-							},
-							campaignsIndex: {
-								...(state.campaignsIndex ?? {}),
-								...(opt?.campaignsIndex ?? {}),
-							},
-						})
-					}
+			queryCampaignsHash(
+				apiProvider,
+				lastCampaignsCount ?? 0,
+				crowdfundingState.campaignsCount
+			).then((opt) => {
+				if (isMountedRef) {
+					setState({
+						campaignsHash: {
+							...(crowdfundingState.campaignsHash ?? {}),
+							...(opt?.campaignsHash ?? {}),
+						},
+						campaignsIndex: {
+							...(crowdfundingState.campaignsIndex ?? {}),
+							...(opt?.campaignsIndex ?? {}),
+						},
+					})
 				}
-			)
-			setLastCampaignsCount(state.campaignsCount)
+			})
+			setLastCampaignsCount(crowdfundingState.campaignsCount)
 		}
-	}, [state.campaignsCount])
+	}, [crowdfundingState.campaignsCount])
 
 	// Fetch campaigns and details
 	useEffect(() => {
-		const keys = Object.keys(state?.campaignsHash ?? {})
+		const keys = Object.keys(crowdfundingState?.campaignsHash ?? {})
 		if (apiProvider && keys.length > 0 && !isDataLoading) {
-			const newHashes = keys.filter((key) => !(state.campaigns ?? {})[key])
+			const newHashes = keys.filter((key) => !(crowdfundingState.campaigns ?? {})[key])
 			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
@@ -267,30 +269,27 @@ export const useCrowdfunding = () => {
 
 				if (isMountedRef) {
 					setState({
-						...state,
 						campaigns: {
-							...(state.campaigns ?? {}),
+							...(crowdfundingState.campaigns ?? {}),
 							...(data[0] ?? {}),
 						},
 						campaignBalance: {
-							...(state.campaignBalance ?? {}),
+							...(crowdfundingState.campaignBalance ?? {}),
 							...(data[1] ?? {}),
 						},
 						campaignState: {
-							...(state.campaignState ?? {}),
+							...(crowdfundingState.campaignState ?? {}),
 							...(data[2] ?? {}),
 						},
 						campaignContributorsCount: {
-							...(state.campaignContributorsCount ?? {}),
+							...(crowdfundingState.campaignContributorsCount ?? {}),
 							...(data[3] ?? {}),
 						},
 					})
 				}
 			})()
 		}
-	}, [state.campaignsHash])
+	}, [crowdfundingState.campaignsHash])
 
-	console.log('🚀 ~ file: useCrowdfunding.ts ~ line 292 ~ useCrowdfunding ~ state', state)
-
-	return state
+	return { ...crowdfundingState, updateCampaigns: handleUpdateCampaigns }
 }

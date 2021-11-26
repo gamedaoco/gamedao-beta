@@ -4,7 +4,13 @@ import { useApiProvider } from '@substra-hooks/core'
 import { createErrorNotification } from 'src/utils/notification'
 import { ApiPromise } from '@polkadot/api'
 import { to } from 'await-to-js'
-import { useHookState } from 'src/context/Hook'
+import {
+	addGameDaoControlMemberStateAction,
+	gameDaoControlRefreshSelector,
+	gameDaoControlStateSelector,
+	updateGameDaoControlAction,
+} from 'src/redux/duck/gameDaoControl.duck'
+import { useDispatch, useSelector } from 'react-redux'
 
 type GameDaoControlState = {
 	nonce: number
@@ -19,8 +25,10 @@ type GameDaoControlState = {
 	bodyTreasury: object
 	memberships: object
 	controlledBodies: object
+	bodyMemberState: object
 
 	queryControlledBodies: Function
+	queryBodyMemberState: Function
 	queryMemberships: Function
 }
 
@@ -37,7 +45,9 @@ const INITIAL_STATE: GameDaoControlState = {
 	bodyTreasury: null,
 	memberships: null,
 	controlledBodies: null,
+	bodyMemberState: null,
 	queryMemberships: (accountId) => {},
+	queryBodyMemberState(hash, accountId) {},
 	queryControlledBodies: (accountId) => {},
 }
 
@@ -242,40 +252,71 @@ async function queryControllerdBodies(apiProvider: ApiPromise, accountId: string
 	return data.toHuman()
 }
 
+async function queryBodyMemberState(
+	apiProvider: ApiPromise,
+	hash: string,
+	accountId: string
+): Promise<any> {
+	const [error, data] = await to(
+		apiProvider.query.gameDaoControl.bodyMemberState([hash, accountId])
+	)
+
+	if (error) {
+		console.error(error)
+		createErrorNotification('Error while querying the gameDaoControl bodyMemberState')
+		return null
+	}
+
+	return data.toHuman()
+}
+
 export const useGameDaoControl = (): GameDaoControlState => {
-	const {gameDaoControl, updateState} = useHookState();
 	const [lastBodyCount, setLastBodyCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
+	const gameDaoControlState = useSelector(gameDaoControlStateSelector)
+	const refresh = useSelector(gameDaoControlRefreshSelector)
+
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
-
-	const state: any = gameDaoControl;
+	const dispatch = useDispatch()
 
 	function setState(data) {
-		updateState({ gameDaoControl: data });
+		dispatch(updateGameDaoControlAction(data))
 	}
 
 	async function handleQueryMemberships(accoutId: string): Promise<void> {
 		const data = await queryMemberships(apiProvider, accoutId)
-
-		setState({ memberships: { ...(gameDaoControl.memberships ?? {}), [accoutId]: data } })
-
+		setState({ memberships: { ...(gameDaoControlState.memberships ?? {}), [accoutId]: data } })
 	}
 
 	async function handleQueryControlledBodies(accoutId: string): Promise<void> {
 		const data = await queryControllerdBodies(apiProvider, accoutId)
 		setState({
-
-			controlledBodies: { ...(gameDaoControl.controlledBodies ?? {}), [accoutId]: data },
+			controlledBodies: { ...(gameDaoControlState.controlledBodies ?? {}), [accoutId]: data },
 		})
 	}
+
+	async function handleQueryBodyMemberState(hash: string, accoutId: string): Promise<void> {
+		const data = await queryBodyMemberState(apiProvider, hash, accoutId)
+
+		dispatch(addGameDaoControlMemberStateAction(hash, { [accoutId]: data }))
+	}
+
+	useEffect(() => {
+		if (refresh === true && apiProvider) {
+			setLastBodyCount(null)
+			queryNonce(apiProvider).then((nonce) => {
+				setState({ nonce: nonce })
+			})
+		}
+	}, [refresh])
 
 	// Fetch nonce
 	useEffect(() => {
 		if (apiProvider) {
 			queryNonce(apiProvider).then((nonce) => {
 				if (isMountedRef) {
-					setState({  nonce: nonce })
+					setState({ nonce: nonce })
 				}
 			})
 		}
@@ -283,67 +324,68 @@ export const useGameDaoControl = (): GameDaoControlState => {
 
 	// Fetch bodies
 	useEffect(() => {
-		if (state?.nonce >= 0 && (lastBodyCount ?? 0 !== gameDaoControl.nonce) && apiProvider) {
-			const lastIndex = (gameDaoControl.nonce || 0) - lastBodyCount ?? 0;
-			if (lastIndex <= 0) return;
-
+		if (
+			gameDaoControlState?.nonce >= 0 &&
+			(lastBodyCount ?? 0 !== gameDaoControlState.nonce) &&
+			apiProvider
+		) {
 			queryBodyByNonce(
 				apiProvider,
-				[...new Array(lastIndex)].map(
+				[...new Array(gameDaoControlState.nonce - lastBodyCount ?? 0)].map(
 					(_, i) => i + lastBodyCount ?? 0
 				)
 			).then((opt) => {
 				if (isMountedRef) {
 					setState({
 						bodyHash: {
-							...(gameDaoControl.bodyHash ?? {}),
+							...(gameDaoControlState.bodyHash ?? {}),
 							...(opt?.bodyHash ?? {}),
 						},
 						bodyIndex: {
-							...(gameDaoControl.bodyIndex ?? {}),
+							...(gameDaoControlState.bodyIndex ?? {}),
 							...(opt?.bodyIndex ?? {}),
 						},
 					})
 				}
 			})
-			setLastBodyCount(gameDaoControl.nonce)
+			setLastBodyCount(gameDaoControlState.nonce)
 		}
-	}, [gameDaoControl.nonce])
+	}, [gameDaoControlState.nonce])
 
 	// Fetch bodie and details
 	useEffect(() => {
-		const keys = Object.keys(gameDaoControl.bodyHash ?? {})
+		const keys = Object.keys(gameDaoControlState.bodyHash ?? {})
 		if (keys.length > 0 && apiProvider && !isDataLoading) {
 			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
 					queryBodies(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodies ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodies ?? {})[hash])
 					),
 					queryBodyAccess(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyAccess ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyAccess ?? {})[hash])
 					),
 					queryBodyConfig(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyConfig ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyConfig ?? {})[hash])
 					),
 					queryBodyController(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyController ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyController ?? {})[hash])
 					),
 					queryBodyCreator(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyCreator ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyCreator ?? {})[hash])
 					),
 					queryBodyMemberCount(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyMemberCount ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyMemberCount ?? {})[hash])
 					),
 					queryBodyTreasury(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControl.bodyTreasury ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControlState.bodyTreasury ?? {})[hash])
 					),
 				])
 
@@ -352,43 +394,43 @@ export const useGameDaoControl = (): GameDaoControlState => {
 				if (isMountedRef) {
 					setState({
 						bodies: {
-							...(gameDaoControl.bodies ?? {}),
+							...(gameDaoControlState.bodies ?? {}),
 							...(data[0] ?? {}),
 						},
 						bodyAccess: {
-							...(gameDaoControl.bodyAccess ?? {}),
+							...(gameDaoControlState.bodyAccess ?? {}),
 							...(data[1] ?? {}),
 						},
 						bodyConfig: {
-							...(gameDaoControl.bodyConfig ?? {}),
+							...(gameDaoControlState.bodyConfig ?? {}),
 							...(data[2] ?? {}),
 						},
 						bodyController: {
-							...(gameDaoControl.bodyController ?? {}),
+							...(gameDaoControlState.bodyController ?? {}),
 							...(data[3] ?? {}),
 						},
 						bodyCreator: {
-							...(gameDaoControl.bodyCreator ?? {}),
+							...(gameDaoControlState.bodyCreator ?? {}),
 							...(data[4] ?? {}),
 						},
 						bodyMemberCount: {
-							...(gameDaoControl.bodyMemberCount ?? {}),
+							...(gameDaoControlState.bodyMemberCount ?? {}),
 							...(data[5] ?? {}),
 						},
 						bodyTreasury: {
-							...(gameDaoControl.bodyTreasury ?? {}),
+							...(gameDaoControlState.bodyTreasury ?? {}),
 							...(data[6] ?? {}),
 						},
 					})
 				}
 			})()
 		}
-	}, [gameDaoControl.bodyHash])
-	console.log('🚀 ~ file: useGameDaoControl.ts ~ line 386 ~ useGameDaoControl ~ state', state)
+	}, [gameDaoControlState.bodyHash])
 
 	return {
-		...(gameDaoControl as any),
+		...gameDaoControlState,
 		queryMemberships: handleQueryMemberships,
 		queryControlledBodies: handleQueryControlledBodies,
+		queryBodyMemberState: handleQueryBodyMemberState,
 	}
 }
