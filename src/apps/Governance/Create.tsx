@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinJSONToIPFS } from '../lib/ipfs'
@@ -84,6 +85,14 @@ export const Main = () => {
 	const [formData, updateFormData] = useState({} as GenericForm)
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState({})
+
+	const { queryMemberships, memberships } = useGameDaoControl()
+
+	useEffect(() => {
+		if (!address) return
+
+		queryMemberships(address)
+	}, [address])
 
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
@@ -224,9 +233,9 @@ export const Main = () => {
 										value={formData.entity}
 										onChange={handleOnChange}
 									>
-										{entities.map((e) => (
-											<MenuItem key={e.key} value={e.value}>
-												{e.text}
+										{(memberships?.[address] ?? []).map((e) => (
+											<MenuItem key={e} value={e}>
+												{e}
 											</MenuItem>
 										))}
 									</MuiSelect>

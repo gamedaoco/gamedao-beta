@@ -5,6 +5,7 @@ import CreateProposal from '../Create'
 import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/components'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { ProposalList } from './ProposalList'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 
 const NavBadge = styled(Badge)(({ theme }) => ({
 	'& .MuiBadge-badge': {
@@ -17,6 +18,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 export function GovernancePage() {
 	const { proposalsCount } = useGameDaoGovernance()
 	const [showCreateMode, setCreateMode] = useState(false)
+	useGameDaoControl()
 
 	return (
 		<Stack spacing={4}>

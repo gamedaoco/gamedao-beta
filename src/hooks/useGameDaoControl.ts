@@ -4,6 +4,7 @@ import { useApiProvider } from '@substra-hooks/core'
 import { createErrorNotification } from 'src/utils/notification'
 import { ApiPromise } from '@polkadot/api'
 import { to } from 'await-to-js'
+import { useHookState } from 'src/context/Hook'
 
 type GameDaoControlState = {
 	nonce: number
@@ -242,40 +243,39 @@ async function queryControllerdBodies(apiProvider: ApiPromise, accountId: string
 }
 
 export const useGameDaoControl = (): GameDaoControlState => {
-	const [state, setState] = useState<GameDaoControlState>(INITIAL_STATE)
+	const {gameDaoControl, updateState} = useHookState();
 	const [lastBodyCount, setLastBodyCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
 
+	const state: any = gameDaoControl;
+
+	function setState(data) {
+		updateState({ gameDaoControl: data });
+	}
+
 	async function handleQueryMemberships(accoutId: string): Promise<void> {
-		const data = queryMemberships(apiProvider, accoutId)
-		setState({ ...state, memberships: { ...(state.memberships ?? {}), [accoutId]: data } })
+		const data = await queryMemberships(apiProvider, accoutId)
+
+		setState({ memberships: { ...(gameDaoControl.memberships ?? {}), [accoutId]: data } })
+
 	}
 
 	async function handleQueryControlledBodies(accoutId: string): Promise<void> {
-		const data = queryControllerdBodies(apiProvider, accoutId)
+		const data = await queryControllerdBodies(apiProvider, accoutId)
 		setState({
-			...state,
-			controlledBodies: { ...(state.controlledBodies ?? {}), [accoutId]: data },
+
+			controlledBodies: { ...(gameDaoControl.controlledBodies ?? {}), [accoutId]: data },
 		})
 	}
-
-	// Connect functions
-	useEffect(() => {
-		setState({
-			...state,
-			queryMemberships: handleQueryMemberships,
-			queryControlledBodies: handleQueryControlledBodies,
-		})
-	}, [])
 
 	// Fetch nonce
 	useEffect(() => {
 		if (apiProvider) {
 			queryNonce(apiProvider).then((nonce) => {
 				if (isMountedRef) {
-					setState({ ...state, nonce: nonce })
+					setState({  nonce: nonce })
 				}
 			})
 		}
@@ -283,65 +283,67 @@ export const useGameDaoControl = (): GameDaoControlState => {
 
 	// Fetch bodies
 	useEffect(() => {
-		if (state?.nonce >= 0 && (lastBodyCount ?? 0 !== state.nonce) && apiProvider) {
+		if (state?.nonce >= 0 && (lastBodyCount ?? 0 !== gameDaoControl.nonce) && apiProvider) {
+			const lastIndex = (gameDaoControl.nonce || 0) - lastBodyCount ?? 0;
+			if (lastIndex <= 0) return;
+
 			queryBodyByNonce(
 				apiProvider,
-				[...new Array(state.nonce - lastBodyCount ?? 0)].map(
+				[...new Array(lastIndex)].map(
 					(_, i) => i + lastBodyCount ?? 0
 				)
 			).then((opt) => {
 				if (isMountedRef) {
 					setState({
-						...state,
 						bodyHash: {
-							...(state.bodyHash ?? {}),
+							...(gameDaoControl.bodyHash ?? {}),
 							...(opt?.bodyHash ?? {}),
 						},
 						bodyIndex: {
-							...(state.bodyIndex ?? {}),
+							...(gameDaoControl.bodyIndex ?? {}),
 							...(opt?.bodyIndex ?? {}),
 						},
 					})
 				}
 			})
-			setLastBodyCount(state.nonce)
+			setLastBodyCount(gameDaoControl.nonce)
 		}
-	}, [state.nonce])
+	}, [gameDaoControl.nonce])
 
 	// Fetch bodie and details
 	useEffect(() => {
-		const keys = Object.keys(state.bodyHash ?? {})
+		const keys = Object.keys(gameDaoControl.bodyHash ?? {})
 		if (keys.length > 0 && apiProvider && !isDataLoading) {
 			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
 					queryBodies(
 						apiProvider,
-						keys.filter((hash) => !(state.bodies ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodies ?? {})[hash])
 					),
 					queryBodyAccess(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyAccess ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyAccess ?? {})[hash])
 					),
 					queryBodyConfig(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyConfig ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyConfig ?? {})[hash])
 					),
 					queryBodyController(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyController ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyController ?? {})[hash])
 					),
 					queryBodyCreator(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyCreator ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyCreator ?? {})[hash])
 					),
 					queryBodyMemberCount(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyMemberCount ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyMemberCount ?? {})[hash])
 					),
 					queryBodyTreasury(
 						apiProvider,
-						keys.filter((hash) => !(state.bodyTreasury ?? {})[hash])
+						keys.filter((hash) => !(gameDaoControl.bodyTreasury ?? {})[hash])
 					),
 				])
 
@@ -349,41 +351,44 @@ export const useGameDaoControl = (): GameDaoControlState => {
 
 				if (isMountedRef) {
 					setState({
-						...state,
 						bodies: {
-							...(state.bodies ?? {}),
+							...(gameDaoControl.bodies ?? {}),
 							...(data[0] ?? {}),
 						},
 						bodyAccess: {
-							...(state.bodyAccess ?? {}),
+							...(gameDaoControl.bodyAccess ?? {}),
 							...(data[1] ?? {}),
 						},
 						bodyConfig: {
-							...(state.bodyConfig ?? {}),
+							...(gameDaoControl.bodyConfig ?? {}),
 							...(data[2] ?? {}),
 						},
 						bodyController: {
-							...(state.bodyController ?? {}),
+							...(gameDaoControl.bodyController ?? {}),
 							...(data[3] ?? {}),
 						},
 						bodyCreator: {
-							...(state.bodyCreator ?? {}),
+							...(gameDaoControl.bodyCreator ?? {}),
 							...(data[4] ?? {}),
 						},
 						bodyMemberCount: {
-							...(state.bodyMemberCount ?? {}),
+							...(gameDaoControl.bodyMemberCount ?? {}),
 							...(data[5] ?? {}),
 						},
 						bodyTreasury: {
-							...(state.bodyTreasury ?? {}),
+							...(gameDaoControl.bodyTreasury ?? {}),
 							...(data[6] ?? {}),
 						},
 					})
 				}
 			})()
 		}
-	}, [state.bodyHash])
+	}, [gameDaoControl.bodyHash])
 	console.log('🚀 ~ file: useGameDaoControl.ts ~ line 386 ~ useGameDaoControl ~ state', state)
 
-	return state
+	return {
+		...(gameDaoControl as any),
+		queryMemberships: handleQueryMemberships,
+		queryControlledBodies: handleQueryControlledBodies,
+	}
 }

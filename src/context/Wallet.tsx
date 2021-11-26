@@ -59,7 +59,7 @@ const WalletProvider = ({ children }) => {
 				if (callback) callback(false)
 				return reject()
 			}
-			const [error] = await to(
+			const [error, data] = await to(
 				tx.signAndSend(state.address, { signer: state.signer }, ({ status }) => {
 					if (status.isInBlock) {
 						if (callback) callback(true)
@@ -67,6 +67,8 @@ const WalletProvider = ({ children }) => {
 					}
 				})
 			)
+
+			console.log(data)
 
 			if (error) {
 				console.log('Transaction failing with', error)

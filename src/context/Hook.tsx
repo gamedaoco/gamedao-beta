@@ -2,11 +2,13 @@ import { createContext, useContext, useState } from 'react'
 
 export type HookState = {
 	balance: object
+	gameDaoControl: any
 	updateState: (stateData: object) => void
 }
 
 const INITIAL_STATE: HookState = {
 	balance: {},
+	gameDaoControl: {},
 	updateState: () => {},
 }
 
