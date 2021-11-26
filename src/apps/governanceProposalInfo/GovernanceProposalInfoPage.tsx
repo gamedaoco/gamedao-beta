@@ -1,5 +1,6 @@
 import React from 'react'
+import { Box } from 'src/components'
 
 export function GovernanceProposalInfoPage() {
-	return <></>
+	return <Box>Back to overview</Box>
 }

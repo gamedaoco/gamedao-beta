@@ -6,6 +6,7 @@ import { blockTime } from 'src/apps/lib/data'
 
 import moment from 'moment'
 import { LinearProgress } from '@mui/material'
+import { useNavigate } from 'react-router'
 
 function normalizeNumber(number: any): number {
 	return +`${number}`.replace(/,|\./g, '')
@@ -15,6 +16,7 @@ export function ProposalItem({ blockNumber, proposal }) {
 	// Get store data
 	const { metadata, proposalSimpleVotes } = useGameDaoGovernance()
 	const { bodies } = useGameDaoControl()
+	const navigate = useNavigate()
 
 	// Proposal data
 	const proposalId = proposal.proposal_id
@@ -68,7 +70,7 @@ export function ProposalItem({ blockNumber, proposal }) {
 					</Box>
 				</Box>
 				<Box marginLeft="auto">
-					<Button>Vote</Button>
+					<Button onClick={() => navigate(`/app/governance/${proposalId}`)}>Vote</Button>
 				</Box>
 			</Stack>
 		</Box>
