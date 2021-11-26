@@ -3,12 +3,29 @@ import { useGameDaoControl } from '../../../hooks/useGameDaoControl'
 import { useWallet } from '../../../context/Wallet'
 import { Button } from '../../../components'
 import { useApiProvider } from '@substra-hooks/core'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+	clearGameDaoControlAction,
+	gameDaoControlRefreshSelector,
+} from 'src/redux/duck/gameDaoControl.duck'
+import { useBalance } from 'src/hooks/useBalance'
 
 export function Interactions({ data }) {
 	const { address, signAndNotify } = useWallet()
+	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
-
+	const navigate = useNavigate()
 	const { queryBodyMemberState, bodyMemberState } = useGameDaoControl()
+	const refresh = useSelector(gameDaoControlRefreshSelector)
+	const dispatch = useDispatch()
+
+	function updatePageState() {
+		setTimeout(() => {
+			dispatch(clearGameDaoControlAction())
+			updateBalance()
+		}, 1500)
+	}
 
 	async function handleApply() {
 		const payload = [data.hash, address]
@@ -20,6 +37,7 @@ export function Interactions({ data }) {
 				error: 'Apply organisations failed',
 			},
 			(state) => {
+				updatePageState()
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
@@ -37,6 +55,7 @@ export function Interactions({ data }) {
 				error: 'Join organisations failed',
 			},
 			(state) => {
+				updatePageState()
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
@@ -54,6 +73,7 @@ export function Interactions({ data }) {
 				error: 'Leave organisations failed',
 			},
 			(state) => {
+				updatePageState()
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
@@ -65,20 +85,15 @@ export function Interactions({ data }) {
 		if (address) {
 			queryBodyMemberState(data.hash, address)
 		}
-	}, [address])
+	}, [address, refresh])
 
 	if (!data || !data?.access) return null
 
 	const isAdmin = () => (address === data?.controller ? true : false)
-	const isMember = () => (queryBodyMemberState?.[data.hash]?.[address] > 0 ? true : false)
+	const isMember = () => (bodyMemberState?.[data.hash]?.[address] > 0 ? true : false)
 
 	const actionType = ['join', 'apply', 'leave'][data.access]
 	const actionCallback = [handleJoin, handleApply, handleLeave][data.access]
-
-	console.log(
-		'🚀 ~ file: Interactions.tsx ~ line 9 ~ Interactions ~ bodyMemberState',
-		bodyMemberState
-	)
 
 	return (
 		<>
@@ -86,7 +101,7 @@ export function Interactions({ data }) {
 				<Button
 					variant={'outlined'}
 					fullWidth
-					onClick={() => {}}
+					onClick={() => navigate(`/app/organisations/${data.hash}`)}
 					value={data.access}
 				>{`Dashboard`}</Button>
 			)}
@@ -94,7 +109,7 @@ export function Interactions({ data }) {
 				<Button
 					variant={'outlined'}
 					fullWidth
-					onClick={() => {}}
+					onClick={handleLeave}
 					value={data.access}
 				>{`leave`}</Button>
 			)}

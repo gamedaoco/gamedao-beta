@@ -74,8 +74,6 @@ export function useBalance(): BalanceState {
 		}
 	}, [address, apiProvider])
 
-	console.log('🚀 ~ file: useBalance.ts ~ line 70 ~ useBalance ~ balanceState')
-
 	return {
 		...balanceState,
 		updateBalance: handleUpdateBalance,

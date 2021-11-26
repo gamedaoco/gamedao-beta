@@ -6,6 +6,7 @@ import { ApiPromise } from '@polkadot/api'
 import { to } from 'await-to-js'
 import {
 	addGameDaoControlMemberStateAction,
+	gameDaoControlRefreshSelector,
 	gameDaoControlStateSelector,
 	updateGameDaoControlAction,
 } from 'src/redux/duck/gameDaoControl.duck'
@@ -273,6 +274,7 @@ export const useGameDaoControl = (): GameDaoControlState => {
 	const [lastBodyCount, setLastBodyCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
 	const gameDaoControlState = useSelector(gameDaoControlStateSelector)
+	const refresh = useSelector(gameDaoControlRefreshSelector)
 
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
@@ -299,6 +301,15 @@ export const useGameDaoControl = (): GameDaoControlState => {
 
 		dispatch(addGameDaoControlMemberStateAction(hash, { [accoutId]: data }))
 	}
+
+	useEffect(() => {
+		if (refresh === true && apiProvider) {
+			setLastBodyCount(null)
+			queryNonce(apiProvider).then((nonce) => {
+				setState({ nonce: nonce })
+			})
+		}
+	}, [refresh])
 
 	// Fetch nonce
 	useEffect(() => {

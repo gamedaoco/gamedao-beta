@@ -103,10 +103,6 @@ export function Item({ data, displayMode }) {
 		)
 	}, [data, metaDataState, displayMode])
 
-	console.log('🚀 ~ file: Item.tsx ~ line 5 ~ Item ~ displayMode', displayMode)
-	console.log('🚀 ~ file: ItemList.tsx ~ line 4 ~ ItemList ~ data', data)
-	console.log('🚀 ~ file: Item.tsx ~ line 19 ~ Item ~ metaDataState', metaDataState)
-
 	if (displayMode === ListTileEnum.LIST) {
 		return (
 			<ListItem

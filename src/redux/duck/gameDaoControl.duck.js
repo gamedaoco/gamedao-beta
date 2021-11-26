@@ -1,8 +1,10 @@
 const UPDATE_DAO_CONTROL = 'UPDATE_DAO_CONTROL'
 const ADD_DAO_CONTROL_MEMBER_STATE = 'ADD_DAO_CONTROL_MEMBER_STATE'
+const CLEAR_DAO_CONTROL = 'CLEAR_DAO_CONTROL'
 
 const shape = {
 	gameDaoControlState: {},
+	refresh: false,
 }
 
 export function gameDaoControlReducer(state = shape, action) {
@@ -10,7 +12,11 @@ export function gameDaoControlReducer(state = shape, action) {
 		case UPDATE_DAO_CONTROL:
 			return {
 				...state,
-				gameDaoControlState: { ...state.gameDaoControlState, ...(action.payload || {}) },
+				refresh: false,
+				gameDaoControlState: {
+					...state.gameDaoControlState,
+					...(action.payload || {}),
+				},
 			}
 		case ADD_DAO_CONTROL_MEMBER_STATE:
 			return {
@@ -28,7 +34,9 @@ export function gameDaoControlReducer(state = shape, action) {
 					},
 				},
 			}
-
+		case CLEAR_DAO_CONTROL: {
+			return { ...shape, refresh: true }
+		}
 		default:
 			break
 	}
@@ -50,10 +58,19 @@ export function addGameDaoControlMemberStateAction(hash, data) {
 	}
 }
 
+export function clearGameDaoControlAction() {
+	return {
+		type: CLEAR_DAO_CONTROL,
+	}
+}
 export function gameDaoControlSelector(state) {
 	return state?.gameDaoControl
 }
 
 export function gameDaoControlStateSelector(state) {
 	return gameDaoControlSelector(state)?.gameDaoControlState
+}
+
+export function gameDaoControlRefreshSelector(state) {
+	return gameDaoControlSelector(state)?.refresh
 }
