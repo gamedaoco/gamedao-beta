@@ -11,6 +11,7 @@ import {
 	InputLabel,
 	Grid,
 	FormControlLabel,
+	Image16to9
 } from '../../components'
 import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
@@ -28,13 +29,16 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
+
+
 const dev = config.dev
 
 const random_state = (account) => {
 	const name = 'Dao Jones'
 	const email = 'daojones@gamedao.co'
 	const title = 'Great Campaign Title'
-	const description = 'Awesome Description'
+	const description = 'Awesome Short Description'
 	const country = data.countries[rnd(data.countries.length)].value
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
@@ -71,6 +75,18 @@ const random_state = (account) => {
 	}
 }
 
+const defaultMarkdown = `
+# gameDAO
+
+| Head | Head | Head |
+| --- | --- | --- |
+| Data | Data | Data |
+| Data | Data | Data |
+| Data | Data | Data |
+
+![unknown (1).png](https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix)
+`
+
 export const Main = () => {
 	const { address, account, finalized, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
@@ -80,6 +96,13 @@ export const Main = () => {
 	const gov = useGameDaoGovernance()
 
 	const [block, setBlock] = useState(0)
+
+	// markdown editor & state
+	const [markdownValue, setMarkdownValue] = useState(defaultMarkdown)
+
+	function handleEditorChange({ html, text }) {
+		setMarkdownValue(text)
+	}
 
 	const [formData, updateFormData] = useState()
 	const [fileCID, updateFileCID] = useState()
@@ -119,6 +142,7 @@ export const Main = () => {
 			email: formData.email,
 			title: formData.title,
 			description: formData.description,
+			markdown: markdownValue,
 			...fileCID,
 		}
 		// if (dev) console.log(contentJSON)
@@ -232,8 +256,6 @@ export const Main = () => {
 	const nonce = daoControl.nonce
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
-	console.log(orgs)
-
 	return (
 		<Grid container spacing={2} component="form">
 			<Grid item xs={12}>
@@ -290,15 +312,29 @@ export const Main = () => {
 					onChange={handleOnChange}
 				/>
 			</Grid>
+
 			<Grid item xs={12}>
 				<Divider>Content</Divider>
 			</Grid>
 
+			{!fileCID && (
+				[<Grid item xs={12} md={6}>
+					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+				</Grid>,
+				<Grid item xs={12} md={6}>
+					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+				</Grid>]
+			)}
+
 			{fileCID && (
-				<Grid item xs={12}>
-					{fileCID.logo && <img alt={formData.title} src={gateway + fileCID.logo} />}
-					{fileCID.header && <img alt={formData.title} src={gateway + fileCID.header} />}
-				</Grid>
+				[<Grid item xs={12} md={6}>
+					{!fileCID.logo && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+					{fileCID.logo && <Image16to9 alt={formData.title} src={gateway + fileCID.logo} />}
+				</Grid>,
+				<Grid item xs={12} md={6}>
+					{!fileCID.header && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+					{fileCID.header && <Image16to9 alt={formData.title} src={gateway + fileCID.header} />}
+				</Grid>]
 			)}
 
 			<Grid item xs={12} md={6}>
@@ -332,6 +368,12 @@ export const Main = () => {
 				>
 					Pick a header graphic
 				</Button>
+			</Grid>
+
+			<Grid item xs={12}>
+				<Divider>Campaign Page Custom Content Description (Markdown)</Divider>
+				<hr/>
+				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
 			</Grid>
 
 			{/* legal body applying for the funding */}
@@ -508,7 +550,3 @@ export default function Module() {
 
 	return apiProvider && account ? <Main /> : null
 }
-
-//
-//
-//

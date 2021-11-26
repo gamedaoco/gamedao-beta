@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 
+
+
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import {
@@ -103,10 +105,16 @@ export function Campaign() {
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
+
 	const [value, setValue] = React.useState(0)
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
+	}
+
+	// markdown editor
+	function handleEditorChange({ html, text }) {
+		console.log('handleEditorChange', html, text);
 	}
 
 	const [content, setContent] = React.useState()
@@ -114,6 +122,9 @@ export function Campaign() {
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
 	// const wallet = useWallet()
+
+	// const mdParser = new MarkdownIt(/* Markdown-it options */);
+	// mdParser.render(text)
 
 	useEffect(() => {
 		if (!campaignBalance || !campaignState || !campaigns) return
