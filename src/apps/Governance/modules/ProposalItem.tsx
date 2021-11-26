@@ -7,10 +7,7 @@ import { blockTime } from 'src/apps/lib/data'
 import moment from 'moment'
 import { LinearProgress } from '@mui/material'
 import { useNavigate } from 'react-router'
-
-function normalizeNumber(number: any): number {
-	return +`${number}`.replace(/,|\./g, '')
-}
+import { normalizeNumber } from 'src/utils/normalizeNumber'
 
 export function ProposalItem({ blockNumber, proposal }) {
 	// Get store data
@@ -21,6 +18,7 @@ export function ProposalItem({ blockNumber, proposal }) {
 	// Proposal data
 	const proposalId = proposal.proposal_id
 	const proposalMeta = metadata?.[proposalId]
+
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
 	// Vote data
@@ -31,11 +29,12 @@ export function ProposalItem({ blockNumber, proposal }) {
 	]
 	const voteCount = yesCount + noCount
 
-	const calculatePercentage = (count) => (voteCount === 0 ? 0 : (count * 100) / voteCount)
-
 	// Orgianization data
 	const bodyId = proposal.context_id
 	const body = bodies?.[bodyId]
+
+	// Helper functions
+	const calculatePercentage = (count) => (voteCount === 0 ? 0 : (count * 100) / voteCount)
 
 	console.log('🚀 ~ file: ProposalItem.tsx ~ line 24 ~ ProposalItem ~ body', body)
 	console.log('🚀 ~ file: ProposalItem.tsx ~ line 25 ~ ProposalItem ~ proposal', proposal)
