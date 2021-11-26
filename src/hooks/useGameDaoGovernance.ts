@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { useIsMountedRef } from './useIsMountedRef'
+import {
+	governanceStateSelector,
+	updateGovernanceAction,
+} from 'src/redux/duck/gameDaoGovernance.duck'
+import { useDispatch, useSelector } from 'react-redux'
 
 type GameDaoGovernanceState = {
 	proposalsCount: number
@@ -15,18 +20,6 @@ type GameDaoGovernanceState = {
 	owners: object
 	proposalSimpleVotes: object
 	proposalStates: object
-}
-
-const INITIAL_STATE: GameDaoGovernanceState = {
-	proposalsCount: null,
-	proposalsArray: null,
-	proposalsIndex: null,
-	campaignBalanceUsed: null,
-	proposals: null,
-	metadata: null,
-	owners: null,
-	proposalSimpleVotes: null,
-	proposalStates: null,
 }
 
 async function queryProposalsCount(apiProvider: ApiPromise): Promise<number> {
@@ -192,19 +185,22 @@ async function queryProposals(apiProvider: ApiPromise, hashes: any): Promise<any
 }
 
 export const useGameDaoGovernance = (): GameDaoGovernanceState => {
-	const [state, setState] = useState<GameDaoGovernanceState>(INITIAL_STATE)
 	const [lastProposalsCount, setLastProposalsCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
+	const governanceState = useSelector(governanceStateSelector)
+	const dispatch = useDispatch()
+
+	function setState(data) {
+		dispatch(updateGovernanceAction(data))
+	}
 
 	// Fetch proposalsCount
 	useEffect(() => {
 		if (apiProvider) {
 			queryProposalsCount(apiProvider).then((proposalsCount) => {
-				if (isMountedRef) {
-					setState({ ...state, proposalsCount: proposalsCount ?? 0 })
-				}
+				setState({ proposalsCount: proposalsCount ?? 0 })
 			})
 		}
 	}, [apiProvider, isMountedRef])
@@ -212,102 +208,97 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 	// Fetch new proposalsArray
 	useEffect(() => {
 		if (
-			state?.proposalsCount >= 0 &&
-			(lastProposalsCount ?? 0 !== state.proposalsCount) &&
+			governanceState?.proposalsCount >= 0 &&
+			(lastProposalsCount ?? 0 !== governanceState.proposalsCount) &&
 			apiProvider
 		) {
-			queryProposalsArray(apiProvider, lastProposalsCount ?? 0, state.proposalsCount).then(
-				(opt) => {
-					if (isMountedRef) {
-						setState({
-							...state,
-							proposalsArray: {
-								...(state.proposalsArray ?? {}),
-								...(opt?.proposalsArray ?? {}),
-							},
-							proposalsIndex: {
-								...(state.proposalsIndex ?? {}),
-								...(opt?.proposalsIndex ?? {}),
-							},
-						})
-					}
+			queryProposalsArray(
+				apiProvider,
+				lastProposalsCount ?? 0,
+				governanceState.proposalsCount
+			).then((opt) => {
+				if (isMountedRef) {
+					setState({
+						proposalsArray: {
+							...(governanceState.proposalsArray ?? {}),
+							...(opt?.proposalsArray ?? {}),
+						},
+						proposalsIndex: {
+							...(governanceState.proposalsIndex ?? {}),
+							...(opt?.proposalsIndex ?? {}),
+						},
+					})
 				}
-			)
-			setLastProposalsCount(state.proposalsCount)
+			})
+			setLastProposalsCount(governanceState.proposalsCount)
 		}
-	}, [state.proposalsCount])
+	}, [governanceState.proposalsCount])
 
 	// Fetch data with hash
 	useEffect(() => {
-		const keys = Object.keys(state.proposalsArray ?? {})
+		const keys = Object.keys(governanceState.proposalsArray ?? {})
 		if (keys.length > 0 && apiProvider && !isDataLoading) {
 			setIsDataLoading(true)
 			;(async () => {
 				const data = await Promise.all([
 					queryCampaignBalanceUsed(
 						apiProvider,
-						keys.filter((hash) => !(state.campaignBalanceUsed ?? {})[hash])
+						keys.filter((hash) => !(governanceState.campaignBalanceUsed ?? {})[hash])
 					),
 					queryMetadata(
 						apiProvider,
-						keys.filter((hash) => !(state.metadata ?? {})[hash])
+						keys.filter((hash) => !(governanceState.metadata ?? {})[hash])
 					),
 					queryOwners(
 						apiProvider,
-						keys.filter((hash) => !(state.owners ?? {})[hash])
+						keys.filter((hash) => !(governanceState.owners ?? {})[hash])
 					),
 					queryProposalSimpleVotes(
 						apiProvider,
-						keys.filter((hash) => !(state.proposalSimpleVotes ?? {})[hash])
+						keys.filter((hash) => !(governanceState.proposalSimpleVotes ?? {})[hash])
 					),
 					queryProposalStates(
 						apiProvider,
-						keys.filter((hash) => !(state.proposalStates ?? {})[hash])
+						keys.filter((hash) => !(governanceState.proposalStates ?? {})[hash])
 					),
 					queryProposals(
 						apiProvider,
-						keys.filter((hash) => !(state.proposalStates ?? {})[hash])
+						keys.filter((hash) => !(governanceState.proposalStates ?? {})[hash])
 					),
 				])
 
 				setIsDataLoading(false)
 				if (isMountedRef) {
 					setState({
-						...state,
 						campaignBalanceUsed: {
-							...(state.campaignBalanceUsed ?? {}),
+							...(governanceState.campaignBalanceUsed ?? {}),
 							...(data[0] ?? {}),
 						},
 						metadata: {
-							...(state.metadata ?? {}),
+							...(governanceState.metadata ?? {}),
 							...(data[1] ?? {}),
 						},
 						owners: {
-							...(state.owners ?? {}),
+							...(governanceState.owners ?? {}),
 							...(data[2] ?? {}),
 						},
 						proposalSimpleVotes: {
-							...(state.proposalSimpleVotes ?? {}),
+							...(governanceState.proposalSimpleVotes ?? {}),
 							...(data[3] ?? {}),
 						},
 						proposalStates: {
-							...(state.proposalStates ?? {}),
+							...(governanceState.proposalStates ?? {}),
 							...(data[4] ?? {}),
 						},
 						proposals: {
-							...(state.proposals ?? {}),
+							...(governanceState.proposals ?? {}),
 							...(data[5] ?? {}),
 						},
 					})
 				}
 			})()
 		}
-	}, [state.proposalsArray])
+	}, [governanceState.proposalsArray])
 
-	console.log(
-		'🚀 ~ file: useGameDaoGovernance.ts ~ line 278 ~ useGameDaoGovernance ~ state',
-		state
-	)
-
-	return state
+	return governanceState
 }

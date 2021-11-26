@@ -48,7 +48,7 @@ const WalletProvider = ({ children }) => {
 		setState({ ...state, ...stateData })
 	}
 
-	const handleSignAndNotify = (
+	const handleSignAndNotify = async (
 		tx: SubmittableExtrinsic<'promise', ISubmittableResult>,
 		msg: SignMSG,
 		callback?: Function
@@ -60,8 +60,13 @@ const WalletProvider = ({ children }) => {
 				return reject()
 			}
 			const [error] = await to(
-				tx.signAndSend(state.address, { signer: state.signer }, ({ status }) => {
-					if (status.isInBlock) {
+				tx.signAndSend(state.address, { signer: state.signer }, (result) => {
+					console.log('🚀 ~ file: Wallet.tsx ~ line 64 ~ tx.signAndSend ~ result', result)
+					if (result.isError) {
+						if (callback) callback(false)
+						return reject()
+					}
+					if (result.status.isInBlock) {
 						if (callback) callback(true)
 						return resolve('')
 					}
@@ -75,7 +80,12 @@ const WalletProvider = ({ children }) => {
 			}
 		})
 
-		createPromiseNotification(promise, msg.pending, msg.success, msg.error)
+		const [errPRO, dataPRO] = await to(
+			createPromiseNotification(promise, msg.pending, msg.success, msg.error)
+		)
+		// TODO Remove only for testing / debug
+		console.log('🚀 ~ file: Wallet.tsx ~ line 79 ~ WalletProvider ~ dataPRO', dataPRO)
+		console.log('🚀 ~ file: Wallet.tsx ~ line 79 ~ WalletProvider ~ errPRO', errPRO)
 	}
 
 	useEffect(() => {

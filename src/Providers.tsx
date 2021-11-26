@@ -12,7 +12,6 @@ import { ToastContainer } from 'react-toastify'
 import { StoreProvider } from './context/Store'
 import { ThemeStateProvider, useThemeState } from './context/ThemeState'
 import { NetworkProvider } from './context/Network'
-import { HookProvider } from './context/Hook'
 
 // Toastify css
 import './Toastify.css'
@@ -32,7 +31,7 @@ function Wrapper({ children }) {
 								className: 'react-icon',
 							}}
 						>
-							<HookProvider>{children}</HookProvider>
+							{children}
 						</IconContext.Provider>
 					</BrowserRouter>
 				</WalletProvider>

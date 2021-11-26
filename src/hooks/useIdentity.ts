@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useIsMountedRef } from './useIsMountedRef'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
+import { useDispatch, useSelector } from 'react-redux'
+import { identityStateSelector, updateIdentityAction } from 'src/redux/duck/identity.duck'
 
 type IdentityState = {
 	identities: Object
@@ -30,25 +32,21 @@ async function queryAccountIdentity(apiProvider: ApiPromise, address: string): P
 
 // Get Account Identity
 export const useIdentity = (address: string) => {
-	const [identityState, setIdentityState] = useState<IdentityState>(INITIAL_STATE)
-
-	const isMountedRef = useIsMountedRef()
+	const identityState = useSelector(identityStateSelector)
+	const dispatch = useDispatch()
 	const apiProvider = useApiProvider()
 
 	useEffect(() => {
 		if (apiProvider && address && !(identityState ?? {})?.identities?.[address]) {
 			queryAccountIdentity(apiProvider, address).then((identity) => {
-				if (isMountedRef) {
-					setIdentityState({
-						...identityState,
+				dispatch(
+					updateIdentityAction({
 						identities: { ...identityState.identities, [address]: identity },
 					})
-				}
+				)
 			})
 		}
-	}, [address, apiProvider, isMountedRef])
-
-	console.log('🚀 ~ file: useIdentity.ts ~ line 52 ~ useIdentity ~ identityState', identityState)
+	}, [address, apiProvider])
 
 	return (identityState ?? {})?.identities?.[address]
 }
