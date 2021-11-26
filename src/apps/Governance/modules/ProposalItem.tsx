@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Button, Paper, Stack, Typography } from 'src/components'
+import React from 'react'
+import { Box, Button, Stack, Typography } from 'src/components'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { blockTime } from 'src/apps/lib/data'
 
 import moment from 'moment'
 import { LinearProgress } from '@mui/material'
+
+function normalizeNumber(number: any): number {
+	return +`${number}`.replace(/,|\./g, '')
+}
 
 export function ProposalItem({ blockNumber, proposal }) {
 	// Get store data
@@ -15,11 +19,17 @@ export function ProposalItem({ blockNumber, proposal }) {
 	// Proposal data
 	const proposalId = proposal.proposal_id
 	const proposalMeta = metadata?.[proposalId]
-	const [yesCount, noCount] = [20, 50] // proposalSimpleVotes?.[proposalId] ?? [0, 0]
-	const expires = (proposal.expiry.replace(/,|\./g, '') - blockNumber) * blockTime
+	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
+
+	// Vote data
+	const [humanizedYesCount, humanizedNoCount] = proposalSimpleVotes?.[proposalId] ?? [0, 0]
+	const [yesCount, noCount] = [
+		normalizeNumber(humanizedYesCount),
+		normalizeNumber(humanizedNoCount),
+	]
 	const voteCount = yesCount + noCount
 
-	const calculatePercentage = (count) => (count * 100) / voteCount
+	const calculatePercentage = (count) => (voteCount === 0 ? 0 : (count * 100) / voteCount)
 
 	// Orgianization data
 	const bodyId = proposal.context_id

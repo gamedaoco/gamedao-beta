@@ -1,10 +1,10 @@
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
-import React, { lazy, useState } from 'react'
-import CreateProposal from '../Create'
+import React, { useState } from 'react'
+import CreateProposal from './Create'
 import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/components'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { ProposalList } from './ProposalList'
+import { ProposalList } from './modules/ProposalList'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 
 const NavBadge = styled(Badge)(({ theme }) => ({
