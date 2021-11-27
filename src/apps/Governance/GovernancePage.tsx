@@ -1,6 +1,6 @@
+import React, { useState } from 'react'
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
-import React, { useState } from 'react'
 import CreateProposal from './Create'
 import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/components'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
@@ -15,7 +15,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	},
 }))
 
-export default function GovernancePage() {
+export function GovernancePage() {
 	const { proposalsCount } = useGameDaoGovernance()
 	const [showCreateMode, setCreateMode] = useState(false)
 	useGameDaoControl()

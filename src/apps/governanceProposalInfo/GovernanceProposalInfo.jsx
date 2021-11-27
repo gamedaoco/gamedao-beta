@@ -53,7 +53,7 @@ async function fetchOrganisationMetaData(cid, setLogo) {
 	}
 }
 
-export default function GovernanceProposalInfoPage() {
+export function GovernanceProposalInfoPage() {
 	// Get state
 	const navigate = useNavigate()
 	const queryParams = useParams()

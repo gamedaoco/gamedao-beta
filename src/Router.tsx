@@ -3,6 +3,9 @@ import { Routes, Route } from 'react-router-dom'
 import { Loader } from './components/Loader'
 import Layout from './layouts/default'
 
+import { GovernancePage } from './apps/Governance/GovernancePage'
+import { GovernanceProposalInfoPage } from './apps/governanceProposalInfo/GovernanceProposalInfo'
+
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
@@ -13,10 +16,6 @@ const DAODashboard = lazy(() => import('./apps/Organisations/dashboard'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
 const Designsystem = lazy(() => import('./apps/Designsystem'))
-const GovernancePage = lazy(() => import('./apps/governance/GovernancePage'))
-const GovernanceProposalInfoPage = lazy(
-	() => import('./apps/governanceProposalInfo/GovernanceProposalInfoPage')
-)
 
 export interface ComponentProps {
 	children?: React.ReactNode
