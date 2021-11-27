@@ -15,7 +15,7 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	},
 }))
 
-export function GovernancePage() {
+export default function GovernancePage() {
 	const { proposalsCount } = useGameDaoGovernance()
 	const [showCreateMode, setCreateMode] = useState(false)
 	useGameDaoControl()
