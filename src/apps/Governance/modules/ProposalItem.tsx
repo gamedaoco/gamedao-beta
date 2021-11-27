@@ -10,18 +10,18 @@ import { useNavigate } from 'react-router'
 import { normalizeNumber } from 'src/utils/normalizeNumber'
 
 export function ProposalItem({ blockNumber, proposal }) {
-	// Get store data
+	// Get state
 	const { metadata, proposalSimpleVotes } = useGameDaoGovernance()
 	const { bodies } = useGameDaoControl()
 	const navigate = useNavigate()
 
-	// Proposal data
+	// Proposal
 	const proposalId = proposal.proposal_id
 	const proposalMeta = metadata?.[proposalId]
 
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
-	// Vote data
+	// Vote
 	const [humanizedYesCount, humanizedNoCount] = proposalSimpleVotes?.[proposalId] ?? [0, 0]
 	const [yesCount, noCount] = [
 		normalizeNumber(humanizedYesCount),
@@ -29,15 +29,12 @@ export function ProposalItem({ blockNumber, proposal }) {
 	]
 	const voteCount = yesCount + noCount
 
-	// Orgianization data
+	// Orgianization
 	const bodyId = proposal.context_id
 	const body = bodies?.[bodyId]
 
 	// Helper functions
 	const calculatePercentage = (count) => (voteCount === 0 ? 0 : (count * 100) / voteCount)
-
-	console.log('🚀 ~ file: ProposalItem.tsx ~ line 24 ~ ProposalItem ~ body', body)
-	console.log('🚀 ~ file: ProposalItem.tsx ~ line 25 ~ ProposalItem ~ proposal', proposal)
 
 	return proposalMeta && body ? (
 		<Box display="flex">
