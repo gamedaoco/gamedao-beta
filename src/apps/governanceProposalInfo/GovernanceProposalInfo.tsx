@@ -63,8 +63,8 @@ export function GovernanceProposalInfoPage() {
 	const { bodies } = useGameDaoControl()
 
 	const [blockNumber, setBlockNumber] = useState(0)
-	const [description, setDescription] = useState<string>()
-	const [imageState, setImageState] = useState<string>()
+	const [description, setDescription] = useState<any>()
+	const [imageState, setImageState] = useState<any>()
 
 	// Proposal
 	const proposalId = queryParams.id
