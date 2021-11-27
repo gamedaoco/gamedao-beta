@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinJSONToIPFS } from '../lib/ipfs'
@@ -85,6 +86,14 @@ export const Main = () => {
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState({})
 
+	const { queryMemberships, memberships } = useGameDaoControl()
+
+	useEffect(() => {
+		if (!address) return
+
+		queryMemberships(address)
+	}, [address])
+
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
 	const [entities, setEntities] = useState([])
@@ -157,14 +166,15 @@ export const Main = () => {
 
 		// send it
 
-		const sendTX = async (args) => {
+		const sendTX = async (cid) => {
 			if (dev) console.log('2. send tx')
 			setLoading(true)
 
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
-			const { id, purpose, cid } = formData
+			const { entity, purpose } = formData
+			console.log('🚀 ~ file: Create.tsx ~ line 166 ~ sendTX ~ formData', formData)
 
-			const payload = [id, purpose, cid, expiry]
+			const payload = [entity, purpose, cid, expiry]
 
 			signAndNotify(
 				apiProvider.tx.gameDaoGovernance.generalProposal(...payload),
@@ -223,9 +233,9 @@ export const Main = () => {
 										value={formData.entity}
 										onChange={handleOnChange}
 									>
-										{entities.map((e) => (
-											<MenuItem key={e.key} value={e.value}>
-												{e.text}
+										{(memberships?.[address] ?? []).map((e) => (
+											<MenuItem key={e} value={e}>
+												{e}
 											</MenuItem>
 										))}
 									</MuiSelect>
