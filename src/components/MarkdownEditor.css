@@ -6,6 +6,10 @@
     color: white;
 }
 
+.editor_dark_html > *{
+    color: white;
+}
+
 .editor_dark_html table th {
     color: black !important;
 }

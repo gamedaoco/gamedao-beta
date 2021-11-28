@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 
 
+import { gateway } from '../lib/ipfs'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -21,6 +22,8 @@ import {
 	Stack,
 	Slider,
 	Image16to9,
+	Countdown,
+	MarkdownViewer
 } from '../../components'
 
 import { TileReward } from './TileReward'
@@ -44,10 +47,6 @@ const CampaignChip = styled(Chip)(({ theme }) => ({
 	borderColor: theme.palette.common.white,
 	padding: 0,
 	height: '22px',
-}))
-
-const CountdownStack = styled(Stack)(({ theme }) => ({
-	width: '80px',
 }))
 
 const ParticipateButton = styled(Button)(({ theme }) => ({
@@ -107,6 +106,7 @@ export function Campaign() {
 
 
 	const [value, setValue] = React.useState(0)
+	const [IPFSData, setIPFSData] = React.useState()
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
@@ -121,11 +121,7 @@ export function Campaign() {
 
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
-	// const wallet = useWallet()
-
-	// const mdParser = new MarkdownIt(/* Markdown-it options */);
-	// mdParser.render(text)
-
+	// fetch chain data
 	useEffect(() => {
 		if (!campaignBalance || !campaignState || !campaigns) return
 
@@ -136,9 +132,28 @@ export function Campaign() {
 		}
 
 		setContent(content)
+
 	}, [campaignBalance, campaignState, campaigns])
 
+	useEffect( () => {
+		if(!content) return
+
+		// fetch json from ipfs
+		fetch(gateway+content.cid)
+			.then( res => res.json() )
+			.then( data => setIPFSData(data) )
+
+	}, [content])
+
+
 	if (!content) return '...'
+
+	console.log(content, IPFSData)
+
+	const expiryTimestamp = parseInt(content.created.replaceAll(',', ''))+parseInt(content.expiry.replaceAll(',', ''))
+
+	console.log(Date.now()+10000)
+	console.log(expiryTimestamp)
 
 	return (
 		<Box>
@@ -174,98 +189,17 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Typography>
-										From the developer of Virgo Versus The Zodiac and
-										Osteoblasts comes a Tactical Rhythm JRPG in which you play
-										as the Singer who fights the oppressive government to bring
-										back Music to a melodyless world.
+										{IPFSData && IPFSData.description}
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<Stack
-										direction={'row'}
-										sx={{ alignItems: 'center' }}
-										divider={
-											<Divider
-												sx={{
-													height: '30px',
-													backgroundColor: 'common.white',
-												}}
-												orientation={'vertical'}
-											/>
-										}
-										spacing={1}
-									>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												24
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												days
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												23
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												hours
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												minutes
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												seconds
-											</Typography>
-										</CountdownStack>
-									</Stack>
+								<Countdown date={expiryTimestamp}/>
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>
 										<img height={17} width={17} src={'/assets/play.png'} />
 										<Typography>
-											<strong>385’721.59 PLAY</strong> funded of 500k goal
+											<strong>385’721.59 PLAY</strong> funded of {content.cap} goal
 										</Typography>
 									</Stack>
 								</Grid>
@@ -340,7 +274,7 @@ export function Campaign() {
 					</Grid>
 					<Grid item xs={12}>
 						<TabPanel value={value} index={0}>
-							<Description />
+							{IPFSData && <MarkdownViewer markdown={IPFSData.markdown}/>}
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<Rewards />

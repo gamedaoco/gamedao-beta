@@ -11,6 +11,7 @@ export const Loader = ({ text }) => (
 	>
 		<CircularProgress
 			sx={{
+				marginLeft: '275px',
 				animationDuration: '300ms',
 				width: '15px !important',
 				height: '15px !important',

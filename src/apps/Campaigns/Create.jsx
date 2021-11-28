@@ -11,7 +11,8 @@ import {
 	InputLabel,
 	Grid,
 	FormControlLabel,
-	Image16to9
+	Image16to9,
+	MarkdownEditor
 } from '../../components'
 import Loader from 'src/components/Loader'
 import { data, rnd } from '../lib/data'
@@ -29,8 +30,9 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-import { MarkdownEditor } from 'src/components/MarkdownEditor'
+import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md';
 
+console.log(defaultMarkdown)
 
 const dev = config.dev
 
@@ -75,17 +77,6 @@ const random_state = (account) => {
 	}
 }
 
-const defaultMarkdown = `
-# gameDAO
-
-| Head | Head | Head |
-| --- | --- | --- |
-| Data | Data | Data |
-| Data | Data | Data |
-| Data | Data | Data |
-
-![unknown (1).png](https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix)
-`
 
 export const Main = () => {
 	const { address, account, finalized, signAndNotify } = useWallet()
