@@ -114,6 +114,7 @@
 		"context_id": "Hash",
 		"proposal_type": "u8",
 		"voting_type": "u8",
+		"start": "BlockNumber",
 		"expiry": "BlockNumber"
 	},
 	"ProposalMetadata": {
