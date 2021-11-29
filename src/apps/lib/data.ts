@@ -13,12 +13,22 @@ export const collateral_types = [
 	{ key: '3', text: 'NFT', value: 3 },
 ]
 
+export const proposal_types = [
+	{ key: '0', text: 'General', value: 0 },
+	// { key: '1', text: 'Multiple Choice', value: 1 },
+	// { key: '2', text: 'Membership', value: 2 },
+	{ key: '3', text: 'Withdrawal', value: 3 },
+]
+
 export const voting_types = [
-	{ key: '0', text: 'Single Choice', value: 0 },
-	{ key: '1', text: 'Approval', value: 1 },
-	{ key: '2', text: 'Quadratic', value: 2 },
-	{ key: '3', text: 'Ranked Choice', value: 3 },
-	{ key: '4', text: 'Weighted', value: 4 },
+// majority of those who vote, 1 account, 1 vote
+	{ key: '0', text: 'Simple Majority', value: 0 },
+// majority of token weight
+	{ key: '1', text: 'Token Weight Majority', value: 1 },
+// 3. absolute majority
+	{ key: '4', text: 'Absolute Majority', value: 3 },
+// { key: '2', text: 'Quadratic', value: 2 },
+// { key: '3', text: 'Ranked Choice', value: 4 },
 ]
 
 // dao
@@ -158,6 +168,7 @@ export const data = {
 	dao_member_governance,
 	dao_fee_model,
 	voting_types,
+	proposal_types,
 }
 
 export default data
