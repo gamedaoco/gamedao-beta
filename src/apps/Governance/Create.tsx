@@ -375,7 +375,7 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{ ( formData.voting_type !== 0 ) && <>
+							{ ( formData.proposal_type !== 0 ) && <>
 								<Grid item xs={12}>
 									<Divider>For withdrawals and grants</Divider>
 								</Grid>
