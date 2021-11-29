@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import {
 	Button,
 	Divider,
@@ -85,6 +86,7 @@ export const Main = () => {
 	const crowdfunding = useCrowdfunding()
 	const daoControl = useGameDaoControl()
 	const gov = useGameDaoGovernance()
+	const navigate = useNavigate();
 
 	const [block, setBlock] = useState(0)
 
@@ -227,7 +229,10 @@ export const Main = () => {
 				(state) => {
 					setLoading(false)
 					setRefresh(true)
-					updateBalance()
+					updateBalance()			
+				
+					navigate("/app", { replace: true });
+
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}

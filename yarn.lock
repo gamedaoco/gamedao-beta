@@ -10048,7 +10048,14 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-markdown-it@12.2.0:
+markdown-it-html5-media@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-html5-media/-/markdown-it-html5-media-0.7.0.tgz#b6c0791676b706f4f7d7aa43ebbf8079aacea174"
+  integrity sha512-abIS/x4SFQI1rDJfY5HGJelO49BapZB8274iZB80lkv6eSNadBC3MXYR41FJRwv+M63lS/Wy+kL8yEDEm02Jnw==
+  dependencies:
+    markdown-it "^12.0.3"
+
+markdown-it@12.2.0, markdown-it@^12.0.3:
   version "12.2.0"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.2.0.tgz#091f720fd5db206f80de7a8d1f1a7035fd0d38db"
   integrity sha512-Wjws+uCrVQRqOoJvze4HCqkKl1AsSh95iFAeQDwnyfxM09divCBSXlDR1uTvyUP3Grzpn4Ru8GeCxYPM8vkCQg==

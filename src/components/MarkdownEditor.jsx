@@ -19,7 +19,9 @@ const dev = config.dev
 // Register plugins if required
 // MdEditor.use(YOUR_PLUGINS_HERE);
 
-const mdParser = new MarkdownIt(/* Markdown-it options */);
+const mdParser = new MarkdownIt({
+  html: true,
+});
 
 async function onImageUpload(file) {
   if (!file) return
@@ -40,7 +42,7 @@ export const MarkdownEditor = ({onChange, value}) => {
   return (
     <MdEditor 
       value={value}
-      style={{ height: '500px' }} 
+      style={{ height: '500px', zIndex: 10000 }} 
       id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
       htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
       markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}

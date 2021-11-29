@@ -147,20 +147,19 @@ export function Campaign() {
 
 
 	if (!content) return '...'
+	if (!IPFSData) return '...'
 
 	console.log(content, IPFSData)
 
 	const expiryTimestamp = parseInt(content.created.replaceAll(',', ''))+parseInt(content.expiry.replaceAll(',', ''))
 
-	console.log(Date.now()+10000)
-	console.log(expiryTimestamp)
+	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
 		<Box>
 			<Box
 				sx={{
-					backgroundImage:
-						'linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(/assets/campaign-bg.png)',
+					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',
@@ -175,7 +174,7 @@ export function Campaign() {
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
-									<img src={'/assets/campaign-logo.png'} alt={'Era of Chaos'} />
+									<img src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
@@ -195,14 +194,6 @@ export function Campaign() {
 								<Grid item xs={12}>
 								<Countdown date={expiryTimestamp}/>
 								</Grid>
-								<Grid item xs={12}>
-									<Stack direction={'row'} alignItems={'center'} spacing={1}>
-										<img height={17} width={17} src={'/assets/play.png'} />
-										<Typography>
-											<strong>385’721.59 PLAY</strong> funded of {content.cap} goal
-										</Typography>
-									</Stack>
-								</Grid>
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
@@ -217,6 +208,14 @@ export function Campaign() {
 			<Box sx={{ marginTop: '-2.6rem' }}>
 				<Container maxWidth={'lg'}>
 					<Grid container spacing={2}>
+						<Grid item xs={12}>
+							<Stack direction={'row'} alignItems={'center'} spacing={1}>
+								<img height={17} width={17} src={'/assets/play.png'} />
+								<Typography>
+									<strong>{content.balance} PLAY</strong> funded of {content.cap} goal
+								</Typography>
+							</Stack>
+						</Grid>
 						<Grid item xs={12} md={7}>
 							<Stack direction={'row'} alignItems={'center'}>
 								<Box
@@ -250,7 +249,7 @@ export function Campaign() {
 												)
 											},
 										}}
-										value={30}
+										value={campaignProgress}
 										sx={{ mr: 5 }}
 									/>
 								</Box>
