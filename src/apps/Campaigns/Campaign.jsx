@@ -192,7 +192,15 @@ export function Campaign() {
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
-								<Countdown date={expiryTimestamp}/>
+									<Countdown date={expiryTimestamp}/>
+								</Grid>
+								<Grid item xs={12}>
+									<Stack direction={'row'} alignItems={'center'} spacing={1}>
+										<img height={17} width={17} src={'/assets/play.png'} />
+										<Typography>
+											<strong>{content.balance} PLAY</strong> funded of {content.cap} goal
+										</Typography>
+									</Stack>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -208,14 +216,6 @@ export function Campaign() {
 			<Box sx={{ marginTop: '-2.6rem' }}>
 				<Container maxWidth={'lg'}>
 					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<Stack direction={'row'} alignItems={'center'} spacing={1}>
-								<img height={17} width={17} src={'/assets/play.png'} />
-								<Typography>
-									<strong>{content.balance} PLAY</strong> funded of {content.cap} goal
-								</Typography>
-							</Stack>
-						</Grid>
 						<Grid item xs={12} md={7}>
 							<Stack direction={'row'} alignItems={'center'}>
 								<Box
