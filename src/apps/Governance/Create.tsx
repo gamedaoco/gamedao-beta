@@ -1,3 +1,11 @@
+import React, { useEffect, useState } from 'react'
+import { useWallet } from 'src/context/Wallet'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useApiProvider } from '@substra-hooks/core'
+import { gateway, pinJSONToIPFS } from '../lib/ipfs'
+import config from '../../config'
+import { data, rnd } from '../lib/data'
+
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
@@ -6,13 +14,6 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
-import { useApiProvider } from '@substra-hooks/core'
-import React, { useEffect, useState } from 'react'
-import { useWallet } from 'src/context/Wallet'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import config from '../../config'
-import { data, rnd } from '../lib/data'
-import { gateway, pinJSONToIPFS } from '../lib/ipfs'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -26,7 +27,10 @@ type GenericForm = {
 	duration: number
 	proposer: string
 	beneficiary: string
-	voting_types: number
+	proposal_type: number
+	voting_type: number
+	collateral_type: number
+	collateral_amount: number
 	[key: string]: any
 }
 
@@ -47,7 +51,10 @@ const random_state = (account, campaigns = []) => {
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
 	const proposer = account.address
 	const beneficiary = account.address
-	const voting_types = data.voting_types[rnd(data.voting_types.length)].value
+	const voting_type = 0
+	const proposal_type = 0
+	const collateral_type = 0
+	const collateral_amount = 1
 
 	// TODO:
 	// version > 0.2
@@ -64,7 +71,10 @@ const random_state = (account, campaigns = []) => {
 		duration,
 		proposer,
 		beneficiary,
-		voting_types,
+		voting_type,
+		proposal_type,
+		collateral_type,
+		collateral_amount
 	}
 	return gen
 }
@@ -170,17 +180,18 @@ export const Main = () => {
 			if (dev) console.log('2. send tx')
 			setLoading(true)
 
+			const start = block // current block as start block
 			const expiry = formData.duration * data.blockFactor + block // take current block as offset
 			const { entity, purpose } = formData
 			console.log('🚀 ~ file: Create.tsx ~ line 166 ~ sendTX ~ formData', formData)
 
-			const payload = [entity, purpose, cid, expiry]
+			const payload = [entity, purpose, cid, start, expiry]
 
 			signAndNotify(
 				apiProvider.tx.gameDaoGovernance.generalProposal(...payload),
 				{
 					pending: 'Proposal creation in progress',
-					success: 'Proposal creation successfully',
+					success: 'Proposal created',
 					error: 'Proposal creation failed',
 				},
 				(state) => {
@@ -246,7 +257,6 @@ export const Main = () => {
 									name={'purpose'}
 									label={'Proposal Title'}
 									placeholder={'Title'}
-									InputLabelProps={{ shrink: true }}
 									value={formData.purpose}
 									onChange={handleOnChange}
 									fullWidth
@@ -263,13 +273,31 @@ export const Main = () => {
 									name={'description'}
 								/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={3}>
+								<FormControl fullWidth>
+									<InputLabel>Proposal Type</InputLabel>
+									<MuiSelect
+										label={'Proposal Type'}
+										name={'proposal_type'}
+										value={formData.proposal_type}
+										onChange={handleOnChange}
+										fullWidth
+									>
+										{data.proposal_types.map((pt) => (
+											<MenuItem key={pt.key} value={pt.value}>
+												{pt.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12} md={3}>
 								<FormControl fullWidth>
 									<InputLabel>Voting Type</InputLabel>
 									<MuiSelect
 										label={'Voting Type'}
-										name={'voting_types'}
-										value={formData.voting_types}
+										name={'voting_type'}
+										value={formData.voting_type}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -281,7 +309,54 @@ export const Main = () => {
 									</MuiSelect>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={3}>
+								<FormControl fullWidth>
+									<InputLabel>Collateral Type</InputLabel>
+									<MuiSelect
+										label={'Collateral Type'}
+										name={'collateral_types'}
+										value={formData.collateral_type}
+										onChange={handleOnChange}
+										fullWidth
+									>
+										{data.collateral_types.map((ct, i) => (
+											<MenuItem key={ct.key} value={ct.value}>
+												{ct.text}
+											</MenuItem>
+										))}
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12} md={3}>
+								<TextField
+									type={'number'}
+									name={'collateral_amount'}
+									value={formData.collateral_amount}
+									onChange={handleOnChange}
+									fullWidth
+									label={'Collateral Amount'}
+									InputLabelProps={{ shrink: true }}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<FormControl fullWidth>
+									<InputLabel>Start (now)</InputLabel>
+									<MuiSelect
+										label={'Start'}
+										name={'start'}
+										value={formData.start}
+										onChange={handleOnChange}
+										fullWidth
+										disabled
+									>
+										<MenuItem key={1} value={0}>
+											now
+										</MenuItem>
+									</MuiSelect>
+								</FormControl>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Duration</InputLabel>
 									<MuiSelect
@@ -299,60 +374,34 @@ export const Main = () => {
 									</MuiSelect>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12} md={4}>
-								<FormControl fullWidth>
-									<InputLabel>Collateral Type</InputLabel>
-									<MuiSelect
-										label={'Collateral Type'}
-										name={'collateral_types'}
-										value={formData.collateral_types}
+
+							{ ( formData.proposal_type !== 0 ) && <>
+								<Grid item xs={12}>
+									<Divider>For withdrawals and grants</Divider>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<TextField
+										type={'number'}
+										name={'amount'}
+										value={formData.amount}
 										onChange={handleOnChange}
 										fullWidth
-									>
-										{data.collateral_types.map((ct) => (
-											<MenuItem key={ct.key} value={ct.value}>
-												{ct.text}
-											</MenuItem>
-										))}
-									</MuiSelect>
-								</FormControl>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									type={'number'}
-									name={'collateral_amount'}
-									value={formData.collateral_amount}
-									onChange={handleOnChange}
-									fullWidth
-									label={'Collateral Amount'}
-									InputLabelProps={{ shrink: true }}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<Divider>For withdrawals and grants</Divider>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<TextField
-									type={'number'}
-									name={'amount'}
-									value={formData.amount}
-									onChange={handleOnChange}
-									fullWidth
-									label={'Amount to transfer on success'}
-									InputLabelProps={{ shrink: true }}
-								/>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<TextField
-									type={'text'}
-									name={'beneficiary'}
-									value={formData.beneficiary}
-									onChange={handleOnChange}
-									fullWidth
-									label={'Beneficiary Account'}
-									InputLabelProps={{ shrink: true }}
-								/>
-							</Grid>
+										label={'Amount to transfer on success'}
+										InputLabelProps={{ shrink: true }}
+									/>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<TextField
+										type={'text'}
+										name={'beneficiary'}
+										value={formData.beneficiary}
+										onChange={handleOnChange}
+										fullWidth
+										label={'Beneficiary Account'}
+										InputLabelProps={{ shrink: true }}
+									/>
+								</Grid>
+							</>}
 							<Grid item xs={12}>
 								<Button
 									variant={'contained'}
