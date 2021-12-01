@@ -6,7 +6,7 @@ import Layout from './layouts/default'
 import { GovernancePage } from './apps/Governance/GovernancePage'
 import { GovernanceProposalInfoPage } from './apps/governanceProposalInfo/GovernanceProposalInfo'
 
-const Home = lazy(() => import('./apps/Home'))
+import { Home } from './apps/Home/Home'
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
@@ -53,7 +53,7 @@ const Router = (props) => {
 			}
 		>
 			<Routes>
-				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
+				<Route path="/" element={<Home />}></Route>
 				<Route
 					path="/app"
 					element={
