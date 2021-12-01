@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles'
 
 const globalTheme = {
 	shape: {
-		borderRadius: 1,
+		borderRadius: '8px',
 	},
 	shadows: 0,
 }
