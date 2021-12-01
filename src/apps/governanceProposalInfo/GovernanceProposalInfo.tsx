@@ -107,10 +107,10 @@ export function GovernanceProposalInfoPage() {
 
 	// Fetch Description
 	useEffect(() => {
-		if (!metadata) return
+		if (!metadata || !(proposalId in metadata)) return
 
 		fetchProposalDescription(metadata[proposalId].cid, setDescription)
-	}, [proposal])
+	}, [metadata, proposalId])
 
 	// Fetch logo
 	useEffect(() => {
@@ -186,7 +186,7 @@ export function GovernanceProposalInfoPage() {
 							<Divider orientation="vertical" sx={{ height: 'inherit' }} />
 							<Stack flex="1" spacing={3}>
 								<Box>
-									<Typography>DAO</Typography>
+									<Typography>Organisation</Typography>
 									<Link
 										display="block"
 										component={NavLink}
