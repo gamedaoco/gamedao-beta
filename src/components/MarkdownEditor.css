@@ -1,8 +1,15 @@
+
+/* EDITOR OVERWIRTES */
+
 #editor_dark {
     background-color: #161C24 !important;
 }
 
 #editor_dark_html > * {
+    color: white;
+}
+
+.editor_dark_html > *{
     color: white;
 }
 
@@ -12,4 +19,63 @@
 
 #editor_light_html > * {
     color: black;
+}
+
+.custom-html-style table {
+    z-index: 10000;
+    width: 100%;
+}
+
+/* GRID */
+
+@media(max-width:640px) {
+    .col {
+        width: 100%;
+    }
+}
+
+@media(min-width:640px) {
+    .col {
+        display: table-cell;
+    }
+
+    .\31 {
+        width: 5%;
+    }
+
+    .\33 {
+        width: 22%;
+    }
+
+    .\34 {
+        width: 30%;
+    }
+
+    .\35 {
+        width: 40%;
+    }
+
+    .\32 {
+        width: 15%;
+    }
+
+    .\36 {
+        width: 50%;
+    }
+
+    .row {
+        display: table;
+        border-spacing: 1em 0;
+    }
+}
+
+.w-100,
+.row {
+    width: 100%;
+}
+
+.container {
+    max-width: 60em;
+    padding: 1em;
+    margin: auto;
 }
