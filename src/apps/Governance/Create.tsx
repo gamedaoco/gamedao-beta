@@ -182,13 +182,13 @@ export const Main = ({ blockNumber }) => {
 			setLoading(true)
 
 			const start = blockNumber // current block as start block
-			console.log('🚀 ~ file: Create.tsx ~ line 184 ~ sendTX ~ start', start)
 
-			// ToDo: Increase backend max proposal time limit of 60480 - else the request will ALWAYS fail
-			const expiry = /* formData.duration * data.blockFactor */ 60480 + start // take current block as offset
-			console.log('🚀 ~ file: Create.tsx ~ line 185 ~ sendTX ~ expiry', expiry)
+			const expiry = formData.duration * data.blocksPerDay + start // take current block as offset
 			const { entity, purpose } = formData
-			console.log('🚀 ~ file: Create.tsx ~ line 166 ~ sendTX ~ formData', formData)
+
+			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
+			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
+			console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
 
 			const payload = [entity, purpose, cid, start, expiry]
 
