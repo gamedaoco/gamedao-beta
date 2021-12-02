@@ -97,7 +97,7 @@ export const Main = ({ blockNumber }) => {
 	const [content, setContent] = useState({})
 	const navigate = useNavigate()
 
-	const { bodies, queryMemberships, memberships } = useGameDaoControl()
+	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
 
 	useEffect(() => {
 		if (!address) return
@@ -229,6 +229,16 @@ export const Main = ({ blockNumber }) => {
 		setLoading(false)
 	}, [account, refresh])
 
+	const [validMemberships, setValidMemberships] = useState([])
+
+	useEffect(() => {
+		if (!bodyStates || !memberships) return
+
+		setValidMemberships(
+			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
+		)
+	}, [bodyStates, memberships])
+
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
 	// })
@@ -256,7 +266,7 @@ export const Main = ({ blockNumber }) => {
 										value={formData.entity}
 										onChange={handleOnChange}
 									>
-										{(memberships?.[address] ?? []).map((e) => (
+										{validMemberships.map((e) => (
 											<MenuItem key={e} value={e}>
 												{bodies?.[e]?.name}
 											</MenuItem>
@@ -422,6 +432,7 @@ export const Main = ({ blockNumber }) => {
 									fullWidth
 									color={'primary'}
 									onClick={handleSubmit}
+									disabled={loading}
 								>
 									Publish Proposal
 								</Button>
