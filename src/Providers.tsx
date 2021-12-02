@@ -36,7 +36,7 @@ function Wrapper({ children }) {
 					</BrowserRouter>
 				</WalletProvider>
 			</SubstrateContextProvider>
-			<ToastContainer theme={darkmodeEnabled ? 'dark' : 'light'} />
+			<ToastContainer position="bottom-right" theme={darkmodeEnabled ? 'dark' : 'light'} />
 		</ThemeProvider>
 	)
 }
