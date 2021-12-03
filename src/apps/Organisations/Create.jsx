@@ -14,6 +14,7 @@ import {
 	Select,
 	TextField,
 	Typography,
+	FileDropZone,
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
@@ -110,13 +111,12 @@ export const Main = (props) => {
 
 	// handle file uploads to ipfs
 
-	async function onFileChange(e, type) {
-		const file = e.target.files[0]
-		if (!file) return
+	async function onFileChange(files, type) {
+		if (!files.length) return
 
 		if (dev) console.log('upload image')
 		try {
-			const cid = await pinFileToIPFS(file)
+			const cid = await pinFileToIPFS(files[0])
 			updateFileCID({ ...fileCID, [type]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
@@ -301,46 +301,22 @@ export const Main = (props) => {
 					</Grid>
 				)}
 				<Grid item xs={12} md={6}>
-					<Button
-						variant={'outlined'}
-						fullWidth
-						onClick={() => {
-							logoInputRef.current.click()
+					<FileDropZone
+						onDroppedFiles={(files) => {
+							onFileChange(files, 'logo')
 						}}
 					>
-						Pick a Logo Graphic
-					</Button>
-					<input
-						labelId="logo-label"
-						fullWidth
-						type="file"
-						ref={logoInputRef}
-						label="Logo Graphic"
-						name="logo"
-						onChange={(e) => onFileChange(e, 'logo')}
-						style={{ position: 'fixed', left: '-99999px' }}
-					/>
+						Pick logo graphic
+					</FileDropZone>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<Button
-						variant={'outlined'}
-						fullWidth
-						onClick={() => {
-							headerInputRef.current.click()
+					<FileDropZone
+						onDroppedFiles={(files) => {
+							onFileChange(files, 'header')
 						}}
 					>
-						Pick a Header Graphic
-					</Button>
-					<input
-						labelId="header-gfx-label"
-						fullWidth
-						ref={headerInputRef}
-						type="file"
-						label="Header Graphic"
-						name="header"
-						onChange={(e) => onFileChange(e, 'header')}
-						style={{ position: 'fixed', left: '-99999px' }}
-					/>
+						Pick header graphic
+					</FileDropZone>
 				</Grid>
 				<Grid item xs={12}>
 					<Divider>
