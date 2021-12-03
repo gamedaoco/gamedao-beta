@@ -8,7 +8,7 @@ const mdParser = new MarkdownIt({
 
 export const MarkdownViewer = function(props) {
     const { darkmodeEnabled } = useThemeState()
-    const markdown = mdParser.render(props.markdown)
+    const markdown = mdParser.render(props.markdown || '')
     const classes = darkmodeEnabled ? 'editor_dark_html' : 'editor_light_html'
     return <div className={`gamedao custom-html-style ${classes}`} dangerouslySetInnerHTML={{__html:markdown}} />;
 }
