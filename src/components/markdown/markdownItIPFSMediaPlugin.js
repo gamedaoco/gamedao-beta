@@ -1,9 +1,6 @@
-'use strict';
-/* eslint complexity: "off" */
-
 
 /**
- * A minimalist `markdown-it` plugin for parsing video/audio references inside
+ * A minimalist `markdown-it` plugin for parsing video/audio IPFS references inside
  * markdown image syntax as `<video>` / `<audio>` tags.
  *
  * @namespace HTML5IPFSMedia
@@ -330,7 +327,7 @@ function renderMedia(tokens, idx, options, env, md) {
  *  human-readable text that is part of the output
  * @memberof HTML5IPFSMedia
  */
-function html5IPFSMedia(md, options = {}) {
+export function html5IPFSMedia(md, options = {}) {
   if (options.messages)
     messages = options.messages;
   if (options.translateFn)
@@ -355,8 +352,10 @@ function html5IPFSMedia(md, options = {}) {
     };
 }
 
+/*
 module.exports = {
   html5IPFSMedia,
   messages, // For partial customization of messages
   guessMediaType
 };
+*/
