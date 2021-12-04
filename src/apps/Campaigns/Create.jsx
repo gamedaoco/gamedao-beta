@@ -1,10 +1,10 @@
-import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md'
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from 'src/components/Loader'
-import { MarkdownEditor } from 'src/components/MarkdownEditor'
+import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
 import { useWallet } from 'src/context/Wallet'
 import { useBalance } from 'src/hooks/useBalance'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
@@ -37,7 +37,6 @@ import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
-console.log(defaultMarkdown)
 
 const dev = config.dev
 

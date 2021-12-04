@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import RendererKoiJam from './koijam/Render'
-
 import { gateway } from '../lib/ipfs'
 
 import Tabs from '@mui/material/Tabs'
