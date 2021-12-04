@@ -13,6 +13,7 @@ import to from 'await-to-js'
 import moment from 'moment'
 import { LinearProgress } from '@mui/material'
 import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
+import { useWallet } from 'src/context/Wallet'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -59,8 +60,10 @@ export function GovernanceProposalInfoPage() {
 	const queryParams = useParams()
 	const apiProvider = useApiProvider()
 
+	const { address, signAndNotify } = useWallet()
+
 	const { owners, metadata, proposals, proposalSimpleVotes } = useGameDaoGovernance()
-	const { bodies } = useGameDaoControl()
+	const { bodies, bodyMemberState, queryBodyMemberState } = useGameDaoControl()
 
 	const [blockNumber, setBlockNumber] = useState(0)
 	const [description, setDescription] = useState<any>()
@@ -71,6 +74,7 @@ export function GovernanceProposalInfoPage() {
 	const proposal = proposals?.[proposalId]
 
 	const proposalMeta = metadata?.[proposalId]
+	const start = proposal ? (normalizeNumber(proposal.start) - blockNumber) * blockTime : null
 	const expires = proposal ? (normalizeNumber(proposal.expiry) - blockNumber) * blockTime : null
 
 	// Get block number
@@ -101,16 +105,23 @@ export function GovernanceProposalInfoPage() {
 	// Orgianization
 	const bodyId = proposal?.context_id ?? null
 	const body = bodyId ? bodies?.[bodyId] : null
+	const isMember = bodyMemberState?.[bodyId]?.[address] === '1' ?? false
+
+	useEffect(() => {
+		if (!bodyId) return
+
+		queryBodyMemberState(bodyId, address)
+	}, [address, bodyId])
 
 	// Helper functions
 	const calculatePercentage = (count) => (voteCount === 0 ? 0 : (count * 100) / voteCount)
 
 	// Fetch Description
 	useEffect(() => {
-		if (!metadata) return
+		if (!metadata || !(proposalId in metadata)) return
 
 		fetchProposalDescription(metadata[proposalId].cid, setDescription)
-	}, [proposal])
+	}, [metadata, proposalId])
 
 	// Fetch logo
 	useEffect(() => {
@@ -120,7 +131,19 @@ export function GovernanceProposalInfoPage() {
 	}, [body])
 
 	function onVoteClicked(hasVotedYes) {
-		createInfoNotification('Not yet implemented')
+		const voteType = hasVotedYes ? 1 : 0
+
+		signAndNotify(
+			apiProvider.tx.gameDaoGovernance.simpleVote(proposalId, voteType),
+			{
+				pending: 'Voting in progress',
+				success: 'Voted',
+				error: 'Voting failed',
+			},
+			(state, result) => {
+				// TODO: 2075 Do we need error handling here if false?
+			}
+		)
 	}
 
 	return (
@@ -186,7 +209,7 @@ export function GovernanceProposalInfoPage() {
 							<Divider orientation="vertical" sx={{ height: 'inherit' }} />
 							<Stack flex="1" spacing={3}>
 								<Box>
-									<Typography>DAO</Typography>
+									<Typography>Organisation</Typography>
 									<Link
 										display="block"
 										component={NavLink}
@@ -209,7 +232,7 @@ export function GovernanceProposalInfoPage() {
 								<Box>
 									<Typography>Start</Typography>
 									<Typography display="block" variant="body1">
-										Not yet implemented
+										{moment().add(start, 'seconds').format('YYYY-MM-DD HH:mm')}
 									</Typography>
 								</Box>
 								<Box>
@@ -222,10 +245,17 @@ export function GovernanceProposalInfoPage() {
 								</Box>
 								<Box marginTop="auto !important" paddingTop={3}>
 									<Typography>Vote</Typography>
-									<Stack direction="row" justifyContent="space-between">
-										<Button onClick={() => onVoteClicked(false)}>No</Button>
-										<Button onClick={() => onVoteClicked(true)}>Yes</Button>
-									</Stack>
+									{isMember ? (
+										<Stack direction="row" justifyContent="space-between">
+											<Button onClick={() => onVoteClicked(false)}>No</Button>
+											<Button onClick={() => onVoteClicked(true)}>Yes</Button>
+										</Stack>
+									) : (
+										<Typography display="block" variant="body1">
+											You need to be a member in order to vote for this
+											proposal.
+										</Typography>
+									)}
 								</Box>
 							</Stack>
 						</Stack>

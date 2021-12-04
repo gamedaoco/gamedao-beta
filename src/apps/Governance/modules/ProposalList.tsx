@@ -1,30 +1,10 @@
-import { useApiProvider } from '@substra-hooks/core'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Divider, Paper, Stack, Typography } from 'src/components'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { ProposalItem } from './ProposalItem'
 
-export function ProposalList() {
-	const apiProvider = useApiProvider()
+export function ProposalList({ blockNumber }) {
 	const { proposals } = useGameDaoGovernance()
-
-	const [blockNumber, setBlockNumber] = useState(0)
-
-	useEffect(() => {
-		if (!apiProvider) return
-		let unsubscribeAll
-
-		apiProvider.derive.chain
-			.bestNumberFinalized((number) => {
-				setBlockNumber(number.toNumber())
-			})
-			.then((unsub) => {
-				unsubscribeAll = unsub
-			})
-			.catch(console.error)
-
-		return () => unsubscribeAll && unsubscribeAll()
-	}, [apiProvider])
 
 	return proposals ? (
 		<Paper>

@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactDOM from 'react-dom';
 import MdEditor from 'react-markdown-editor-lite';
 import MarkdownIt from 'markdown-it';
+import { html5IPFSMedia } from './markdownItIPFSMediaPlugin'
 import { useThemeState } from 'src/context/ThemeState'
 
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
@@ -20,8 +21,12 @@ const dev = config.dev
 // MdEditor.use(YOUR_PLUGINS_HERE);
 
 const mdParser = new MarkdownIt({
-  html: true,
+  //html: true,
 });
+
+mdParser.use(html5IPFSMedia);
+
+console.log(mdParser.render('![text](video.mp4)'));
 
 async function onImageUpload(file) {
   if (!file) return
