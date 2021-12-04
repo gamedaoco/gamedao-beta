@@ -1,5 +1,8 @@
+import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md'
+import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Loader from 'src/components/Loader'
 import { MarkdownEditor } from 'src/components/MarkdownEditor'
 import { useWallet } from 'src/context/Wallet'
@@ -10,30 +13,31 @@ import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { formatZero } from 'src/utils/helper'
 import {
+	Box,
 	Button,
 	Checkbox,
-	Box,
 	Container,
 	FileDropZone,
 	FormControl,
 	FormControlLabel,
+	FormSectionHeadline,
 	Grid,
-	Stepper,
-	Step,
-	StepLabel,
 	Image16to9,
 	InputLabel,
 	MenuItem,
 	Paper,
 	Select,
+	Step,
+	StepLabel,
+	Stepper,
 	TextField,
 	Typography,
-	FormSectionHeadline,
 } from '../../components'
 import config from '../../config'
-import { Image } from '@mui/icons-material'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
+
+console.log(defaultMarkdown)
 
 const dev = config.dev
 
@@ -78,18 +82,6 @@ const random_state = (account) => {
 	}
 }
 
-const defaultMarkdown = `
-# gameDAO
-
-| Head | Head | Head |
-| --- | --- | --- |
-| Data | Data | Data |
-| Data | Data | Data |
-| Data | Data | Data |
-
-![unknown (1).png](https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix)
-`
-
 export const Main = () => {
 	const { address, account, finalized, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
@@ -97,6 +89,7 @@ export const Main = () => {
 	const crowdfunding = useCrowdfunding()
 	const daoControl = useGameDaoControl()
 	const gov = useGameDaoGovernance()
+	const navigate = useNavigate()
 
 	const [block, setBlock] = useState(0)
 
@@ -239,6 +232,9 @@ export const Main = () => {
 					setLoading(false)
 					setRefresh(true)
 					updateBalance()
+
+					navigate('/app', { replace: true })
+
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
