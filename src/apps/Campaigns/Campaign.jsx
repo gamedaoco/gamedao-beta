@@ -98,8 +98,27 @@ function a11yProps(index) {
 }
 
 export function Campaign() {
+	const apiProvider = useApiProvider()
+	const [blockNumber, setBlockNumber] = useState(0)
+
+	useEffect(() => {
+		if (!apiProvider) return
+		let unsubscribeAll
+
+		apiProvider.derive.chain
+			.bestNumberFinalized((number) => {
+				setBlockNumber(number.toNumber())
+			})
+			.then((unsub) => {
+				unsubscribeAll = unsub
+			})
+			.catch(console.error)
+
+		return () => unsubscribeAll && unsubscribeAll()
+	}, [apiProvider])
+
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survivial']
+	const t = ['Open World', 'Trending', 'Survival']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
@@ -149,17 +168,19 @@ export function Campaign() {
 	if (!content) return '...'
 	if (!IPFSData) return '...'
 
-	console.log(content, IPFSData)
+	//console.log(content, IPFSData)
+	//console.log(blockNumber)
 
-	const expiryTimestamp = parseInt(content.created.replaceAll(',', ''))+parseInt(content.expiry.replaceAll(',', ''))
-
+	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
+	const blocksUntilExpiry = parseInt(content.expiry.replaceAll(',', '')) - blockNumber
+	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000 // 3 second blocknumber
 	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
 		<Box>
 			<Box
 				sx={{
-					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(${gateway}${IPFSData.header})`,
+					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '450px',

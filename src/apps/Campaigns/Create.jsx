@@ -33,8 +33,6 @@ import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md';
 
-console.log(defaultMarkdown)
-
 const dev = config.dev
 
 const random_state = (account) => {
