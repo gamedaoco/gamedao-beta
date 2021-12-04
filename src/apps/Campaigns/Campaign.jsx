@@ -172,8 +172,9 @@ export function Campaign() {
 	//console.log(blockNumber)
 
 	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
-	const blocksUntilExpiry = parseInt(content.expiry.replaceAll(',', '')) - blockNumber
-	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000 // 3 second blocknumber
+	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
+	const blocksUntilExpiry = campaignEndBlockHeight - blockNumber
+	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
 	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
