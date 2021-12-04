@@ -53,10 +53,21 @@ export const FileDropZone: React.FC<
 				sx={{
 					justifyContent: 'center',
 					alignItems: 'center',
+					textAlign: 'center',
+					border: `1px solid ${theme.palette.background.neutral}`,
+					display: 'flex',
+					flexDirection: 'column',
+					opacity: hover ? 1 : 0.6,
+					cursor: 'pointer',
+					transition: 'all 0.2s linear',
 					padding: 4,
 					background: hover
 						? theme.palette.background.neutral
 						: theme.palette.background.paper,
+					['&:hover']: {
+						background: theme.palette.background.neutral,
+						opacity: 1,
+					},
 				}}
 				component={'div'}
 			>

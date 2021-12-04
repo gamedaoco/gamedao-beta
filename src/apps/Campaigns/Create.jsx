@@ -13,6 +13,8 @@ import {
 	Button,
 	Checkbox,
 	Box,
+	Container,
+	FileDropZone,
 	FormControl,
 	FormControlLabel,
 	Grid,
@@ -29,6 +31,7 @@ import {
 	FormSectionHeadline,
 } from '../../components'
 import config from '../../config'
+import { Image } from '@mui/icons-material'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
@@ -167,12 +170,11 @@ export const Main = () => {
 		updateFormData({ ...formData, [name]: !formData[name] })
 	}
 
-	async function onFileChange(e, type) {
-		const file = e.target.files[0]
-		if (!file) return
+	async function onFileChange(files, type) {
+		if (!files?.[0]) return
 		if (dev) console.log('upload image')
 		try {
-			const cid = await pinFileToIPFS(file)
+			const cid = await pinFileToIPFS(files[0])
 			updateFileCID({ ...fileCID, [type]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
@@ -259,7 +261,7 @@ export const Main = () => {
 	return (
 		<>
 			<Box sx={{ pb: 2 }}>
-				<Grid container spacing={3}>
+				<Grid container alignItems={'center'} spacing={3}>
 					<Grid item xs={12} md={8}>
 						<Typography variant={'body1'}>Create Campaign</Typography>
 						<Typography variant={'h3'}>
@@ -367,36 +369,28 @@ export const Main = () => {
 					]}
 
 					<Grid item xs={12} md={6}>
-						<input
-							type={'file'}
-							ref={logoGraphicInputRef}
-							onChange={(e) => onFileChange(e, 'logo')}
-							name={'logo'}
-							style={{ position: 'fixed', left: '-999999px' }}
-						/>
-						<Button
-							fullWidth
-							variant={'outlined'}
-							onClick={() => logoGraphicInputRef.current.click()}
+						<FileDropZone
+							onDroppedFiles={(files) => {
+								onFileChange(files, 'logo')
+							}}
 						>
-							Pick a logo graphic
-						</Button>
+							<Image />
+							<Typography variant={'body2'} align={'center'}>
+								Pick a logo graphic
+							</Typography>
+						</FileDropZone>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<input
-							type={'file'}
-							ref={headerGraphicInputRef}
-							onChange={(e) => onFileChange(e, 'header')}
-							name={'header'}
-							style={{ position: 'fixed', left: '-999999px' }}
-						/>
-						<Button
-							fullWidth
-							variant={'outlined'}
-							onClick={() => headerGraphicInputRef.current.click()}
+						<FileDropZone
+							onDroppedFiles={(files) => {
+								onFileChange(files, 'header')
+							}}
 						>
-							Pick a header graphic
-						</Button>
+							<Image />
+							<Typography variant={'body2'} align={'center'}>
+								Pick a header graphic
+							</Typography>
+						</FileDropZone>
 					</Grid>
 
 					<Grid item xs={12}>
@@ -568,13 +562,13 @@ export const Main = () => {
 							}
 						/>
 					</Grid>
-					<Grid item xs={12}>
-						<Button variant={'contained'} fullWidth onClick={handleSubmit}>
-							Create Campaign
-						</Button>
-					</Grid>
 				</Grid>
 			</Paper>
+			<Container maxWidth={'xs'} sx={{ p: 4 }}>
+				<Button variant={'contained'} fullWidth onClick={handleSubmit}>
+					Create Campaign
+				</Button>
+			</Container>
 		</>
 	)
 }
