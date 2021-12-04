@@ -10,7 +10,6 @@ import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
 
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
-
 import './MarkdownEditor.css';
 
 
