@@ -39,3 +39,7 @@
 </div>
 
 <video src="https://ipfs.gamedao.co/gateway/QmceZKtSB4TJdCbcmsG7EARBzQGJhSLyga6WHPWSf4ck4n"></video>
+
+![enter.mp4](https://ipfs.gamedao.co/gateway/QmceZKtSB4TJdCbcmsG7EARBzQGJhSLyga6WHPWSf4ck4n.mp4)
+
+![text](video.mp4)

@@ -31,9 +31,7 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md';
-
-console.log(defaultMarkdown)
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md';
 
 const dev = config.dev
 
