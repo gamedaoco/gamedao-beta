@@ -63,16 +63,15 @@ const WalletProvider = ({ children }) => {
 				tx.signAndSend(state.address, { signer: state.signer }, (result) => {
 					console.log('🚀 ~ file: Wallet.tsx ~ line 64 ~ tx.signAndSend ~ result', result)
 					if (result.isError) {
-						if (callback) callback(false)
+						if (callback) callback(false, result)
 						return reject()
 					}
-					if (result.status.isInBlock) {
-						if (callback) callback(true)
+					if (result.status.isFinalized) {
+						if (callback) callback(true, result)
 						return resolve('')
 					}
 				})
 			)
-
 			if (error) {
 				console.log('Transaction failing with', error)
 				if (callback) callback(false)
