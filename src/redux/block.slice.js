@@ -9,7 +9,7 @@ export const slice = createSlice({
   name: 'block',
   initialState,
   reducers: {
-    setBlockheight: (state, action) => {
+    updateBlockheight: (state, action) => {
       state.height = action.payload
     },
   },
@@ -24,6 +24,6 @@ export function blockStateSelector(state) {
 }
 
 
-export const { blockheight } = slice.actions  
+export const { updateBlockheight } = slice.actions  
 export const reducer = slice.reducer
 export default slice
