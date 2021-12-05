@@ -25,7 +25,7 @@ const NetInfo = () => {
 		apiProvider.derive.chain
 			.bestNumberFinalized((number) => {
 				setBlockNumber(number.toNumber())
-				dispatch(slice.actions.setBlockheight(number.toNumber()))
+				dispatch(slice.actions.updateBlockheight(number.toNumber()))
 				setBlockNumberTimer(0)
 			})
 			.then((unsub) => {
