@@ -78,7 +78,7 @@ const random_state = (account) => {
 
 
 export const Main = () => {
-	const { address, account, finalized, signAndNotify } = useWallet()
+	const { address, account, connected, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
 	const identity = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
@@ -103,7 +103,7 @@ export const Main = () => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const bestBlock = finalized
+	const bestBlock = connected
 		? apiProvider.derive.chain.bestNumberFinalized
 		: apiProvider.derive.chain.bestNumber
 

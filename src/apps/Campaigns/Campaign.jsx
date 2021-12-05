@@ -151,7 +151,6 @@ export function Campaign() {
 	console.log(content, IPFSData)
 
 	const expiryTimestamp = parseInt(content.created.replaceAll(',', ''))+parseInt(content.expiry.replaceAll(',', ''))
-
 	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
