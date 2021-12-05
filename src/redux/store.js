@@ -1,12 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 // import { reduxBatch } from '@manaflair/redux-batch'
 
-import { balanceReducer } from './duck/balance.duck'
-import { governanceReducer } from './duck/gameDaoGovernance.duck'
-import { identityReducer } from './duck/identity.duck'
-import { crowdfundingReducer } from './duck/crowdfunding.duck'
-import { gameDaoControlReducer } from './duck/gameDaoControl.duck'
+// import { balanceReducer } from './duck/balance.duck'
+// import { governanceReducer } from './duck/gameDaoGovernance.duck'
+// import { identityReducer } from './duck/identity.duck'
+// import { crowdfundingReducer } from './duck/crowdfunding.duck'
+// import { gameDaoControlReducer } from './duck/gameDaoControl.duck'
+
 import { reducer as blockReducer } from './block.slice'
+import { reducer as crowdfundingReducer } from './crowdfunding.slice'
+import { reducer as balanceReducer } from './balance.slice'
+import { reducer as identityReducer } from './identity.slice'
+import { reducer as governanceReducer } from './gameDaoGovernance.slice'
+import { reducer as gameDaoControlReducer } from './gameDaoControl.slice'
 
 
 const rootReducer = {

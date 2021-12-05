@@ -5,7 +5,7 @@ import { useWallet } from 'src/context/Wallet'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { useDispatch, useSelector } from 'react-redux'
-import { balanceStateSelector, updateBalanceAction } from 'src/redux/duck/balance.duck'
+import { balanceStateSelector, updateBalanceAction } from 'src/redux/balance.slice'
 
 export type BalanceState = {
 	balanceZero: String

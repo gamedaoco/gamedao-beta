@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	clearGameDaoControlAction,
 	gameDaoControlRefreshSelector,
-} from 'src/redux/duck/gameDaoControl.duck'
+} from 'src/redux/gameDaoControl.slice'
 import { useBalance } from 'src/hooks/useBalance'
 
 export function Interactions({ data }) {

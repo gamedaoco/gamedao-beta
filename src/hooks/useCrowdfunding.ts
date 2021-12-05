@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	crowdfundingStateSelector,
 	updateCrowdfundingAction,
-} from 'src/redux/duck/crowdfunding.duck'
+} from 'src/redux/crowdfunding.slice'
 
 // Todo: Logic for subscribing to changes
 // Todo: Max initial load. Currently all are loaded

@@ -10,7 +10,7 @@ export const slice = createSlice({
   initialState: shape,
   reducers: {
     updateGovernance: (state, action) => {
-      state.governanceState = action.payload
+      Object.assign(state.governanceState, action.payload)
     },
   },
 })

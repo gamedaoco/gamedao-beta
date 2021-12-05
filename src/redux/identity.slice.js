@@ -10,7 +10,7 @@ export const slice = createSlice({
   initialState: shape,
   reducers: {
     updateIdentity: (state, action) => {
-      return action.payload
+      Object.assign(state.identityState, action.payload)
     },
   },
 })

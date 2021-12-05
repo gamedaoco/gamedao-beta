@@ -10,7 +10,7 @@ export const slice = createSlice({
   initialState: shape,
   reducers: {
     updateBalance: (state, action) => {
-      return action.payload
+      Object.assign(state.balanceState, action.payload)
     },
   },
 })

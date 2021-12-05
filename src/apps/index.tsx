@@ -30,9 +30,6 @@ const Dashboard = (props) => {
 		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
-	console.log(identity)
-	console.log(crowdfunding)
-
 	return (
 		<>
 			<Grid container spacing={3}>

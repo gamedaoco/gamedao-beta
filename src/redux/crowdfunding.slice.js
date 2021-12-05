@@ -1,3 +1,4 @@
+import { state } from '@polkadot/types/interfaces/definitions'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // uhttps://redux-toolkit.js.org/usage/immer-reducers
@@ -11,7 +12,7 @@ export const slice = createSlice({
   initialState: shape,
   reducers: {
     updateCrowdfunding: (state, action) => {
-      return { crowdfundingState: action.payload }
+      Object.assign(state.crowdfundingState, action.payload)
     },
   },
 })

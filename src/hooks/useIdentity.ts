@@ -5,7 +5,7 @@ import { useIsMountedRef } from './useIsMountedRef'
 import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { useDispatch, useSelector } from 'react-redux'
-import { identityStateSelector, updateIdentityAction } from 'src/redux/duck/identity.duck'
+import { identityStateSelector, updateIdentityAction } from 'src/redux/identity.slice'
 
 type IdentityState = {
 	identities: Object

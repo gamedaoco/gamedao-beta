@@ -7,7 +7,7 @@ import { useIsMountedRef } from './useIsMountedRef'
 import {
 	governanceStateSelector,
 	updateGovernanceAction,
-} from 'src/redux/duck/gameDaoGovernance.duck'
+} from 'src/redux/gameDaoGovernance.slice'
 import { useDispatch, useSelector } from 'react-redux'
 
 type GameDaoGovernanceState = {

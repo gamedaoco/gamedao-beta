@@ -9,7 +9,7 @@ import {
 	gameDaoControlRefreshSelector,
 	gameDaoControlStateSelector,
 	updateGameDaoControlAction,
-} from 'src/redux/duck/gameDaoControl.duck'
+} from 'src/redux/gameDaoControl.slice'
 import { useDispatch, useSelector } from 'react-redux'
 
 type GameDaoControlState = {
