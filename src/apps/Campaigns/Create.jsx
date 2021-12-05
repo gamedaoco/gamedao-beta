@@ -31,7 +31,7 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-import defaultMarkdown from '!!raw-loader!src/components/MarkdownDefault.md';
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md';
 
 const dev = config.dev
 
@@ -198,7 +198,7 @@ export const Main = () => {
 		const sendTX = async (cid) => {
 			setLoading(true)
 			//                             day factor            a day in blocks   current block as offset
-			const campaign_end = parseFloat(formData.duration) * data.blockFactor + block // take current block as offset
+			const campaign_end = parseFloat(formData.duration) * data.blocksPerDay + block // take current block as offset
 			const payload = [
 				formData.org,
 				formData.admin,

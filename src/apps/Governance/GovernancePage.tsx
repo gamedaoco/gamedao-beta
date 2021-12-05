@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
 import CreateProposal from './Create'
@@ -6,6 +6,7 @@ import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/compon
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { ProposalList } from './modules/ProposalList'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useApiProvider } from '@substra-hooks/core'
 
 const NavBadge = styled(Badge)(({ theme }) => ({
 	'& .MuiBadge-badge': {
@@ -18,7 +19,26 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 export function GovernancePage() {
 	const { proposalsCount } = useGameDaoGovernance()
 	const [showCreateMode, setCreateMode] = useState(false)
+	const [blockNumber, setBlockNumber] = useState(0)
+	const apiProvider = useApiProvider()
+
 	useGameDaoControl()
+
+	useEffect(() => {
+		if (!apiProvider) return
+		let unsubscribeAll
+
+		apiProvider.derive.chain
+			.bestNumberFinalized((number) => {
+				setBlockNumber(number.toNumber())
+			})
+			.then((unsub) => {
+				unsubscribeAll = unsub
+			})
+			.catch(console.error)
+
+		return () => unsubscribeAll && unsubscribeAll()
+	}, [apiProvider])
 
 	return (
 		<Stack spacing={4}>
@@ -51,7 +71,11 @@ export function GovernancePage() {
 					</Box>
 				</Box>
 			</Paper>
-			{showCreateMode ? <CreateProposal /> : <ProposalList />}
+			{showCreateMode ? (
+				<CreateProposal blockNumber={blockNumber} />
+			) : (
+				<ProposalList blockNumber={blockNumber} />
+			)}
 		</Stack>
 	)
 }

@@ -24,6 +24,20 @@
 .custom-html-style table {
     z-index: 10000;
     width: 100%;
+    border: none !important;
+}
+
+.custom-html-style table tr {
+    border: none !important;
+}
+
+.custom-html-style table td {
+    border: none !important;
+}
+
+.custom-html-style table th {
+    border: none !important;
+    background-color: transparent;
 }
 
 /* GRID */

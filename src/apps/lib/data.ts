@@ -123,14 +123,15 @@ export const CampaignGovernance = {
 // durations will be converted to blocks
 // where 1 day == (60 / 3) * 60 * 24 == 28800 blocks
 export const blockTime = 3
-export const blockFactor = (60 / blockTime) * 60 * 24
+export const blocksPerDay = 24 * 60 * 60 / blockTime
+export const blockFactor = blockTime * (60 / blockTime) * 60 * 24
 
 export const project_durations = [
 	{ key: '0', text: '1 day', value: '1' },
 	{ key: '1', text: '7 days', value: '7' },
 	{ key: '2', text: '30 days', value: '30' },
-	{ key: '3', text: '100 days', value: '100' },
-	{ key: '4', text: '1 year', value: '365' },
+	// { key: '3', text: '100 days', value: '100' },
+	// { key: '4', text: '1 year', value: '365' },
 ]
 
 if(dev){
@@ -169,6 +170,7 @@ export const data = {
 	curve_function,
 	project_durations,
 	blockTime,
+	blocksPerDay,
 	blockFactor,
 	dao_bodies,
 	dao_member_governance,

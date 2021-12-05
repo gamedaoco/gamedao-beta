@@ -3,7 +3,7 @@ import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
-
+import RendererKoiJam from './koijam/Render'
 
 import { gateway } from '../lib/ipfs'
 
@@ -28,7 +28,6 @@ import {
 
 import { TileReward } from './TileReward'
 
-import { Renderer } from './three'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
@@ -184,7 +183,7 @@ export function Campaign() {
 					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
-					minHeight: '450px',
+					minHeight: '60vh',
 					padding: 8,
 					color: 'common.white',
 					alignItems: 'center',
@@ -227,10 +226,17 @@ export function Campaign() {
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<img
-								src={'/assets/campaign-model.png'}
-								style={{ maxWidth: '80%', marginBottom: '-10rem' }}
-							/>
+							<Box
+								sx={{
+									width: '66vw',
+									height: '55vh',
+									position: 'absolute',
+									right: '0px',
+									overflow: 'hidden',
+								}}
+							>
+								<RendererKoiJam />
+							</Box>
 						</Grid>
 					</Grid>
 				</Container>

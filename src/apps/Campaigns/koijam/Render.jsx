@@ -7,7 +7,7 @@ import ModelJSX from './Panda'
 import Fireflies from './Fireflies'
 import { a as three } from '@react-spring/three'
 
-export default function App() {
+export default function Koijam() {
 	return (
 		<Canvas dpr={[1, 2]} shadows camera={{ zoom: 0.5, fov: 45, position: [-1, 1, -2.5] }}>
 			<Suspense fallback={null}>

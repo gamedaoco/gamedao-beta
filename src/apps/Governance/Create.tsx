@@ -14,6 +14,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
+import { useNavigate } from 'react-router'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -74,7 +75,7 @@ const random_state = (account, campaigns = []) => {
 		voting_type,
 		proposal_type,
 		collateral_type,
-		collateral_amount
+		collateral_amount,
 	}
 	return gen
 }
@@ -84,10 +85,9 @@ const random_state = (account, campaigns = []) => {
 // 0.2 -> organisational votings
 // 0.3 -> surveys
 
-export const Main = () => {
+export const Main = ({ blockNumber }) => {
 	const apiProvider = useApiProvider()
 	const { account, address, signAndNotify } = useWallet()
-	const [block, setBlock] = useState(0)
 
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -95,8 +95,9 @@ export const Main = () => {
 	const [formData, updateFormData] = useState({} as GenericForm)
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState({})
+	const navigate = useNavigate()
 
-	const { queryMemberships, memberships } = useGameDaoControl()
+	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
 
 	useEffect(() => {
 		if (!address) return
@@ -180,10 +181,14 @@ export const Main = () => {
 			if (dev) console.log('2. send tx')
 			setLoading(true)
 
-			const start = block // current block as start block
-			const expiry = formData.duration * data.blockFactor + block // take current block as offset
+			const start = blockNumber // current block as start block
+
+			const expiry = formData.duration * data.blocksPerDay + start // take current block as offset
 			const { entity, purpose } = formData
-			console.log('🚀 ~ file: Create.tsx ~ line 166 ~ sendTX ~ formData', formData)
+
+			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
+			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
+			console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
 
 			const payload = [entity, purpose, cid, start, expiry]
 
@@ -194,12 +199,19 @@ export const Main = () => {
 					success: 'Proposal created',
 					error: 'Proposal creation failed',
 				},
-				(state) => {
+				(state, result) => {
 					setLoading(false)
 					setRefresh(true)
-					if (!state) {
-						// TODO: 2075 Do we need error handling here?
+
+					if (state) {
+						result.events.forEach(({ event: { data, method, section } }) => {
+							if (section === 'gameDaoGovernance' && method === 'Proposal') {
+								navigate(`/app/governance/${data[1].toHex()}`)
+							}
+						})
 					}
+
+					// TODO: 2075 Do we need error handling here if false?
 				}
 			)
 		}
@@ -216,6 +228,16 @@ export const Main = () => {
 		setRefresh(false)
 		setLoading(false)
 	}, [account, refresh])
+
+	const [validMemberships, setValidMemberships] = useState([])
+
+	useEffect(() => {
+		if (!bodyStates || !memberships) return
+
+		setValidMemberships(
+			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
+		)
+	}, [bodyStates, memberships])
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
@@ -244,9 +266,9 @@ export const Main = () => {
 										value={formData.entity}
 										onChange={handleOnChange}
 									>
-										{(memberships?.[address] ?? []).map((e) => (
+										{validMemberships.map((e) => (
 											<MenuItem key={e} value={e}>
-												{e}
+												{bodies?.[e]?.name}
 											</MenuItem>
 										))}
 									</MuiSelect>
@@ -375,39 +397,42 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{ ( formData.proposal_type !== 0 ) && <>
-								<Grid item xs={12}>
-									<Divider>For withdrawals and grants</Divider>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<TextField
-										type={'number'}
-										name={'amount'}
-										value={formData.amount}
-										onChange={handleOnChange}
-										fullWidth
-										label={'Amount to transfer on success'}
-										InputLabelProps={{ shrink: true }}
-									/>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<TextField
-										type={'text'}
-										name={'beneficiary'}
-										value={formData.beneficiary}
-										onChange={handleOnChange}
-										fullWidth
-										label={'Beneficiary Account'}
-										InputLabelProps={{ shrink: true }}
-									/>
-								</Grid>
-							</>}
+							{formData.proposal_type !== 0 && (
+								<>
+									<Grid item xs={12}>
+										<Divider>For withdrawals and grants</Divider>
+									</Grid>
+									<Grid item xs={12} md={6}>
+										<TextField
+											type={'number'}
+											name={'amount'}
+											value={formData.amount}
+											onChange={handleOnChange}
+											fullWidth
+											label={'Amount to transfer on success'}
+											InputLabelProps={{ shrink: true }}
+										/>
+									</Grid>
+									<Grid item xs={12} md={6}>
+										<TextField
+											type={'text'}
+											name={'beneficiary'}
+											value={formData.beneficiary}
+											onChange={handleOnChange}
+											fullWidth
+											label={'Beneficiary Account'}
+											InputLabelProps={{ shrink: true }}
+										/>
+									</Grid>
+								</>
+							)}
 							<Grid item xs={12}>
 								<Button
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
 									onClick={handleSubmit}
+									disabled={loading}
 								>
 									Publish Proposal
 								</Button>
@@ -420,9 +445,11 @@ export const Main = () => {
 	)
 }
 
-export default function Module() {
+export default function Module({ blockNumber }) {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoGovernance ? <Main /> : null
+	return apiProvider && apiProvider.query.gameDaoGovernance ? (
+		<Main blockNumber={blockNumber} />
+	) : null
 }
 
 //
