@@ -26,7 +26,6 @@ const mdParser = new MarkdownIt({
 
 mdParser.use(html5IPFSMedia);
 
-console.log(mdParser.render('![text](video.mp4)'));
 
 async function onImageUpload(file) {
   if (!file) return

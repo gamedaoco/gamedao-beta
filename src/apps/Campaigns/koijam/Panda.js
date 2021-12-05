@@ -12,7 +12,7 @@ export default function Model({ ...props }) {
 	)
 	const { actions } = useAnimations(animations, group)
 	React.useEffect(() => {
-		console.log(actions)
+		
 		actions['Root|CINEMA_4D_Basis|Layer0'].play()
 	})
 	return (
