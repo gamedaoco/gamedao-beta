@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Typography from '@mui/material/Typography'
 import { useApiProvider } from '@substra-hooks/core'
+import { useDispatch, useSelector } from 'react-redux'
+import { slice, blockStateSelector } from 'src/redux/block.slice'
+
 
 const NetInfo = () => {
 	const apiProvider = useApiProvider()
 	const [version, setVersion] = useState('')
 	const [blockNumber, setBlockNumber] = useState(0)
 	const [blockNumberTimer, setBlockNumberTimer] = useState(0)
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		if (!apiProvider) return
@@ -21,6 +25,7 @@ const NetInfo = () => {
 		apiProvider.derive.chain
 			.bestNumberFinalized((number) => {
 				setBlockNumber(number.toNumber())
+				dispatch(slice.actions.setBlockheight(number.toNumber()))
 				setBlockNumberTimer(0)
 			})
 			.then((unsub) => {
