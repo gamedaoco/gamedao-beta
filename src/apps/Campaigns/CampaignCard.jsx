@@ -75,6 +75,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	}, [identity])
 
 	const blocksRemain = expiry
+
 	const tags = ['game', '2d', 'pixel', 'steam']
 
 	const epoch = created.replaceAll(',', '')
