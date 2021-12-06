@@ -49,6 +49,7 @@ export { default as useMediaQuery } from '@mui/material/useMediaQuery'
 
 // styled
 export { styled } from '@mui/material/styles'
+export { useTheme } from '@mui/material/styles'
 
 // custom
 export * as Loader from './Loader'
