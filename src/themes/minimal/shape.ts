@@ -8,8 +8,8 @@ declare module '@mui/system' {
 }
 
 const shape = {
-	borderRadius: 4,
-	borderRadiusSm: 2,
+	borderRadius: 5,
+	borderRadiusSm: 3,
 	borderRadiusMd: 8,
 }
 
