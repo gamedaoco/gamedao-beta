@@ -197,10 +197,8 @@ export const Main = () => {
 
 		const sendTX = async (cid) => {
 			setLoading(true)
-			const campaign_end = dev
-				? block + 100 // 100 blocks = 300 seconds = 5 mins
-				: formData.duration * data.blockFactor + block // take current block as offset
-
+			//                             day factor            a day in blocks   current block as offset
+			const campaign_end = parseFloat(formData.duration) * data.blocksPerDay + block // take current block as offset
 			const payload = [
 				formData.org,
 				formData.admin,

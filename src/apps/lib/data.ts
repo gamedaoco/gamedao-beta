@@ -1,3 +1,6 @@
+import config from '../../config'
+const dev = config.dev
+
 export const rnd = (top: number) => Math.round(Math.random() * (top - 1))
 
 export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
@@ -118,7 +121,7 @@ export const CampaignGovernance = {
 }
 
 // durations will be converted to blocks
-// where 1 day == 3sec blocktime * 20 * 60 * 24 == 86400 blocks
+// where 1 day == (60 / 3) * 60 * 24 == 28800 blocks
 export const blockTime = 3
 export const blocksPerDay = 24 * 60 * 60 / blockTime
 export const blockFactor = blockTime * (60 / blockTime) * 60 * 24
@@ -130,6 +133,10 @@ export const project_durations = [
 	// { key: '3', text: '100 days', value: '100' },
 	// { key: '4', text: '1 year', value: '365' },
 ]
+
+if(dev){
+  project_durations.push({ key: '5', text: '5 Minutes', value: '0.004' })
+}
 
 export const blocksToTime = (blocks: number) => {
 	const ss = blocks * blockTime
