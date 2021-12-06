@@ -1,28 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-
 const shape = {
 	gameDaoControlState: {},
 	refresh: false,
 }
 
 export const slice = createSlice({
-  name: 'control',
-  initialState: shape,
-  reducers: {
-    updateDaoControl: (state, action) => {
-      state.refresh = false
-      Object.assign(state.gameDaoControlState, action.payload)
-    },
-    addDaoControlMemberState: (state, action) => {
-      const memberState = state.gameDaoControlState.bodyMemberState || {}
-      const target = memberState[action.payload?.hash] || {}
-      Object.assign(target, action.payload?.data)
-    },
-    clearDaoControl: (state, action) => {
-      return Object.assign({}, shape, {refresh: true})
-    },
-  },
+	name: 'control',
+	initialState: shape,
+	reducers: {
+		updateDaoControl: (state, action) => {
+			state.refresh = false
+			Object.assign(state.gameDaoControlState ?? {}, action.payload ?? {})
+		},
+		addDaoControlMemberState: (state, action) => {
+			const memberState = state.gameDaoControlState?.bodyMemberState ?? {}
+			const target = memberState[action.payload?.hash] ?? {}
+			memberState[action.payload?.hash] = Object.assign(target, action.payload.data ?? {})
+			Object.assign(state.gameDaoControlState ?? {}, {
+				bodyMemberState: memberState,
+			})
+		},
+		clearDaoControl: (state, action) => {
+			return Object.assign({}, shape, { refresh: true })
+		},
+	},
 })
 
 export function updateGameDaoControlAction(payload) {
@@ -48,6 +50,6 @@ export function gameDaoControlStateSelector(state) {
 export function gameDaoControlRefreshSelector(state) {
 	return gameDaoControlSelector(state)?.refresh
 }
-export const { updateDaoControl, clearDaoControl, addDaoControlMemberState } = slice.actions  
+export const { updateDaoControl, clearDaoControl, addDaoControlMemberState } = slice.actions
 export const reducer = slice.reducer
 export default slice
