@@ -17,7 +17,11 @@ import AppOrderTimeline from './components/dashboard/AppOrderTimeline'
 
 import DashboardUserConnected from './DashboardUserConnected'
 
+import SingleChart from '../components/chart/SingleChart'
+
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
+
+import { Box, Stack, Divider, Card } from 'src/components'
 
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
@@ -46,18 +50,88 @@ const Dashboard = (props) => {
 					/>
 				</Grid>*/}
 
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">DAOs: {nonce ?? 'Loading...'}</Typography>
+<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+					<Typography variant="h5">Global Dashboard</Typography>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">
-						Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}
-					</Typography>
+				
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Total Value Locked (Global)</Typography>
+							<Typography variant="h3">32'603'000'444.435</Typography>
+							<Typography>GAME</Typography>
+						</Stack>
+					</Card>
 				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">
-						Proposals: {proposalsCount ?? 'Loading...'}
-					</Typography>
+
+				<Grid item sm={12} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>DAOs</Typography>
+							<Typography variant="h3">{nonce ?? 'Loading...'}</Typography>
+							<Typography></Typography>
+						</Stack>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Total contributions</Typography>
+							<Typography variant="h3">1005.00</Typography>
+							<Typography>aUSD</Typography>
+						</Stack>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Card>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+						  <Typography variant="h5">Organization Updates:</Typography>
+						  <Typography variant="h5">filter</Typography>
+						</Box>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+					<Typography variant="h5">{crowdfunding.campaignsCount ?? 'Loading...'} Campaigns</Typography>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Card>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+						  <Typography variant="h5">Active Campaigns</Typography>
+						</Box>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+					<Typography variant="h5">{proposalsCount ?? 'Loading...'} Proposals</Typography>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Card>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+						  <Typography variant="h5">Votings Closing Soon</Typography>
+						</Box>
+					</Card>
 				</Grid>
 
 				<Grid item xs={12} md={6} lg={4}>

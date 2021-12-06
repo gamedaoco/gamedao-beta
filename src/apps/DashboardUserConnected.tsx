@@ -86,7 +86,7 @@ const Dashboard = (props) => {
 				
 				<Grid item xs={12} sm={6} md={4}>
 					<Card sx={{ height: '160px' }}>
-						<Box sx={{ position: 'absolute', top: '0px', left: '-1.5rem', width: '115%' }}><SingleChart/></Box>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
 						<Stack  
 							justifyContent="space-evenly"
 							alignItems="center"
@@ -100,23 +100,6 @@ const Dashboard = (props) => {
 					</Card>
 				</Grid>
 
-				
-				<Grid item xs={12} sm={6} md={4}>
-					<Card sx={{ height: '160px' }}>
-						<Box sx={{ position: 'absolute', top: '0px', left: '-1.5rem', width: '115%' }}><SingleChart/></Box>
-						<Stack  
-							justifyContent="space-evenly"
-							alignItems="center"
-							spacing={2}
-							mt={2}
-						>
-							<Typography>Total contributions</Typography>
-							<Typography variant="h3">1005.00</Typography>
-							<Typography>aUSD</Typography>
-						</Stack>
-					</Card>
-				</Grid>
-
 				<Grid item sm={12} md={4}>
 					<Card sx={{ height: '160px' }}>
 						<Stack  
@@ -126,10 +109,24 @@ const Dashboard = (props) => {
 							mt={2}
 						>
 							<Typography>Votings</Typography>
-							<Typography>
-								{proposalsCount ?? 'Loading...'}
-							</Typography>
+							<Typography variant="h3">{proposalsCount ?? 'Loading...'}</Typography>
 							<Typography>Open Votings</Typography>
+						</Stack>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Total contributions</Typography>
+							<Typography variant="h3">1005.00</Typography>
+							<Typography>aUSD</Typography>
 						</Stack>
 					</Card>
 				</Grid>
