@@ -1,7 +1,7 @@
 import { merge } from 'lodash'
 import ReactApexChart from 'react-apexcharts'
-// material
-import { Card, CardHeader, Box } from '@mui/material'
+
+import { Card, CardHeader, Box, useTheme } from '../index'
 //
 import { ChartBaseOptions } from './ChartBaseOptions'
 
@@ -15,10 +15,18 @@ const CHART_DATA = [
 	}
 ]
 
+const color = []
+
 export default function SingleChart() {
+	const theme = useTheme()
+	const colors = [theme.palette.success.light, theme.palette.info.light, theme.palette.primary.light]
+	const randomColor = colors[Math.floor(Math.random() * colors.length)]
 	const chartOptions = merge(ChartBaseOptions(), {
 		stroke: { width: [0] },
-		fill: { type: ['gradient'] },
+		fill: { 
+			colors: [randomColor],
+			type: ['gradient'] 
+		},
 	})
 
 	return (

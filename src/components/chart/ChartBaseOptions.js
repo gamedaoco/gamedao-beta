@@ -120,7 +120,6 @@ export function ChartBaseOptions() {
 
 		// Fill
 		fill: {
-			colors: ['#888888'],
 			opacity: 1,
 			gradient: {
 				type: 'vertical',
