@@ -15,6 +15,8 @@ import AppCurrentSubject from './components/dashboard/AppCurrentSubject'
 import AppNewsUpdate from './components/dashboard/AppNewsUpdate'
 import AppOrderTimeline from './components/dashboard/AppOrderTimeline'
 
+import DashboardUserConnected from './DashboardUserConnected'
+
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
 const Dashboard = (props) => {
@@ -30,8 +32,8 @@ const Dashboard = (props) => {
 		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
 	}, [identity])
 
-	console.log(identity)
-	console.log(crowdfunding)
+	// if logged in render custom dashboard instead
+	if(identity) return <DashboardUserConnected/>
 
 	return (
 		<>

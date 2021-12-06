@@ -5,7 +5,8 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { Button, Grid, Typography } from 'src/components'
+
+import HeartIcon from '@mui/icons-material/FavoriteBorder'
 
 import MiniStats from './components/MiniStats'
 import AppWebsiteVisits from './components/dashboard/AppWebsiteVisits'
@@ -14,68 +15,150 @@ import AppConversionRates from './components/dashboard/AppConversionRates'
 import AppCurrentSubject from './components/dashboard/AppCurrentSubject'
 import AppNewsUpdate from './components/dashboard/AppNewsUpdate'
 import AppOrderTimeline from './components/dashboard/AppOrderTimeline'
+import SingleChart from '../components/chart/SingleChart'
 
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
+import { Button, Grid, Typography, Box, Stack, Divider, Card } from 'src/components'
+
+
+
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
-	const { address, signAndNotify } = useWallet()
+	const { allowConnect, updateWalletState, account, address } = useWallet()
 	const identity = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
-	const [name, setName] = useState('')
-
-	useEffect(() => {
-		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
-	}, [identity])
-
-	console.log(identity)
-	console.log(crowdfunding)
 
 	return (
 		<>
-			<Grid container spacing={3}>
-				{/*				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
-					<Icons
-						src={ICON_MAPPING.logo}
-						alt={'GameDAO'}
-						sx={{ height: '64px' }}
-					/>
-				</Grid>*/}
-
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">DAOs: {nonce ?? 'Loading...'}</Typography>
-				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">
-						Campaigns: {crowdfunding.campaignsCount ?? 'Loading...'}
-					</Typography>
-				</Grid>
-				<Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography variant="h3">
-						Proposals: {proposalsCount ?? 'Loading...'}
-					</Typography>
-				</Grid>
-
-				<Grid item xs={12} md={6} lg={4}>
-					<AppCurrentVisits />
-				</Grid>
-
-				<Grid item xs={12} md={6} lg={4}>
-					<AppOrderTimeline />
+			<Grid container spacing={4}>
+				<Grid item xs={12} sm={6} sx={{display: "flex", justifyContent: "start"}}>
+					<Stack direction="row">
+						<Box
+							sx={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#292B2D',
+								borderRadius: '50%',
+								marginRight: 2,
+								height: '3.5rem',
+								width: '3.5rem',
+							}}
+						>
+							<HeartIcon />
+						</Box>
+						<Box sx={{ marginRight: 2, marginTop: 1 }}>
+							<Typography>✅</Typography>
+						</Box>
+						<Stack>
+							<Typography variant="h5">{account && account.meta.name}</Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">{account && `${account.address.substring(0,5)}...${account.address.substring(account.address.length-5)}`}</Typography>
+						</Stack>
+					</Stack>
 				</Grid>
 
-				<Grid item xs={12} md={6} lg={4}>
-					<AppCurrentSubject />
+				<Grid item xs={12} sm={6} sx={{display: "flex", justifyContent: "end"}}>
+					<Stack direction="row">
+						<Stack>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">Trust</Typography>
+							<Typography variant="overline">Level 2</Typography>
+						</Stack>
+						<Divider sx={{ mx: 2, mt: 1, height: '60%' }} orientation="vertical" flexItem />
+						<Typography></Typography>
+						<Stack>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">Rep</Typography>
+							<Typography variant="overline">530</Typography>
+						</Stack>
+						<Divider sx={{ mx: 2, height: '100%' }} orientation="vertical" flexItem />
+						<Stack>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">XP</Typography>
+							<Typography variant="overline">1120</Typography>
+						</Stack>
+					</Stack>
+				</Grid>
+
+				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+					<Typography variant="h5">Dashboard</Typography>
+				</Grid>
+				
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-1.5rem', width: '115%' }}><SingleChart/></Box>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Total Value Locked</Typography>
+							<Typography variant="h3">32'603.435</Typography>
+							<Typography>GAME</Typography>
+						</Stack>
+					</Card>
+				</Grid>
+
+				
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Box sx={{ position: 'absolute', top: '0px', left: '-1.5rem', width: '115%' }}><SingleChart/></Box>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Total contributions</Typography>
+							<Typography variant="h3">1005.00</Typography>
+							<Typography>aUSD</Typography>
+						</Stack>
+					</Card>
+				</Grid>
+
+				<Grid item sm={12} md={4}>
+					<Card sx={{ height: '160px' }}>
+						<Stack  
+							justifyContent="space-evenly"
+							alignItems="center"
+							spacing={2}
+							mt={2}
+						>
+							<Typography>Votings</Typography>
+							<Typography>
+								{proposalsCount ?? 'Loading...'}
+							</Typography>
+							<Typography>Open Votings</Typography>
+						</Stack>
+					</Card>
 				</Grid>
 
 				<Grid item xs={12}>
-					<AppWebsiteVisits />
+					<Card>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+						  <Typography variant="h5">Organizations</Typography>
+						  <Typography variant="h5">Sort by ^</Typography>
+						</Box>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+					<Typography variant="h5">Campaigns</Typography>
 				</Grid>
 
 				<Grid item xs={12}>
-					<AppConversionRates />
+					<Card>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+						  <Typography variant="h5">My Campaigns</Typography>
+						</Box>
+					</Card>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Card>
+						<SingleChart/>
+					</Card>
 				</Grid>
 			</Grid>
 			{/*<Button
