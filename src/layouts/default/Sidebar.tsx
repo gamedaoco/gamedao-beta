@@ -179,7 +179,7 @@ function Main({ showNavigation }: ComponentProps) {
 						{organisationCount > 0 ? (
 							<>
 								<Box />
-								<NavBadge badgeContent={organisationCount} color={'primary'} />
+								<NavBadge badgeContent={organisationCount} color={'success'} />
 							</>
 						) : null}
 					</SidebarButton>
@@ -204,7 +204,7 @@ function Main({ showNavigation }: ComponentProps) {
 						{campaignsCount > 0 ? (
 							<>
 								<Box />
-								<NavBadge badgeContent={campaignsCount} color={'primary'} />
+								<NavBadge badgeContent={campaignsCount} color={'info'} />
 							</>
 						) : null}
 					</SidebarButton>

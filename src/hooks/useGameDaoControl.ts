@@ -17,6 +17,7 @@ type GameDaoControlState = {
 	bodyHash: object
 	bodyIndex: object
 	bodies: object
+	bodyStates: object
 	bodyAccess: object
 	bodyConfig: object
 	bodyController: object
@@ -37,6 +38,7 @@ const INITIAL_STATE: GameDaoControlState = {
 	bodyHash: null,
 	bodyIndex: null,
 	bodies: null,
+	bodyStates: null,
 	bodyAccess: null,
 	bodyConfig: null,
 	bodyController: null,
@@ -196,6 +198,26 @@ async function queryBodyTreasury(apiProvider: ApiPromise, hashes: Array<string>)
 	if (error) {
 		console.error(error)
 		createErrorNotification('Error while querying the gameDaoControl bodyTreasury')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
+async function queryBodyStates(apiProvider: ApiPromise, hashes: Array<string>): Promise<any> {
+	if (!Array.isArray(hashes) || hashes.length === 0) return null
+
+	const [error, data] = await to(apiProvider.query.gameDaoControl.bodyState.multi(hashes))
+
+	if (error) {
+		console.error(error)
+		createErrorNotification('Error while querying the gameDaoControl bodyStates')
 		return null
 	}
 
@@ -387,6 +409,10 @@ export const useGameDaoControl = (): GameDaoControlState => {
 						apiProvider,
 						keys.filter((hash) => !(gameDaoControlState.bodyTreasury ?? {})[hash])
 					),
+					queryBodyStates(
+						apiProvider,
+						keys.filter((hash) => !(gameDaoControlState.bodyStates ?? {})[hash])
+					),
 				])
 
 				setIsDataLoading(false)
@@ -420,6 +446,10 @@ export const useGameDaoControl = (): GameDaoControlState => {
 						bodyTreasury: {
 							...(gameDaoControlState.bodyTreasury ?? {}),
 							...(data[6] ?? {}),
+						},
+						bodyStates: {
+							...(gameDaoControlState.bodyStates ?? {}),
+							...(data[7] ?? {}),
 						},
 					})
 				}

@@ -3,8 +3,9 @@ import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
-
-
+import { useBlock } from 'src/hooks/useBlock'
+import { gateway } from '../lib/ipfs'
+import RendererKoiJam from './koijam/Render'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -21,11 +22,12 @@ import {
 	Stack,
 	Slider,
 	Image16to9,
+	Countdown,
+	MarkdownViewer
 } from '../../components'
 
 import { TileReward } from './TileReward'
 
-import { Renderer } from './three'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
@@ -44,10 +46,6 @@ const CampaignChip = styled(Chip)(({ theme }) => ({
 	borderColor: theme.palette.common.white,
 	padding: 0,
 	height: '22px',
-}))
-
-const CountdownStack = styled(Stack)(({ theme }) => ({
-	width: '80px',
 }))
 
 const ParticipateButton = styled(Button)(({ theme }) => ({
@@ -99,14 +97,17 @@ function a11yProps(index) {
 }
 
 export function Campaign() {
+	const blockheight = useBlock()
+
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survivial']
+	const t = ['Open World', 'Trending', 'Survival']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
 
 	const [value, setValue] = React.useState(0)
+	const [IPFSData, setIPFSData] = React.useState()
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
@@ -121,11 +122,7 @@ export function Campaign() {
 
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
-	// const wallet = useWallet()
-
-	// const mdParser = new MarkdownIt(/* Markdown-it options */);
-	// mdParser.render(text)
-
+	// fetch chain data
 	useEffect(() => {
 		if (!campaignBalance || !campaignState || !campaigns) return
 
@@ -136,19 +133,40 @@ export function Campaign() {
 		}
 
 		setContent(content)
+
 	}, [campaignBalance, campaignState, campaigns])
 
+	useEffect( () => {
+		if(!content) return
+
+		// fetch json from ipfs
+		fetch(gateway+content.cid)
+			.then( res => res.json() )
+			.then( data => setIPFSData(data) )
+
+	}, [content])
+
+
 	if (!content) return '...'
+	if (!IPFSData) return '...'
+
+	//console.log(content, IPFSData)
+	//console.log(blockNumber)
+
+	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
+	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
+	const blocksUntilExpiry = campaignEndBlockHeight - blockheight
+	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
+	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
 		<Box>
 			<Box
 				sx={{
-					backgroundImage:
-						'linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(/assets/campaign-bg.png)',
+					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
-					minHeight: '450px',
+					minHeight: '60vh',
 					padding: 8,
 					color: 'common.white',
 					alignItems: 'center',
@@ -160,7 +178,7 @@ export function Campaign() {
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
-									<img src={'/assets/campaign-logo.png'} alt={'Era of Chaos'} />
+									<img src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
@@ -174,108 +192,34 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Typography>
-										From the developer of Virgo Versus The Zodiac and
-										Osteoblasts comes a Tactical Rhythm JRPG in which you play
-										as the Singer who fights the oppressive government to bring
-										back Music to a melodyless world.
+										{IPFSData && IPFSData.description}
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<Stack
-										direction={'row'}
-										sx={{ alignItems: 'center' }}
-										divider={
-											<Divider
-												sx={{
-													height: '30px',
-													backgroundColor: 'common.white',
-												}}
-												orientation={'vertical'}
-											/>
-										}
-										spacing={1}
-									>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												24
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												days
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												23
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												hours
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												minutes
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												seconds
-											</Typography>
-										</CountdownStack>
-									</Stack>
+									<Countdown date={expiryTimestamp}/>
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>
 										<img height={17} width={17} src={'/assets/play.png'} />
 										<Typography>
-											<strong>385’721.59 PLAY</strong> funded of 500k goal
+											<strong>{content.balance} PLAY</strong> funded of {content.cap} goal
 										</Typography>
 									</Stack>
 								</Grid>
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<img
-								src={'/assets/campaign-model.png'}
-								style={{ maxWidth: '80%', marginBottom: '-10rem' }}
-							/>
+							<Box
+								sx={{
+									width: '66vw',
+									height: '55vh',
+									position: 'absolute',
+									right: '0px',
+									overflow: 'hidden',
+								}}
+							>
+								<RendererKoiJam />
+							</Box>
 						</Grid>
 					</Grid>
 				</Container>
@@ -316,7 +260,7 @@ export function Campaign() {
 												)
 											},
 										}}
-										value={30}
+										value={campaignProgress}
 										sx={{ mr: 5 }}
 									/>
 								</Box>
@@ -340,7 +284,7 @@ export function Campaign() {
 					</Grid>
 					<Grid item xs={12}>
 						<TabPanel value={value} index={0}>
-							<Description />
+							{IPFSData && <MarkdownViewer markdown={IPFSData.markdown}/>}
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<Rewards />

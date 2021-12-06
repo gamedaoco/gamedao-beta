@@ -19,6 +19,7 @@ import {
 	Stack,
 	Slider,
 	Image16to9,
+	Countdown
 } from '../../../components'
 
 import { TileReward } from '../TileReward'
@@ -40,10 +41,6 @@ const CampaignChip = styled(Chip)(({ theme }) => ({
 	borderColor: theme.palette.common.white,
 	padding: 0,
 	height: '22px',
-}))
-
-const CountdownStack = styled(Stack)(({ theme }) => ({
-	width: '80px',
 }))
 
 const ParticipateButton = styled(Button)(({ theme }) => ({
@@ -170,85 +167,7 @@ export function Campaign() {
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<Stack
-										direction={'row'}
-										sx={{ alignItems: 'center' }}
-										divider={
-											<Divider
-												sx={{
-													height: '30px',
-													backgroundColor: 'common.white',
-												}}
-												orientation={'vertical'}
-											/>
-										}
-										spacing={1}
-									>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												24
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												days
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												23
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												hours
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												minutes
-											</Typography>
-										</CountdownStack>
-										<CountdownStack direction={'column'}>
-											<Typography
-												align={'center'}
-												variant={'h3'}
-												component={'span'}
-											>
-												59
-											</Typography>
-											<Typography
-												align={'center'}
-												variant={'body2'}
-												component={'span'}
-											>
-												seconds
-											</Typography>
-										</CountdownStack>
-									</Stack>
+									<Countdown date={Date.now()+10000}/>
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>

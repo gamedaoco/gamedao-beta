@@ -52,6 +52,19 @@ export const Campaigns = (props) => {
 				balance: campaignBalance[itemHash],
 			}
 		})
+
+		content.sort(function(a, b) {
+			var A = parseInt(a.expiry.replaceAll(',', ''))
+			var B = parseInt(b.expiry.replaceAll(',', ''))
+			if (A < B) {
+			  return -1;
+			}
+			if (A > B) {
+			  return 1;
+			}
+			return 0;
+		  });
+		  
 		setContent(content)
 	}, [campaignsIndex, campaignBalance, campaignState, campaigns])
 

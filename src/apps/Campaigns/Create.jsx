@@ -1,35 +1,41 @@
-import React, { useEffect, useState } from 'react'
-import {
-	Button,
-	Divider,
-	FormControl,
-	MenuItem,
-	Select,
-	Checkbox,
-	TextField,
-	Typography,
-	InputLabel,
-	Grid,
-	FormControlLabel,
-	Image16to9
-} from '../../components'
-import Loader from 'src/components/Loader'
-import { data, rnd } from '../lib/data'
-import config from '../../config'
-
-import { pinJSONToIPFS, pinFileToIPFS, gateway } from '../lib/ipfs'
-
-import { formatZero } from 'src/utils/helper'
-
-import { useBalance } from 'src/hooks/useBalance'
-import { useWallet } from 'src/context/Wallet'
-import { useIdentity } from 'src/hooks/useIdentity'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
+import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Loader from 'src/components/Loader'
+import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
+import { useWallet } from 'src/context/Wallet'
+import { useBalance } from 'src/hooks/useBalance'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-
-import { MarkdownEditor } from 'src/components/MarkdownEditor'
+import { useIdentity } from 'src/hooks/useIdentity'
+import { formatZero } from 'src/utils/helper'
+import {
+	Box,
+	Button,
+	Checkbox,
+	Container,
+	FileDropZone,
+	FormControl,
+	FormControlLabel,
+	FormSectionHeadline,
+	Grid,
+	Image16to9,
+	InputLabel,
+	MenuItem,
+	Paper,
+	Select,
+	Step,
+	StepLabel,
+	Stepper,
+	TextField,
+	Typography,
+} from '../../components'
+import config from '../../config'
+import { data, rnd } from '../lib/data'
+import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
 
 const dev = config.dev
@@ -75,25 +81,14 @@ const random_state = (account) => {
 	}
 }
 
-const defaultMarkdown = `
-# gameDAO
-
-| Head | Head | Head |
-| --- | --- | --- |
-| Data | Data | Data |
-| Data | Data | Data |
-| Data | Data | Data |
-
-![unknown (1).png](https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix)
-`
-
 export const Main = () => {
-	const { address, account, finalized, signAndNotify } = useWallet()
+	const { address, account, connected, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
 	const identity = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
 	const daoControl = useGameDaoControl()
 	const gov = useGameDaoGovernance()
+	const navigate = useNavigate()
 
 	const [block, setBlock] = useState(0)
 
@@ -112,7 +107,7 @@ export const Main = () => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const bestBlock = finalized
+	const bestBlock = connected
 		? apiProvider.derive.chain.bestNumberFinalized
 		: apiProvider.derive.chain.bestNumber
 
@@ -167,12 +162,11 @@ export const Main = () => {
 		updateFormData({ ...formData, [name]: !formData[name] })
 	}
 
-	async function onFileChange(e, type) {
-		const file = e.target.files[0]
-		if (!file) return
+	async function onFileChange(files, type) {
+		if (!files?.[0]) return
 		if (dev) console.log('upload image')
 		try {
-			const cid = await pinFileToIPFS(file)
+			const cid = await pinFileToIPFS(files[0])
 			updateFileCID({ ...fileCID, [type]: cid })
 			if (dev) console.log('file cid', `${gateway}${cid}`)
 		} catch (error) {
@@ -206,10 +200,8 @@ export const Main = () => {
 
 		const sendTX = async (cid) => {
 			setLoading(true)
-			const campaign_end = dev
-				? block + 100 // 100 blocks = 300 seconds = 5 mins
-				: formData.duration * data.blockFactor + block // take current block as offset
-
+			//                             day factor            a day in blocks   current block as offset
+			const campaign_end = parseFloat(formData.duration) * data.blocksPerDay + block // take current block as offset
 			const payload = [
 				formData.org,
 				formData.admin,
@@ -237,6 +229,9 @@ export const Main = () => {
 					setLoading(false)
 					setRefresh(true)
 					updateBalance()
+
+					navigate('/app', { replace: true })
+
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
@@ -257,290 +252,317 @@ export const Main = () => {
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
 	return (
-		<Grid container spacing={2} component="form">
-			<Grid item xs={12}>
-				<Typography align={'center'} variant="h3">
-					Create Campaign {nonce}
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Divider clearing horizontal>
-					<Typography>General Information</Typography>
-				</Divider>
-			</Grid>
-			<Grid item xs={12}>
-				<FormControl fullWidth>
-					<InputLabel id="org-select-label">Organization</InputLabel>
-					<Select
-						labelId="org-select-label"
-						id="org"
-						required
-						label="Organization"
-						placeholder="Organization"
-						name="org"
-						value={formData.org}
-						onChange={handleOnChange}
-					>
-						{orgs.map((item, index) => (
-							<MenuItem key={index} value={item.id}>
-								{item.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					fullWidth
-					required
-					label="Campaign name"
-					placeholder="Campaign name"
-					name="title"
-					value={formData.title}
-					onChange={handleOnChange}
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					fullWidth
-					multiline
-					required
-					value={formData.description}
-					label="Campaign Description"
-					placeholder="Tell us more about your idea..."
-					name="description"
-					onChange={handleOnChange}
-				/>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Divider>Content</Divider>
-			</Grid>
-
-			{!fileCID && (
-				[<Grid item xs={12} md={6}>
-					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-				</Grid>,
-				<Grid item xs={12} md={6}>
-					{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-				</Grid>]
-			)}
-
-			{fileCID && (
-				[<Grid item xs={12} md={6}>
-					{!fileCID.logo && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-					{fileCID.logo && <Image16to9 alt={formData.title} src={gateway + fileCID.logo} />}
-				</Grid>,
-				<Grid item xs={12} md={6}>
-					{!fileCID.header && <Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-					{fileCID.header && <Image16to9 alt={formData.title} src={gateway + fileCID.header} />}
-				</Grid>]
-			)}
-
-			<Grid item xs={12} md={6}>
-				<input
-					type={'file'}
-					ref={logoGraphicInputRef}
-					onChange={(e) => onFileChange(e, 'logo')}
-					name={'logo'}
-					style={{ position: 'fixed', left: '-999999px' }}
-				/>
-				<Button
-					fullWidth
-					variant={'outlined'}
-					onClick={() => logoGraphicInputRef.current.click()}
-				>
-					Pick a logo graphic
-				</Button>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<input
-					type={'file'}
-					ref={headerGraphicInputRef}
-					onChange={(e) => onFileChange(e, 'header')}
-					name={'header'}
-					style={{ position: 'fixed', left: '-999999px' }}
-				/>
-				<Button
-					fullWidth
-					variant={'outlined'}
-					onClick={() => headerGraphicInputRef.current.click()}
-				>
-					Pick a header graphic
-				</Button>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Divider>Campaign Page Custom Content Description (Markdown)</Divider>
-				<hr/>
-				<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
-			</Grid>
-
-			{/* legal body applying for the funding */}
-
-			<Grid item xs={12}>
-				<Divider>Public Representative</Divider>
-			</Grid>
-
-			<Grid item xs={12} md={6}>
-				<TextField
-					fullWidth
-					label="Name"
-					placeholder="Name"
-					name="name"
-					value={formData.name}
-					onChange={handleOnChange}
-				/>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<TextField
-					fullWidth
-					label="Email"
-					placeholder="Email"
-					name="email"
-					value={formData.email}
-					onChange={handleOnChange}
-				/>
-			</Grid>
-
-			<Grid item xs={12}>
-				<Divider clearing horizontal>
-					Campaign Settings
-				</Divider>
-			</Grid>
-
-			{/* usage of funding and protocol to initiate after successfully raising */}
-
-			<Grid item xs={12} md={6}>
-				<TextField
-					fullWidth
-					label="Admin Account"
-					placeholder="Admin"
-					name="admin"
-					value={formData.admin}
-					onChange={handleOnChange}
-					required
-				/>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<FormControl fullWidth>
-					<InputLabel id="usage-select-label">Usage of funds</InputLabel>
-					<Select
-						labelId="usage-select-label"
-						label={'Usage of funds'}
-						id="usage"
-						required
-						name="usage"
-						placeholder="Usage"
-						value={formData.usage}
-						onChange={handleOnChange}
-					>
-						{data.project_types.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-
-			<Grid item xs={12}>
-				<FormControl fullWidth>
-					<InputLabel id="protocol-select-label">Protocol</InputLabel>
-					<Select
-						labelId="protocol-select-label"
-						id="protocol"
-						required
-						fullWidth
-						name="protocol"
-						label={'protocol'}
-						placeholder="Protocol"
-						value={formData.protocol}
-						onChange={handleOnChange}
-					>
-						{data.protocol_types.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-
-			<Grid item xs={12} md={4}>
-				<TextField
-					fullWidth
-					label="Deposit (GAME)"
-					placeholder="Deposit"
-					name="deposit"
-					value={formData.deposit}
-					onChange={handleOnChange}
-				/>
-			</Grid>
-			<Grid item xs={12} md={4}>
-				<TextField
-					fullWidth
-					label="Funding Target (PLAY)"
-					placeholder="Cap"
-					name="cap"
-					value={formData.cap}
-					onChange={handleOnChange}
-				/>
-			</Grid>
-
-			<Grid item xs={12} md={4}>
-				<FormControl fullWidth>
-					<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
-					<Select
-						labelId="duration-select-label"
-						id="duration"
-						required
-						label="Campaign Duration"
-						options={data.project_durations}
-						placeholder="Campaign Duration"
-						name="duration"
-						value={formData.duration}
-						onChange={handleOnChange}
-					>
-						{data.project_durations.map((item) => (
-							<MenuItem key={item.key} value={item.value}>
-								{item.text}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-
-			<Grid item xs={12}>
-				<FormControlLabel
-					label="DAO Governance"
-					control={
-						<Checkbox
-							name="governance"
-							checked={formData.governance}
-							onChange={handleCheckboxToggle}
+		<>
+			<Box sx={{ pb: 2 }}>
+				<Grid container alignItems={'center'} spacing={3}>
+					<Grid item xs={12} md={8}>
+						<Typography variant={'body1'}>Create Campaign</Typography>
+						<Typography variant={'h3'}>
+							{formData.title || 'Untitled campaign'}
+						</Typography>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Stepper orientation={'horizontal'}>
+							<Step>
+								<StepLabel>Enter data</StepLabel>
+							</Step>
+							<Step>
+								<StepLabel>Validate</StepLabel>
+							</Step>
+							<Step>
+								<StepLabel>Profit</StepLabel>
+							</Step>
+						</Stepper>
+					</Grid>
+				</Grid>
+			</Box>
+			<Paper sx={{ p: 4 }}>
+				<Grid container spacing={3} component="form">
+					<Grid item xs={12}>
+						<FormSectionHeadline variant={'h5'}>
+							General Information
+						</FormSectionHeadline>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<FormControl fullWidth>
+							<InputLabel id="org-select-label">Organization</InputLabel>
+							<Select
+								labelId="org-select-label"
+								id="org"
+								required
+								label="Organization"
+								placeholder="Organization"
+								name="org"
+								value={formData.org}
+								onChange={handleOnChange}
+							>
+								{orgs.map((item, index) => (
+									<MenuItem key={index} value={item.id}>
+										{item.name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							fullWidth
+							required
+							label="Campaign name"
+							placeholder="Campaign name"
+							name="title"
+							value={formData.title}
+							onChange={handleOnChange}
 						/>
-					}
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<FormControlLabel
-					label="I agree to the Terms and Conditions"
-					control={
-						<Checkbox
-							name="accept"
-							checked={formData.accept}
-							onChange={handleCheckboxToggle}
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							fullWidth
+							multiline
+							minRows={5}
+							required
+							value={formData.description}
+							label="Campaign Description"
+							placeholder="Tell us more about your idea..."
+							name="description"
+							onChange={handleOnChange}
 						/>
-					}
-				/>
-			</Grid>
-			<Grid item xs={12}>
+					</Grid>
+
+					<Grid item xs={12}>
+						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
+					</Grid>
+
+					{!fileCID && [
+						<Grid item xs={12} md={6}>
+							{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+						</Grid>,
+						<Grid item xs={12} md={6}>
+							{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
+						</Grid>,
+					]}
+
+					{fileCID && [
+						<Grid item xs={12} md={6}>
+							{!fileCID.logo && (
+								<Image16to9 alt="placeholder" src="https://picsum.photos/200" />
+							)}
+							{fileCID.logo && (
+								<Image16to9 alt={formData.title} src={gateway + fileCID.logo} />
+							)}
+						</Grid>,
+						<Grid item xs={12} md={6}>
+							{!fileCID.header && (
+								<Image16to9 alt="placeholder" src="https://picsum.photos/200" />
+							)}
+							{fileCID.header && (
+								<Image16to9 alt={formData.title} src={gateway + fileCID.header} />
+							)}
+						</Grid>,
+					]}
+
+					<Grid item xs={12} md={6}>
+						<FileDropZone
+							onDroppedFiles={(files) => {
+								onFileChange(files, 'logo')
+							}}
+						>
+							<Image />
+							<Typography variant={'body2'} align={'center'}>
+								Pick a logo graphic
+							</Typography>
+						</FileDropZone>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<FileDropZone
+							onDroppedFiles={(files) => {
+								onFileChange(files, 'header')
+							}}
+						>
+							<Image />
+							<Typography variant={'body2'} align={'center'}>
+								Pick a header graphic
+							</Typography>
+						</FileDropZone>
+					</Grid>
+
+					<Grid item xs={12}>
+						<FormSectionHeadline variant={'h5'}>
+							Content Description
+						</FormSectionHeadline>
+					</Grid>
+
+					<Grid item xs={12}>
+						<MarkdownEditor value={markdownValue} onChange={handleEditorChange} />
+					</Grid>
+
+					{/* legal body applying for the funding */}
+
+					<Grid item xs={12}>
+						<FormSectionHeadline variant={'h5'}>
+							Public Representative
+						</FormSectionHeadline>
+					</Grid>
+
+					<Grid item xs={12} md={6}>
+						<TextField
+							fullWidth
+							label="Name"
+							placeholder="Name"
+							name="name"
+							value={formData.name}
+							onChange={handleOnChange}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							fullWidth
+							label="Email"
+							placeholder="Email"
+							name="email"
+							value={formData.email}
+							onChange={handleOnChange}
+						/>
+					</Grid>
+
+					<Grid item xs={12}>
+						<FormSectionHeadline variant={'h5'}>Campaign Settings</FormSectionHeadline>
+					</Grid>
+
+					{/* usage of funding and protocol to initiate after successfully raising */}
+
+					<Grid item xs={12} md={6}>
+						<TextField
+							fullWidth
+							label="Admin Account"
+							placeholder="Admin"
+							name="admin"
+							value={formData.admin}
+							onChange={handleOnChange}
+							required
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<FormControl fullWidth>
+							<InputLabel id="usage-select-label">Usage of funds</InputLabel>
+							<Select
+								labelId="usage-select-label"
+								label={'Usage of funds'}
+								id="usage"
+								required
+								name="usage"
+								placeholder="Usage"
+								value={formData.usage}
+								onChange={handleOnChange}
+							>
+								{data.project_types.map((item) => (
+									<MenuItem key={item.key} value={item.value}>
+										{item.text}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+
+					<Grid item xs={12}>
+						<FormControl fullWidth>
+							<InputLabel id="protocol-select-label">Protocol</InputLabel>
+							<Select
+								labelId="protocol-select-label"
+								id="protocol"
+								required
+								fullWidth
+								name="protocol"
+								label={'protocol'}
+								placeholder="Protocol"
+								value={formData.protocol}
+								onChange={handleOnChange}
+							>
+								{data.protocol_types.map((item) => (
+									<MenuItem key={item.key} value={item.value}>
+										{item.text}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+
+					<Grid item xs={12} md={4}>
+						<TextField
+							fullWidth
+							label="Deposit (GAME)"
+							placeholder="Deposit"
+							name="deposit"
+							value={formData.deposit}
+							onChange={handleOnChange}
+						/>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<TextField
+							fullWidth
+							label="Funding Target (PLAY)"
+							placeholder="Cap"
+							name="cap"
+							value={formData.cap}
+							onChange={handleOnChange}
+						/>
+					</Grid>
+
+					<Grid item xs={12} md={4}>
+						<FormControl fullWidth>
+							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
+							<Select
+								labelId="duration-select-label"
+								id="duration"
+								required
+								label="Campaign Duration"
+								options={data.project_durations}
+								placeholder="Campaign Duration"
+								name="duration"
+								value={formData.duration}
+								onChange={handleOnChange}
+							>
+								{data.project_durations.map((item) => (
+									<MenuItem key={item.key} value={item.value}>
+										{item.text}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+
+					<Grid item xs={12}>
+						<FormControlLabel
+							label="DAO Governance"
+							control={
+								<Checkbox
+									name="governance"
+									checked={formData.governance}
+									onChange={handleCheckboxToggle}
+								/>
+							}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<FormControlLabel
+							label="I agree to the Terms and Conditions"
+							control={
+								<Checkbox
+									name="accept"
+									checked={formData.accept}
+									onChange={handleCheckboxToggle}
+								/>
+							}
+						/>
+					</Grid>
+				</Grid>
+			</Paper>
+			<Container maxWidth={'xs'} sx={{ p: 4 }}>
 				<Button variant={'contained'} fullWidth onClick={handleSubmit}>
 					Create Campaign
 				</Button>
-			</Grid>
-		</Grid>
+			</Container>
+		</>
 	)
 }
 
