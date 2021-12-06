@@ -3,8 +3,9 @@ import { Suspense, useState, useEffect, lazy } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
-import RendererKoiJam from './koijam/Render'
+import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
+import RendererKoiJam from './koijam/Render'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -96,8 +97,10 @@ function a11yProps(index) {
 }
 
 export function Campaign() {
+	const blockheight = useBlock()
+
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survivial']
+	const t = ['Open World', 'Trending', 'Survival']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
@@ -147,17 +150,20 @@ export function Campaign() {
 	if (!content) return '...'
 	if (!IPFSData) return '...'
 
-	console.log(content, IPFSData)
+	//console.log(content, IPFSData)
+	//console.log(blockNumber)
 
-	const expiryTimestamp = parseInt(content.created.replaceAll(',', ''))+parseInt(content.expiry.replaceAll(',', ''))
-
+	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
+	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
+	const blocksUntilExpiry = campaignEndBlockHeight - blockheight
+	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
 	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
 
 	return (
 		<Box>
 			<Box
 				sx={{
-					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.8)), url(${gateway}${IPFSData.header})`,
+					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '60vh',
