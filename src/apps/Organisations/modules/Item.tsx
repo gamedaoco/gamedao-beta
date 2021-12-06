@@ -62,6 +62,8 @@ export function Item({ data, displayMode }) {
 		return null
 	}
 
+	console.log('XXXXXXXXXXXXX', metaDataState, data)
+
 	const metaContent = useMemo(() => {
 		if (!data || !metaDataState) {
 			return null
@@ -114,7 +116,7 @@ export function Item({ data, displayMode }) {
 			<ListItem
 				linkTo={`/app/organisations/${data.id}`}
 				imageURL={imageState}
-				headline={data.name}
+				headline={metaDataState?.name}
 				metaHeadline={textState}
 				metaContent={metaContent}
 			>
@@ -127,7 +129,7 @@ export function Item({ data, displayMode }) {
 		<TileItem
 			linkTo={`/app/organisations/${data.id}`}
 			imageURL={imageState}
-			headline={data.name}
+			headline={metaDataState?.name}
 			metaHeadline={textState}
 			metaContent={metaContent}
 		>
