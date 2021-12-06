@@ -15,6 +15,7 @@ import { NavLink } from 'react-router-dom'
 
 import { useWallet } from 'src/context/Wallet'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useBlock } from 'src/hooks/useBlock'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { ListItem } from '../../components/ListItem'
 import { TileItem } from '../../components/TileItem'
@@ -28,6 +29,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
 		item
 	const apiProvider = useApiProvider()
+	const blockheight = useBlock()
 	const identity = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
 	const { account, signAndNotify } = useWallet()
@@ -65,7 +67,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				backers: campaignContributorsCount[id] || null,
 			})
 		}
-	}, [id, campaignContributorsCount])
+	}, [id, campaignContributorsCount, identity, blockheight])
 
 	useEffect(() => {
 		setContent({
@@ -74,8 +76,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		})
 	}, [identity])
 
-	const blocksRemain = expiry
-
+	const blocksRemain = parseInt(expiry.replaceAll(',', '')) - blockheight
+	
 	const tags = ['game', '2d', 'pixel', 'steam']
 
 	const epoch = created.replaceAll(',', '')
@@ -187,6 +189,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 
 	if (!content) return null
 
+	//console.log(content)
+
 	return displayMode === ListTileEnum.TILE ? (
 		<TileItem
 			linkTo={`/app/campaigns/${id}`}
@@ -195,7 +199,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
 			headline={name}
-			metaHeadline={`${content.backers} backer(s)`}
+			metaHeadline={`${content.backers ? content.backers : ''} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>
 					{metaInfo}
