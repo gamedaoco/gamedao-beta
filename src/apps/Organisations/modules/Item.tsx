@@ -62,8 +62,6 @@ export function Item({ data, displayMode }) {
 		return null
 	}
 
-	console.log('XXXXXXXXXXXXX', metaDataState, data)
-
 	const metaContent = useMemo(() => {
 		if (!data || !metaDataState) {
 			return null
