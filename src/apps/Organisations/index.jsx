@@ -73,8 +73,6 @@ export const Main = (props) => {
 	const handleCreateBtn = (e) => setCreateMode(true)
 	const handleCloseBtn = (e) => setCreateMode(false)
 
-	const content = 0
-
 	return (
 		<Container maxWidth="lg">
 			<Box
@@ -84,8 +82,12 @@ export const Main = (props) => {
 				}}
 			>
 				<Box>
-					{!content || nonce === 0 ? (
-						<h4>No organizations yet. Create one!</h4>
+					{!nonce || nonce === 0 ? (
+						nonce === 0 ? (
+							<h4>No organizations yet. Create one!</h4>
+						) : (
+							<h4>Loading...</h4>
+						)
 					) : (
 						<h4>Total organizations: {nonce}</h4>
 					)}

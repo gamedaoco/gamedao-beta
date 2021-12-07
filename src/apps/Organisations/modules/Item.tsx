@@ -76,26 +76,32 @@ export function Item({ data, displayMode }) {
 				<Stack direction={'row'} spacing={1}>
 					<WebsiteIcon />
 					<Link
-						component={NavLink}
+						component="a"
 						rel={'noreferrer'}
 						target={'_blank'}
-						to={metaDataState.website || ''}
+						href={metaDataState.website || '#'}
 					>
 						{metaDataState.website}
 					</Link>
 				</Stack>
-				{data.access === '0' ? (
-					<Stack direction={'row'} spacing={1}>
-						<LockIcon /> <Typography>Locked</Typography>
-					</Stack>
-				) : (
-					<Stack direction={'row'} spacing={1}>
-						<OpenLockIcon /> <Typography>Open</Typography>
-					</Stack>
-				)}
+
+				<Stack direction={'row'} spacing={1}>
+					{data.access === '0' ? (
+						<>
+							<OpenLockIcon /> <Typography>Public</Typography>
+						</>
+					) : (
+						<>
+							<LockIcon /> <Typography>Private</Typography>
+						</>
+					)}
+				</Stack>
+
 				<Stack direction={'row'} spacing={1}>
 					<MemberIcon />
-					<Typography>{data.members || 0} Members</Typography>
+					<Typography>
+						{data.members || 0} {data.members || 0 > 1 ? 'Members' : 'Member'}
+					</Typography>
 				</Stack>
 				{displayMode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
 				<Interactions data={data} />
@@ -108,7 +114,7 @@ export function Item({ data, displayMode }) {
 			<ListItem
 				linkTo={`/app/organisations/${data.id}`}
 				imageURL={imageState}
-				headline={data.name}
+				headline={metaDataState?.name}
 				metaHeadline={textState}
 				metaContent={metaContent}
 			>
@@ -121,7 +127,7 @@ export function Item({ data, displayMode }) {
 		<TileItem
 			linkTo={`/app/organisations/${data.id}`}
 			imageURL={imageState}
-			headline={data.name}
+			headline={metaDataState?.name}
 			metaHeadline={textState}
 			metaContent={metaContent}
 		>

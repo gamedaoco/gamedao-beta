@@ -32,8 +32,8 @@ export const ListItem: React.FC<
 					</Link>
 				</Box>
 				<Stack>
-					<Typography variant="h6">{props.metaHeadline}</Typography>
 					<Typography variant="h4">{props.headline}</Typography>
+					<Typography variant="h6">{props.metaHeadline}</Typography>
 					{props.children}
 					{typeof props.progressValue === 'number' ? (
 						<>

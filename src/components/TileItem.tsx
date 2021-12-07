@@ -38,10 +38,10 @@ export const TileItem: React.FC<
 					p: 2,
 				}}
 			>
-				<Typography variant="h6">{props.metaHeadline}</Typography>
 				<Typography variant="h4">
 					{props.feature ? 'FEATURED:' : ''} {props.headline}
 				</Typography>
+				<Typography variant="h6">{props.metaHeadline}</Typography>
 				{props.children}
 				{typeof props.progressValue === 'number' ? (
 					<Slider disabled defaultValue={props.progressValue} />

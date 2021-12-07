@@ -49,11 +49,14 @@ export { default as useMediaQuery } from '@mui/material/useMediaQuery'
 
 // styled
 export { styled } from '@mui/material/styles'
+export { useTheme } from '@mui/material/styles'
 
 // custom
 export * as Loader from './Loader'
 export * as Message from './Message'
 export { Image16to9, Box16to9 } from './Image16to9'
+export { default as FormSectionHeadline } from './FormSectionHeadline'
+export { default as FileDropZone } from './FileDropZone'
 export { Countdown } from './Countdown'
 export { MarkdownViewer } from './markdown/MarkdownViewer'
 export { MarkdownEditor } from './markdown/MarkdownEditor'
