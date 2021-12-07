@@ -266,7 +266,7 @@ export function Campaign() {
 										sx={{ mr: 5 }}
 									/>
 								</Box>
-								<ParticipateButton onClick={() => createInfoNotification("Not Implemented") } variant={'contained'}>
+								<ParticipateButton onClick={() => createInfoNotification("Not Implemented Yet!") } variant={'contained'}>
 									{!funded && "Participate"}
 									{funded && "Funded!"}
 								</ParticipateButton>
