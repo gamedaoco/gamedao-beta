@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
-import RendererKoiJam from './koijam/Render'
+
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -31,6 +31,7 @@ import { TileReward } from './TileReward'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
+import { foregroundContentMap } from './foregroundContentMap'
 
 const Koijam = lazy(() => import('./koijam/Koijam'))
 
@@ -104,6 +105,11 @@ export function Campaign() {
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
+
+	let Foreground = <></>
+	if(true){
+		Foreground = foregroundContentMap.koijam
+	}
 
 
 	const [value, setValue] = React.useState(0)
@@ -209,17 +215,7 @@ export function Campaign() {
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<Box
-								sx={{
-									width: '66vw',
-									height: '55vh',
-									position: 'absolute',
-									right: '0px',
-									overflow: 'hidden',
-								}}
-							>
-								<RendererKoiJam />
-							</Box>
+							{Foreground}
 						</Grid>
 					</Grid>
 				</Container>
