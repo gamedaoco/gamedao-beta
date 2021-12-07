@@ -1,3 +1,4 @@
+import { IsObject } from '@react-three/drei'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const shape = {
@@ -14,11 +15,13 @@ export const slice = createSlice({
 			Object.assign(state.gameDaoControlState ?? {}, action.payload ?? {})
 		},
 		addDaoControlMemberState: (state, action) => {
-			const memberState = state.gameDaoControlState?.bodyMemberState ?? {}
+			if(!state.gameDaoControlState.bodyMemberState){
+				state.gameDaoControlState.bodyMemberState = {}
+			}
+			const memberState = state.gameDaoControlState.bodyMemberState
 			const target = memberState[action.payload?.hash] ?? {}
-			const controlState = state.gameDaoControlState ?? {}
 			memberState[action.payload?.hash] = Object.assign(target, action.payload.data ?? {})
-			Object.assign(controlState, { bodyMemberState: memberState })
+			Object.assign(state.gameDaoControlState, { bodyMemberState: memberState })
 		},
 		clearDaoControl: (state, action) => {
 			return Object.assign({}, shape, { refresh: true })
