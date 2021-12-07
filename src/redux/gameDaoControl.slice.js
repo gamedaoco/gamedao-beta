@@ -16,10 +16,9 @@ export const slice = createSlice({
 		addDaoControlMemberState: (state, action) => {
 			const memberState = state.gameDaoControlState?.bodyMemberState ?? {}
 			const target = memberState[action.payload?.hash] ?? {}
+			const controlState = state.gameDaoControlState ?? {}
 			memberState[action.payload?.hash] = Object.assign(target, action.payload.data ?? {})
-			Object.assign(state.gameDaoControlState ?? {}, {
-				bodyMemberState: memberState,
-			})
+			Object.assign(controlState, { bodyMemberState: memberState })
 		},
 		clearDaoControl: (state, action) => {
 			return Object.assign({}, shape, { refresh: true })
