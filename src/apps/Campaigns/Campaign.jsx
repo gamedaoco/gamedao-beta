@@ -6,6 +6,7 @@ import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
 import RendererKoiJam from './koijam/Render'
+import { createInfoNotification } from 'src/utils/notification'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -157,7 +158,8 @@ export function Campaign() {
 	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
 	const blocksUntilExpiry = campaignEndBlockHeight - blockheight
 	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
-	const campaignProgress = ( parseInt(content.balance) / parseInt(content.cap.split(' ')[0].replace(".", "")) ) * 100
+	const campaignProgress = ( parseFloat(content.balance.split(' ')[0]) / parseFloat(content.cap.split(' ')[0]) ) * 100
+	const funded = campaignProgress >= 100
 
 	return (
 		<Box>
@@ -264,8 +266,9 @@ export function Campaign() {
 										sx={{ mr: 5 }}
 									/>
 								</Box>
-								<ParticipateButton variant={'contained'}>
-									Participate
+								<ParticipateButton onClick={() => createInfoNotification("Not Implemented") } variant={'contained'}>
+									{!funded && "Participate"}
+									{funded && "Funded!"}
 								</ParticipateButton>
 							</Stack>
 						</Grid>
