@@ -20,7 +20,7 @@ const rootReducer = {
 
 export const createStore = () => configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }), //.concat(logger),
   devTools: process.env.NODE_ENV !== 'production',
   //preloadedState,
   //enhancers: [reduxBatch],
