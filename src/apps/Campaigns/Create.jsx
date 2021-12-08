@@ -100,7 +100,8 @@ export const Main = () => {
 	}
 
 	const [formData, updateFormData] = useState()
-	const [fileCID, updateFileCID] = useState()
+	const [logoCID, updateLogoCID] = useState({})
+	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 	const { updateBalance } = useBalance()
 
@@ -138,16 +139,17 @@ export const Main = () => {
 			title: formData.title,
 			description: formData.description,
 			markdown: markdownValue,
-			...fileCID,
+			...logoCID,
+			...headerCID
 		}
-		// if (dev) console.log(contentJSON)
+		if (dev) console.log(contentJSON)
 		setContent(contentJSON)
-	}, [fileCID, formData])
+	}, [logoCID, headerCID, formData])
 
 	useEffect(() => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
-		updateFileCID(null)
+		//updateFileCID(null)
 		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
@@ -162,20 +164,32 @@ export const Main = () => {
 		updateFormData({ ...formData, [name]: !formData[name] })
 	}
 
-	async function onFileChange(files, type) {
+	const onFileChange = (files, event) => {
+		const name = event.target.name
+
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
-		try {
-			const cid = await pinFileToIPFS(files[0])
-			updateFileCID({ ...fileCID, [type]: cid })
+
+		pinFileToIPFS(files[0])
+		.then( cid => {
+			if(name === 'logo'){
+				updateLogoCID({logo: cid})
+			}
+
+			if(name === 'header'){
+				updateHeaderCID({header: cid})
+			}
+
 			if (dev) console.log('file cid', `${gateway}${cid}`)
-		} catch (error) {
+		})
+		.catch( error => {
 			console.log('Error uploading file: ', error)
-		}
+		})
+	
+
 	}
 
 	// submit
-
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		console.log('submit')
@@ -332,40 +346,30 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
 					</Grid>
-
-					{!fileCID && [
-						<Grid item xs={12} md={6}>
-							{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-						</Grid>,
-						<Grid item xs={12} md={6}>
-							{<Image16to9 alt="placeholder" src="https://picsum.photos/200" />}
-						</Grid>,
-					]}
-
-					{fileCID && [
-						<Grid item xs={12} md={6}>
-							{!fileCID.logo && (
-								<Image16to9 alt="placeholder" src="https://picsum.photos/200" />
-							)}
-							{fileCID.logo && (
-								<Image16to9 alt={formData.title} src={gateway + fileCID.logo} />
-							)}
-						</Grid>,
-						<Grid item xs={12} md={6}>
-							{!fileCID.header && (
-								<Image16to9 alt="placeholder" src="https://picsum.photos/200" />
-							)}
-							{fileCID.header && (
-								<Image16to9 alt={formData.title} src={gateway + fileCID.header} />
-							)}
-						</Grid>,
-					]}
+					
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+						{!logoCID.logo && (
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`} />
+						)}
+						{logoCID.logo && (
+							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+						)}
+					</Grid>
+					
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+						{!headerCID.header && (
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
+						)}
+						{headerCID.header && (
+							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+						)}
+					</Grid>
+					
 
 					<Grid item xs={12} md={6}>
 						<FileDropZone
-							onDroppedFiles={(files) => {
-								onFileChange(files, 'logo')
-							}}
+						    name="logo"
+							onDroppedFiles={onFileChange}
 						>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
@@ -375,9 +379,8 @@ export const Main = () => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FileDropZone
-							onDroppedFiles={(files) => {
-								onFileChange(files, 'header')
-							}}
+						    name="header"
+							onDroppedFiles={onFileChange}
 						>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>

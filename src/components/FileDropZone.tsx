@@ -4,7 +4,7 @@ import { Paper } from '../components'
 
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
-		onDroppedFiles: (files: File[]) => void
+		onDroppedFiles: (files: File[], e: any) => void
 		accept: string
 	}>
 > = (props) => {
@@ -17,7 +17,7 @@ export const FileDropZone: React.FC<
 
 	const onDrop = React.useCallback((e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault()
-		if (e.dataTransfer.files?.length) props.onDroppedFiles(Array.from(e.dataTransfer.files))
+		if (e.dataTransfer.files?.length) props.onDroppedFiles(Array.from(e.dataTransfer.files), e)
 	}, [])
 
 	const onDragLeave = React.useCallback((e: DragEvent<HTMLDivElement>) => {
@@ -27,7 +27,7 @@ export const FileDropZone: React.FC<
 
 	const onFileInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.currentTarget.files) {
-			props.onDroppedFiles(Array.from(e.currentTarget.files))
+			props.onDroppedFiles(Array.from(e.currentTarget.files), e)
 		}
 	}, [])
 
@@ -38,6 +38,8 @@ export const FileDropZone: React.FC<
 	return (
 		<>
 			<input
+				//@ts-ignore
+				name={props.name}
 				style={{ position: 'absolute', left: '-9999999px' }}
 				multiple
 				type={'file'}

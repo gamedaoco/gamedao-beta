@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
-import RendererKoiJam from './koijam/Render'
 import { createInfoNotification } from 'src/utils/notification'
 
 import Tabs from '@mui/material/Tabs'
@@ -32,8 +31,9 @@ import { TileReward } from './TileReward'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
+import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
-const Koijam = lazy(() => import('./koijam/Koijam'))
+const Koijam = lazy(() => import('./campaignForegrounds/koijam/Koijam'))
 
 const Headline = styled(Typography)(({ theme }) => {
 	return {
@@ -101,10 +101,19 @@ export function Campaign() {
 	const blockheight = useBlock()
 
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survival']
+	const t = ['Indie', 'Solo Dev', 'Pondbox']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
+
+	let Foreground = foregroundContentMap.default
+
+	if(id === '0x50251ef18be05b7788e02b7d1d174582d3c3f094e62fa830e94d99ba9abcc478'){
+		Foreground = foregroundContentMap.koijam
+	}
+	if(id === '0xde3037f168376de4932b32a65b05d29b588d84e4fec7148641861a4ee9b310e2'){
+		Foreground = foregroundContentMap.pixzoo
+	}
 
 
 	const [value, setValue] = React.useState(0)
@@ -180,7 +189,7 @@ export function Campaign() {
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
-									<img src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
+									<img style={{maxHeight: '40vh'}} src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
@@ -211,17 +220,7 @@ export function Campaign() {
 							</Grid>
 						</Grid>
 						<Grid item sx={{ textAlign: 'right' }} xs={12} md={7}>
-							<Box
-								sx={{
-									width: '66vw',
-									height: '55vh',
-									position: 'absolute',
-									right: '0px',
-									overflow: 'hidden',
-								}}
-							>
-								<RendererKoiJam />
-							</Box>
+							{Foreground}
 						</Grid>
 					</Grid>
 				</Container>

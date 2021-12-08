@@ -5,6 +5,7 @@ import App from './App'
 import Providers from './Providers'
 
 import 'react-toastify/dist/ReactToastify.css'
+import './animation.css'
 import { createStore } from './redux/store'
 import { Provider } from 'react-redux'
 

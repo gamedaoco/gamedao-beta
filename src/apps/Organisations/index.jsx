@@ -99,7 +99,7 @@ export const Main = (props) => {
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
 						>
-							Close {address}
+							Close
 						</Button>
 					) : account ? (
 						<Button
