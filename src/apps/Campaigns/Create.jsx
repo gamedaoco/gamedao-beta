@@ -347,18 +347,18 @@ export const Main = () => {
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
 					</Grid>
 					
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
 						{!logoCID.logo && (
-							<Image16to9 alt="placeholder" src="https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix" />
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`} />
 						)}
 						{logoCID.logo && (
 							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
 						)}
 					</Grid>
 					
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
 						{!headerCID.header && (
-							<Image16to9 alt="placeholder" src="https://ipfs.gamedao.co/gateway/Qmcb6WGF2iiw3eUd1RLrEWmFtSxLbdDnH5M7roaoWtdhix" />
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
 						)}
 						{headerCID.header && (
 							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />

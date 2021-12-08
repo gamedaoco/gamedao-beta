@@ -12,6 +12,7 @@ import {
 	FormSectionHeadline,
 	Grid,
 	InputLabel,
+	Image16to9,
 	MenuItem,
 	Paper,
 	Select,
@@ -88,7 +89,8 @@ export const Main = (props) => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 	const [formData, updateFormData] = useState()
-	const [fileCID, updateFileCID] = useState()
+	const [logoCID, updateLogoCID] = useState({})
+	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 
 	useEffect(() => {
@@ -109,24 +111,36 @@ export const Main = (props) => {
 			website: formData.website,
 			email: formData.email,
 			repo: formData.repo,
-			...fileCID,
+			...logoCID,
+			...headerCID
 		}
 		setContent(contentJSON)
-	}, [fileCID, formData])
+	}, [logoCID, headerCID, formData])
 
 	// handle file uploads to ipfs
+	const onFileChange = (files, event) => {
+		const name = event.target.name
 
-	async function onFileChange(files, type) {
-		if (!files.length) return
-
+		if (!files?.[0]) return
 		if (dev) console.log('upload image')
-		try {
-			const cid = await pinFileToIPFS(files[0])
-			updateFileCID({ ...fileCID, [type]: cid })
+
+		pinFileToIPFS(files[0])
+		.then( cid => {
+			if(name === 'logo'){
+				updateLogoCID({logo: cid})
+			}
+
+			if(name === 'header'){
+				updateHeaderCID({header: cid})
+			}
+
 			if (dev) console.log('file cid', `${gateway}${cid}`)
-		} catch (error) {
+		})
+		.catch( error => {
 			console.log('Error uploading file: ', error)
-		}
+		})
+	
+
 	}
 
 	// form fields
@@ -201,7 +215,7 @@ export const Main = (props) => {
 	useEffect(() => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
-		updateFileCID(null)
+		//updateFileCID(null)
 		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
@@ -309,37 +323,44 @@ export const Main = (props) => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
-					{fileCID && (
-						<Grid item xs={12}>
-							{fileCID.logo && (
-								<img alt={formData.name} src={gateway + fileCID.logo} />
-							)}
-							{fileCID.header && (
-								<img alt={formData.name} src={gateway + fileCID.header} />
-							)}
-						</Grid>
-					)}
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+						{!logoCID.logo && (
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`} />
+						)}
+						{logoCID.logo && (
+							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+						)}
+					</Grid>
+					
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+						{!headerCID.header && (
+							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
+						)}
+						{headerCID.header && (
+							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+						)}
+					</Grid>
+					
+
 					<Grid item xs={12} md={6}>
 						<FileDropZone
-							onDroppedFiles={(files) => {
-								onFileChange(files, 'logo')
-							}}
+						    name="logo"
+							onDroppedFiles={onFileChange}
 						>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
-								Pick logo graphic
+								Pick a logo graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FileDropZone
-							onDroppedFiles={(files) => {
-								onFileChange(files, 'header')
-							}}
+						    name="header"
+							onDroppedFiles={onFileChange}
 						>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
-								Pick header graphic
+								Pick a header graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>

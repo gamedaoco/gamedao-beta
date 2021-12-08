@@ -185,7 +185,7 @@ export function Campaign() {
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
-									<img src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
+									<img style={{maxHeight: '40vh'}} src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>

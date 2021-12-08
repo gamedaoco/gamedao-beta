@@ -6,9 +6,10 @@ export const foregroundContentMap = {
     koijam: <Box
         sx={{
             width: '66vw',
-            height: '55vh',
+            height: '60vh',
             position: 'absolute',
             right: '0px',
+            top: '25vh',
             overflow: 'hidden',
         }}>
             <RendererKoiJam />
