@@ -24,6 +24,7 @@
 .custom-html-style table {
     z-index: 10000;
     width: 100%;
+    margin-bottom: 0.5rem;
     border: none !important;
 }
 
@@ -36,12 +37,21 @@
     border: none !important;
     padding: none !important;
     padding: 0px !important;
-    padding-right: 1rem !important;
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
     min-width: none !important;
+}
+
+
+.custom-html-style table td:first-of-type {
+    padding: 0px !important;
+    padding-right: 0.5rem !important;
+    padding-left: 0px !important;
 }
 
 .custom-html-style table td:last-of-type {
     padding: 0px !important;
+    padding-left: 0.5rem !important;
     padding-right: 0px !important;
 }
 
@@ -49,6 +59,10 @@
     padding: 0px !important;
     border: none !important;
     background-color: transparent !important;
+}
+
+.custom-html-style img, .custom-html-style video {
+    width: 100%;
 }
 
 

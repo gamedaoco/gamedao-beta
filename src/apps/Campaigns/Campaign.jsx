@@ -101,14 +101,18 @@ export function Campaign() {
 	const blockheight = useBlock()
 
 	const id = useParams().id
-	const t = ['Open World', 'Trending', 'Survival']
+	const t = ['Indie', 'Solo Dev', 'Pondbox']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
-	let Foreground = <></>
-	if(true){
+	let Foreground = foregroundContentMap.default
+
+	if(id === '0x50251ef18be05b7788e02b7d1d174582d3c3f094e62fa830e94d99ba9abcc478'){
 		Foreground = foregroundContentMap.koijam
+	}
+	if(id === '0xde3037f168376de4932b32a65b05d29b588d84e4fec7148641861a4ee9b310e2'){
+		Foreground = foregroundContentMap.pixzoo
 	}
 
 
