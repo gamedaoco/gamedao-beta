@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
-import RendererKoiJam from './koijam/Render'
 import { createInfoNotification } from 'src/utils/notification'
 
 import Tabs from '@mui/material/Tabs'
@@ -32,9 +31,9 @@ import { TileReward } from './TileReward'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
-import { foregroundContentMap } from './foregroundContentMap'
+import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
-const Koijam = lazy(() => import('./koijam/Koijam'))
+const Koijam = lazy(() => import('./campaignForegrounds/koijam/Koijam'))
 
 const Headline = styled(Typography)(({ theme }) => {
 	return {

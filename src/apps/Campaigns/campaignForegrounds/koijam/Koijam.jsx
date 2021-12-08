@@ -20,9 +20,9 @@ import {
 	Slider,
 	Image16to9,
 	Countdown
-} from '../../../components'
+} from '../../../../components'
 
-import { TileReward } from '../TileReward'
+import { TileReward } from '../../TileReward'
 
 import Renderer from './Render'
 
