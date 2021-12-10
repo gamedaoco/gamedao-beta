@@ -1,4 +1,4 @@
-# GameDAO POC
+# GameDAO BETA 1
 
 GameDAO is a EU based community owned and governed cooperative providing community centric protocols:
 
@@ -14,7 +14,7 @@ These enable crowdfunding and governance protocols and aim at videogame creators
 
 GameDAO as a dApp is running on [ZERO.IO](https://zero.io), a substrate based multichain network for the Metaverse featuring unique, decentralised protocols for the videogames industry.
 
-This is a proof of concept dApp featuring fundraising, governance and other functionality based on [Substrate Frontend Template](https://github.com/substrate-developer-hub/substrate-front-end-template).
+This is a proof of concept dApp featuring fundraising, governance and other functionality, inspired by [Substrate Frontend Template](https://github.com/substrate-developer-hub/substrate-front-end-template).
 
 Expect things to break and sub par production quality code, if you are checking it out.
 Also, check out https://github.com/gamedaoco/subzero for rust based modules running on zero network.
