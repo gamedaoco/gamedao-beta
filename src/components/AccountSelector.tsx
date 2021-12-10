@@ -10,6 +10,7 @@ import { useThemeState } from 'src/context/ThemeState'
 import { useBalance } from 'src/hooks/useBalance'
 import { styled } from '../components'
 import { Icons, ICON_MAPPING } from './Icons'
+import { createInfoNotification } from 'src/utils/notification'
 
 function accountString(account) {
 	const text = account?.meta?.name || account?.address || ''
@@ -105,6 +106,12 @@ const AccountComponent = () => {
 		[allowConnect, accounts]
 	)
 
+	function copyAddress(e){
+		e.preventDefault(); 
+		navigator.clipboard.writeText(address); 
+		createInfoNotification("Address Copied to Clipboard!")
+	}
+
 	return (
 		<>
 			{!allowConnect || !accounts ? (
@@ -116,6 +123,23 @@ const AccountComponent = () => {
 				address && (
 					<AccountBox>
 						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
+							<Box
+								sx={{
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									backgroundColor: '#292B2D',
+									borderRadius: '50%',
+									marginLeft: '4px',
+									marginTop: '4px',
+									marginBottom: '4px',
+									height: '2.5rem',
+									width: '2.5rem',
+									cursor: 'pointer'
+								}}
+							>
+								<HeartIcon onClick={copyAddress}/>
+							</Box>
 							<AccountSelect
 								renderValue={(value) => {
 									const account = accounts.find((a) => a.address === value)
@@ -128,22 +152,6 @@ const AccountComponent = () => {
 												alignItems: 'center',
 											}}
 										>
-											<Box
-												sx={{
-													display: 'flex',
-													alignItems: 'center',
-													justifyContent: 'center',
-													backgroundColor: '#292B2D',
-													borderRadius: '50%',
-													marginLeft: '4px',
-													marginTop: '4px',
-													marginBottom: '4px',
-													height: '2.5rem',
-													width: '2.5rem',
-												}}
-											>
-												<HeartIcon />
-											</Box>
 											<Box
 												sx={{
 													marginLeft: '1rem',
