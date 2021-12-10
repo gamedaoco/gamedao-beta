@@ -63,7 +63,6 @@ const Terrain = () => {
 	function didUpdate(mesh) {
 		mesh.current = mesh
 
-		console.log(mesh)
 		const geometry = arg.geometry
 
 		noise.seed(Math.random())

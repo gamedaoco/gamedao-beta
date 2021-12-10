@@ -125,7 +125,6 @@ const CampaignGrid = ({ content }) => {
 			<Wrapper>
 				{pageContent &&
 					pageContent.map((item, index) => {
-						// console.log(item)
 						const c = (
 							<CampaignCard
 								displayMode={displayMode}

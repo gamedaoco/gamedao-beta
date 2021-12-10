@@ -215,7 +215,6 @@ function tokenizeImagesAndMedia(state, silent, md) {
   // content then we need for media detection (myName.mp4)
   if(isIPFS){
     mediaType = guessMediaType(content)
-    console.log("IPFS URL! Media Type: "+mediaType)
   }
 
   const tag = mediaType == 'image' ? 'img' : mediaType;

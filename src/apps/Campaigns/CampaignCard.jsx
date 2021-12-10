@@ -15,6 +15,7 @@ import { NavLink } from 'react-router-dom'
 
 import { useWallet } from 'src/context/Wallet'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useBlock } from 'src/hooks/useBlock'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { ListItem } from '../../components/ListItem'
@@ -26,7 +27,7 @@ import { BigNumber } from 'bignumber.js'
 import { useBalance } from 'src/hooks/useBalance'
 
 const CampaignCard = ({ displayMode, item, index }) => {
-	const { id, /*protocol,*/ name, cap, cid, created, expiry, governance, owner, balance, state } =
+	const { id, /*protocol,*/org, name, cap, cid, created, expiry, governance, owner, balance, state } =
 		item
 	const apiProvider = useApiProvider()
 	const blockheight = useBlock()
@@ -39,6 +40,9 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const [loading, setLoading] = useState(true)
 	const [formData, updateFormData] = useState({ amount: 0 })
 	const { updateBalance } = useBalance()
+	const {
+		bodies,
+	} = useGameDaoControl()
 
 	const handleOnChange = (e) => {
 		updateFormData({ ...formData, [e.target.name]: e.target.value })
@@ -130,11 +134,11 @@ const CampaignCard = ({ displayMode, item, index }) => {
 						</Typography>
 					</Stack>
 				)}
-				{content?.identity ? (
+				{bodies && bodies[org] && bodies[org].name ? (
 					<Stack direction={'row'} spacing={2}>
 						<IdentityIcon />
-						<Link component={NavLink} to={`/id/${owner}`}>
-							{content.identity}
+						<Link component={NavLink} to={`/app/organisations/${org}`}>
+							{bodies[org].name}
 						</Link>
 						<br />
 					</Stack>
@@ -142,14 +146,14 @@ const CampaignCard = ({ displayMode, item, index }) => {
 					<Stack direction={'row'} spacing={2}>
 						<WarningIcon />
 						<Link component={NavLink} to="/faq#unknown_entity">
-							unknown entity
+							unknown dao
 						</Link>
 					</Stack>
 				)}
-				<Stack direction={'row'} spacing={2}>
+				{/*<Stack direction={'row'} spacing={2}>
 					<TagIcon />
 					<Typography>{tags.join(', ')}</Typography>
-				</Stack>
+				</Stack>*/}
 			</Stack>
 		)
 	}, [content])
