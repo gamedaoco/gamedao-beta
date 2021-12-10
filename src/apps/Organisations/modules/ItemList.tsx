@@ -25,7 +25,7 @@ const ListWrapper = styled(Box)(({ theme }) => ({
 
 export function ItemList({ data }) {
 	const [pageState, setPageState] = useState(0)
-	const [rowsPerPageState, setRowsPerPageState] = useState(10)
+	const [rowsPerPageState, setRowsPerPageState] = useState(25)
 	const [displayModeState, setDisplayModeState] = useState(ListTileEnum.LIST)
 	const [displayState, setDisplayState] = useState([])
 
