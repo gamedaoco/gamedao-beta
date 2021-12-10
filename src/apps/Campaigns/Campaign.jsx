@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Suspense, useState, useEffect, lazy } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
@@ -23,13 +23,15 @@ import {
 	Slider,
 	Image16to9,
 	Countdown,
-	MarkdownViewer
+	MarkdownViewer,
+	Link
 } from '../../components'
 
 import { TileReward } from './TileReward'
 
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useWallet } from 'src/context/Wallet'
 import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
@@ -98,14 +100,15 @@ function a11yProps(index) {
 }
 
 export function Campaign() {
-	const blockheight = useBlock()
+	// TODO: implement tags
+	const t = ['Indie', 'Solo Dev', 'Pondbox']
 
 	const id = useParams().id
-	const t = ['Indie', 'Solo Dev', 'Pondbox']
 
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
+	// campaign specific foreground object code
 	let Foreground = foregroundContentMap.default
 
 	if(id === '0x50251ef18be05b7788e02b7d1d174582d3c3f094e62fa830e94d99ba9abcc478'){
@@ -115,9 +118,15 @@ export function Campaign() {
 		Foreground = foregroundContentMap.pixzoo
 	}
 
+	const blockheight = useBlock()
 
 	const [value, setValue] = React.useState(0)
 	const [IPFSData, setIPFSData] = React.useState()
+	const [content, setContent] = React.useState()
+	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
+	const {
+		bodies,
+	} = useGameDaoControl()
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
@@ -127,10 +136,6 @@ export function Campaign() {
 	function handleEditorChange({ html, text }) {
 		console.log('handleEditorChange', html, text);
 	}
-
-	const [content, setContent] = React.useState()
-
-	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
 
 	// fetch chain data
 	useEffect(() => {
@@ -157,11 +162,10 @@ export function Campaign() {
 	}, [content])
 
 
-	if (!content) return '...'
-	if (!IPFSData) return '...'
+	if (!content || !IPFSData || !bodies) return null
 
 	//console.log(content, IPFSData)
-	//console.log(blockNumber)
+	//console.log(bodies)
 
 	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
 	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
@@ -169,6 +173,11 @@ export function Campaign() {
 	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
 	const campaignProgress = ( parseFloat(content.balance.split(' ')[0]) / parseFloat(content.cap.split(' ')[0]) ) * 100
 	const funded = campaignProgress >= 100
+
+	const org = bodies[content.org].name
+	const mdown = IPFSData.markdown
+
+	//console.log(org)
 
 	return (
 		<Box>
@@ -193,14 +202,15 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
+									<Link component={NavLink}  to={"/app/organisations/"+content.org}><Typography variant="caption">{org}</Typography></Link>
 								</Grid>
-								<Grid item xs={12}>
+								{/*<Grid item xs={12}>
 									<Stack direction="row" spacing={2}>
 										{t.map((tag) => {
 											return <CampaignChip label={tag} variant="outlined" />
 										})}
 									</Stack>
-								</Grid>
+								</Grid>*/}
 								<Grid item xs={12}>
 									<Typography>
 										{IPFSData && IPFSData.description}
@@ -286,7 +296,7 @@ export function Campaign() {
 					</Grid>
 					<Grid item xs={12}>
 						<TabPanel value={value} index={0}>
-							{IPFSData && <MarkdownViewer markdown={IPFSData.markdown}/>}
+							<MarkdownViewer markdown={mdown}/>
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<Rewards />

@@ -31,8 +31,6 @@ const Dashboard = (props) => {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 
-	console.log(crowdfunding)
-
 	return (
 		<>
 			<Grid container spacing={4}>
