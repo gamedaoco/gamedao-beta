@@ -104,7 +104,7 @@ export function Item({ data, displayMode }) {
 					</Typography>
 				</Stack>
 				{displayMode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
-				<Interactions data={data} />
+				<Interactions data={data} hideDashboard={false} />
 			</Stack>
 		)
 	}, [data, metaDataState, displayMode])

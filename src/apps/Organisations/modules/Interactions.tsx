@@ -11,7 +11,7 @@ import {
 } from 'src/redux/duck/gameDaoControl.duck'
 import { useBalance } from 'src/hooks/useBalance'
 
-export function Interactions({ data }) {
+export function Interactions({ data, hideDashboard }) {
 	const { address, signAndNotify } = useWallet()
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
@@ -97,7 +97,7 @@ export function Interactions({ data }) {
 
 	return (
 		<>
-			{(isMember() || isAdmin()) && (
+			{(isMember() || isAdmin()) && !hideDashboard && (
 				<Button
 					variant={'outlined'}
 					fullWidth

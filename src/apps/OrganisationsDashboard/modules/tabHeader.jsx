@@ -24,9 +24,8 @@ const TabButton = styled(Button)({
 	padding: '0.5rem 1.5rem',
 })
 
-const BUTTONS = ['Overview', 'Campaigns', 'Votings', 'Members', 'Settings']
-
-export function TabHeader({ selectedTab, setSelectedTab }) {
+const BUTTONS = ['Overview', 'Campaigns', 'Votings', 'Members']
+export function TabHeader({ selectedTab, setSelectedTab, isAdmin }) {
 	return (
 		<TabContainer direction="row" justifyContent="space-between">
 			{BUTTONS.map((text) => (
@@ -38,6 +37,15 @@ export function TabHeader({ selectedTab, setSelectedTab }) {
 					{text}
 				</TabButton>
 			))}
+
+			{isAdmin() && (
+				<TabButton
+					sx={{ backgroundColor: selectedTab === 'Settings' ? '#1A1C1E' : undefined }}
+					onClick={() => setSelectedTab('Settings')}
+				>
+					{'Settings'}
+				</TabButton>
+			)}
 		</TabContainer>
 	)
 }
