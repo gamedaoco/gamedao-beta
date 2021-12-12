@@ -112,7 +112,7 @@ export function Item({ data, displayMode }) {
 	if (displayMode === ListTileEnum.LIST) {
 		return (
 			<ListItem
-				linkTo={`/app/organisations/${data.body.id}`}
+				linkTo={`/app/organisations/${data.hash}`}
 				imageURL={imageState}
 				headline={metaDataState?.name}
 				metaHeadline={textState}
@@ -125,7 +125,7 @@ export function Item({ data, displayMode }) {
 
 	return (
 		<TileItem
-			linkTo={`/app/organisations/${data.body.id}`}
+			linkTo={`/app/organisations/${data.hash}`}
 			imageURL={imageState}
 			headline={metaDataState?.name}
 			metaHeadline={textState}
