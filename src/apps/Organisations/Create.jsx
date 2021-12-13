@@ -30,11 +30,11 @@ const dev = config.dev
 if (dev) console.log('dev mode')
 
 const random_state = (account) => {
-	const name = 'Mighty Organization Name'
-	const email = 'dao@gamedao.co'
-	const website = 'http://bestdaoever.com'
+	const name = ''
+	const email = ''
+	const website = ''
 	const repo = ''
-	const description = 'Informative Description and Usecases...'
+	const description = ''
 
 	const creator = account.address
 	const controller = account.address
@@ -42,9 +42,9 @@ const random_state = (account) => {
 
 	const body = 0
 	const access = 0
-	const member_limit = '10'
+	const member_limit = '1'
 	const fee_model = 0
-	const fee = '10'
+	const fee = '1'
 
 	const cid = ''
 	const gov_asset = 0
@@ -139,7 +139,7 @@ export const Main = (props) => {
 		.catch( error => {
 			console.log('Error uploading file: ', error)
 		})
-	
+
 
 	}
 
@@ -179,7 +179,6 @@ export const Main = (props) => {
 			if (dev) console.log('2. send tx')
 			const payload = [
 				address,
-				formData.controller,
 				formData.treasury,
 				formData.name,
 				cid,
@@ -195,9 +194,9 @@ export const Main = (props) => {
 			signAndNotify(
 				apiProvider.tx.gameDaoControl.create(...payload),
 				{
-					pending: 'Dao creation in progress',
-					success: 'Dao creation successfully',
-					error: 'Dao creation failed',
+					pending: 'Summoning your DAO...',
+					success: 'The beast is unleashed!',
+					error: 'Summoning failed, check your Mana.',
 				},
 				(state) => {
 					setLoading(false)
@@ -331,7 +330,7 @@ export const Main = (props) => {
 							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
 						)}
 					</Grid>
-					
+
 					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
 						{!headerCID.header && (
 							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
@@ -340,7 +339,7 @@ export const Main = (props) => {
 							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
 						)}
 					</Grid>
-					
+
 
 					<Grid item xs={12} md={6}>
 						<FileDropZone
