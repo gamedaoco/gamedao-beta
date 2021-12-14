@@ -1,7 +1,6 @@
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
-import { METHODS } from 'http'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from 'src/components/Loader'
