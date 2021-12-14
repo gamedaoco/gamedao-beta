@@ -202,8 +202,8 @@ export const Main = (props) => {
 					setRefresh(true)
 					if (state) {
 						result.events.forEach(({ event: { data, method, section } }) => {
-							if (section === 'gameDaoControl' && method === 'CampaignCreated') {
-								navigate(`/app/organisations/${data[0].toHex()}`)
+							if (section === 'gameDaoControl' && method === 'BodyCreated') {
+								navigate(`/app/organisations/${data[2].toHex()}`)
 							}
 						})
 					}
