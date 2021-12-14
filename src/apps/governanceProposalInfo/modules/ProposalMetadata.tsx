@@ -7,17 +7,21 @@ import { blockTime } from '../../lib/data'
 import { useSelector } from 'react-redux'
 import { blockStateSelector } from 'src/redux/block.slice'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 export function ProposalMetadata({ address, body, proposalOwner, proposal, onVoteClicked }) {
 	const blockNumber = useSelector(blockStateSelector)
 	const { bodyMemberState } = useGameDaoControl()
+	const { proposalVoters } = useGameDaoGovernance()
 
 	const bodyId = body.id
+	const proposalId = proposal.proposal_id
 
 	const start = proposal ? (normalizeNumber(proposal.start) - blockNumber) * blockTime : null
 	const expires = proposal ? (normalizeNumber(proposal.expiry) - blockNumber) * blockTime : null
 
 	const isMember = bodyMemberState?.[bodyId]?.[address] === '1' ?? false
+	const hasVoted = proposalVoters?.[proposalId]?.includes(address) ?? false
 
 	return (
 		<Stack flex="1" spacing={3}>
@@ -51,10 +55,16 @@ export function ProposalMetadata({ address, body, proposalOwner, proposal, onVot
 			<Box marginTop="auto !important" paddingTop={3}>
 				<Typography>Vote</Typography>
 				{isMember ? (
-					<Stack direction="row" justifyContent="space-between">
-						<Button onClick={() => onVoteClicked(false)}>No</Button>
-						<Button onClick={() => onVoteClicked(true)}>Yes</Button>
-					</Stack>
+					!hasVoted ? (
+						<Stack direction="row" justifyContent="space-between">
+							<Button onClick={() => onVoteClicked(false)}>No</Button>
+							<Button onClick={() => onVoteClicked(true)}>Yes</Button>
+						</Stack>
+					) : (
+						<Typography display="block" variant="body1">
+							You have already voted for this proposal.
+						</Typography>
+					)
 				) : (
 					<Typography display="block" variant="body1">
 						You need to be a member in order to vote for this proposal.

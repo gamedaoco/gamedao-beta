@@ -25,7 +25,7 @@ async function fetchOrganisationMetaData(cid, setLogo) {
 	}
 }
 
-export function BodyData({ body, metadata, proposalId }) {
+export function ProposalBodyData({ body, metadata, proposalId }) {
 	const [imageState, setImageState] = useState<any>()
 	const proposalMeta = metadata?.[proposalId]
 

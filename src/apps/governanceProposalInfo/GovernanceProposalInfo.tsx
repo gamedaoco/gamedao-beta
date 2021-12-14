@@ -11,7 +11,7 @@ import { createErrorNotification } from 'src/utils/notification'
 import { useWallet } from 'src/context/Wallet'
 import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
-import { BodyData } from './modules/BodyData'
+import { ProposalBodyData } from './modules/ProposalBodyData'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -34,7 +34,7 @@ async function fetchProposalDescription(cid, setter) {
 export function GovernanceProposalInfoPage() {
 	// Get state
 	const navigate = useNavigate()
-	const { id: proposalId } = useParams()
+	const { proposalId } = useParams()
 	const apiProvider = useApiProvider()
 
 	const { address, signAndNotify } = useWallet()
@@ -90,7 +90,7 @@ export function GovernanceProposalInfoPage() {
 			</Button>
 			{proposal && body && owners ? (
 				<>
-					<BodyData body={body} metadata={metadata} proposalId={proposalId} />
+					<ProposalBodyData body={body} metadata={metadata} proposalId={proposalId} />
 					<Paper sx={{ width: '100%' }}>
 						<Stack direction="row" padding={6} spacing={6}>
 							<Stack flex="3">

@@ -1,6 +1,6 @@
+import React from 'react'
 import { LinearProgress, styled } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { Box, Button, Divider, Link, Paper, Stack, Typography } from 'src/components'
+import { Box, Stack, Typography } from 'src/components'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { normalizeNumber } from 'src/utils/normalizeNumber'
 

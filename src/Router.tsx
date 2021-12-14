@@ -83,7 +83,7 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path="/app/governance/:id"
+					path="/app/governance/:proposalId"
 					element={
 						<LayoutRoute
 							showSidebar
