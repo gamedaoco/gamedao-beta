@@ -1,6 +1,7 @@
 import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 //const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
 import {
@@ -92,7 +93,7 @@ export const Main = (props) => {
 	const [logoCID, updateLogoCID] = useState({})
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
-
+	const navigate = useNavigate()
 	useEffect(() => {
 		if (!account) return
 		if (dev) console.log('generate form data')
@@ -112,7 +113,7 @@ export const Main = (props) => {
 			email: formData.email,
 			repo: formData.repo,
 			...logoCID,
-			...headerCID
+			...headerCID,
 		}
 		setContent(contentJSON)
 	}, [logoCID, headerCID, formData])
@@ -125,22 +126,20 @@ export const Main = (props) => {
 		if (dev) console.log('upload image')
 
 		pinFileToIPFS(files[0])
-		.then( cid => {
-			if(name === 'logo'){
-				updateLogoCID({logo: cid})
-			}
+			.then((cid) => {
+				if (name === 'logo') {
+					updateLogoCID({ logo: cid })
+				}
 
-			if(name === 'header'){
-				updateHeaderCID({header: cid})
-			}
+				if (name === 'header') {
+					updateHeaderCID({ header: cid })
+				}
 
-			if (dev) console.log('file cid', `${gateway}${cid}`)
-		})
-		.catch( error => {
-			console.log('Error uploading file: ', error)
-		})
-
-
+				if (dev) console.log('file cid', `${gateway}${cid}`)
+			})
+			.catch((error) => {
+				console.log('Error uploading file: ', error)
+			})
 	}
 
 	// form fields
@@ -198,11 +197,15 @@ export const Main = (props) => {
 					success: 'The beast is unleashed!',
 					error: 'Summoning failed, check your Mana.',
 				},
-				(state) => {
+				(state, result) => {
 					setLoading(false)
 					setRefresh(true)
-					if (!state) {
-						// TODO: 2075 Do we need error handling here?
+					if (state) {
+						result.events.forEach(({ event: { data, method, section } }) => {
+							if (section === 'gameDaoControl' && method === 'CampaignCreated') {
+								navigate(`/app/organisations/${data[0].toHex()}`)
+							}
+						})
 					}
 				}
 			)
@@ -322,30 +325,34 @@ export const Main = (props) => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
 						{!logoCID.logo && (
-							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`} />
+							<img
+								alt="placeholder"
+								height={'128'}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
+							/>
 						)}
 						{logoCID.logo && (
 							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
 						)}
 					</Grid>
 
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
 						{!headerCID.header && (
-							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
+							<img
+								alt="placeholder"
+								height={'128'}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`}
+							/>
 						)}
 						{headerCID.header && (
 							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
 						)}
 					</Grid>
 
-
 					<Grid item xs={12} md={6}>
-						<FileDropZone
-						    name="logo"
-							onDroppedFiles={onFileChange}
-						>
+						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
 								Pick a logo graphic
@@ -353,10 +360,7 @@ export const Main = (props) => {
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<FileDropZone
-						    name="header"
-							onDroppedFiles={onFileChange}
-						>
+						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
 								Pick a header graphic

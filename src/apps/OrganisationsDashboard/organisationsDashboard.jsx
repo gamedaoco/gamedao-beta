@@ -7,14 +7,18 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { Overview } from './modules/overview'
 import { Members } from './modules/members'
 import { Campaigns } from './modules/campaigns'
+import { Votings } from './modules/votings'
 import { to } from 'await-to-js'
 import { useWallet } from 'src/context/Wallet'
 import { Interactions } from 'src/apps/Organisations/modules/Interactions'
 import { createErrorNotification } from 'src/utils/notification'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import CreateCampaign from '../Campaigns/Create'
+import CreateProposal from '../Governance/Create'
 import ClearIcon from '@mui/icons-material/Clear'
 import { Box, Stack, Paper, Typography, Button, Avatar } from '../../components'
+import { useSelector } from 'react-redux'
+import { blockStateSelector } from 'src/redux/block.slice'
 
 async function fetchMetaData(cid, setMetaData) {
 	// Invalid ipfs hash
@@ -46,6 +50,7 @@ export function OrganisationsDashboard() {
 	const [campaignsState, setCampaignsState] = useState([])
 	const [votingState, setVotingState] = useState([])
 	const [createCampaignState, setCreateCampaignState] = useState(false)
+	const [createVotingState, setCreateVoatingState] = useState(false)
 	const {
 		bodyConfig,
 		bodyMemberCount,
@@ -60,6 +65,7 @@ export function OrganisationsDashboard() {
 	const { proposals } = useGameDaoGovernance()
 	const { id } = useParams()
 	const avatarRef = useRef()
+	const blockNumber = useSelector(blockStateSelector)
 
 	useEffect(() => {
 		if (id) {
@@ -152,18 +158,21 @@ export function OrganisationsDashboard() {
 
 	return (
 		<>
-			{createCampaignState && (
+			{(createCampaignState || createVotingState) && (
 				<Stack direction="row" justifyContent="flex-end">
 					<Button
 						variant="contained"
 						startIcon={<ClearIcon />}
-						onClick={() => setCreateCampaignState(false)}
+						onClick={() => {
+							setCreateCampaignState(false)
+							setCreateVoatingState(false)
+						}}
 					>
 						Close
 					</Button>
 				</Stack>
 			)}
-			{!createCampaignState && (
+			{!createCampaignState && !createVotingState && (
 				<>
 					<TabHeader
 						selectedTab={selectedTabState}
@@ -208,11 +217,19 @@ export function OrganisationsDashboard() {
 								<Overview
 									metaData={metaDataState}
 									campaigns={campaignsState}
-									{...{ createCampaignState, setCreateCampaignState }}
+									votings={votingState}
+									{...{
+										setCreateCampaignState,
+										setCreateVoatingState,
+										blockNumber,
+									}}
 								/>
 							)}
 							{selectedTabState === 'Campaigns' && (
 								<Campaigns campaigns={campaignsState} />
+							)}
+							{selectedTabState === 'Votings' && (
+								<Votings votings={votingState} blockNumber={blockNumber} />
 							)}
 							{selectedTabState === 'Members' && <Members data={dataState} />}
 						</Stack>
@@ -220,6 +237,7 @@ export function OrganisationsDashboard() {
 				</>
 			)}
 			{createCampaignState && <CreateCampaign />}
+			{createVotingState && <CreateProposal blockNumber={blockNumber} />}
 		</>
 	)
 }
