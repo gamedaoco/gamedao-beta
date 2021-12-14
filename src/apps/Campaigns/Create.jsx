@@ -1,6 +1,7 @@
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
+import { METHODS } from 'http'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from 'src/components/Loader'
@@ -239,12 +240,18 @@ export const Main = () => {
 					success: 'Campaign creation successfully',
 					error: 'Campaign creation failed',
 				},
-				(state) => {
+				(state, result) => {
 					setLoading(false)
 					setRefresh(true)
 					updateBalance()
 
-					navigate('/app', { replace: true })
+					if (state) {
+						result.events.forEach(({ event: { data, method, section } }) => {
+							if (section === 'gameDaoCrowdfunding' && method === 'CampaignCreated') {
+								navigate(`/app/campaigns/${data[0].toHex()}`)
+							}
+						})
+					}
 
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
