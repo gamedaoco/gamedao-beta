@@ -203,7 +203,7 @@ export const Main = (props) => {
 					if (state) {
 						result.events.forEach(({ event: { data, method, section } }) => {
 							if (section === 'gameDaoControl' && method === 'BodyCreated') {
-								navigate(`/app/organisations/${data[2].toHex()}`)
+								navigate(`/app/organisations/${data[1].toHex()}`)
 							}
 						})
 					}
