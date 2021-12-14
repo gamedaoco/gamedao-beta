@@ -26,18 +26,18 @@ import { Box, Stack, Divider, Card } from 'src/components'
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
 	const { address, signAndNotify } = useWallet()
-	const identity = useIdentity(address)
+	const { identities } = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 	const [name, setName] = useState('')
 
 	useEffect(() => {
-		setName(identity?.toHuman()?.info?.display?.Raw ?? '')
-	}, [identity])
+		setName(identities?.[address]?.toHuman()?.info?.display?.Raw ?? '')
+	}, [identities])
 
 	// if logged in render custom dashboard instead
-	if(identity) return <DashboardUserConnected/>
+	if (identities?.[address]) return <DashboardUserConnected />
 
 	return (
 		<>
@@ -50,19 +50,23 @@ const Dashboard = (props) => {
 					/>
 				</Grid>*/}
 
-<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
+				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
 					<Typography variant="h5">Global Dashboard</Typography>
 				</Grid>
-				
+
 				<Grid item xs={12} sm={6} md={4}>
 					<Card sx={{ height: '160px' }}>
-						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
-						<Stack  
-							justifyContent="space-evenly"
-							alignItems="center"
-							spacing={2}
-							mt={2}
+						<Box
+							sx={{
+								position: 'absolute',
+								top: '0px',
+								left: '-0.5rem',
+								width: '115%',
+							}}
 						>
+							<SingleChart />
+						</Box>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
 							<Typography>Total Value Locked (Global)</Typography>
 							<Typography variant="h3">32'603'000'444.435</Typography>
 							<Typography>GAME</Typography>
@@ -72,12 +76,7 @@ const Dashboard = (props) => {
 
 				<Grid item sm={12} md={4}>
 					<Card sx={{ height: '160px' }}>
-						<Stack  
-							justifyContent="space-evenly"
-							alignItems="center"
-							spacing={2}
-							mt={2}
-						>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
 							<Typography>DAOs</Typography>
 							<Typography variant="h3">{nonce ?? 'Loading...'}</Typography>
 							<Typography></Typography>
@@ -87,13 +86,17 @@ const Dashboard = (props) => {
 
 				<Grid item xs={12} sm={6} md={4}>
 					<Card sx={{ height: '160px' }}>
-						<Box sx={{ position: 'absolute', top: '0px', left: '-0.5rem', width: '115%' }}><SingleChart/></Box>
-						<Stack  
-							justifyContent="space-evenly"
-							alignItems="center"
-							spacing={2}
-							mt={2}
+						<Box
+							sx={{
+								position: 'absolute',
+								top: '0px',
+								left: '-0.5rem',
+								width: '115%',
+							}}
 						>
+							<SingleChart />
+						</Box>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
 							<Typography>Total contributions</Typography>
 							<Typography variant="h3">1005.00</Typography>
 							<Typography>aUSD</Typography>
@@ -104,20 +107,22 @@ const Dashboard = (props) => {
 				<Grid item xs={12}>
 					<Card>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						  <Typography variant="h5">Organization Updates:</Typography>
-						  <Typography variant="h5">filter</Typography>
+							<Typography variant="h5">Organization Updates:</Typography>
+							<Typography variant="h5">filter</Typography>
 						</Box>
 					</Card>
 				</Grid>
 
 				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
-					<Typography variant="h5">{crowdfunding.campaignsCount ?? 'Loading...'} Campaigns</Typography>
+					<Typography variant="h5">
+						{crowdfunding.campaignsCount ?? 'Loading...'} Campaigns
+					</Typography>
 				</Grid>
 
 				<Grid item xs={12}>
 					<Card>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						  <Typography variant="h5">Active Campaigns</Typography>
+							<Typography variant="h5">Active Campaigns</Typography>
 						</Box>
 					</Card>
 				</Grid>
@@ -129,7 +134,7 @@ const Dashboard = (props) => {
 				<Grid item xs={12}>
 					<Card>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						  <Typography variant="h5">Votings Closing Soon</Typography>
+							<Typography variant="h5">Votings Closing Soon</Typography>
 						</Box>
 					</Card>
 				</Grid>

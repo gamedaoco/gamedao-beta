@@ -27,11 +27,22 @@ import { BigNumber } from 'bignumber.js'
 import { useBalance } from 'src/hooks/useBalance'
 
 const CampaignCard = ({ displayMode, item, index }) => {
-	const { id, /*protocol,*/org, name, cap, cid, created, expiry, governance, owner, balance, state } =
-		item
+	const {
+		id,
+		/*protocol,*/ org,
+		name,
+		cap,
+		cid,
+		created,
+		expiry,
+		governance,
+		owner,
+		balance,
+		state,
+	} = item
 	const apiProvider = useApiProvider()
 	const blockheight = useBlock()
-	const identity = useIdentity(owner)
+	const { identities } = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
 	const { account, signAndNotify } = useWallet()
 	const [metadata, setMetadata] = useState(null)
@@ -40,9 +51,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const [loading, setLoading] = useState(true)
 	const [formData, updateFormData] = useState({ amount: 0 })
 	const { updateBalance } = useBalance()
-	const {
-		bodies,
-	} = useGameDaoControl()
+	const { bodies } = useGameDaoControl()
 
 	const handleOnChange = (e) => {
 		updateFormData({ ...formData, [e.target.name]: e.target.value })
@@ -71,17 +80,17 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				backers: campaignContributorsCount[id] || null,
 			})
 		}
-	}, [id, campaignContributorsCount, identity, blockheight])
+	}, [id, campaignContributorsCount, identities, blockheight])
 
 	useEffect(() => {
 		setContent({
 			...content,
-			identity: identity?.toHuman()?.info?.display?.Raw || null,
+			identity: identities?.[owner]?.toHuman()?.info?.display?.Raw || null,
 		})
-	}, [identity])
+	}, [identities])
 
 	const blocksRemain = parseInt(expiry.replaceAll(',', '')) - blockheight
-	
+
 	const tags = ['game', '2d', 'pixel', 'steam']
 
 	const epoch = created.replaceAll(',', '')

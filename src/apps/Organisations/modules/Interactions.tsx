@@ -16,7 +16,8 @@ export function Interactions({ data, hideDashboard }) {
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
 	const navigate = useNavigate()
-	const { queryBodyMemberState, bodyMemberState } = useGameDaoControl()
+	const { queryBodyMemberState, bodyMemberState, memberships, queryMemberships } =
+		useGameDaoControl()
 	const refresh = useSelector(gameDaoControlRefreshSelector)
 	const dispatch = useDispatch()
 
@@ -84,13 +85,14 @@ export function Interactions({ data, hideDashboard }) {
 	useEffect(() => {
 		if (address) {
 			queryBodyMemberState(data.hash, address)
+			queryMemberships(address)
 		}
 	}, [address, refresh])
 
 	if (!data || !data?.access) return null
 
 	const isAdmin = () => (address === data?.controller ? true : false)
-	const isMember = () => (bodyMemberState?.[data.hash]?.[address] > 0 ? true : false)
+	const isMember = () => memberships?.[address]?.includes(data.hash)
 
 	const actionType = ['join', 'apply', 'leave'][data.access]
 	const actionCallback = [handleJoin, handleApply, handleLeave][data.access]

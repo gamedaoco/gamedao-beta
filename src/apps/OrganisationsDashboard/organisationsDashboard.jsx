@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { TabHeader } from './modules/tabHeader'
 import { gateway } from '../lib/ipfs'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { Overview } from './modules/overview'
 import { Members } from './modules/members'
+import { Campaigns } from './modules/campaigns'
 import { to } from 'await-to-js'
 import { useWallet } from 'src/context/Wallet'
 import { Interactions } from 'src/apps/Organisations/modules/Interactions'
-import { Box, Stack, Paper, Typography, Avatar } from '../../components'
 import { createErrorNotification } from 'src/utils/notification'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import CreateCampaign from '../Campaigns/Create'
+import ClearIcon from '@mui/icons-material/Clear'
+import { Box, Stack, Paper, Typography, Button, Avatar } from '../../components'
 
 async function fetchMetaData(cid, setMetaData) {
 	// Invalid ipfs hash
@@ -38,6 +43,9 @@ export function OrganisationsDashboard() {
 	const [imageState, setImageState] = useState(
 		`${gateway}QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY`
 	)
+	const [campaignsState, setCampaignsState] = useState([])
+	const [votingState, setVotingState] = useState([])
+	const [createCampaignState, setCreateCampaignState] = useState(false)
 	const {
 		bodyConfig,
 		bodyMemberCount,
@@ -46,10 +54,12 @@ export function OrganisationsDashboard() {
 		bodyAccess,
 		bodyTreasury,
 		queryBodyMemberState,
-		bodyMemberState,
 		bodyMembers,
 	} = useGameDaoControl()
+	const { campaigns, campaignState, campaignBalance } = useCrowdfunding()
+	const { proposals } = useGameDaoGovernance()
 	const { id } = useParams()
+	const avatarRef = useRef()
 
 	useEffect(() => {
 		if (id) {
@@ -110,46 +120,106 @@ export function OrganisationsDashboard() {
 		}
 	}, [address, dataState])
 
+	useEffect(() => {
+		if (campaigns && dataState && campaignState && campaignBalance) {
+			setCampaignsState(
+				Object.keys(campaigns)
+					.filter((key) => campaigns[key].org === dataState.hash)
+					.map((campaignHash) => ({
+						...(campaigns[campaignHash] ?? {}),
+						state: campaignState?.[campaignHash] ?? {},
+						balance: campaignBalance?.[campaignHash] ?? {},
+					}))
+			)
+		}
+	}, [campaigns, dataState, campaignState, campaignBalance])
+
+	useEffect(() => {
+		if (proposals && dataState) {
+			setVotingState(
+				Object.keys(proposals)
+					.filter((key) => proposals[key].context_id === dataState.hash)
+					.map((key) => ({ ...(proposals?.[key] ?? {}) }))
+			)
+		}
+	}, [proposals, dataState])
+
 	if (!dataState) {
 		return null
 	}
 
 	const isAdmin = () => (address === dataState?.controller ? true : false)
-	const isMember = () => (bodyMemberState?.[dataState.hash]?.[address] > 0 ? true : false)
 
 	return (
 		<>
-			<TabHeader
-				selectedTab={selectedTabState}
-				setSelectedTab={setSelectedTabState}
-				isAdmin={isAdmin}
-			/>
-
-			<Box display="flex" padding={4}>
-				<Box flex="1">
-					<Paper>
-						<Stack spacing={2} padding={4} justifyContent="center" alignItems="center">
-							<Avatar
-								sx={{ width: '50%', height: 'auto' }}
-								alt="org"
-								src={imageState}
-							/>
-							<Typography variant="h6" textAlign="center">
-								{metaDataState?.name ?? ''}
-							</Typography>
-							<Typography textAlign="center">
-								{dataState?.members || 0}{' '}
-								{dataState?.members || 0 > 1 ? 'Members' : 'Member'}
-							</Typography>
-							<Interactions data={dataState} hideDashboard={true} />
-						</Stack>
-					</Paper>
-				</Box>
-				<Stack spacing={4} flex="3" paddingLeft={4}>
-					{selectedTabState === 'Overview' && <Overview metaData={metaDataState} />}
-					{selectedTabState === 'Members' && <Members data={dataState} />}
+			{createCampaignState && (
+				<Stack direction="row" justifyContent="flex-end">
+					<Button
+						variant="contained"
+						startIcon={<ClearIcon />}
+						onClick={() => setCreateCampaignState(false)}
+					>
+						Close
+					</Button>
 				</Stack>
-			</Box>
+			)}
+			{!createCampaignState && (
+				<>
+					<TabHeader
+						selectedTab={selectedTabState}
+						setSelectedTab={setSelectedTabState}
+						isAdmin={isAdmin}
+						campaignsCount={campaignsState?.length ?? 0}
+						votingCount={votingState?.length ?? 0}
+						memberCount={dataState?.bodyMembers?.length ?? 0}
+					/>
+
+					<Box display="flex" padding={4}>
+						<Box flex="1">
+							<Paper>
+								<Stack
+									spacing={2}
+									padding={4}
+									justifyContent="center"
+									alignItems="center"
+								>
+									<Avatar
+										ref={avatarRef}
+										sx={{
+											width: '50%',
+											height: avatarRef?.current?.clientWidth ?? 0,
+										}}
+										alt="org"
+										src={imageState}
+									/>
+									<Typography variant="h6" textAlign="center">
+										{metaDataState?.name ?? ''}
+									</Typography>
+									<Typography textAlign="center">
+										{dataState?.members || 0}{' '}
+										{dataState?.members || 0 > 1 ? 'Members' : 'Member'}
+									</Typography>
+									<Interactions data={dataState} hideDashboard={true} />
+								</Stack>
+							</Paper>
+						</Box>
+						<Stack spacing={4} flex="3" paddingLeft={4}>
+							{selectedTabState === 'Overview' && (
+								<Overview
+									metaData={metaDataState}
+									campaigns={campaignsState}
+									{...{ createCampaignState, setCreateCampaignState }}
+								/>
+							)}
+							{selectedTabState === 'Campaigns' && (
+								<Campaigns campaigns={campaignsState} />
+							)}
+							{selectedTabState === 'Members' && <Members data={dataState} />}
+						</Stack>
+					</Box>
+				</>
+			)}
+			{createCampaignState && <CreateCampaign />}
 		</>
 	)
 }

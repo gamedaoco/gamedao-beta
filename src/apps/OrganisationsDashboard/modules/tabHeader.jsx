@@ -24,19 +24,45 @@ const TabButton = styled(Button)({
 	padding: '0.5rem 1.5rem',
 })
 
-const BUTTONS = ['Overview', 'Campaigns', 'Votings', 'Members']
-export function TabHeader({ selectedTab, setSelectedTab, isAdmin }) {
+export function TabHeader({
+	selectedTab,
+	setSelectedTab,
+	isAdmin,
+	campaignsCount,
+	votingCount,
+	memberCount,
+}) {
 	return (
 		<TabContainer direction="row" justifyContent="space-between">
-			{BUTTONS.map((text) => (
+			<TabButton
+				sx={{ backgroundColor: selectedTab === 'Overview' ? '#1A1C1E' : undefined }}
+				onClick={() => setSelectedTab('Overview')}
+			>
+				{'Overview'}
+			</TabButton>
+			{campaignsCount > 0 && (
 				<TabButton
-					sx={{ backgroundColor: selectedTab === text ? '#1A1C1E' : undefined }}
-					key={text}
-					onClick={() => setSelectedTab(text)}
+					sx={{ backgroundColor: selectedTab === 'Campaigns' ? '#1A1C1E' : undefined }}
+					onClick={() => setSelectedTab('Campaigns')}
 				>
-					{text}
+					{`Campaigns ( ${campaignsCount} )`}
 				</TabButton>
-			))}
+			)}
+
+			{votingCount > 0 && (
+				<TabButton
+					sx={{ backgroundColor: selectedTab === 'Votings' ? '#1A1C1E' : undefined }}
+					onClick={() => setSelectedTab('Votings')}
+				>
+					{`Votings ( ${votingCount} )`}
+				</TabButton>
+			)}
+			<TabButton
+				sx={{ backgroundColor: selectedTab === 'Members' ? '#1A1C1E' : undefined }}
+				onClick={() => setSelectedTab('Members')}
+			>
+				{`Members ( ${memberCount} )`}
+			</TabButton>
 
 			{isAdmin() && (
 				<TabButton

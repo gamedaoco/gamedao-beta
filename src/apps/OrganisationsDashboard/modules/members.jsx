@@ -14,9 +14,13 @@ import {
 } from '../../../components'
 
 export function Members({ data }) {
-	const identeties = data?.bodyMembers?.map((member) => {
-		return useIdentity(member)
-	})
+	const { queryAccountIdentity, identities } = useIdentity()
+
+	useEffect(() => {
+		if (data?.bodyMembers) {
+			queryAccountIdentity(data?.bodyMembers)
+		}
+	}, [data])
 
 	return (
 		<Paper>
@@ -40,8 +44,8 @@ export function Members({ data }) {
 										<Avatar alt="user"></Avatar>
 										<Stack>
 											<Typography variant="h6">
-												{identeties[index]?.toHuman()?.info?.display?.Raw ??
-													''}
+												{identities?.[member]?.toHuman()?.info?.display
+													?.Raw ?? ''}
 											</Typography>
 											<Typography variant="body1">{`${member.substr(
 												0,
