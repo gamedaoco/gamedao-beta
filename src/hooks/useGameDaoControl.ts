@@ -27,6 +27,7 @@ type GameDaoControlState = {
 	memberships: object
 	controlledBodies: object
 	bodyMemberState: object
+	bodyMembers: object
 
 	queryControlledBodies: Function
 	queryBodyMemberState: Function
@@ -48,6 +49,8 @@ const INITIAL_STATE: GameDaoControlState = {
 	memberships: null,
 	controlledBodies: null,
 	bodyMemberState: null,
+	bodyMembers: null,
+
 	queryMemberships: (accountId) => {},
 	queryBodyMemberState(hash, accountId) {},
 	queryControlledBodies: (accountId) => {},
@@ -250,6 +253,26 @@ async function queryBodyMemberCount(apiProvider: ApiPromise, hashes: Array<strin
 	return mapping
 }
 
+async function queryBodyMembers(apiProvider: ApiPromise, hashes: Array<string>): Promise<any> {
+	if (!Array.isArray(hashes) || hashes.length === 0) return null
+
+	const [error, data] = await to(apiProvider.query.gameDaoControl.bodyMembers.multi(hashes))
+
+	if (error) {
+		console.error(error)
+		createErrorNotification('Error while querying the gameDaoControl bodyMembers')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
 async function queryMemberships(apiProvider: ApiPromise, accoutId: string): Promise<any> {
 	const [error, data] = await to(apiProvider.query.gameDaoControl.memberships(accoutId))
 
@@ -413,6 +436,10 @@ export const useGameDaoControl = (): GameDaoControlState => {
 						apiProvider,
 						keys.filter((hash) => !(gameDaoControlState.bodyStates ?? {})[hash])
 					),
+					queryBodyMembers(
+						apiProvider,
+						keys.filter((hash) => !(gameDaoControlState.bodyMembers ?? {})[hash])
+					),
 				])
 
 				setIsDataLoading(false)
@@ -450,6 +477,10 @@ export const useGameDaoControl = (): GameDaoControlState => {
 						bodyStates: {
 							...(gameDaoControlState.bodyStates ?? {}),
 							...(data[7] ?? {}),
+						},
+						bodyMembers: {
+							...(gameDaoControlState.bodyMembers ?? {}),
+							...(data[8] ?? {}),
 						},
 					})
 				}

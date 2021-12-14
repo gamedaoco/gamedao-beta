@@ -10,7 +10,7 @@ import { useBalance } from 'src/hooks/useBalance'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { useIdentity } from 'src/hooks/useIdentity'
+
 import { formatZero } from 'src/utils/helper'
 import {
 	Box,
@@ -36,7 +36,6 @@ import {
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
-
 
 const dev = config.dev
 
@@ -82,9 +81,8 @@ const random_state = (account) => {
 }
 
 export const Main = () => {
-	const { address, account, connected, signAndNotify } = useWallet()
+	const { account, connected, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
-	const identity = useIdentity(address)
 	const crowdfunding = useCrowdfunding()
 	const daoControl = useGameDaoControl()
 	const gov = useGameDaoGovernance()
@@ -140,7 +138,7 @@ export const Main = () => {
 			description: formData.description,
 			markdown: markdownValue,
 			...logoCID,
-			...headerCID
+			...headerCID,
 		}
 		if (dev) console.log(contentJSON)
 		setContent(contentJSON)
@@ -171,22 +169,20 @@ export const Main = () => {
 		if (dev) console.log('upload image')
 
 		pinFileToIPFS(files[0])
-		.then( cid => {
-			if(name === 'logo'){
-				updateLogoCID({logo: cid})
-			}
+			.then((cid) => {
+				if (name === 'logo') {
+					updateLogoCID({ logo: cid })
+				}
 
-			if(name === 'header'){
-				updateHeaderCID({header: cid})
-			}
+				if (name === 'header') {
+					updateHeaderCID({ header: cid })
+				}
 
-			if (dev) console.log('file cid', `${gateway}${cid}`)
-		})
-		.catch( error => {
-			console.log('Error uploading file: ', error)
-		})
-	
-
+				if (dev) console.log('file cid', `${gateway}${cid}`)
+			})
+			.catch((error) => {
+				console.log('Error uploading file: ', error)
+			})
 	}
 
 	// submit
@@ -346,31 +342,35 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
 					</Grid>
-					
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
 						{!logoCID.logo && (
-							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`} />
+							<img
+								alt="placeholder"
+								height={'128'}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
+							/>
 						)}
 						{logoCID.logo && (
 							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
 						)}
 					</Grid>
-					
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: "center" }}>
+
+					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
 						{!headerCID.header && (
-							<img alt="placeholder" height={'128'} src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`} />
+							<img
+								alt="placeholder"
+								height={'128'}
+								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`}
+							/>
 						)}
 						{headerCID.header && (
 							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
 						)}
 					</Grid>
-					
 
 					<Grid item xs={12} md={6}>
-						<FileDropZone
-						    name="logo"
-							onDroppedFiles={onFileChange}
-						>
+						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
 								Pick a logo graphic
@@ -378,10 +378,7 @@ export const Main = () => {
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<FileDropZone
-						    name="header"
-							onDroppedFiles={onFileChange}
-						>
+						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							<Image />
 							<Typography variant={'body2'} align={'center'}>
 								Pick a header graphic
