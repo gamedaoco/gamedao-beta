@@ -235,12 +235,18 @@ export const Main = () => {
 					success: 'Campaign creation successfully',
 					error: 'Campaign creation failed',
 				},
-				(state) => {
+				(state, result) => {
 					setLoading(false)
 					setRefresh(true)
 					updateBalance()
 
-					navigate('/app', { replace: true })
+					if (state) {
+						result.events.forEach(({ event: { data, method, section } }) => {
+							if (section === 'gameDaoCrowdfunding' && method === 'CampaignCreated') {
+								navigate(`/app/campaigns/${data[0].toHex()}`)
+							}
+						})
+					}
 
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
