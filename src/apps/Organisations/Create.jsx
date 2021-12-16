@@ -325,37 +325,25 @@ export const Main = (props) => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!logoCID.logo && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
-							/>
-						)}
-						{logoCID.logo && (
-							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
-						)}
-					</Grid>
-
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!headerCID.header && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`}
-							/>
-						)}
-						{headerCID.header && (
-							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
-						)}
-					</Grid>
-
 					<Grid item xs={12} md={6}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
-							<Image />
+							{!logoCID.logo && <Image />}
+							{logoCID.logo && (
+								<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+							)}
 							<Typography variant={'body2'} align={'center'}>
-								Pick a logo graphic
+							{!logoCID.logo ? "Pick a " : ""}logo graphic
+							</Typography>
+						</FileDropZone>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<FileDropZone name="header" onDroppedFiles={onFileChange}>
+							{!headerCID.header && <Image />}
+							{headerCID.header && (
+								<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+							)}
+							<Typography variant={'body2'} align={'center'}>
+							{!headerCID.header ? "Pick a " : ""}header graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
@@ -367,6 +355,7 @@ export const Main = (props) => {
 							</Typography>
 						</FileDropZone>
 					</Grid>
+					
 					<Grid item xs={12}>
 						<FormSectionHeadline>Meta Information</FormSectionHeadline>
 					</Grid>

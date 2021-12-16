@@ -48,6 +48,8 @@ export const FileDropZone: React.FC<
 				ref={fileInputRef}
 			/>
 			<Paper
+				//@ts-ignore
+				name={props.name}
 				onDragOver={onDragOver}
 				onDragLeave={onDragLeave}
 				onClick={() => fileInputRef.current?.click()}
@@ -73,7 +75,7 @@ export const FileDropZone: React.FC<
 				}}
 				component={'div'}
 			>
-				{props.children}
+				<div style={{ pointerEvents: "none" }}>{props.children}</div>
 			</Paper>
 		</>
 	)

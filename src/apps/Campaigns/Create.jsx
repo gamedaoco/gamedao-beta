@@ -168,13 +168,14 @@ export const Main = () => {
 	}
 
 	const onFileChange = (files, event) => {
-		const name = event.target.name
+		const name = event.target.getAttribute("name")
 
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
 
 		pinFileToIPFS(files[0])
 			.then((cid) => {
+				console.log(name)
 				if (name === 'logo') {
 					updateLogoCID({ logo: cid })
 				}
@@ -199,7 +200,7 @@ export const Main = () => {
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
 			try {
-				// TODO: pin...
+				
 				const cid = await pinJSONToIPFS(content)
 				if (cid) {
 					// setContentCID(cid)
@@ -345,6 +346,7 @@ export const Main = () => {
 								onChange={handleOnChange}
 								validate={ (x) => {
 									console.log(x)
+									return !!x
 								}}
 							>
 								{orgs.map((item, index) => (
@@ -386,12 +388,12 @@ export const Main = () => {
 
 					<Grid item xs={12} md={6}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
-							{!logoCID.header && <Image />}
+							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
 								<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-								Pick a logo graphic
+							{!logoCID.logo ? "Pick a " : ""}logo graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
@@ -402,7 +404,7 @@ export const Main = () => {
 								<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-								Pick a header graphic
+							{!headerCID.header ? "Pick a " : ""}header graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
