@@ -1,15 +1,14 @@
-import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Formik, Field, Form } from 'formik'
+import { Persist } from 'formik-persist'
+
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
+
 import Loader from 'src/components/Loader'
 import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
-import { useWallet } from 'src/context/Wallet'
-import { useBalance } from 'src/hooks/useBalance'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 import { formatZero } from 'src/utils/helper'
 import {
@@ -36,6 +35,12 @@ import {
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
+
+import { useWallet } from 'src/context/Wallet'
+import { useBalance } from 'src/hooks/useBalance'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 const dev = config.dev
 
@@ -147,8 +152,8 @@ export const Main = () => {
 	useEffect(() => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
-		//updateFileCID(null)
-		updateFormData(random_state(account))
+
+		// updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
 	}, [account, refresh])
@@ -267,8 +272,34 @@ export const Main = () => {
 	const nonce = daoControl.nonce
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
+	//const initialValues = dataPersisted ? 
+
 	return (
-		<>
+		<Formik
+			initialValues={{
+				email: '',
+				password: '',
+			}}
+			validate={(values) => {
+			const errors = {};
+			if (!values.email) {
+				errors.email = 'Required';
+			} else if (
+				!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+			) {
+				errors.email = 'Invalid email address';
+			}
+			return errors;
+			}}
+			onSubmit={(values, { setSubmitting }) => {
+			setTimeout(() => {
+				setSubmitting(false);
+				alert(JSON.stringify(values, null, 2));
+			}, 500);
+			}}
+		>
+		{({ submitForm, isSubmitting }) => (
+		  <Form>
 			<Box sx={{ pb: 2 }}>
 				<Grid container alignItems={'center'} spacing={3}>
 					<Grid item xs={12} md={8}>
@@ -302,7 +333,8 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<FormControl fullWidth>
 							<InputLabel id="org-select-label">Organization</InputLabel>
-							<Select
+							<Field
+								component={Select}
 								labelId="org-select-label"
 								id="org"
 								required
@@ -311,13 +343,16 @@ export const Main = () => {
 								name="org"
 								value={formData.org}
 								onChange={handleOnChange}
+								validate={ (x) => {
+									console.log(x)
+								}}
 							>
 								{orgs.map((item, index) => (
 									<MenuItem key={index} value={item.id}>
 										{item.name}
 									</MenuItem>
 								))}
-							</Select>
+							</Field>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -349,35 +384,12 @@ export const Main = () => {
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
 					</Grid>
 
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!logoCID.logo && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
-							/>
-						)}
-						{logoCID.logo && (
-							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
-						)}
-					</Grid>
-
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!headerCID.header && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`}
-							/>
-						)}
-						{headerCID.header && (
-							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
-						)}
-					</Grid>
-
 					<Grid item xs={12} md={6}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
-							<Image />
+							{!logoCID.header && <Image />}
+							{logoCID.logo && (
+								<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+							)}
 							<Typography variant={'body2'} align={'center'}>
 								Pick a logo graphic
 							</Typography>
@@ -385,7 +397,10 @@ export const Main = () => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
-							<Image />
+							{!headerCID.header && <Image />}
+							{headerCID.header && (
+								<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+							)}
 							<Typography variant={'body2'} align={'center'}>
 								Pick a header graphic
 							</Typography>
@@ -564,11 +579,19 @@ export const Main = () => {
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
-				<Button variant={'contained'} fullWidth onClick={handleSubmit}>
+				<Button 
+					variant='contained' 
+					fullWidth 
+					disabled={isSubmitting}
+            		onClick={submitForm}
+				>
 					Create Campaign
 				</Button>
 			</Container>
-		</>
+			<Persist name="form-create-campaign" />
+			</Form>
+      )}
+    </Formik>
 	)
 }
 

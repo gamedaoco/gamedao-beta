@@ -33,6 +33,8 @@
 		"@mui/system": "^5.2.3",
 		"@mui/utils": "^5.2.3",
 		"@mui/x-data-grid": "^5.1.0",
+		"formik": "^2.2.9",
+		"formik-mui":"4.0.0-alpha.3",
 		"@pinata/sdk": "^1.1.23",
 		"@polkadot/api": "^6.11.1",
 		"@polkadot/api-contract": "^6.11.1",
@@ -56,7 +58,6 @@
 		"big.js": "^6.1.1",
 		"bignumber.js": "^9.0.1",
 		"change-case": "^4.1.2",
-		"formik": "^2.2.9",
 		"framer-motion": "^5.4.1",
 		"ipfs-http-client": "^54.0.2",
 		"markdown-it": "^12.2.0",
@@ -89,7 +90,8 @@
 		"three": "0.135.0",
 		"three-stdlib": "2.6.1",
 		"toformat": "^2.0.0",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"formik-persist": "1.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^16.11.11",
