@@ -16,6 +16,21 @@ services:
       LETSENCRYPT_HOST: ${LEHOST}
       LETSENCRYPT_EMAIL: ${LEMAIL}
 
+  subzero:
+    image: playzero/subzero:latest
+    container_name: "zero"
+    restart: always
+    ports:
+      - "9944:9944"
+      - "30333:30333"
+    user: "$UID:$GID"
+    command: [
+        "/usr/local/bin/subzero",
+        "--name", "subzero",
+        "--dev",
+        "--tmp"
+      ]
+
   app:
     image: gamedao/app:latest
     container_name: "app"
