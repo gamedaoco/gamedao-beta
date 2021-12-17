@@ -112,7 +112,7 @@ export const Footer = (props) => (
 									: theme.palette.grey[100],
 						}}
 					>
-						{`© 2019-${new Date().getFullYear()} `}GAMEDAO CO. Powered by ZERO.IO
+						{`© 2019-${new Date().getFullYear()} `}GAMEDAO AG, Vaduz, Liechtenstein. Powered by ZERO.IO
 					</Typography>
 				</Grid>
 
