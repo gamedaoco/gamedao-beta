@@ -24,6 +24,7 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Loader
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
@@ -97,7 +98,6 @@ export const Main = (props) => {
 	const [initialData, setInitialData] = useState()
 	const [persistedData, setPersistedData] = useState()
 	const [refresh, setRefresh] = useState(true)
-	const [formData, updateFormData] = useState()
 	const [logoCID, updateLogoCID] = useState({})
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
@@ -107,7 +107,6 @@ export const Main = (props) => {
 		const ls =  localStorage.getItem("gamedao-form-create-org")
 		if(ls){
 			setPersistedData(JSON.parse(ls))
-			return
 		}
 		setInitialData(random_state(account))
 	}, [account])
@@ -137,19 +136,11 @@ export const Main = (props) => {
 			})
 	}
 
-	// form fields
-
-	const handleOnChange = (e) => {
-		const { name, value } = e.target
-		return updateFormData({ ...formData, [name]: value })
-	}
-
 	//
 	// submit function
 	//
 
-	const handleSubmit = (e) => {
-		e.preventDefault()
+	const handleSubmit = async (values, form) => {
 		console.log('submit')
 		setLoading(true)
 
@@ -196,6 +187,7 @@ export const Main = (props) => {
 					setLoading(false)
 					setRefresh(true)
 					if (state) {
+						setStepperState(2)
 						result.events.forEach(({ event: { data, method, section } }) => {
 							if (section === 'gameDaoControl' && method === 'BodyCreated') {
 								navigate(`/app/organisations/${data[1].toHex()}`)
@@ -222,8 +214,14 @@ export const Main = (props) => {
 			const errors = {}
 			console.log(values)
 
-			if(!values.org || values.org === "") errors.org = "You must choose an Organization"
+			if(!values.name || values.name === "") errors.name = "You must choose a Name"
 
+			if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
+				errors.email = "Not a vaild email I'm afraid..."
+			}
+
+			if(!values.description || values.description === "") errors.description = "We need a short description"
+			console.log(errors)
 			return errors
 		},
 		//validationSchema: validationSchema,
@@ -254,7 +252,7 @@ export const Main = (props) => {
 		setLoading(false)
 	}, [account, refresh])
 
-	if (!formik.values) return <Loader text="Create Organisation" />
+	if (!formik.values) return <Loader text="Create Organization" />
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
@@ -263,7 +261,7 @@ export const Main = (props) => {
 					<Grid item xs={12} md={8}>
 						<Typography variant={'body1'}>Create Organization</Typography>
 						<Typography variant={'h3'}>
-							{formData.name || 'Untitled organization'}
+							{formik.values.name || 'Untitled organization'}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -314,7 +312,7 @@ export const Main = (props) => {
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.body)}>
 							<InputLabel id="body-select-label">Organizational Body</InputLabel>
 							<Select
 								label="Organizational Body"
@@ -332,10 +330,11 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.body || formik.touched.body}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.country)}>
 							<InputLabel id="country-select-label">Country</InputLabel>
 							<Select
 								label="Country"
@@ -353,27 +352,28 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.country || formik.touched.country}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
-								<Image16to9 sx={{  minWidth: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
+								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!logoCID.logo ? "Pick a " : ""}logo graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
-								<Image16to9 sx={{  minWidth: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
+								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!headerCID.header ? "Pick a " : ""}header graphic
@@ -461,7 +461,7 @@ export const Main = (props) => {
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.access)}>
 							<InputLabel id="member-select-label">Member Access Control</InputLabel>
 							<Select
 								labelId="member-select-label"
@@ -478,6 +478,7 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.access || formik.touched.access}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -537,6 +538,7 @@ export const Main = (props) => {
 						Create Organization
 					</Button>
 				)}
+				<Typography sx={{ color: "red" }}>{Object.keys(formik.errors).length !== 0 ? "errors present" : ""}</Typography>
 			</Container>
 		</form>
 	)

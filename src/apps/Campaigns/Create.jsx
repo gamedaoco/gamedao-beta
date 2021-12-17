@@ -25,10 +25,10 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Loader
 } from '../../components'
 
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
-import Loader from 'src/components/Loader'
 import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
 import { formatZero } from 'src/utils/helper'
 import config from '../../config'
@@ -122,7 +122,6 @@ export const Main = () => {
 		}
 		if(ls){
 			setPersistedData(JSON.parse(ls))
-			return
 		}
 		setInitialData(random_state(account))
 	}, [account])
@@ -145,8 +144,7 @@ export const Main = () => {
 	}
 
 	// submit
-	const handleSubmit = (values, { setSubmitting }) => {
-		e.preventDefault()
+	const handleSubmit = (values, form) => {
 		console.log('submit')
 		setLoading(true)
 
@@ -599,6 +597,7 @@ export const Main = () => {
 				>
 					Create Campaign
 				</Button>
+				<Typography sx={{ color: "red" }}>{Object.keys(formik.errors).length !== 0 ? "errors present" : ""}</Typography>
 			</Container>
 	</form>
 	)

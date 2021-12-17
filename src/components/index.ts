@@ -53,8 +53,8 @@ export { styled } from '@mui/material/styles'
 export { useTheme } from '@mui/material/styles'
 
 // custom
-export * as Loader from './Loader'
-export * as Message from './Message'
+export { default as Message } from './Message'
+export { default as Loader } from './Loader'
 export { Image16to9, Box16to9 } from './Image16to9'
 export { default as FormSectionHeadline } from './FormSectionHeadline'
 export { default as FileDropZone } from './FileDropZone'
