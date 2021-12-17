@@ -4,7 +4,7 @@ import { CircularProgress, Typography, Backdrop } from './index'
 export const Loader = ({ text }) => (
 	<Backdrop
 		sx={{
-			backgroundColor: 'transparent',
+			background: "transparent !important",
 			flexDirection: 'column',
 		}}
 		open={true}

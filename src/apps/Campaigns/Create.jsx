@@ -2,15 +2,9 @@ import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Formik, Field, Form } from 'formik'
-import { Persist } from 'formik-persist'
+import { useFormik } from 'formik';
 
-import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 
-import Loader from 'src/components/Loader'
-import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
-
-import { formatZero } from 'src/utils/helper'
 import {
 	Box,
 	Button,
@@ -32,15 +26,21 @@ import {
 	TextField,
 	Typography,
 } from '../../components'
+import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
+import Loader from 'src/components/Loader'
+import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
+import { formatZero } from 'src/utils/helper'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
+import { useBlock } from 'src/hooks/useBlock'
 import { useWallet } from 'src/context/Wallet'
 import { useBalance } from 'src/hooks/useBalance'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect';
 
 const dev = config.dev
 
@@ -60,7 +60,7 @@ const random_state = (account) => {
 	const governance = rnd(2) === 0 ? false : true
 	const cid = ''
 	const tags = ['dao', 'game']
-	const org = null
+	const org = ''
 
 	const admin = account.address
 
@@ -85,6 +85,7 @@ const random_state = (account) => {
 	}
 }
 
+
 export const Main = () => {
 	const { account, connected, signAndNotify } = useWallet()
 	const apiProvider = useApiProvider()
@@ -92,8 +93,16 @@ export const Main = () => {
 	const daoControl = useGameDaoControl()
 	const gov = useGameDaoGovernance()
 	const navigate = useNavigate()
+	const { updateBalance } = useBalance()
+	const blockheight = useBlock()
 
-	const [block, setBlock] = useState(0)
+	const [stepperState, setStepperState] = useState(0)
+	const [initialData, setInitialData] = useState()
+	const [logoCID, updateLogoCID] = useState({})
+	const [headerCID, updateHeaderCID] = useState({})
+	const [content, setContent] = useState()
+	const [loading, setLoading] = useState(false)
+	const [refresh, setRefresh] = useState(true)
 
 	// markdown editor & state
 	const [markdownValue, setMarkdownValue] = useState(defaultMarkdown)
@@ -102,97 +111,38 @@ export const Main = () => {
 		setMarkdownValue(text)
 	}
 
-	const [formData, updateFormData] = useState()
-	const [logoCID, updateLogoCID] = useState({})
-	const [headerCID, updateHeaderCID] = useState({})
-	const [content, setContent] = useState()
-	const { updateBalance } = useBalance()
-
-	const [loading, setLoading] = useState(false)
-	const [refresh, setRefresh] = useState(true)
-
-	const bestBlock = connected
-		? apiProvider.derive.chain.bestNumberFinalized
-		: apiProvider.derive.chain.bestNumber
-
 	useEffect(() => {
-		let unsubscribe = null
-		bestBlock((number) => {
-			setBlock(number.toNumber())
-		})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [bestBlock])
-
-	useEffect(() => {
-		//if (orgs.length === 0) return
-		const initial_state = random_state(account)
-		updateFormData(initial_state)
-	}, [account])
-
-	useEffect(() => {
-		if (!formData) return
-		if (dev) console.log('update content json')
-		const contentJSON = {
-			name: formData.name,
-			email: formData.email,
-			title: formData.title,
-			description: formData.description,
-			markdown: markdownValue,
-			...logoCID,
-			...headerCID,
+		const ls =  localStorage.getItem("gamedao-form-create-campaign")
+		const mls = localStorage.getItem("gamedao-markdown-create-campaign")
+		if(mls){
+			setMarkdownValue(mls)
 		}
-		if (dev) console.log(contentJSON)
-		setContent(contentJSON)
-	}, [logoCID, headerCID, formData])
-
-	useEffect(() => {
-		if (!refresh) return
-		if (dev) console.log('refresh signal')
-
-		// updateFormData(random_state(account))
-		setRefresh(false)
-		setLoading(false)
-	}, [account, refresh])
-
-	// handle form state
-	const handleOnChange = ({ target: { name, value } }) => {
-		updateFormData({ ...formData, [name]: value })
-	}
-
-	const handleCheckboxToggle = ({ target: { name } }) => {
-		updateFormData({ ...formData, [name]: !formData[name] })
-	}
+		if(ls){
+			setInitialData(JSON.parse(ls))
+			return
+		}
+		setInitialData(random_state(account))
+	}, [])
 
 	const onFileChange = (files, event) => {
 		const name = event.target.getAttribute("name")
-
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
 
 		pinFileToIPFS(files[0])
 			.then((cid) => {
-				console.log(name)
-				if (name === 'logo') {
-					updateLogoCID({ logo: cid })
-				}
-
-				if (name === 'header') {
-					updateHeaderCID({ header: cid })
-				}
-
+				if (name === 'logo') updateLogoCID({ logo: cid })
+				if (name === 'header') updateHeaderCID({ header: cid })
 				if (dev) console.log('file cid', `${gateway}${cid}`)
 			})
 			.catch((error) => {
 				console.log('Error uploading file: ', error)
 			})
+
 	}
 
 	// submit
-	const handleSubmit = (e) => {
+	const handleSubmit = (values, { setSubmitting }) => {
 		e.preventDefault()
 		console.log('submit')
 		setLoading(true)
@@ -203,7 +153,6 @@ export const Main = () => {
 				
 				const cid = await pinJSONToIPFS(content)
 				if (cid) {
-					// setContentCID(cid)
 					if (dev) console.log('json cid', `${gateway}${cid}`)
 					sendTX(cid)
 				}
@@ -212,21 +161,20 @@ export const Main = () => {
 			}
 		}
 
-		//
-
 		const sendTX = async (cid) => {
 			setLoading(true)
 			//                             day factor            a day in blocks   current block as offset
-			const campaign_end = parseFloat(formData.duration) * data.blocksPerDay + block // take current block as offset
+			const campaign_end = parseFloat(formik.values.duration) * data.blocksPerDay + blockheight // take current block as offset
+
 			const payload = [
-				formData.org,
-				formData.admin,
-				formData.title,
-				formatZero(formData.cap),
-				formatZero(formData.deposit),
+				formik.values.org,
+				formik.values.admin,
+				formik.values.title,
+				formatZero(formik.values.cap),
+				formatZero(formik.values.deposit),
 				campaign_end,
-				formData.protocol,
-				formData.governance === true ? 1 : 0,
+				formik.values.protocol,
+				formik.values.governance === true ? 1 : 0,
 				cid,
 				'PLAY',
 				'Play Coin',
@@ -247,6 +195,7 @@ export const Main = () => {
 					updateBalance()
 
 					if (state) {
+						setStepperState(2)
 						result.events.forEach(({ event: { data, method, section } }) => {
 							if (section === 'gameDaoCrowdfunding' && method === 'CampaignCreated') {
 								navigate(`/app/campaigns/${data[0].toHex()}`)
@@ -264,53 +213,61 @@ export const Main = () => {
 		getCID()
 	}
 
-	const logoGraphicInputRef = React.useRef(null)
-	const headerGraphicInputRef = React.useRef(null)
+	
+	const formik = useFormik({
+		enableReinitialize: true,
+		initialValues: initialData,
+		validate: (values) => {
+			setStepperState(1)
+			console.log(values)
+		},
+		//validationSchema: validationSchema,
+		onSubmit: handleSubmit
+	});
 
-	if (!daoControl || !daoControl.bodies) return <Loader text="" />
-	if (!formData) return null
 
-	const nonce = daoControl.nonce
+	// save content json and form values to localstorage
+	useDebouncedEffect(() => {
+		if (!formik.values) return
+		if (dev) console.log('update content json')
+		const contentJSON = {
+			name: formik.values.name,
+			email: formik.values.email,
+			title: formik.values.title,
+			description: formik.values.description,
+			markdown: markdownValue,
+			...logoCID,
+			...headerCID,
+		}
+		if (dev) console.log(contentJSON)
+		setContent(contentJSON)
+		localStorage.setItem("gamedao-form-create-campaign", JSON.stringify(formik.values))
+		localStorage.setItem("gamedao-markdown-create-campaign", markdownValue)
+	}, [logoCID, headerCID, formik.values, markdownValue], 2000)
+
+	useEffect(() => {
+		if (!refresh) return
+		if (dev) console.log('refresh signal')
+		setRefresh(false)
+		setLoading(false)
+	}, [account, refresh])
+
+	if (!daoControl || !daoControl.bodies || !formik.values ) return <Loader text="Create Campaign" />
+
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
-	//const initialValues = dataPersisted ? 
-
 	return (
-		<Formik
-			initialValues={{
-				email: '',
-				password: '',
-			}}
-			validate={(values) => {
-			const errors = {};
-			if (!values.email) {
-				errors.email = 'Required';
-			} else if (
-				!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-			) {
-				errors.email = 'Invalid email address';
-			}
-			return errors;
-			}}
-			onSubmit={(values, { setSubmitting }) => {
-			setTimeout(() => {
-				setSubmitting(false);
-				alert(JSON.stringify(values, null, 2));
-			}, 500);
-			}}
-		>
-		{({ submitForm, isSubmitting }) => (
-		  <Form>
+		<>
 			<Box sx={{ pb: 2 }}>
 				<Grid container alignItems={'center'} spacing={3}>
 					<Grid item xs={12} md={8}>
 						<Typography variant={'body1'}>Create Campaign</Typography>
 						<Typography variant={'h3'}>
-							{formData.title || 'Untitled campaign'}
+							{formik.values.title || 'Untitled campaign'}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<Stepper orientation={'horizontal'}>
+						<Stepper activeStep={stepperState} orientation={'horizontal'}>
 							<Step>
 								<StepLabel>Enter data</StepLabel>
 							</Step>
@@ -334,7 +291,7 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<FormControl fullWidth>
 							<InputLabel id="org-select-label">Organization</InputLabel>
-							<Field
+							<Select
 								component={Select}
 								labelId="org-select-label"
 								id="org"
@@ -342,19 +299,21 @@ export const Main = () => {
 								label="Organization"
 								placeholder="Organization"
 								name="org"
-								value={formData.org}
-								onChange={handleOnChange}
 								validate={ (x) => {
 									console.log(x)
 									return !!x
 								}}
+								value={formik.values.org}
+								onChange={formik.handleChange}
+								error={formik.touched.org && Boolean(formik.errors.org)}
+								helperText={formik.touched.org && formik.errors.org}
 							>
 								{orgs.map((item, index) => (
 									<MenuItem key={index} value={item.id}>
 										{item.name}
 									</MenuItem>
 								))}
-							</Field>
+							</Select>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -364,8 +323,10 @@ export const Main = () => {
 							label="Campaign name"
 							placeholder="Campaign name"
 							name="title"
-							value={formData.title}
-							onChange={handleOnChange}
+							value={formik.values.title}
+							onChange={formik.handleChange}
+							error={formik.touched.title && Boolean(formik.errors.title)}
+							helperText={formik.touched.title && formik.errors.title}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -374,11 +335,13 @@ export const Main = () => {
 							multiline
 							minRows={5}
 							required
-							value={formData.description}
 							label="Campaign Description"
 							placeholder="Tell us more about your idea..."
 							name="description"
-							onChange={handleOnChange}
+							value={formik.values.description}
+							onChange={formik.handleChange}
+							error={formik.touched.description && Boolean(formik.errors.description)}
+							helperText={formik.touched.description && formik.errors.description}
 						/>
 					</Grid>
 
@@ -386,22 +349,22 @@ export const Main = () => {
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
 					</Grid>
 
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
-								<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!logoCID.logo ? "Pick a " : ""}logo graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
-								<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!headerCID.header ? "Pick a " : ""}header graphic
@@ -433,8 +396,10 @@ export const Main = () => {
 							label="Name"
 							placeholder="Name"
 							name="name"
-							value={formData.name}
-							onChange={handleOnChange}
+							value={formik.values.name}
+							onChange={formik.handleChange}
+							error={formik.touched.name && Boolean(formik.errors.name)}
+							helperText={formik.touched.name && formik.errors.name}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -443,8 +408,10 @@ export const Main = () => {
 							label="Email"
 							placeholder="Email"
 							name="email"
-							value={formData.email}
-							onChange={handleOnChange}
+							value={formik.values.email}
+							onChange={formik.handleChange}
+							error={formik.touched.email && Boolean(formik.errors.email)}
+							helperText={formik.touched.email && formik.errors.email}
 						/>
 					</Grid>
 
@@ -460,9 +427,11 @@ export const Main = () => {
 							label="Admin Account"
 							placeholder="Admin"
 							name="admin"
-							value={formData.admin}
-							onChange={handleOnChange}
 							required
+							value={formik.values.admin}
+							onChange={formik.handleChange}
+							error={formik.touched.admin && Boolean(formik.errors.admin)}
+							helperText={formik.touched.admin && formik.errors.admin}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -475,8 +444,10 @@ export const Main = () => {
 								required
 								name="usage"
 								placeholder="Usage"
-								value={formData.usage}
-								onChange={handleOnChange}
+								value={formik.values.usage}
+								onChange={formik.handleChange}
+								error={formik.touched.usage && Boolean(formik.errors.usage)}
+								helperText={formik.touched.usage && formik.errors.usage}
 							>
 								{data.project_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -498,8 +469,10 @@ export const Main = () => {
 								name="protocol"
 								label={'protocol'}
 								placeholder="Protocol"
-								value={formData.protocol}
-								onChange={handleOnChange}
+								value={formik.values.protocol}
+								onChange={formik.handleChange}
+								error={formik.touched.protocol && Boolean(formik.errors.protocol)}
+								helperText={formik.touched.protocol && formik.errors.protocol}
 							>
 								{data.protocol_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -516,8 +489,10 @@ export const Main = () => {
 							label="Deposit (GAME)"
 							placeholder="Deposit"
 							name="deposit"
-							value={formData.deposit}
-							onChange={handleOnChange}
+							value={formik.values.deposit}
+							onChange={formik.handleChange}
+							error={formik.touched.deposit && Boolean(formik.errors.deposit)}
+							helperText={formik.touched.deposit && formik.errors.deposit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -526,8 +501,10 @@ export const Main = () => {
 							label="Funding Target (PLAY)"
 							placeholder="Cap"
 							name="cap"
-							value={formData.cap}
-							onChange={handleOnChange}
+							value={formik.values.cap}
+							onChange={formik.handleChange}
+							error={formik.touched.cap && Boolean(formik.errors.cap)}
+							helperText={formik.touched.cap && formik.errors.cap}
 						/>
 					</Grid>
 
@@ -539,11 +516,12 @@ export const Main = () => {
 								id="duration"
 								required
 								label="Campaign Duration"
-								options={data.project_durations}
 								placeholder="Campaign Duration"
 								name="duration"
-								value={formData.duration}
-								onChange={handleOnChange}
+								value={formik.values.duration}
+								onChange={formik.handleChange}
+								error={formik.touched.duration && Boolean(formik.errors.duration)}
+								helperText={formik.touched.duration && formik.errors.duration}
 							>
 								{data.project_durations.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -560,8 +538,10 @@ export const Main = () => {
 							control={
 								<Checkbox
 									name="governance"
-									checked={formData.governance}
-									onChange={handleCheckboxToggle}
+									value={formik.values.governance}
+									onChange={formik.handleChange}
+									error={formik.touched.governance && Boolean(formik.errors.governance)}
+									helperText={formik.touched.governance && formik.errors.governance}
 								/>
 							}
 						/>
@@ -572,8 +552,10 @@ export const Main = () => {
 							control={
 								<Checkbox
 									name="accept"
-									checked={formData.accept}
-									onChange={handleCheckboxToggle}
+									value={formik.values.accept}
+									onChange={formik.handleChange}
+									error={formik.touched.accept && Boolean(formik.errors.accept)}
+									helperText={formik.touched.accept && formik.errors.accept}
 								/>
 							}
 						/>
@@ -584,16 +566,13 @@ export const Main = () => {
 				<Button 
 					variant='contained' 
 					fullWidth 
-					disabled={isSubmitting}
-            		onClick={submitForm}
+					//disabled={isSubmitting}
+            		onClick={formik.handleSubmit}
 				>
 					Create Campaign
 				</Button>
 			</Container>
-			<Persist name="form-create-campaign" />
-			</Form>
-      )}
-    </Formik>
+	</>
 	)
 }
 

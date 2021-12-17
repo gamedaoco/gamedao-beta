@@ -120,7 +120,7 @@ export const Main = (props) => {
 
 	// handle file uploads to ipfs
 	const onFileChange = (files, event) => {
-		const name = event.target.name
+		const name = event.target.getAttribute("name")
 
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
@@ -329,7 +329,7 @@ export const Main = (props) => {
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
-								<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
+								<Image16to9 sx={{  minWidth: "200px" }} alt={formData.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!logoCID.logo ? "Pick a " : ""}logo graphic
@@ -340,22 +340,14 @@ export const Main = (props) => {
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
-								<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
+								<Image16to9 sx={{  minWidth: "200px" }} alt={formData.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
 							{!headerCID.header ? "Pick a " : ""}header graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
-					<Grid item xs={12} md={6}>
-						<FileDropZone name="header" onDroppedFiles={onFileChange}>
-							<Image />
-							<Typography variant={'body2'} align={'center'}>
-								Pick a header graphic
-							</Typography>
-						</FileDropZone>
-					</Grid>
-					
+
 					<Grid item xs={12}>
 						<FormSectionHeadline>Meta Information</FormSectionHeadline>
 					</Grid>

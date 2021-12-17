@@ -7554,11 +7554,6 @@ form-data@^3.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-formik-mui@4.0.0-alpha.3:
-  version "4.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/formik-mui/-/formik-mui-4.0.0-alpha.3.tgz#faca4b439c0653a8a33be97772da50709f0aa8c8"
-  integrity sha512-a696XpNIYulBd3LcwPt1+3BqtArdA/1hZryxMXT9azwucNwMcnnpVMR10yn6Qycd7eT//qv8V+r1XTBn0X8S1w==
-
 formik-persist@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/formik-persist/-/formik-persist-1.1.0.tgz#fbd2f11db4cb882a0c6f83646028f603bb43511d"

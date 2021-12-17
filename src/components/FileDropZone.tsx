@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material'
 import React, { DragEvent } from 'react'
-import { Paper } from '../components'
+import { Paper, Box } from '../components'
 
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
@@ -75,7 +75,7 @@ export const FileDropZone: React.FC<
 				}}
 				component={'div'}
 			>
-				<div style={{ pointerEvents: "none" }}>{props.children}</div>
+				<Box style={{ width: '100%', pointerEvents: 'none' }}>{props.children}</Box>
 			</Paper>
 		</>
 	)

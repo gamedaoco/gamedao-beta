@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import * as ReactDOM from 'react-dom';
 import MdEditor from 'react-markdown-editor-lite';
 import MarkdownIt from 'markdown-it';
@@ -43,18 +43,18 @@ async function onImageUpload(file) {
 
 export const MarkdownEditor = ({onChange, value}) => {
   const { darkmodeEnabled } = useThemeState()
-  return (
-    <MdEditor 
-      value={value}
-      style={{ height: '500px', zIndex: 10000 }} 
-      id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
-      htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
-      markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}
-      onImageUpload={onImageUpload}
-      onChange={onChange}
-      renderHTML={text => mdParser.render(text)}
-    />
-  );
+  return useMemo( () => { 
+    return <MdEditor 
+        value={value}
+        style={{ height: '500px', zIndex: 10000 }} 
+        id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
+        htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
+        markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}
+        onImageUpload={onImageUpload}
+        onChange={onChange}
+        renderHTML={text => mdParser.render(text)}
+      />
+  }, [value]);
 };
 
 // https://github.com/HarryChen0506/react-markdown-editor-lite/blob/master/docs/configure.md
