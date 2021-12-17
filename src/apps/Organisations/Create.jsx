@@ -221,7 +221,8 @@ export const Main = (props) => {
 			}
 
 			if(!values.description || values.description === "") errors.description = "We need a short description"
-			console.log(errors)
+			
+			if(values.treasury === values.controller) errors.treasury = "Treasury Account needs to differ from Controller Account!"
 			return errors
 		},
 		//validationSchema: validationSchema,
