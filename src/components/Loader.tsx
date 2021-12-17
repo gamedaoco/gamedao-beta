@@ -21,7 +21,7 @@ export const Loader = ({ text }) => (
 			}}
 			color="primary"
 		/>
-		<Typography variant="subtitle2">{text || ''}</Typography>
+		<Typography sx={{ marginLeft: '267px' }} variant="subtitle2">{text || ''}</Typography>
 	</Backdrop>
 )
 

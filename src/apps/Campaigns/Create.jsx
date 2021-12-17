@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik';
 
-
 import {
 	Box,
 	Button,
@@ -14,6 +13,7 @@ import {
 	FormControl,
 	FormControlLabel,
 	FormSectionHeadline,
+	FormHelperText,
 	Grid,
 	Image16to9,
 	InputLabel,
@@ -26,6 +26,7 @@ import {
 	TextField,
 	Typography,
 } from '../../components'
+
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import Loader from 'src/components/Loader'
 import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
@@ -98,6 +99,7 @@ export const Main = () => {
 
 	const [stepperState, setStepperState] = useState(0)
 	const [initialData, setInitialData] = useState()
+	const [persistedData, setPersistedData] = useState()
 	const [logoCID, updateLogoCID] = useState({})
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
@@ -112,17 +114,18 @@ export const Main = () => {
 	}
 
 	useEffect(() => {
+		if (!account) return
 		const ls =  localStorage.getItem("gamedao-form-create-campaign")
 		const mls = localStorage.getItem("gamedao-markdown-create-campaign")
 		if(mls){
 			setMarkdownValue(mls)
 		}
 		if(ls){
-			setInitialData(JSON.parse(ls))
+			setPersistedData(JSON.parse(ls))
 			return
 		}
 		setInitialData(random_state(account))
-	}, [])
+	}, [account])
 
 	const onFileChange = (files, event) => {
 		const name = event.target.getAttribute("name")
@@ -216,10 +219,40 @@ export const Main = () => {
 	
 	const formik = useFormik({
 		enableReinitialize: true,
-		initialValues: initialData,
+		initialValues: persistedData ? persistedData : initialData,
+		touched: (values) => {
+			const touched = {}
+
+			if(values.title && values.title !== "" ) touched.title = "The Start of Something Wonderful!"
+
+			return touched
+		},
 		validate: (values) => {
 			setStepperState(1)
+			const errors = {}
 			console.log(values)
+
+			if(!values.org || values.org === "") errors.org = "You must choose an Organization"
+
+			if(values.description === "Awesome Short Description") errors.description = "You can do better than that!"
+
+			if(!values.title || values.title === "" ) errors.title = "Please Enter a Campaign Title!"
+
+			if(!values.name || values.name === "" ) errors.name = "Please Enter a Name!"
+			if(values.name === "Dao Jones") errors.name = "...I dont think thats your name"
+
+			if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
+				errors.email = "Not a vaild email I'm afraid..."
+			}
+
+			if(values.cap === "0" || values.cap === ""){
+				errors.cap = "Your funding Target must be bigger than 0"
+			}
+			if(isNaN(parseInt(values.cap))) errors.cap = "Funding target must be numerical"
+
+			if(!values.accept) errors.accept = "You must accept the Terms"
+
+			return errors
 		},
 		//validationSchema: validationSchema,
 		onSubmit: handleSubmit
@@ -257,16 +290,16 @@ export const Main = () => {
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
 	return (
-		<>
+		<form onSubmit={formik.handleSubmit}>
 			<Box sx={{ pb: 2 }}>
 				<Grid container alignItems={'center'} spacing={3}>
-					<Grid item xs={12} md={8}>
+					<Grid item xs={12} md={7}>
 						<Typography variant={'body1'}>Create Campaign</Typography>
 						<Typography variant={'h3'}>
 							{formik.values.title || 'Untitled campaign'}
 						</Typography>
 					</Grid>
-					<Grid item xs={12} md={4}>
+					<Grid item xs={12} md={5}>
 						<Stepper activeStep={stepperState} orientation={'horizontal'}>
 							<Step>
 								<StepLabel>Enter data</StepLabel>
@@ -289,7 +322,7 @@ export const Main = () => {
 						</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.org)}>
 							<InputLabel id="org-select-label">Organization</InputLabel>
 							<Select
 								component={Select}
@@ -299,14 +332,8 @@ export const Main = () => {
 								label="Organization"
 								placeholder="Organization"
 								name="org"
-								validate={ (x) => {
-									console.log(x)
-									return !!x
-								}}
 								value={formik.values.org}
 								onChange={formik.handleChange}
-								error={formik.touched.org && Boolean(formik.errors.org)}
-								helperText={formik.touched.org && formik.errors.org}
 							>
 								{orgs.map((item, index) => (
 									<MenuItem key={index} value={item.id}>
@@ -314,6 +341,7 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.org || formik.touched.org}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -325,8 +353,8 @@ export const Main = () => {
 							name="title"
 							value={formik.values.title}
 							onChange={formik.handleChange}
-							error={formik.touched.title && Boolean(formik.errors.title)}
-							helperText={formik.touched.title && formik.errors.title}
+							error={Boolean(formik.errors.title)}
+							helperText={formik.errors.title || formik.touched.title}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -340,8 +368,8 @@ export const Main = () => {
 							name="description"
 							value={formik.values.description}
 							onChange={formik.handleChange}
-							error={formik.touched.description && Boolean(formik.errors.description)}
-							helperText={formik.touched.description && formik.errors.description}
+							error={Boolean(formik.errors.description)}
+							helperText={formik.errors.description || formik.touched.description}
 						/>
 					</Grid>
 
@@ -398,8 +426,8 @@ export const Main = () => {
 							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
-							error={formik.touched.name && Boolean(formik.errors.name)}
-							helperText={formik.touched.name && formik.errors.name}
+							error={Boolean(formik.errors.name)}
+							helperText={formik.errors.name || formik.touched.name}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -410,8 +438,8 @@ export const Main = () => {
 							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
-							error={formik.touched.email && Boolean(formik.errors.email)}
-							helperText={formik.touched.email && formik.errors.email}
+							error={Boolean(formik.errors.email)}
+							helperText={formik.errors.email || formik.touched.email}
 						/>
 					</Grid>
 
@@ -430,8 +458,8 @@ export const Main = () => {
 							required
 							value={formik.values.admin}
 							onChange={formik.handleChange}
-							error={formik.touched.admin && Boolean(formik.errors.admin)}
-							helperText={formik.touched.admin && formik.errors.admin}
+							error={Boolean(formik.errors.admin)}
+							helperText={formik.errors.admin || formik.touched.admin}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -446,8 +474,8 @@ export const Main = () => {
 								placeholder="Usage"
 								value={formik.values.usage}
 								onChange={formik.handleChange}
-								error={formik.touched.usage && Boolean(formik.errors.usage)}
-								helperText={formik.touched.usage && formik.errors.usage}
+								error={Boolean(formik.errors.usage)}
+								helperText={formik.errors.usage || formik.touched.usage}
 							>
 								{data.project_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -459,7 +487,7 @@ export const Main = () => {
 					</Grid>
 
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.protocol)}>
 							<InputLabel id="protocol-select-label">Protocol</InputLabel>
 							<Select
 								labelId="protocol-select-label"
@@ -471,8 +499,6 @@ export const Main = () => {
 								placeholder="Protocol"
 								value={formik.values.protocol}
 								onChange={formik.handleChange}
-								error={formik.touched.protocol && Boolean(formik.errors.protocol)}
-								helperText={formik.touched.protocol && formik.errors.protocol}
 							>
 								{data.protocol_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -480,6 +506,7 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.protocol || formik.touched.protocol}</FormHelperText>
 						</FormControl>
 					</Grid>
 
@@ -491,8 +518,8 @@ export const Main = () => {
 							name="deposit"
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
-							error={formik.touched.deposit && Boolean(formik.errors.deposit)}
-							helperText={formik.touched.deposit && formik.errors.deposit}
+							error={Boolean(formik.errors.deposit)}
+							helperText={formik.errors.deposit || formik.touched.deposit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -503,13 +530,13 @@ export const Main = () => {
 							name="cap"
 							value={formik.values.cap}
 							onChange={formik.handleChange}
-							error={formik.touched.cap && Boolean(formik.errors.cap)}
-							helperText={formik.touched.cap && formik.errors.cap}
+							error={Boolean(formik.errors.cap)}
+							helperText={formik.errors.cap || formik.touched.cap}
 						/>
 					</Grid>
 
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.duration)}>
 							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
 							<Select
 								labelId="duration-select-label"
@@ -520,8 +547,6 @@ export const Main = () => {
 								name="duration"
 								value={formik.values.duration}
 								onChange={formik.handleChange}
-								error={formik.touched.duration && Boolean(formik.errors.duration)}
-								helperText={formik.touched.duration && formik.errors.duration}
 							>
 								{data.project_durations.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -529,10 +554,12 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>{formik.errors.duration || formik.touched.duration}</FormHelperText>
 						</FormControl>
 					</Grid>
 
 					<Grid item xs={12}>
+					<FormControl error={Boolean(formik.errors.governance)}>
 						<FormControlLabel
 							label="DAO Governance"
 							control={
@@ -540,39 +567,40 @@ export const Main = () => {
 									name="governance"
 									value={formik.values.governance}
 									onChange={formik.handleChange}
-									error={formik.touched.governance && Boolean(formik.errors.governance)}
-									helperText={formik.touched.governance && formik.errors.governance}
 								/>
 							}
 						/>
+        				<FormHelperText>{formik.errors.governance || formik.touched.governance}</FormHelperText>
+      				</FormControl>
 					</Grid>
 					<Grid item xs={12}>
+					<FormControl error={Boolean(formik.errors.accept)}>
 						<FormControlLabel
 							label="I agree to the Terms and Conditions"
 							control={
 								<Checkbox
+									required
 									name="accept"
 									value={formik.values.accept}
 									onChange={formik.handleChange}
-									error={formik.touched.accept && Boolean(formik.errors.accept)}
-									helperText={formik.touched.accept && formik.errors.accept}
 								/>
 							}
 						/>
+        				<FormHelperText>{formik.errors.accept || formik.touched.accept}</FormHelperText>
+      				</FormControl>
 					</Grid>
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
 				<Button 
+					type="submit"
 					variant='contained' 
 					fullWidth 
-					//disabled={isSubmitting}
-            		onClick={formik.handleSubmit}
 				>
 					Create Campaign
 				</Button>
 			</Container>
-	</>
+	</form>
 	)
 }
 
