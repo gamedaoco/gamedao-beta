@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { useNavigate } from 'react-router'
+import { FormSectionHeadline, MarkdownEditor } from 'src/components'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -45,8 +46,8 @@ const random_state = (account, campaigns = []) => {
 	// voting without withdrawal ==> amount == 0
 
 	const id = campaigns[campaigns.length]
-	const purpose = 'nice purpose'
-	const description = 'cool description'
+	const purpose = ''
+	const description = ''
 	const cid = ''
 	const amount = rnd(10) * 100
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
@@ -141,6 +142,14 @@ export const Main = ({ blockNumber }) => {
 		const update = {
 			...formData,
 			[name]: value,
+		}
+		updateFormData(update)
+	}
+
+	const handleMarkdownChange = ({ html, text }) => {
+		const update = {
+			...formData,
+			['description']: text,
 		}
 		updateFormData(update)
 	}
@@ -285,14 +294,12 @@ export const Main = ({ blockNumber }) => {
 								/>
 							</Grid>
 							<Grid item xs={12}>
-								<TextField
-									multiline
-									fullWidth
-									label={'Short Description'}
+								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
+									Content Description
+								</FormSectionHeadline>
+								<MarkdownEditor
 									value={formData.description}
-									placeholder={'Tell us more'}
-									onChange={handleOnChange}
-									name={'description'}
+									onChange={handleMarkdownChange}
 								/>
 							</Grid>
 							<Grid item xs={12} md={3}>
@@ -301,7 +308,7 @@ export const Main = ({ blockNumber }) => {
 									<MuiSelect
 										label={'Proposal Type'}
 										name={'proposal_type'}
-										value={formData.proposal_type}
+										value={`${formData.proposal_type}`}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -319,7 +326,7 @@ export const Main = ({ blockNumber }) => {
 									<MuiSelect
 										label={'Voting Type'}
 										name={'voting_type'}
-										value={formData.voting_type}
+										value={`${formData.voting_type}`}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -337,7 +344,7 @@ export const Main = ({ blockNumber }) => {
 									<MuiSelect
 										label={'Collateral Type'}
 										name={'collateral_types'}
-										value={formData.collateral_type}
+										value={`${formData.collateral_type}`}
 										onChange={handleOnChange}
 										fullWidth
 									>

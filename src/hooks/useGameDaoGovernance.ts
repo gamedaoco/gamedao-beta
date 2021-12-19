@@ -20,6 +20,7 @@ type GameDaoGovernanceState = {
 	owners: object
 	proposalSimpleVotes: object
 	proposalStates: object
+	proposalVoters: object
 }
 
 async function queryProposalsCount(apiProvider: ApiPromise): Promise<number> {
@@ -184,6 +185,24 @@ async function queryProposals(apiProvider: ApiPromise, hashes: any): Promise<any
 	return mapping
 }
 
+async function queryProposalVoters(apiProvider: ApiPromise, hashes: any): Promise<any> {
+	const [error, data] = await to(apiProvider.query.gameDaoGovernance.proposalVoters.multi(hashes))
+
+	if (error) {
+		console.error(error, hashes)
+		createErrorNotification('Error while querying the gameDaoGovernance queryProposalVoters')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
 export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 	const [lastProposalsCount, setLastProposalsCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
@@ -265,6 +284,10 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 						apiProvider,
 						keys.filter((hash) => !(governanceState.proposalStates ?? {})[hash])
 					),
+					queryProposalVoters(
+						apiProvider,
+						keys.filter((hash) => !(governanceState.proposalVoters ?? {})[hash])
+					),
 				])
 
 				setIsDataLoading(false)
@@ -293,6 +316,10 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 						proposals: {
 							...(governanceState.proposals ?? {}),
 							...(data[5] ?? {}),
+						},
+						proposalVoters: {
+							...(governanceState.proposalVoters ?? {}),
+							...(data[6] ?? {}),
 						},
 					})
 				}
