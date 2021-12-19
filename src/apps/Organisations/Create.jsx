@@ -214,18 +214,31 @@ export const Main = (props) => {
 			const errors = {}
 			console.log(values)
 
-			if (!values.name || values.name === '') errors.name = 'You must choose a Name'
+			if(new Blob([values.name]).size > 48) errors.name = 'Please enter a maximum of 48 bytes.'
+			if(!values.name || values.name === "") errors.name = "You must choose a Name"
 
-			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-				errors.email = "Not a vaild email I'm afraid..."
+			if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
+				errors.email = "Please enter a valid e-mail address."
 			}
 
-			if (!values.description || values.description === '')
-				errors.description = 'We need a short description'
+			if(values.website !== '' && !/^(ftp|http|https):\/\/[^ "]+$/i.test(values.website)){
+				errors.website = "Please enter a valid URL."
+			}
 
-			if (values.treasury === values.controller)
-				errors.treasury = 'Treasury Account needs to differ from Controller Account!'
-			return errors
+			if(!values.member_limit || values.member_limit === "" ) errors.member_limit = "Please enter the maximum number of members."
+			if(values.member_limit && isNaN(parseInt(values.member_limit))) errors.member_limit = "Needs to be a number."
+
+			if(!values.fee || values.fee === "" ) errors.fee = "Please enter the membership fee."
+			if(values.fee && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.fee)) errors.fee = "Needs to be a number."
+
+			if(!values.description || values.description === "") errors.description = "We need a short description"
+			
+			if(values.controller.length !== 47) errors.controller = "Not a valid Account Address!"
+
+			if(values.treasury.length !== 47) errors.treasury = "Not a valid Account Address!"
+			if(values.treasury === values.controller) errors.treasury = "Treasury Account needs to differ from Controller Account!"
+
+      return errors
 		},
 		//validationSchema: validationSchema,
 		onSubmit: handleSubmit,
@@ -301,8 +314,9 @@ export const Main = (props) => {
 							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.name)}
-							helperText={formik.errors.name || formik.touched.name}
+							onBlur={formik.handleBlur}
+							error={formik.touched.name && Boolean(formik.errors.name)}
+							helperText={formik.touched.name && formik.errors.name}
 							required
 						/>
 					</Grid>
@@ -314,12 +328,13 @@ export const Main = (props) => {
 							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.email)}
-							helperText={formik.errors.email || formik.touched.email}
+							onBlur={formik.handleBlur}
+							error={formik.touched.email && Boolean(formik.errors.email)}
+							helperText={formik.touched.email && formik.errors.email}
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth error={Boolean(formik.errors.body)}>
+						<FormControl fullWidth error={formik.touched.body && Boolean(formik.errors.body)}>
 							<InputLabel id="body-select-label">Organizational Body</InputLabel>
 							<Select
 								label="Organizational Body"
@@ -329,6 +344,7 @@ export const Main = (props) => {
 								id="body"
 								value={formik.values.body}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 								required
 							>
 								{data.dao_bodies.map((item) => (
@@ -337,13 +353,13 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>
-								{formik.errors.body || formik.touched.body}
-							</FormHelperText>
-						</FormControl>
+
+							<FormHelperText>{formik.touched.body && formik.errors.body}</FormHelperText>
+
+</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth error={Boolean(formik.errors.country)}>
+						<FormControl fullWidth error={formik.touched.country && Boolean(formik.errors.country)}>
 							<InputLabel id="country-select-label">Country</InputLabel>
 							<Select
 								label="Country"
@@ -353,6 +369,7 @@ export const Main = (props) => {
 								id="country"
 								value={formik.values.country}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 								required
 							>
 								{data.countries.map((item) => (
@@ -361,10 +378,9 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>
-								{formik.errors.country || formik.touched.country}
-							</FormHelperText>
-						</FormControl>
+
+							<FormHelperText>{formik.touched.country && formik.errors.country}</FormHelperText>
+</FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
@@ -415,8 +431,9 @@ export const Main = (props) => {
 							value={formik.values.description}
 							placeholder="Tell us more"
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.description)}
-							helperText={formik.errors.description || formik.touched.description}
+							onBlur={formik.handleBlur}
+							error={formik.touched.description && Boolean(formik.errors.description)}
+							helperText={formik.touched.description && formik.errors.description}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -428,8 +445,9 @@ export const Main = (props) => {
 							name="website"
 							value={formik.values.website}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.website)}
-							helperText={formik.errors.website || formik.touched.website}
+							onBlur={formik.handleBlur}
+							error={formik.touched.website && Boolean(formik.errors.website)}
+							helperText={formik.touched.website && formik.errors.website}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -441,8 +459,9 @@ export const Main = (props) => {
 							name="repo"
 							value={formik.values.repo}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.repo)}
-							helperText={formik.errors.repo || formik.touched.repo}
+							onBlur={formik.handleBlur}
+							error={formik.touched.repo && Boolean(formik.errors.repo)}
+							helperText={formik.touched.repo && formik.errors.repo}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -461,8 +480,9 @@ export const Main = (props) => {
 							}
 							onChange={formik.handleChange}
 							required
-							error={Boolean(formik.errors.controller)}
-							helperText={formik.errors.controller || formik.touched.controller}
+							onBlur={formik.handleBlur}
+							error={formik.touched.controller && Boolean(formik.errors.controller)}
+							helperText={formik.touched.controller && formik.errors.controller}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -475,12 +495,14 @@ export const Main = (props) => {
 							value={formik.values.treasury}
 							onChange={formik.handleChange}
 							required
-							error={Boolean(formik.errors.treasury)}
-							helperText={formik.errors.treasury || formik.touched.treasury}
+							onBlur={formik.handleBlur}
+							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
+							helperText={formik.touched.treasury && formik.errors.treasury}
 						/>
+						<Typography variant="caption">Note: The treasury account may not be the same as the controller account.</Typography>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth error={Boolean(formik.errors.access)}>
+						<FormControl fullWidth error={formik.touched.access && Boolean(formik.errors.access)}>
 							<InputLabel id="member-select-label">Member Access Control</InputLabel>
 							<Select
 								labelId="member-select-label"
@@ -488,6 +510,7 @@ export const Main = (props) => {
 								label="Member Access Control"
 								name="access"
 								value={formik.values.access}
+								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 								required
 							>
@@ -497,9 +520,8 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>
-								{formik.errors.access || formik.touched.access}
-							</FormHelperText>
+
+							<FormHelperText>{formik.touched.access && formik.errors.access}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -512,12 +534,13 @@ export const Main = (props) => {
 							onChange={formik.handleChange}
 							fullWidth
 							required
-							error={Boolean(formik.errors.member_limit)}
-							helperText={formik.errors.member_limit || formik.touched.member_limit}
+							onBlur={formik.handleBlur}
+							error={formik.touched.member_limit && Boolean(formik.errors.member_limit)}
+							helperText={formik.touched.member_limit && formik.errors.member_limit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth error={Boolean(formik.errors.fee_model)}>
+						<FormControl fullWidth error={formik.touched.fee_model && Boolean(formik.errors.fee_model)}>
 							<InputLabel id="fee_model-label">Fee Model</InputLabel>
 							<Select
 								labelId="fee_model-label"
@@ -525,6 +548,7 @@ export const Main = (props) => {
 								label="Fee Model"
 								name="fee_model"
 								value={formik.values.fee_model}
+								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 								required
 							>
@@ -534,9 +558,8 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>
-								{formik.errors.fee_model || formik.touched.fee_model}
-							</FormHelperText>
+
+							<FormHelperText>{formik.touched.fee_model && formik.touched.fee_model}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -549,8 +572,9 @@ export const Main = (props) => {
 							value={formik.values.fee}
 							onChange={formik.handleChange}
 							required
-							error={Boolean(formik.errors.fee)}
-							helperText={formik.errors.fee || formik.touched.fee}
+							onBlur={formik.handleBlur}
+							error={formik.touched.fee && Boolean(formik.errors.fee)}
+							helperText={formik.touched.fee && formik.errors.fee}
 						/>
 					</Grid>
 				</Grid>
