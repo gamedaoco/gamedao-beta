@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import to from 'await-to-js'
 import ArrowBackIosIconNew from '@mui/icons-material/ArrowBackIosNew'
-import { Box, Button, Divider, Paper, Stack, Typography } from 'src/components'
+import { Box, Button, Divider, MarkdownViewer, Paper, Stack, Typography } from 'src/components'
 import { useNavigate, useParams } from 'react-router'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
@@ -95,7 +95,9 @@ export function GovernanceProposalInfoPage() {
 						<Stack direction="row" padding={6} spacing={6}>
 							<Stack flex="3">
 								<Box whiteSpace="pre-line">
-									{description ?? 'Could not load the description!'}
+									<MarkdownViewer
+										markdown={description ?? 'Could not load the description!'}
+									/>
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />
 							</Stack>
