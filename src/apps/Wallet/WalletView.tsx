@@ -97,7 +97,7 @@ export const Component = () => {
 
 				<Typography variant="h4" sx={{ mt: 2, mb: 2 }}> Identity </Typography>
 				<SmallTable data={[
-					['identity',identity.identity],
+					['identity', JSON.stringify(identity.identity)],
 					['email','hey@gamedao.co','mailto:hey@gamedao.co'],
 					['website','gamedao.co','https://gamedao.co'],
 					['twitter','@gamedaoco','https://twitter.com/gamedaoco'],
