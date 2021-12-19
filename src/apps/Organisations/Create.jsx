@@ -5,28 +5,36 @@ import { useNavigate } from 'react-router-dom'
 //const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
 import { formatZero } from 'src/utils/helper'
+import { useFormik } from 'formik'
 import {
 	Box,
 	Button,
+	Checkbox,
 	Container,
 	FileDropZone,
 	FormControl,
+	FormControlLabel,
 	FormSectionHeadline,
+	FormHelperText,
 	Grid,
-	InputLabel,
 	Image16to9,
+	InputLabel,
 	MenuItem,
 	Paper,
 	Select,
-	TextField,
-	Typography,
-	Stepper,
 	Step,
 	StepLabel,
+	Stepper,
+	TextField,
+	Typography,
+	Loader,
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
+
+import { useWallet } from 'src/context/Wallet'
+import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -87,41 +95,28 @@ const random_state = (account) => {
 
 export const Main = (props) => {
 	const apiProvider = useApiProvider()
+	const [stepperState, setStepperState] = useState(0)
 	const { account, address, signAndNotify } = useWallet()
 	const [loading, setLoading] = useState(false)
+	const [initialData, setInitialData] = useState()
+	const [persistedData, setPersistedData] = useState()
 	const [refresh, setRefresh] = useState(true)
-	const [formData, updateFormData] = useState()
 	const [logoCID, updateLogoCID] = useState({})
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 	const navigate = useNavigate()
-	useEffect(() => {
-		if (!account) return
-		if (dev) console.log('generate form data')
-		const initial_state = random_state(account)
-		updateFormData(initial_state)
-	}, [account])
-
-	// update json payload from form data
 
 	useEffect(() => {
-		if (!formData) return
-		if (dev) console.log('update content json')
-		const contentJSON = {
-			name: formData.name,
-			description: formData.description,
-			website: formData.website,
-			email: formData.email,
-			repo: formData.repo,
-			...logoCID,
-			...headerCID,
+		const ls = localStorage.getItem('gamedao-form-create-org')
+		if (ls) {
+			setPersistedData(JSON.parse(ls))
 		}
-		setContent(contentJSON)
-	}, [logoCID, headerCID, formData])
+		setInitialData(random_state(account))
+	}, [account])
 
 	// handle file uploads to ipfs
 	const onFileChange = (files, event) => {
-		const name = event.target.name
+		const name = event.target.getAttribute('name')
 
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
@@ -143,19 +138,11 @@ export const Main = (props) => {
 			})
 	}
 
-	// form fields
-
-	const handleOnChange = (e) => {
-		const { name, value } = e.target
-		return updateFormData({ ...formData, [name]: value })
-	}
-
 	//
 	// submit function
 	//
 
-	const handleSubmit = (e) => {
-		e.preventDefault()
+	const handleSubmit = async (values, form) => {
 		console.log('submit')
 		setLoading(true)
 
@@ -180,16 +167,16 @@ export const Main = (props) => {
 
 			const payload = [
 				address,
-				formData.treasury,
-				formData.name,
+				formik.values.treasury,
+				formik.values.name,
 				cid,
-				formData.body,
-				formData.access,
-				formData.fee_model,
-				formatZero(formData.fee),
+				formik.values.body,
+				formik.values.access,
+				formik.values.fee_model,
+				formatZero(formik.values.fee),
 				0,
 				0,
-				formData.member_limit,
+				formik.values.member_limit,
 			]
 
 			signAndNotify(
@@ -200,11 +187,14 @@ export const Main = (props) => {
 					error: 'Summoning failed, check your Mana.',
 				},
 				(state, result) => {
-					result.events.forEach(({ event: { data, method, section } }) => {
-						if (section === 'gameDaoControl' && method === 'BodyCreated') {
-							navigate(`/app/organisations/${data[1].toHex()}`)
-						}
-					})
+					if (state) {
+						setStepperState(2)
+						result.events.forEach(({ event: { data, method, section } }) => {
+							if (section === 'gameDaoControl' && method === 'BodyCreated') {
+								navigate(`/app/organisations/${data[1].toHex()}`)
+							}
+						})
+					}
 				}
 			)
 		}
@@ -212,31 +202,78 @@ export const Main = (props) => {
 		getCID()
 	}
 
+	const formik = useFormik({
+		enableReinitialize: true,
+		initialValues: persistedData ? persistedData : initialData,
+		touched: (values) => {
+			const touched = {}
+
+			return touched
+		},
+		validate: (values) => {
+			setStepperState(1)
+			const errors = {}
+			console.log(values)
+
+			if (!values.name || values.name === '') errors.name = 'You must choose a Name'
+
+			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+				errors.email = "Not a vaild email I'm afraid..."
+			}
+
+			if (!values.description || values.description === '')
+				errors.description = 'We need a short description'
+
+			if (values.treasury === values.controller)
+				errors.treasury = 'Treasury Account needs to differ from Controller Account!'
+			return errors
+		},
+		//validationSchema: validationSchema,
+		onSubmit: handleSubmit,
+	})
+
+	// update json payload from form data
+	useDebouncedEffect(
+		() => {
+			if (!formik.values) return
+			if (dev) console.log('update content json')
+			const contentJSON = {
+				name: formik.values.name,
+				description: formik.values.description,
+				website: formik.values.website,
+				email: formik.values.email,
+				repo: formik.values.repo,
+				...logoCID,
+				...headerCID,
+			}
+			setContent(contentJSON)
+			localStorage.setItem('gamedao-form-create-org', JSON.stringify(formik.values))
+		},
+		[logoCID, headerCID, formik.values],
+		2000
+	)
+
 	useEffect(() => {
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
-		//updateFileCID(null)
-		updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
 	}, [account, refresh])
 
-	const logoInputRef = useRef(null)
-	const headerInputRef = useRef(null)
+	if (!formik.values) return <Loader text="Create Organization" />
 
-	if (!formData) return null
 	return (
-		<>
+		<form onSubmit={formik.handleSubmit}>
 			<Box sx={{ pb: 2 }}>
 				<Grid container spacing={3} alignItems={'center'}>
 					<Grid item xs={12} md={8}>
 						<Typography variant={'body1'}>Create Organization</Typography>
 						<Typography variant={'h3'}>
-							{formData.name || 'Untitled organization'}
+							{formik.values.name || 'Untitled organization'}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<Stepper orientation={'horizontal'}>
+						<Stepper activeStep={stepperState} orientation={'horizontal'}>
 							<Step>
 								<StepLabel>Enter data</StepLabel>
 							</Step>
@@ -263,8 +300,10 @@ export const Main = (props) => {
 							fullWidth
 							placeholder="Name"
 							name="name"
-							value={formData.name}
-							onChange={handleOnChange}
+							value={formik.values.name}
+							onChange={formik.handleChange}
+							error={Boolean(formik.errors.name)}
+							helperText={formik.errors.name || formik.touched.name}
 							required
 						/>
 					</Grid>
@@ -274,12 +313,14 @@ export const Main = (props) => {
 							fullWidth
 							placeholder="email"
 							name="email"
-							value={formData.email}
-							onChange={handleOnChange}
+							value={formik.values.email}
+							onChange={formik.handleChange}
+							error={Boolean(formik.errors.email)}
+							helperText={formik.errors.email || formik.touched.email}
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.body)}>
 							<InputLabel id="body-select-label">Organizational Body</InputLabel>
 							<Select
 								label="Organizational Body"
@@ -287,8 +328,8 @@ export const Main = (props) => {
 								placeholder="Organizational Body"
 								labelId="body-select-label"
 								id="body"
-								value={formData.body}
-								onChange={handleOnChange}
+								value={formik.values.body}
+								onChange={formik.handleChange}
 								required
 							>
 								{data.dao_bodies.map((item) => (
@@ -297,10 +338,13 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>
+								{formik.errors.body || formik.touched.body}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.country)}>
 							<InputLabel id="country-select-label">Country</InputLabel>
 							<Select
 								label="Country"
@@ -308,8 +352,8 @@ export const Main = (props) => {
 								placeholder="Country"
 								labelId="country-select-label"
 								id="country"
-								value={formData.country}
-								onChange={handleOnChange}
+								value={formik.values.country}
+								onChange={formik.handleChange}
 								required
 							>
 								{data.countries.map((item) => (
@@ -318,53 +362,45 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>
+								{formik.errors.country || formik.touched.country}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!logoCID.logo && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_logo_symbol.svg`}
-							/>
-						)}
-						{logoCID.logo && (
-							<Image16to9 alt={formData.title} src={gateway + logoCID.logo} />
-						)}
-					</Grid>
-
-					<Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						{!headerCID.header && (
-							<img
-								alt="placeholder"
-								height={'128'}
-								src={`${process.env.PUBLIC_URL}/assets/gamedao_tangram_white.svg`}
-							/>
-						)}
-						{headerCID.header && (
-							<Image16to9 alt={formData.title} src={gateway + headerCID.header} />
-						)}
-					</Grid>
-
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
-							<Image />
+							{!logoCID.logo && <Image />}
+							{logoCID.logo && (
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + logoCID.logo}
+								/>
+							)}
 							<Typography variant={'body2'} align={'center'}>
-								Pick a logo graphic
+								{!logoCID.logo ? 'Pick a ' : ''}logo graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
-							<Image />
+							{!headerCID.header && <Image />}
+							{headerCID.header && (
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + headerCID.header}
+								/>
+							)}
 							<Typography variant={'body2'} align={'center'}>
-								Pick a header graphic
+								{!headerCID.header ? 'Pick a ' : ''}header graphic
 							</Typography>
 						</FileDropZone>
 					</Grid>
+
 					<Grid item xs={12}>
 						<FormSectionHeadline>Meta Information</FormSectionHeadline>
 					</Grid>
@@ -377,9 +413,11 @@ export const Main = (props) => {
 							fullWidth
 							label="Short Description"
 							name="description"
-							value={formData.description}
+							value={formik.values.description}
 							placeholder="Tell us more"
-							onChange={handleOnChange}
+							onChange={formik.handleChange}
+							error={Boolean(formik.errors.description)}
+							helperText={formik.errors.description || formik.touched.description}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -389,8 +427,10 @@ export const Main = (props) => {
 							isInjected="website"
 							fullWidth
 							name="website"
-							value={formData.website}
-							onChange={handleOnChange}
+							value={formik.values.website}
+							onChange={formik.handleChange}
+							error={Boolean(formik.errors.website)}
+							helperText={formik.errors.website || formik.touched.website}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -400,8 +440,10 @@ export const Main = (props) => {
 							id="repo"
 							fullWidth
 							name="repo"
-							value={formData.repo}
-							onChange={handleOnChange}
+							value={formik.values.repo}
+							onChange={formik.handleChange}
+							error={Boolean(formik.errors.repo)}
+							helperText={formik.errors.repo || formik.touched.repo}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -414,12 +456,14 @@ export const Main = (props) => {
 							name="controller"
 							placeholder="Controller"
 							label="Controller Account"
-							value={formData.controller}
+							value={formik.values.controller}
 							helperText={
 								'Note: In case you want to create a DAO, the controller must be the organization.'
 							}
-							onChange={handleOnChange}
+							onChange={formik.handleChange}
 							required
+							error={Boolean(formik.errors.controller)}
+							helperText={formik.errors.controller || formik.touched.controller}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -429,21 +473,23 @@ export const Main = (props) => {
 							placeholder="Treasury"
 							fullWidth
 							label="Treasury Account"
-							value={formData.treasury}
-							onChange={handleOnChange}
+							value={formik.values.treasury}
+							onChange={formik.handleChange}
 							required
+							error={Boolean(formik.errors.treasury)}
+							helperText={formik.errors.treasury || formik.touched.treasury}
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.access)}>
 							<InputLabel id="member-select-label">Member Access Control</InputLabel>
 							<Select
 								labelId="member-select-label"
 								id="member-select"
 								label="Member Access Control"
 								name="access"
-								value={formData.access}
-								onChange={handleOnChange}
+								value={formik.values.access}
+								onChange={formik.handleChange}
 								required
 							>
 								{data.dao_member_governance.map((item) => (
@@ -452,6 +498,9 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>
+								{formik.errors.access || formik.touched.access}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -460,22 +509,24 @@ export const Main = (props) => {
 							name="member_limit"
 							placeholder="100"
 							label="Member Limit"
-							value={formData.member_limit}
-							onChange={handleOnChange}
+							value={formik.values.member_limit}
+							onChange={formik.handleChange}
 							fullWidth
 							required
+							error={Boolean(formik.errors.member_limit)}
+							helperText={formik.errors.member_limit || formik.touched.member_limit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth>
+						<FormControl fullWidth error={Boolean(formik.errors.fee_model)}>
 							<InputLabel id="fee_model-label">Fee Model</InputLabel>
 							<Select
 								labelId="fee_model-label"
 								id="fee_model"
 								label="Fee Model"
 								name="fee_model"
-								value={formData.fee_model}
-								onChange={handleOnChange}
+								value={formik.values.fee_model}
+								onChange={formik.handleChange}
 								required
 							>
 								{data.dao_fee_model.map((item) => (
@@ -484,6 +535,9 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+							<FormHelperText>
+								{formik.errors.fee_model || formik.touched.fee_model}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -493,21 +547,26 @@ export const Main = (props) => {
 							label="Membership Fee"
 							placeholder="10"
 							fullWidth
-							value={formData.fee}
-							onChange={handleOnChange}
+							value={formik.values.fee}
+							onChange={formik.handleChange}
 							required
+							error={Boolean(formik.errors.fee)}
+							helperText={formik.errors.fee || formik.touched.fee}
 						/>
 					</Grid>
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
 				{account && (
-					<Button fullWidth variant={'contained'} onClick={handleSubmit}>
+					<Button type="submit" fullWidth variant={'contained'}>
 						Create Organization
 					</Button>
 				)}
+				<Typography sx={{ color: 'red' }}>
+					{Object.keys(formik.errors).length !== 0 ? 'errors present' : ''}
+				</Typography>
 			</Container>
-		</>
+		</form>
 	)
 }
 

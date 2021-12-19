@@ -6,6 +6,7 @@ price function for token allocation
    B. Token Type ( NFT / FT )
    C. supply ( uncapped / capped )
    D. vesting ( n / t )
+
 2. Bond
    E. Collateral ( PLAY / NFT / Multi { FT / nested curves })
    F. reserve ratios
