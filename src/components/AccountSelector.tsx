@@ -55,7 +55,7 @@ const AccountSelect = styled(Select)(({ theme }) => ({
 
 const AccountComponent = () => {
 	const { darkmodeEnabled } = useThemeState()
-	const { updateStore, allowConnection } = useStore()
+	const { updateStore, allowConnection, lastAccountIndex } = useStore()
 	const { accounts, w3enable, w3Enabled } = usePolkadotExtension()
 	const { allowConnect, updateWalletState, account, address } = useWallet()
 
@@ -77,6 +77,7 @@ const AccountComponent = () => {
 		if (allowConnect && !w3Enabled) {
 			w3enable()
 		} else if (w3Enabled && !allowConnect) {
+			updateStore({lastAccountIndex: null})
 			updateWalletState({
 				address: null,
 				account: null,
@@ -89,7 +90,7 @@ const AccountComponent = () => {
 	useEffect(() => {
 		// Set initial account => default account 0
 		if (accounts && allowConnect) {
-			updateWalletState({ account: accounts[0], address: accounts[0]?.address })
+			updateWalletState({ account: accounts[lastAccountIndex || 0], address: accounts[lastAccountIndex || 0]?.address })
 		}
 	}, [accounts, allowConnect])
 
@@ -97,7 +98,7 @@ const AccountComponent = () => {
 		(address: string) => {
 			const account = accounts.find((a) => a.address === address)
 			if (!account) return
-
+			updateStore({lastAccountIndex: accounts.indexOf(account) || 0})
 			updateWalletState({
 				account,
 				address: account.address,

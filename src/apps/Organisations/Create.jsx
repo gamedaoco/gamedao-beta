@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 //const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
+import { formatZero } from 'src/utils/helper'
 import {
 	Box,
 	Button,
@@ -176,6 +177,7 @@ export const Main = (props) => {
 		const sendTX = async (cid) => {
 			setLoading(true)
 			if (dev) console.log('2. send tx')
+
 			const payload = [
 				address,
 				formData.treasury,
@@ -184,7 +186,7 @@ export const Main = (props) => {
 				formData.body,
 				formData.access,
 				formData.fee_model,
-				formData.fee,
+				formatZero(formData.fee),
 				0,
 				0,
 				formData.member_limit,
@@ -198,15 +200,11 @@ export const Main = (props) => {
 					error: 'Summoning failed, check your Mana.',
 				},
 				(state, result) => {
-					setLoading(false)
-					setRefresh(true)
-					if (state) {
-						result.events.forEach(({ event: { data, method, section } }) => {
-							if (section === 'gameDaoControl' && method === 'BodyCreated') {
-								navigate(`/app/organisations/${data[1].toHex()}`)
-							}
-						})
-					}
+					result.events.forEach(({ event: { data, method, section } }) => {
+						if (section === 'gameDaoControl' && method === 'BodyCreated') {
+							navigate(`/app/organisations/${data[1].toHex()}`)
+						}
+					})
 				}
 			)
 		}
