@@ -27,6 +27,7 @@ export const Footer = (props) => (
 	>
 		<Container>
 			<Grid columns={12}>
+{/*
 
 				<Grid container direction="row" mt={4} mb={4}>
 
@@ -115,6 +116,7 @@ export const Footer = (props) => (
 						{`© 2019-${new Date().getFullYear()} `}GAMEDAO AG, Vaduz, Liechtenstein. Powered by ZERO.IO
 					</Typography>
 				</Grid>
+		*/}
 
 			</Grid>
 		</Container>
