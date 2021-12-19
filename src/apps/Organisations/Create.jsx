@@ -33,7 +33,6 @@ import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
-import { useWallet } from 'src/context/Wallet'
 import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
 const dev = config.dev
