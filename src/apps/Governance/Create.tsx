@@ -159,36 +159,22 @@ export const Main = ({ blockNumber }) => {
 		query()
 	}, [apiProvider, address])
 
-	// form fields
-	/*
-	const handleOnChange = (e) => {
-		const { name, value } = e.target
-		const update = {
-			...formData,
-			[name]: value,
-		}
-		updateFormData(update)
-	*/
 
 	const handleMarkdownChange = ({ html, text }) => {
-		const update = {
-			//...formData,
-			['description']: text,
-		}
-		//updateFormData(update)
+		formik.setFieldValue('description',text);
 	}
 	
 
 	// submit function
 
-	const handleSubmit = (e) => {
-		e.preventDefault()
+	const handleSubmit = (values, form) => {
 		console.log('submit')
-
 		setLoading(true)
+		console.log(values)
+
 		const content = {
-			id: formik.values.id,
-			description: formik.values.description,
+			id: values.id,
+			description: values.description,
 		}
 
 		//
@@ -207,6 +193,7 @@ export const Main = ({ blockNumber }) => {
 				console.log('Error uploading file: ', err)
 			}
 		}
+		
 		getCID()
 
 		// send it
