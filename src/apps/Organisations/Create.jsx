@@ -396,7 +396,7 @@ export const Main = (props) => {
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "Header Image. Drop here, or select a file."}</Typography>
-							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "It must be a JPG, GIF or PNG, 1920 x 800px no larger than 200 MB."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "It must be a JPG or PNG, 1920 x 800px no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 
