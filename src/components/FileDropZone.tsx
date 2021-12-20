@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material'
 import React, { DragEvent } from 'react'
 import { Paper, Box } from '../components'
+import { useThemeState } from 'src/context/ThemeState'
 
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
@@ -32,7 +33,6 @@ export const FileDropZone: React.FC<
 	}, [])
 
 	const theme = useTheme()
-
 	const fileInputRef = React.useRef<HTMLInputElement>(null)
 
 	return (
@@ -58,7 +58,7 @@ export const FileDropZone: React.FC<
 					justifyContent: 'center',
 					alignItems: 'center',
 					textAlign: 'center',
-					border: `1px solid ${theme.palette.background.neutral}`,
+					border: `1px dashed ${theme.palette.grey[500]}`,
 					display: 'flex',
 					flexDirection: 'column',
 					opacity: hover ? 1 : 0.6,

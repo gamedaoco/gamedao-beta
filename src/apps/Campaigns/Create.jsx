@@ -381,8 +381,11 @@ export const Main = () => {
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!logoCID.logo ? "Pick a " : ""}logo graphic
+							{!logoCID.logo ? "Drop an image here, or select a file." : ""}
 							</Typography>
+							<Button onClick={ () => {
+								updateLogoCID(null)
+							} }>x</Button>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
@@ -392,8 +395,11 @@ export const Main = () => {
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!headerCID.header ? "Pick a " : ""}header graphic
+							{!headerCID.header ? "Drop an image here, or select a file." : ""}
 							</Typography>
+							<Button onClick={ () => {
+								updateHeaderCID(null)
+							} }>x</Button>
 						</FileDropZone>
 					</Grid>
 
