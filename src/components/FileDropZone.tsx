@@ -81,7 +81,7 @@ export const FileDropZone: React.FC<
 					padding: 4,
 					background: hover
 						? theme.palette.background.neutral
-						: theme.palette.grey[900],
+						: darkmodeEnabled ? theme.palette.grey[900] : theme.palette.background.neutral,
 					['&:hover']: {
 						background: theme.palette.background.neutral,
 						opacity: 1,
