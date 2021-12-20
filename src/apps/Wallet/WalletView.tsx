@@ -21,11 +21,18 @@ const SmallTable = ({ data }) => {
 						key={d[0]}
 						sx={{
 							'td, th': { borderBottom:'1px dotted #999' },
-							'&:last-child td, &:last-child th': { border: 0 }
+							'&:last-child td, &:last-child th': { border: 0 },
+							'a,a:hover,a:visited': { color: 'white', textDecoration: 'none'},
+							'a:hover': { borderBottom: '1px dotted' }
 						}}
 						>
 						<TableCell component="th" scope="row">{d[0]}</TableCell>
-						<TableCell align="right">{d[1]}</TableCell>
+						<TableCell align="right">
+							{ d[2]
+								? <a href={d[2]} target="_blank">{d[1]}</a>
+								: <>{d[1]}</>
+							}
+						</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
@@ -90,18 +97,18 @@ export const Component = () => {
 					justifyContent: 'space-between'
 				}}>
 					<Typography variant="h3" sx={{ height: 'auto', m: 0 }}> Account </Typography>
-{/*					<Button size="small" sx={{borderRadius: '100vw'}} variant="outlined" color="secondary">
+					<Button size="small" sx={{borderRadius: '100vw'}} variant="outlined" color="secondary">
 						Refresh
 					</Button>
-*/}				</Box>
+				</Box>
 
 				<Typography variant="h4" sx={{ mt: 2, mb: 2 }}> Identity </Typography>
 				<SmallTable data={[
-					['identity',identity.identity],
+					['identity','gamedao',''],
 					['email','hey@gamedao.co','mailto:hey@gamedao.co'],
 					['website','gamedao.co','https://gamedao.co'],
 					['twitter','@gamedaoco','https://twitter.com/gamedaoco'],
-					['discord','gamedao#1337',''],
+					['discord','gamedao#1337','']
 				]}/>
 				<Typography variant="h4" sx={{ mt: 4, mb: 2 }}> Sense </Typography>
 				<SmallTable data={[
@@ -120,16 +127,19 @@ export const Component = () => {
 					justifyContent: 'space-between'
 				}}>
 					<Typography variant="h3" sx={{ height: 'auto', m: 0 }}> Portfolio </Typography>
-{/*					<Button size="small" sx={{borderRadius: '100vw'}} variant="outlined" color="secondary">
+{/*
+					<Button size="small" sx={{borderRadius: '100vw'}} variant="outlined" color="secondary">
 						Refresh
-					</Button>*/}
+					</Button>
+*/}
 				</Box>
 
 				<Typography variant="h4" sx={{ my: 2 }}> Balances </Typography>
 				<hr/>
 				<Typography variant="h4" sx={{ my: 2 }}> Collectables </Typography>
 				<hr/>
-	{/*			<Box sx={{display: 'flex', justifyContent: 'end' }}>
+{/*
+				<Box sx={{display: 'flex', justifyContent: 'end' }}>
 					<a href="https://docs.gamedao.co/" target="_blank">
 						<Button size="small" sx={{mr:2}}>
 							Learn More
@@ -141,7 +151,8 @@ export const Component = () => {
 						</Button>
 					</a>
 				</Box>
-	*/}		</Paper>
+*/}
+			</Paper>
 		</Box>
 	)
 }

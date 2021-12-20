@@ -221,25 +221,29 @@ export const Main = () => {
 		validate: (values) => {
 			setStepperState(1)
 			const errors = {}
-			console.log(values)
-
+		
 			if(!values.org || values.org === "") errors.org = "You must choose an Organization"
 
 			if(values.description === "Awesome Short Description") errors.description = "You can do better than that!"
 
 			if(!values.title || values.title === "" ) errors.title = "Please Enter a Campaign Title!"
+			if(new Blob([values.title]).size > 48) errors.title = 'Please enter a maximum of 48 bytes.'
 
 			if(!values.name || values.name === "" ) errors.name = "Please Enter a Name!"
 			if(values.name === "Dao Jones") errors.name = "...I dont think thats your name"
+			if(!/^[a-zA-Z\s]*$/i.test(values.name)){
+				errors.name = "Please enter only letters."
+			}
 
 			if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
-				errors.email = "Not a vaild email I'm afraid..."
+				errors.email = "Please enter a valid e-mail address."
 			}
 
-			if(values.cap === "0" || values.cap === ""){
-				errors.cap = "Your funding Target must be bigger than 0"
-			}
-			if(isNaN(parseInt(values.cap))) errors.cap = "Funding target must be numerical"
+			if(values.cap === "0" || values.cap === "") errors.cap = "Please enter funding target."
+			if(values.cap && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.cap)) errors.cap = "Funding target must be numerical"
+			
+			if(values.deposit === "0" || values.deposit === "") errors.deposit = "Please enter funding target."
+			if(values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit)) errors.deposit = "Deposit must be numerical"
 
 			if(!values.accept) errors.accept = "You must accept the Terms"
 
@@ -248,7 +252,6 @@ export const Main = () => {
 		//validationSchema: validationSchema,
 		onSubmit: handleSubmit
 	});
-
 
 	// save content json and form values to localstorage
 	useDebouncedEffect(() => {
@@ -313,7 +316,7 @@ export const Main = () => {
 						</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<FormControl fullWidth error={Boolean(formik.errors.org)}>
+						<FormControl fullWidth error={formik.touched.org && Boolean(formik.errors.org)}>
 							<InputLabel id="org-select-label">Organization</InputLabel>
 							<Select
 								component={Select}
@@ -325,6 +328,7 @@ export const Main = () => {
 								name="org"
 								value={formik.values.org}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							>
 								{orgs.map((item, index) => (
 									<MenuItem key={index} value={item.id}>
@@ -332,7 +336,7 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.errors.org || formik.touched.org}</FormHelperText>
+							<FormHelperText>{formik.touched.org && formik.errors.org}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -344,8 +348,9 @@ export const Main = () => {
 							name="title"
 							value={formik.values.title}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.title)}
-							helperText={formik.errors.title || formik.touched.title}
+							onBlur={formik.handleBlur}
+							error={formik.touched.title && Boolean(formik.errors.title)}
+							helperText={formik.touched.title && formik.errors.title}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -359,8 +364,9 @@ export const Main = () => {
 							name="description"
 							value={formik.values.description}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.description)}
-							helperText={formik.errors.description || formik.touched.description}
+							onBlur={formik.handleBlur}
+							error={formik.touched.description && Boolean(formik.errors.description)}
+							helperText={formik.touched.description && formik.errors.description}
 						/>
 					</Grid>
 
@@ -417,8 +423,9 @@ export const Main = () => {
 							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.name)}
-							helperText={formik.errors.name || formik.touched.name}
+							onBlur={formik.handleBlur}
+							error={formik.touched.name && Boolean(formik.errors.name)}
+							helperText={formik.touched.name && formik.errors.name}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -429,8 +436,9 @@ export const Main = () => {
 							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.email)}
-							helperText={formik.errors.email || formik.touched.email}
+							onBlur={formik.handleBlur}
+							error={formik.touched.email && Boolean(formik.errors.email)}
+							helperText={formik.touched.email && formik.errors.email}
 						/>
 					</Grid>
 
@@ -449,8 +457,9 @@ export const Main = () => {
 							required
 							value={formik.values.admin}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.admin)}
-							helperText={formik.errors.admin || formik.touched.admin}
+							onBlur={formik.handleBlur}
+							error={formik.touched.admin && Boolean(formik.errors.admin)}
+							helperText={formik.touched.admin && formik.errors.admin}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -465,8 +474,9 @@ export const Main = () => {
 								placeholder="Usage"
 								value={formik.values.usage}
 								onChange={formik.handleChange}
-								error={Boolean(formik.errors.usage)}
-								helperText={formik.errors.usage || formik.touched.usage}
+								onBlur={formik.handleBlur}
+								error={formik.touched.usage && Boolean(formik.errors.usage)}
+								helperText={formik.touched.usage && formik.errors.usage}
 							>
 								{data.project_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -478,7 +488,7 @@ export const Main = () => {
 					</Grid>
 
 					<Grid item xs={12}>
-						<FormControl fullWidth error={Boolean(formik.errors.protocol)}>
+						<FormControl fullWidth error={formik.touched.protocol && Boolean(formik.errors.protocol)}>
 							<InputLabel id="protocol-select-label">Protocol</InputLabel>
 							<Select
 								labelId="protocol-select-label"
@@ -490,6 +500,7 @@ export const Main = () => {
 								placeholder="Protocol"
 								value={formik.values.protocol}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							>
 								{data.protocol_types.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -497,7 +508,7 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.errors.protocol || formik.touched.protocol}</FormHelperText>
+							<FormHelperText>{formik.touched.protocol && formik.errors.protocol}</FormHelperText>
 						</FormControl>
 					</Grid>
 
@@ -509,8 +520,9 @@ export const Main = () => {
 							name="deposit"
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.deposit)}
-							helperText={formik.errors.deposit || formik.touched.deposit}
+							onBlur={formik.handleBlur}
+							error={formik.touched.deposit && Boolean(formik.errors.deposit)}
+							helperText={formik.touched.deposit && formik.errors.deposit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
@@ -521,13 +533,14 @@ export const Main = () => {
 							name="cap"
 							value={formik.values.cap}
 							onChange={formik.handleChange}
-							error={Boolean(formik.errors.cap)}
-							helperText={formik.errors.cap || formik.touched.cap}
+							onBlur={formik.handleBlur}
+							error={formik.touched.cap && Boolean(formik.errors.cap)}
+							helperText={formik.touched.cap && formik.errors.cap}
 						/>
 					</Grid>
 
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth error={Boolean(formik.errors.duration)}>
+						<FormControl fullWidth error={formik.touched.duration && Boolean(formik.errors.duration)}>
 							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
 							<Select
 								labelId="duration-select-label"
@@ -538,6 +551,7 @@ export const Main = () => {
 								name="duration"
 								value={formik.values.duration}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							>
 								{data.project_durations.map((item) => (
 									<MenuItem key={item.key} value={item.value}>
@@ -545,39 +559,41 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.errors.duration || formik.touched.duration}</FormHelperText>
+							<FormHelperText>{formik.touched.duration && formik.errors.duration}</FormHelperText>
 						</FormControl>
 					</Grid>
 
 					<Grid item xs={12}>
-					<FormControl error={Boolean(formik.errors.governance)}>
+					<FormControl error={formik.touched.governance && Boolean(formik.errors.governance)}>
 						<FormControlLabel
 							label="DAO Governance"
 							control={
 								<Checkbox
 									name="governance"
-									value={formik.values.governance}
+									checked={formik.values.governance}
 									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
 								/>
 							}
 						/>
-        				<FormHelperText>{formik.errors.governance || formik.touched.governance}</FormHelperText>
+        				<FormHelperText>{formik.touched.governance && formik.errors.governance}</FormHelperText>
       				</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-					<FormControl error={Boolean(formik.errors.accept)}>
+					<FormControl error={formik.touched.accept && Boolean(formik.errors.accept)}>
 						<FormControlLabel
 							label="I agree to the Terms and Conditions"
 							control={
 								<Checkbox
 									required
 									name="accept"
-									value={formik.values.accept}
+									checked={formik.values.accept}
 									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
 								/>
 							}
 						/>
-        				<FormHelperText>{formik.errors.accept || formik.touched.accept}</FormHelperText>
+        				<FormHelperText>{formik.touched.accept && formik.errors.accept}</FormHelperText>
       				</FormControl>
 					</Grid>
 				</Grid>

@@ -15,11 +15,15 @@ import {
 	InputLabel, 
 	MenuItem, 
 	Select, 
-	TextField 
+	TextField,
+	FormSectionHeadline, 
+	MarkdownEditor,
+	FormHelperText 
 } from "src/components"
 
 import { useWallet } from 'src/context/Wallet'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -50,8 +54,8 @@ const random_state = (account, campaigns = []) => {
 	// voting without withdrawal ==> amount == 0
 
 	const id = campaigns[campaigns.length]
-	const purpose = 'nice purpose'
-	const description = 'cool description'
+	const purpose = ''
+	const description = ''
 	const cid = ''
 	const amount = rnd(10) * 100
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
@@ -166,6 +170,15 @@ export const Main = ({ blockNumber }) => {
 		updateFormData(update)
 	*/
 
+	const handleMarkdownChange = ({ html, text }) => {
+		const update = {
+			//...formData,
+			['description']: text,
+		}
+		//updateFormData(update)
+	}
+	
+
 	// submit function
 
 	const handleSubmit = (e) => {
@@ -207,7 +220,7 @@ export const Main = ({ blockNumber }) => {
 			const expiry = formik.values.duration * data.blocksPerDay + start // take current block as offset
 			const { entity, purpose } = formik.values
 
-			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
+			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formik.values)
 			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
 			console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
 
@@ -287,13 +300,13 @@ export const Main = ({ blockNumber }) => {
 		<React.Fragment>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
-					<form>
+					<form onSubmit={formik.handleSubmit}>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>
 								<Divider>General Information</Divider>
 							</Grid>
 							<Grid item xs={12}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.entity && Boolean(formik.errors.entity)}>
 									<InputLabel>Organization / Campaign</InputLabel>
 									<Select
 										required
@@ -301,7 +314,8 @@ export const Main = ({ blockNumber }) => {
 										fullWidth
 										name="entity"
 										value={formik.values.entity}
-										onChange={handleOnChange}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 									>
 										{validMemberships.map((e) => (
 											<MenuItem key={e} value={e}>
@@ -309,6 +323,7 @@ export const Main = ({ blockNumber }) => {
 											</MenuItem>
 										))}
 									</Select>
+									<FormHelperText>{formik.touched.entity && formik.errors.entity}</FormHelperText>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12}>
@@ -317,29 +332,31 @@ export const Main = ({ blockNumber }) => {
 									label={'Proposal Title'}
 									placeholder={'Title'}
 									value={formik.values.purpose}
-									onChange={handleOnChange}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									error={formik.touched.purpose && Boolean(formik.errors.purpose)}
+									helperText={formik.touched.purpose && formik.errors.purpose}
 									fullWidth
 								/>
 							</Grid>
 							<Grid item xs={12}>
-								<TextField
-									multiline
-									fullWidth
-									label={'Short Description'}
+								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
+									Content Description
+								</FormSectionHeadline>
+								<MarkdownEditor
 									value={formik.values.description}
-									placeholder={'Tell us more'}
-									onChange={handleOnChange}
-									name={'description'}
+									onChange={handleMarkdownChange}
 								/>
 							</Grid>
 							<Grid item xs={12} md={3}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.proposal_type && Boolean(formik.errors.proposal_type)}>
 									<InputLabel>Proposal Type</InputLabel>
 									<Select
 										label={'Proposal Type'}
 										name={'proposal_type'}
-										value={formik.values.proposal_type}
-										onChange={handleOnChange}
+										value={`${formik.values.proposal_type}`}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										fullWidth
 									>
 										{data.proposal_types.map((pt) => (
@@ -348,16 +365,18 @@ export const Main = ({ blockNumber }) => {
 											</MenuItem>
 										))}
 									</Select>
+									<FormHelperText>{formik.touched.proposal_type && formik.errors.proposal_type}</FormHelperText>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.voting_type && Boolean(formik.errors.voting_type)}>
 									<InputLabel>Voting Type</InputLabel>
 									<Select
 										label={'Voting Type'}
 										name={'voting_type'}
-										value={formik.values.voting_type}
-										onChange={handleOnChange}
+										value={`${formik.values.voting_type}`}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										fullWidth
 									>
 										{data.voting_types.map((vt) => (
@@ -366,16 +385,18 @@ export const Main = ({ blockNumber }) => {
 											</MenuItem>
 										))}
 									</Select>
+									<FormHelperText>{formik.touched.voting_type && formik.errors.voting_type}</FormHelperText>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.collateral_type && Boolean(formik.errors.collateral_type)}>
 									<InputLabel>Collateral Type</InputLabel>
 									<Select
 										label={'Collateral Type'}
 										name={'collateral_types'}
-										value={formik.values.collateral_type}
-										onChange={handleOnChange}
+										value={`${formik.values.collateral_type}`}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										fullWidth
 									>
 										{data.collateral_types.map((ct, i) => (
@@ -384,6 +405,7 @@ export const Main = ({ blockNumber }) => {
 											</MenuItem>
 										))}
 									</Select>
+									<FormHelperText>{formik.touched.collateral_type && formik.errors.collateral_type}</FormHelperText>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
@@ -391,20 +413,24 @@ export const Main = ({ blockNumber }) => {
 									type={'number'}
 									name={'collateral_amount'}
 									value={formik.values.collateral_amount}
-									onChange={handleOnChange}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									error={formik.touched.collateral_amount && Boolean(formik.errors.collateral_amount)}
+									helperText={formik.touched.collateral_amount && formik.errors.collateral_amount}
 									fullWidth
 									label={'Collateral Amount'}
 									InputLabelProps={{ shrink: true }}
 								/>
 							</Grid>
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.start && Boolean(formik.errors.start)}>
 									<InputLabel>Start (now)</InputLabel>
 									<Select
 										label={'Start'}
 										name={'start'}
 										value={formik.values.start}
-										onChange={handleOnChange}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										fullWidth
 										disabled
 									>
@@ -412,17 +438,19 @@ export const Main = ({ blockNumber }) => {
 											now
 										</MenuItem>
 									</Select>
+									<FormHelperText>{formik.touched.start && formik.errors.start}</FormHelperText>
 								</FormControl>
 							</Grid>
 
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth>
+								<FormControl fullWidth error={formik.touched.duration && Boolean(formik.errors.duration)}>
 									<InputLabel>Duration</InputLabel>
 									<Select
 										label={'Duration'}
 										name={'duration'}
 										value={formik.values.duration}
-										onChange={handleOnChange}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										fullWidth
 									>
 										{data.project_durations.map((pd) => (
@@ -431,6 +459,7 @@ export const Main = ({ blockNumber }) => {
 											</MenuItem>
 										))}
 									</Select>
+									<FormHelperText>{formik.touched.duration && formik.errors.duration}</FormHelperText>
 								</FormControl>
 							</Grid>
 
@@ -444,7 +473,10 @@ export const Main = ({ blockNumber }) => {
 											type={'number'}
 											name={'amount'}
 											value={formik.values.amount}
-											onChange={handleOnChange}
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											error={formik.touched.amount && Boolean(formik.errors.amount)}
+											helperText={formik.touched.amount && formik.errors.amount}
 											fullWidth
 											label={'Amount to transfer on success'}
 											InputLabelProps={{ shrink: true }}
@@ -455,7 +487,10 @@ export const Main = ({ blockNumber }) => {
 											type={'text'}
 											name={'beneficiary'}
 											value={formik.values.beneficiary}
-											onChange={handleOnChange}
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											error={formik.touched.beneficiary && Boolean(formik.errors.beneficiary)}
+											helperText={formik.touched.beneficiary && formik.errors.beneficiary}
 											fullWidth
 											label={'Beneficiary Account'}
 											InputLabelProps={{ shrink: true }}
@@ -465,10 +500,10 @@ export const Main = ({ blockNumber }) => {
 							)}
 							<Grid item xs={12}>
 								<Button
+									type="submit"
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
-									onClick={handleSubmit}
 									disabled={loading}
 								>
 									Publish Proposal
