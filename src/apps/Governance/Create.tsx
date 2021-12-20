@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { useWallet } from 'src/context/Wallet'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useFormik } from 'formik';
+import { useNavigate } from 'react-router'
 import { useApiProvider } from '@substra-hooks/core'
+
 import { gateway, pinJSONToIPFS } from '../lib/ipfs'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import FormControl from '@mui/material/FormControl'
-import Grid from '@mui/material/Grid'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import MuiSelect from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
-import { useNavigate } from 'react-router'
+import { 
+	Button,
+	Divider,
+	FormControl, 
+	Grid, 
+	InputLabel, 
+	MenuItem, 
+	Select, 
+	TextField 
+} from "src/components"
+
+import { useWallet } from 'src/context/Wallet'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -92,7 +97,9 @@ export const Main = ({ blockNumber }) => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const [formData, updateFormData] = useState({} as GenericForm)
+	const [initialData, setInitialData] = useState()
+	const [persistedData, setPersistedData] = useState()
+
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState({})
 	const navigate = useNavigate()
@@ -104,6 +111,20 @@ export const Main = ({ blockNumber }) => {
 
 		queryMemberships(address)
 	}, [address])
+
+	useEffect(() => {
+		if (!account) return
+		/*const ls =  localStorage.getItem("gamedao-form-create-campaign")
+		const mls = localStorage.getItem("gamedao-markdown-create-campaign")
+		if(mls){
+			setMarkdownValue(mls)
+		}
+		if(ls){
+			setPersistedData(JSON.parse(ls))
+		}*/
+		//@ts-ignore
+		setInitialData(random_state(account))
+	}, [account])
 
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
@@ -135,7 +156,7 @@ export const Main = ({ blockNumber }) => {
 	}, [apiProvider, address])
 
 	// form fields
-
+	/*
 	const handleOnChange = (e) => {
 		const { name, value } = e.target
 		const update = {
@@ -143,7 +164,7 @@ export const Main = ({ blockNumber }) => {
 			[name]: value,
 		}
 		updateFormData(update)
-	}
+	*/
 
 	// submit function
 
@@ -153,8 +174,8 @@ export const Main = ({ blockNumber }) => {
 
 		setLoading(true)
 		const content = {
-			id: formData.id,
-			description: formData.description,
+			id: formik.values.id,
+			description: formik.values.description,
 		}
 
 		//
@@ -183,8 +204,8 @@ export const Main = ({ blockNumber }) => {
 
 			const start = blockNumber // current block as start block
 
-			const expiry = formData.duration * data.blocksPerDay + start // take current block as offset
-			const { entity, purpose } = formData
+			const expiry = formik.values.duration * data.blocksPerDay + start // take current block as offset
+			const { entity, purpose } = formik.values
 
 			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
 			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
@@ -219,12 +240,28 @@ export const Main = ({ blockNumber }) => {
 
 	useEffect(() => {}, [])
 
+	const formik = useFormik({
+		enableReinitialize: true,
+		initialValues: initialData,
+		validate: (values) => {
+			//setStepperState(1)
+			const errors:Partial<GenericForm> = {}
+			console.log(values)
+
+			if(!values.accept) errors.accept = "You must accept the Terms"
+
+			return errors
+		},
+		//validationSchema: validationSchema,
+		onSubmit: handleSubmit
+	});
+
 	useEffect(() => {
 		if (!account) return
 		if (!refresh) return
 		if (dev) console.log('refresh signal')
 		updateFileCID(null)
-		updateFormData(random_state(account))
+		//updateFormData(random_state(account))
 		setRefresh(false)
 		setLoading(false)
 	}, [account, refresh])
@@ -244,7 +281,7 @@ export const Main = ({ blockNumber }) => {
 	// })
 	// const entities = { ...data.orgs, ...campaigns }
 
-	if (!formData) return null
+	if (!formik) return null
 
 	return (
 		<React.Fragment>
@@ -258,12 +295,12 @@ export const Main = ({ blockNumber }) => {
 							<Grid item xs={12}>
 								<FormControl fullWidth>
 									<InputLabel>Organization / Campaign</InputLabel>
-									<MuiSelect
+									<Select
 										required
 										label="Organization / Campaign"
 										fullWidth
 										name="entity"
-										value={formData.entity}
+										value={formik.values.entity}
 										onChange={handleOnChange}
 									>
 										{validMemberships.map((e) => (
@@ -271,7 +308,7 @@ export const Main = ({ blockNumber }) => {
 												{bodies?.[e]?.name}
 											</MenuItem>
 										))}
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12}>
@@ -279,7 +316,7 @@ export const Main = ({ blockNumber }) => {
 									name={'purpose'}
 									label={'Proposal Title'}
 									placeholder={'Title'}
-									value={formData.purpose}
+									value={formik.values.purpose}
 									onChange={handleOnChange}
 									fullWidth
 								/>
@@ -289,7 +326,7 @@ export const Main = ({ blockNumber }) => {
 									multiline
 									fullWidth
 									label={'Short Description'}
-									value={formData.description}
+									value={formik.values.description}
 									placeholder={'Tell us more'}
 									onChange={handleOnChange}
 									name={'description'}
@@ -298,10 +335,10 @@ export const Main = ({ blockNumber }) => {
 							<Grid item xs={12} md={3}>
 								<FormControl fullWidth>
 									<InputLabel>Proposal Type</InputLabel>
-									<MuiSelect
+									<Select
 										label={'Proposal Type'}
 										name={'proposal_type'}
-										value={formData.proposal_type}
+										value={formik.values.proposal_type}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -310,16 +347,16 @@ export const Main = ({ blockNumber }) => {
 												{pt.text}
 											</MenuItem>
 										))}
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
 								<FormControl fullWidth>
 									<InputLabel>Voting Type</InputLabel>
-									<MuiSelect
+									<Select
 										label={'Voting Type'}
 										name={'voting_type'}
-										value={formData.voting_type}
+										value={formik.values.voting_type}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -328,16 +365,16 @@ export const Main = ({ blockNumber }) => {
 												{vt.text}
 											</MenuItem>
 										))}
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
 								<FormControl fullWidth>
 									<InputLabel>Collateral Type</InputLabel>
-									<MuiSelect
+									<Select
 										label={'Collateral Type'}
 										name={'collateral_types'}
-										value={formData.collateral_type}
+										value={formik.values.collateral_type}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -346,14 +383,14 @@ export const Main = ({ blockNumber }) => {
 												{ct.text}
 											</MenuItem>
 										))}
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={3}>
 								<TextField
 									type={'number'}
 									name={'collateral_amount'}
-									value={formData.collateral_amount}
+									value={formik.values.collateral_amount}
 									onChange={handleOnChange}
 									fullWidth
 									label={'Collateral Amount'}
@@ -363,10 +400,10 @@ export const Main = ({ blockNumber }) => {
 							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Start (now)</InputLabel>
-									<MuiSelect
+									<Select
 										label={'Start'}
 										name={'start'}
-										value={formData.start}
+										value={formik.values.start}
 										onChange={handleOnChange}
 										fullWidth
 										disabled
@@ -374,17 +411,17 @@ export const Main = ({ blockNumber }) => {
 										<MenuItem key={1} value={0}>
 											now
 										</MenuItem>
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 
 							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Duration</InputLabel>
-									<MuiSelect
+									<Select
 										label={'Duration'}
 										name={'duration'}
-										value={formData.duration}
+										value={formik.values.duration}
 										onChange={handleOnChange}
 										fullWidth
 									>
@@ -393,11 +430,11 @@ export const Main = ({ blockNumber }) => {
 												{pd.text}
 											</MenuItem>
 										))}
-									</MuiSelect>
+									</Select>
 								</FormControl>
 							</Grid>
 
-							{formData.proposal_type !== 0 && (
+							{formik.values.proposal_type !== 0 && (
 								<>
 									<Grid item xs={12}>
 										<Divider>For withdrawals and grants</Divider>
@@ -406,7 +443,7 @@ export const Main = ({ blockNumber }) => {
 										<TextField
 											type={'number'}
 											name={'amount'}
-											value={formData.amount}
+											value={formik.values.amount}
 											onChange={handleOnChange}
 											fullWidth
 											label={'Amount to transfer on success'}
@@ -417,7 +454,7 @@ export const Main = ({ blockNumber }) => {
 										<TextField
 											type={'text'}
 											name={'beneficiary'}
-											value={formData.beneficiary}
+											value={formik.values.beneficiary}
 											onChange={handleOnChange}
 											fullWidth
 											label={'Beneficiary Account'}

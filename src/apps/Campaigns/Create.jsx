@@ -218,13 +218,6 @@ export const Main = () => {
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: persistedData ? persistedData : initialData,
-		touched: (values) => {
-			const touched = {}
-
-			if(values.title && values.title !== "" ) touched.title = "The Start of Something Wonderful!"
-
-			return touched
-		},
 		validate: (values) => {
 			setStepperState(1)
 			const errors = {}
