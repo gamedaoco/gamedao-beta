@@ -39,6 +39,8 @@ export const FileDropZone: React.FC<
 		<>
 			<input
 				//@ts-ignore
+				className={"gamedao_filedrop_input_"+props.name}
+				//@ts-ignore
 				name={props.name}
 				style={{ position: 'absolute', left: '-9999999px' }}
 				multiple

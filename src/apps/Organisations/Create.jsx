@@ -378,24 +378,36 @@ export const Main = (props) => {
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
+						{logoCID.logo && <Button
+						onClick={ () => {
+								const inputElem = document.getElementsByClassName("gamedao_filedrop_input_logo")[0]
+								inputElem.value = ""
+								updateLogoCID({})
+						}}>x</Button>}
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!logoCID.logo ? "Pick a " : ""}logo graphic
+							{!logoCID.logo ? "Logo Image. Drop here, or select a file." : ""}
 							</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
+						{headerCID.header && <Button 
+						onClick={ () => {
+								const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
+								inputElem.value = ""
+								updateHeaderCID({})
+						}}>x</Button>}
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!headerCID.header ? "Pick a " : ""}header graphic
+							{!headerCID.header ? "Header Image. Drop here, or select a file." : ""}
 							</Typography>
 						</FileDropZone>
 					</Grid>
