@@ -2,7 +2,6 @@ import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-//const steps = ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad']
 import { useWallet } from 'src/context/Wallet'
 import { formatZero } from 'src/utils/helper'
 import { useFormik } from 'formik'
@@ -353,10 +352,8 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-
 							<FormHelperText>{formik.touched.body && formik.errors.body}</FormHelperText>
-
-</FormControl>
+            </FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormControl fullWidth error={formik.touched.country && Boolean(formik.errors.country)}>
@@ -378,15 +375,15 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-
 							<FormHelperText>{formik.touched.country && formik.errors.country}</FormHelperText>
-</FormControl>
+            </FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
+						<FormSectionHeadline variant={'h5'}>Images</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
-						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
+						<FileDropZone name="logo" onDroppedFiles={onFileChange} onDeleteItem={ () => updateLogoCID({}) } >
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
 								<Image16to9
@@ -395,13 +392,13 @@ export const Main = (props) => {
 									src={gateway + logoCID.logo}
 								/>
 							)}
-							<Typography variant={'body2'} align={'center'}>
-								{!logoCID.logo ? 'Pick a ' : ''}logo graphic
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo && "Logo Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo  && "It must be a JPG, GIF or PNG, no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						<FileDropZone name="header" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Header (1920 x 800px)</FormSectionHeadline>
+						<FileDropZone name="header" onDroppedFiles={onFileChange} onDeleteItem={ () => updateHeaderCID({}) }>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
 								<Image16to9
@@ -410,9 +407,8 @@ export const Main = (props) => {
 									src={gateway + headerCID.header}
 								/>
 							)}
-							<Typography variant={'body2'} align={'center'}>
-								{!headerCID.header ? 'Pick a ' : ''}header graphic
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "Header Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "It must be a JPG or PNG, 1920 x 800px no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 
