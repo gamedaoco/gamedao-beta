@@ -193,6 +193,9 @@ export const Main = (props) => {
 								navigate(`/app/organisations/${data[1].toHex()}`)
 							}
 						})
+
+						// clear localstorage
+						localStorage.removeItem("gamedao-form-create-org")
 					}
 				}
 			)
