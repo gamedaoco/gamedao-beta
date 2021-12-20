@@ -9,7 +9,7 @@ export const foregroundContentMap = {
             height: '60vh',
             position: 'absolute',
             right: '0px',
-            top: '28vh',
+            top: '320px',
             overflow: 'hidden',
         }}>
             <RendererKoiJam />
@@ -22,7 +22,7 @@ export const foregroundContentMap = {
             height: '60vh',
             position: 'absolute',
             right: '0px',
-            top: '33vh'
+            top: '320px'
         }}
         className="float">
         <img height='100%' src="https://ipfs.gamedao.co/gateway/QmevAQLQMThNR1pFfDHzMCxwaEi5xx9HqsnxVcb1yEzmBL"/>

@@ -9,10 +9,12 @@ import { identityStateSelector, updateIdentityAction } from 'src/redux/duck/iden
 
 type IdentityState = {
 	identities: Object
+	queryAccountIdentity: Function
 }
 
 const INITIAL_STATE: IdentityState = {
 	identities: {},
+	queryAccountIdentity: () => {},
 }
 
 async function queryAccountIdentity(apiProvider: ApiPromise, address: string): Promise<any> {
@@ -36,6 +38,24 @@ export const useIdentity = (address: string) => {
 	const dispatch = useDispatch()
 	const apiProvider = useApiProvider()
 
+	async function handleQueryAccountIdentity(address) {
+		let data = {}
+		if (Array.isArray(address)) {
+			;(
+				await Promise.all(
+					address.map((address) => queryAccountIdentity(apiProvider, address))
+				)
+			).map((identity, i) => (data[address[i]] = identity))
+		} else {
+			data[address] = await queryAccountIdentity(apiProvider, address)
+		}
+		dispatch(
+			updateIdentityAction({
+				identities: { ...identityState.identities, ...data },
+			})
+		)
+	}
+
 	useEffect(() => {
 		if (apiProvider && address && !(identityState ?? {})?.identities?.[address]) {
 			queryAccountIdentity(apiProvider, address).then((identity) => {
@@ -48,5 +68,5 @@ export const useIdentity = (address: string) => {
 		}
 	}, [address, apiProvider])
 
-	return (identityState ?? {})?.identities?.[address]
+	return { ...(identityState ?? {}), queryAccountIdentity: handleQueryAccountIdentity }
 }

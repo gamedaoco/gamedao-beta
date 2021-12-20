@@ -4,7 +4,8 @@ import config from '../config'
 
 export enum ENetworks {
 	zero = 'zero',
-	kusama = 'kusama',
+	// karura = 'karura',
+	// kusama = 'kusama',
 }
 
 export type NetworkState = {
@@ -24,10 +25,14 @@ const API_PROVIDER_CONFIG = {
 		wsProviderUrl: config.PROVIDER_SOCKET,
 		types: config.types,
 	},
-	[ENetworks.kusama]: {
-		id: ENetworks.kusama,
-		wsProviderUrl: 'wss://kusama-rpc.polkadot.io',
-	},
+	// [ENetworks.kusama]: {
+	// 	id: ENetworks.karura,
+	// 	wsProviderUrl: 'wss://karura-rpc-0.aca-api.network',
+	// },
+	// [ENetworks.kusama]: {
+	// 	id: ENetworks.kusama,
+	// 	wsProviderUrl: 'wss://kusama-rpc.polkadot.io',
+	// },
 }
 
 export const NetworkProvider = ({ children }) => {

@@ -1,10 +1,11 @@
 import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { Loader } from './components/Loader'
+import { Loader } from './components'
 import Layout from './layouts/default'
 
 import { GovernancePage } from './apps/Governance/GovernancePage'
 import { GovernanceProposalInfoPage } from './apps/governanceProposalInfo/GovernanceProposalInfo'
+import { OrganisationsDashboard } from './apps/OrganisationsDashboard/organisationsDashboard'
 
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
@@ -12,7 +13,6 @@ const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
 const Organisations = lazy(() => import('./apps/Organisations'))
 const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
-const DAODashboard = lazy(() => import('./apps/Organisations/dashboard'))
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
 const Designsystem = lazy(() => import('./apps/Designsystem'))
@@ -130,7 +130,12 @@ const Router = (props) => {
 				<Route
 					path="/app/organisations/:id"
 					element={
-						<LayoutRoute showSidebar showHeader showFooter element={<DAODashboard />} />
+						<LayoutRoute
+							showSidebar
+							showHeader
+							showFooter
+							element={<OrganisationsDashboard />}
+						/>
 					}
 				></Route>
 			</Routes>

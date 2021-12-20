@@ -162,6 +162,7 @@ const COMMON = {
 	gradients: GRADIENTS,
 	chart: CHART_COLORS,
 	divider: GREY[500_24],
+
 	action: {
 		hover: GREY[500_8],
 		selected: GREY[500_16],
@@ -183,7 +184,7 @@ const palette = {
 	dark: {
 		...COMMON,
 		text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
-		background: { paper: GREY[800], default: GREY[900], neutral: GREY[500_16] },
+		background: { paper: '#25282B', default: GREY[900], neutral: GREY[500_16] },
 		action: { active: GREY[500], ...COMMON.action },
 	},
 }
