@@ -125,7 +125,7 @@ export const Main = ({ blockNumber }) => {
 		}
 		if(ls){
 			setPersistedData(JSON.parse(ls))
-		}*/
+		}
 		//@ts-ignore
 		setInitialData(random_state(account))
 	}, [account])
