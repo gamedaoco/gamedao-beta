@@ -18,11 +18,13 @@ import {
 	TextField,
 	FormSectionHeadline, 
 	MarkdownEditor,
-	FormHelperText 
+	FormHelperText,
+	Loader
 } from "src/components"
 
 import { useWallet } from 'src/context/Wallet'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 
 
 const dev = config.dev
@@ -31,7 +33,6 @@ if (dev) console.log('dev mode')
 type GenericForm = {
 	id: string
 	purpose: string
-	description: string
 	cid: string
 	amount: number
 	duration: number
@@ -55,7 +56,6 @@ const random_state = (account, campaigns = []) => {
 
 	const id = campaigns[campaigns.length]
 	const purpose = ''
-	const description = ''
 	const cid = ''
 	const amount = rnd(10) * 100
 	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
@@ -75,7 +75,6 @@ const random_state = (account, campaigns = []) => {
 	const gen: GenericForm = {
 		id,
 		purpose,
-		description,
 		cid,
 		amount,
 		duration,
@@ -105,10 +104,14 @@ export const Main = ({ blockNumber }) => {
 	const [persistedData, setPersistedData] = useState()
 
 	const [fileCID, updateFileCID] = useState()
-	const [markdownValue, setMarkdownValue] = useState({})
+	const [markdownValue, setMarkdownValue] = useState("# gamedao")
 	const navigate = useNavigate()
 
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
+
+	function handleMarkdownChange({ html, text }) {
+		setMarkdownValue(text)
+	}
 
 	useEffect(() => {
 		if (!address) return
@@ -160,11 +163,6 @@ export const Main = ({ blockNumber }) => {
 	}, [apiProvider, address])
 
 
-	const handleMarkdownChange = ({ html, text }) => {
-		formik.setFieldValue('description',text);
-	}
-	
-
 	// submit function
 
 	const handleSubmit = (values, form) => {
@@ -174,7 +172,7 @@ export const Main = ({ blockNumber }) => {
 
 		const content = {
 			id: values.id,
-			description: values.description,
+			description: markdownValue,
 		}
 
 		//
@@ -249,9 +247,10 @@ export const Main = ({ blockNumber }) => {
 		validate: (values) => {
 			//setStepperState(1)
 			const errors:Partial<GenericForm> = {}
-			console.log(values)
+			//console.log(values)
 
-			if(!values.accept) errors.accept = "You must accept the Terms"
+			if(!values.purpose || values.purpose === "") errors.purpose = "You must have a purpose."
+
 
 			return errors
 		},
@@ -284,7 +283,7 @@ export const Main = ({ blockNumber }) => {
 	// })
 	// const entities = { ...data.orgs, ...campaigns }
 
-	if (!formik) return null
+	if (!formik || !formik.values) return <Loader text="Create Proposal"/>
 
 	return (
 		<React.Fragment>
@@ -334,7 +333,7 @@ export const Main = ({ blockNumber }) => {
 									Content Description
 								</FormSectionHeadline>
 								<MarkdownEditor
-									value={formik.values.description}
+									value={markdownValue}
 									onChange={handleMarkdownChange}
 								/>
 							</Grid>
