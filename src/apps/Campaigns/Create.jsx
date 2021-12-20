@@ -202,6 +202,10 @@ export const Main = () => {
 								navigate(`/app/campaigns/${data[0].toHex()}`)
 							}
 						})
+
+						// clear localstorage
+						localStorage.removeItem("gamedao-form-create-campaign")
+						localStorage.removeItem("gamedao-markdown-create-campaign")
 					}
 
 					if (!state) {
