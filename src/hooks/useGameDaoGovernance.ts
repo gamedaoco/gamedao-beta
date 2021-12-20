@@ -5,6 +5,7 @@ import { to } from 'await-to-js'
 import { createErrorNotification } from 'src/utils/notification'
 import { useIsMountedRef } from './useIsMountedRef'
 import {
+	governanceRefreshSelector,
 	governanceStateSelector,
 	updateGovernanceAction,
 } from 'src/redux/duck/gameDaoGovernance.duck'
@@ -209,11 +210,23 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 	const apiProvider = useApiProvider()
 	const isMountedRef = useIsMountedRef()
 	const governanceState = useSelector(governanceStateSelector)
+	const refresh = useSelector(governanceRefreshSelector)
+
 	const dispatch = useDispatch()
 
 	function setState(data) {
 		dispatch(updateGovernanceAction(data))
 	}
+
+	useEffect(() => {
+		if (refresh === true && apiProvider) {
+			setState({proposalsCount: 0});
+			setLastProposalsCount(null)
+			queryProposalsCount(apiProvider).then((proposalsCount) => {
+				setState({ proposalsCount: proposalsCount ?? 0 })
+			})
+		}
+	}, [refresh])
 
 	// Fetch proposalsCount
 	useEffect(() => {

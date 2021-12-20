@@ -12,6 +12,8 @@ import { useWallet } from 'src/context/Wallet'
 import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
+import { useDispatch } from 'react-redux'
+import { clearGovernanceAction } from 'src/redux/duck/gameDaoGovernance.duck'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -44,6 +46,8 @@ export function GovernanceProposalInfoPage() {
 
 	const [description, setDescription] = useState<any>()
 
+	const dispatch = useDispatch()
+
 	// Proposal
 	const proposal = proposals?.[proposalId]
 
@@ -75,7 +79,7 @@ export function GovernanceProposalInfoPage() {
 				error: 'Voting failed',
 			},
 			(state, result) => {
-				// TODO: 2075 Do we need error handling here if false?
+				dispatch(clearGovernanceAction())
 			}
 		)
 	}
@@ -107,6 +111,7 @@ export function GovernanceProposalInfoPage() {
 								body={body}
 								proposal={proposal}
 								proposalOwner={owners[proposalId]}
+								apiProvider={apiProvider}
 								onVoteClicked={onVoteClicked}
 							/>
 						</Stack>

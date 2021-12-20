@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Button, Link, Stack, Typography } from 'src/components'
 import { NavLink } from 'react-router-dom'
 import moment from 'moment'
@@ -7,12 +7,19 @@ import { blockTime } from '../../lib/data'
 import { useSelector } from 'react-redux'
 import { blockStateSelector } from 'src/redux/block.slice'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-export function ProposalMetadata({ address, body, proposalOwner, proposal, onVoteClicked }) {
+export function ProposalMetadata({
+	address,
+	body,
+	proposalOwner,
+	proposal,
+	apiProvider,
+	onVoteClicked,
+}) {
 	const blockNumber = useSelector(blockStateSelector)
 	const { bodyMemberState } = useGameDaoControl()
-	const { proposalVoters } = useGameDaoGovernance()
+
+	const [hasVoted, setHasVoted] = useState(false)
 
 	const bodyId = body.id
 	const proposalId = proposal.proposal_id
@@ -21,7 +28,16 @@ export function ProposalMetadata({ address, body, proposalOwner, proposal, onVot
 	const expires = proposal ? (normalizeNumber(proposal.expiry) - blockNumber) * blockTime : null
 
 	const isMember = bodyMemberState?.[bodyId]?.[address] === '1' ?? false
-	const hasVoted = proposalVoters?.[proposalId]?.includes(address) ?? false
+
+	useEffect(() => {
+		;(async () => {
+			const hasVoted = (
+				await apiProvider.query.gameDaoGovernance.votedBefore([address, proposalId])
+			).toHuman()
+
+			setHasVoted(hasVoted)
+		})()
+	}, [address, proposalId])
 
 	return (
 		<Stack flex="1" spacing={3}>
