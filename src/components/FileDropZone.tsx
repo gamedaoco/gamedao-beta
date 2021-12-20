@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material'
 import React, { DragEvent } from 'react'
 import { Paper, Box, Button } from '../components'
+
 import { useThemeState } from 'src/context/ThemeState'
 
 export const FileDropZone: React.FC<
@@ -34,6 +35,7 @@ export const FileDropZone: React.FC<
 	}, [])
 
 	const theme = useTheme()
+	const { darkmodeEnabled } = useThemeState()
 	const fileInputRef = React.useRef<HTMLInputElement>(null)
 
 	return (
