@@ -372,47 +372,28 @@ export const Main = () => {
 
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>Content</FormSectionHeadline>
-						<Typography variant="caption">It must be a JPG, GIF or PNG, 1920 x 800px and no larger than 200 MB.</Typography>
 					</Grid>
 
 					<Grid item xs={12}>
-						{logoCID.logo && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
-							<Button
-								sx={{ zIndex: '9999' }}
-								onClick={ () => {
-									const inputElem = document.getElementsByClassName("gamedao_filedrop_input_logo")[0]
-									inputElem.value = ""
-									updateLogoCID({})
-								}}>X</Button>
-						</Box>}
-						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
+						<FileDropZone name="logo" onDroppedFiles={onFileChange} onDeleteItem={ () => updateLogoCID({}) }>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
 							)}
-							<Typography variant={'body2'} align={'center'}>
-							{!logoCID.logo ? "Logo Image. Drop here, or select a file." : ""}
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo && "Logo Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo  && "It must be a JPG, GIF or PNG, no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						{headerCID.header && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
-							<Button
-								sx={{ zIndex: '9999' }}
-								onClick={ () => {
-										const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
-										inputElem.value = ""
-										updateHeaderCID({})
-								}}>x</Button>
-						</Box>}
-						<FileDropZone name="header" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Header Image (1920 x 800px)</FormSectionHeadline>
+						<FileDropZone name="header" onDroppedFiles={onFileChange} onDeleteItem={ () => updateHeaderCID({}) }>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
 								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
 							)}
-							<Typography variant={'body2'} align={'center'}>
-							{!headerCID.header ? "Header Image. Drop here, or select a file." : ""}
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "Header Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "It must be a JPG, GIF or PNG, 1920 x 800px no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 

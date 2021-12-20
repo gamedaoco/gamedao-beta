@@ -1,12 +1,13 @@
 import { useTheme } from '@mui/material'
 import React, { DragEvent } from 'react'
-import { Paper, Box } from '../components'
+import { Paper, Box, Button } from '../components'
 import { useThemeState } from 'src/context/ThemeState'
 
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
 		onDroppedFiles: (files: File[], e: any) => void
-		accept: string
+		accept: string,
+		onDeleteItem: () => void
 	}>
 > = (props) => {
 	const [hover, setHover] = React.useState(false)
@@ -37,6 +38,17 @@ export const FileDropZone: React.FC<
 
 	return (
 		<>
+			{(fileInputRef.current && fileInputRef.current.value !== "") && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
+				<Button
+					sx={{ zIndex: '9999' }}
+					onClick={ () => {
+							// const inputElem = document.getElementsByClassName("gamedao_filedrop_input_"+props.name)[0]
+							// inputElem.value = ""
+							fileInputRef.current.value = ""
+							props.onDeleteItem ? props.onDeleteItem() : null
+							//updateHeaderCID({})
+					}}>x</Button>
+			</Box>}
 			<input
 				//@ts-ignore
 				className={"gamedao_filedrop_input_"+props.name}
@@ -69,7 +81,7 @@ export const FileDropZone: React.FC<
 					padding: 4,
 					background: hover
 						? theme.palette.background.neutral
-						: theme.palette.background.paper,
+						: theme.palette.grey[900],
 					['&:hover']: {
 						background: theme.palette.background.neutral,
 						opacity: 1,
