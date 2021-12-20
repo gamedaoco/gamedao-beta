@@ -378,12 +378,15 @@ export const Main = (props) => {
 						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
-						{logoCID.logo && <Button
-						onClick={ () => {
-								const inputElem = document.getElementsByClassName("gamedao_filedrop_input_logo")[0]
-								inputElem.value = ""
-								updateLogoCID({})
-						}}>x</Button>}
+						{logoCID.logo && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
+							<Button
+								sx={{ zIndex: '9999' }}
+								onClick={ () => {
+									const inputElem = document.getElementsByClassName("gamedao_filedrop_input_logo")[0]
+									inputElem.value = ""
+									updateLogoCID({})
+								}}>X</Button>
+						</Box>}
 						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
@@ -395,12 +398,15 @@ export const Main = (props) => {
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						{headerCID.header && <Button 
-						onClick={ () => {
-								const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
-								inputElem.value = ""
-								updateHeaderCID({})
-						}}>x</Button>}
+						{headerCID.header && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
+							<Button
+								sx={{ zIndex: '9999' }}
+								onClick={ () => {
+										const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
+										inputElem.value = ""
+										updateHeaderCID({})
+								}}>x</Button>
+						</Box>}
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (

@@ -396,12 +396,15 @@ export const Main = () => {
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						{headerCID.header && <Button 
-						onClick={ () => {
-								const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
-								inputElem.value = ""
-								updateHeaderCID({})
-						}}>x</Button>}
+						{headerCID.header && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
+							<Button
+								sx={{ zIndex: '9999' }}
+								onClick={ () => {
+										const inputElem = document.getElementsByClassName("gamedao_filedrop_input_header")[0]
+										inputElem.value = ""
+										updateHeaderCID({})
+								}}>x</Button>
+						</Box>}
 						<FileDropZone name="header" onDroppedFiles={onFileChange}>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
