@@ -105,7 +105,7 @@ export const Main = ({ blockNumber }) => {
 	const [persistedData, setPersistedData] = useState()
 
 	const [fileCID, updateFileCID] = useState()
-	const [content, setContent] = useState({})
+	const [markdownValue, setMarkdownValue] = useState({})
 	const navigate = useNavigate()
 
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
@@ -118,8 +118,8 @@ export const Main = ({ blockNumber }) => {
 
 	useEffect(() => {
 		if (!account) return
-		/*const ls =  localStorage.getItem("gamedao-form-create-campaign")
-		const mls = localStorage.getItem("gamedao-markdown-create-campaign")
+		const ls =  localStorage.getItem("gamedao-form-create-governance")
+		const mls = localStorage.getItem("gamedao-markdown-create-governance")
 		if(mls){
 			setMarkdownValue(mls)
 		}
@@ -185,7 +185,7 @@ export const Main = ({ blockNumber }) => {
 				// TODO: pin...
 				const cid = await pinJSONToIPFS(content)
 				if (cid) {
-					// setContentCID(cid)
+					// setMarkdownValueCID(cid)
 					if (dev) console.log('json cid', `${gateway}${cid}`)
 					sendTX(cid)
 				}
@@ -230,6 +230,9 @@ export const Main = ({ blockNumber }) => {
 								navigate(`/app/governance/${data[1].toHex()}`)
 							}
 						})
+
+						// clear localstorage
+						localStorage.removeItem("gamedao-form-create-governance")
 					}
 
 					// TODO: 2075 Do we need error handling here if false?
