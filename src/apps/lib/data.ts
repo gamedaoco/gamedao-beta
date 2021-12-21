@@ -164,6 +164,7 @@ export const proposal_states = [
 	{ key: '3', text: 'rejected', value: '3' },
 	{ key: '4', text: 'expired', value: '4' },
 	{ key: '5', text: 'aborted', value: '5' },
+	{ key: '6', text: 'finalized', value: '6' }, // withdrawal proposal was processed
 ]
 
 //
