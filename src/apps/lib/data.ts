@@ -157,9 +157,19 @@ export const campaign_states = [
 	{ key: '5', text: 'locked', value: '5' },
 ]
 
+export const proposal_states = [
+	{ key: '0', text: 'initialized', value: '0' },
+	{ key: '1', text: 'active', value: '1' },
+	{ key: '2', text: 'accepted', value: '2' },
+	{ key: '3', text: 'rejected', value: '3' },
+	{ key: '4', text: 'expired', value: '4' },
+	{ key: '5', text: 'aborted', value: '5' },
+]
+
 //
 
 export const data = {
+	proposal_states,
 	collateral_types,
 	campaign_states,
 	jsonEndpoint,
@@ -170,13 +180,11 @@ export const data = {
 	curve_function,
 	project_durations,
 	blockTime,
-	blocksPerDay,
 	blockFactor,
 	dao_bodies,
 	dao_member_governance,
 	dao_fee_model,
 	voting_types,
-	proposal_types,
 }
 
 export default data
