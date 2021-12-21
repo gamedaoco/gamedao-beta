@@ -180,12 +180,26 @@ const palette = {
 		text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
 		background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
 		action: { active: GREY[600], ...COMMON.action },
+		proposalStates: {
+			active: '#F9C49D',
+			expired: '#848484',
+			accepted: '#A1F1D8',
+			rejected: '#F2ADAD',
+			default: '#F9C49D',
+		},
 	},
 	dark: {
 		...COMMON,
 		text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
 		background: { paper: '#25282B', default: GREY[900], neutral: GREY[500_16] },
 		action: { active: GREY[500], ...COMMON.action },
+		proposalStates: {
+			active: '#F9C49D',
+			expired: '#848484',
+			accepted: '#A1F1D8',
+			rejected: '#F2ADAD',
+			default: '#F9C49D',
+		},
 	},
 }
 
