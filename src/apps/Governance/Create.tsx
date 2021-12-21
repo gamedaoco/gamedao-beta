@@ -4,7 +4,14 @@ import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useApiProvider } from '@substra-hooks/core'
 import { gateway, pinJSONToIPFS } from '../lib/ipfs'
 import config from '../../config'
-import { data, rnd } from '../lib/data'
+import {
+	blocksPerDay,
+	project_durations,
+	proposal_types,
+	voting_types,
+	data,
+	rnd,
+} from '../lib/data'
 
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -50,7 +57,7 @@ const random_state = (account, campaigns = []) => {
 	const description = ''
 	const cid = ''
 	const amount = rnd(10) * 100
-	const duration = Number(data.project_durations[rnd(data.project_durations.length)].value)
+	const duration = Number(project_durations[rnd(project_durations.length)].value)
 	const proposer = account.address
 	const beneficiary = account.address
 	const voting_type = 0
@@ -192,7 +199,7 @@ export const Main = ({ blockNumber }) => {
 
 			const start = blockNumber // current block as start block
 
-			const expiry = formData.duration * data.blocksPerDay + start // take current block as offset
+			const expiry = formData.duration * blocksPerDay + start // take current block as offset
 			const { entity, purpose } = formData
 
 			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
@@ -312,7 +319,7 @@ export const Main = ({ blockNumber }) => {
 										onChange={handleOnChange}
 										fullWidth
 									>
-										{data.proposal_types.map((pt) => (
+										{proposal_types.map((pt) => (
 											<MenuItem key={pt.key} value={pt.value}>
 												{pt.text}
 											</MenuItem>
@@ -330,7 +337,7 @@ export const Main = ({ blockNumber }) => {
 										onChange={handleOnChange}
 										fullWidth
 									>
-										{data.voting_types.map((vt) => (
+										{voting_types.map((vt) => (
 											<MenuItem key={vt.key} value={vt.value}>
 												{vt.text}
 											</MenuItem>

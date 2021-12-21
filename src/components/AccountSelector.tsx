@@ -69,6 +69,7 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
+		updateStore({ allowConnection: false })
 		updateWalletState({ allowConnect: false })
 	}
 
@@ -77,7 +78,6 @@ const AccountComponent = () => {
 		if (allowConnect && !w3Enabled) {
 			w3enable()
 		} else if (w3Enabled && !allowConnect) {
-			updateStore({lastAccountIndex: null})
 			updateWalletState({
 				address: null,
 				account: null,
