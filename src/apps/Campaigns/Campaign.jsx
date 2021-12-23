@@ -24,11 +24,10 @@ import {
 	Image16to9,
 	Countdown,
 	MarkdownViewer,
-	Link
+	Link,
 } from '../../components'
 
 import { TileReward } from './TileReward'
-
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
@@ -111,10 +110,10 @@ export function Campaign() {
 	// campaign specific foreground object code
 	let Foreground = foregroundContentMap.default
 
-	if(id === '0xd05e980cffef3bf9d00984d92ba5023b2e7e57de39718b3bc0abb6e961f4de3a'){
+	if (id === '0xd05e980cffef3bf9d00984d92ba5023b2e7e57de39718b3bc0abb6e961f4de3a') {
 		Foreground = foregroundContentMap.koijam
 	}
-	if(id === '0xd22b4578b3b6d82a9b2e2ce13cc49f4b20806a34b31dcf08060cd815fcc43bcc'){
+	if (id === '0xd22b4578b3b6d82a9b2e2ce13cc49f4b20806a34b31dcf08060cd815fcc43bcc') {
 		Foreground = foregroundContentMap.pixzoo
 	}
 
@@ -124,9 +123,7 @@ export function Campaign() {
 	const [IPFSData, setIPFSData] = React.useState()
 	const [content, setContent] = React.useState()
 	const { campaignBalance, campaignState, campaigns } = useCrowdfunding()
-	const {
-		bodies,
-	} = useGameDaoControl()
+	const { bodies } = useGameDaoControl()
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
@@ -134,7 +131,7 @@ export function Campaign() {
 
 	// markdown editor
 	function handleEditorChange({ html, text }) {
-		console.log('handleEditorChange', html, text);
+		console.log('handleEditorChange', html, text)
 	}
 
 	// fetch chain data
@@ -148,19 +145,16 @@ export function Campaign() {
 		}
 
 		setContent(content)
-
 	}, [campaignBalance, campaignState, campaigns])
 
-	useEffect( () => {
-		if(!content) return
+	useEffect(() => {
+		if (!content) return
 
 		// fetch json from ipfs
-		fetch(gateway+content.cid)
-			.then( res => res.json() )
-			.then( data => setIPFSData(data) )
-
+		fetch(gateway + content.cid)
+			.then((res) => res.json())
+			.then((data) => setIPFSData(data))
 	}, [content])
-
 
 	if (!content || !IPFSData || !bodies) return null
 
@@ -170,20 +164,19 @@ export function Campaign() {
 	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
 	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
 	const blocksUntilExpiry = campaignEndBlockHeight - blockheight
-	const expiryTimestamp = Date.now() + blocksUntilExpiry*3*1000
-	const campaignProgress = ( parseFloat(content.balance.split(' ')[0]) / parseFloat(content.cap.split(' ')[0]) ) * 100
+	const expiryTimestamp = Date.now() + blocksUntilExpiry * 3 * 1000
+	const campaignProgress =
+		(parseFloat(content.balance.split(' ')[0]) / parseFloat(content.cap.split(' ')[0])) * 100
 	const funded = campaignProgress >= 100
 
-	const org = bodies[content.org].name
+	const org = bodies[content.org]?.name
 	const mdown = IPFSData.markdown
-
-	//console.log(org)
 
 	return (
 		<Box>
 			<Box
 				sx={{
-					backgroundImage:`linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
+					backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.0), rgba(22, 28, 36, 0.9)), url(${gateway}${IPFSData.header})`,
 					backgroundRepeat: 'no-repeat',
 					backgroundSize: 'cover',
 					minHeight: '60vh',
@@ -198,11 +191,20 @@ export function Campaign() {
 						<Grid item xs={12} md={5}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
-									<img style={{maxHeight: '40vh'}} src={`${gateway}${IPFSData.logo}`} alt={IPFSData.title+' logo'} />
+									<img
+										style={{ maxHeight: '40vh' }}
+										src={`${gateway}${IPFSData.logo}`}
+										alt={IPFSData.title + ' logo'}
+									/>
 								</Grid>
 								<Grid item xs={12}>
 									<Headline component={'h1'}>{content.name}</Headline>
-									<Link component={NavLink}  to={"/app/organisations/"+content.org}><Typography variant="caption">{org}</Typography></Link>
+									<Link
+										component={NavLink}
+										to={'/app/organisations/' + content.org}
+									>
+										<Typography variant="caption">{org}</Typography>
+									</Link>
 								</Grid>
 								{/*<Grid item xs={12}>
 									<Stack direction="row" spacing={2}>
@@ -212,18 +214,17 @@ export function Campaign() {
 									</Stack>
 								</Grid>*/}
 								<Grid item xs={12}>
-									<Typography>
-										{IPFSData && IPFSData.description}
-									</Typography>
+									<Typography>{IPFSData && IPFSData.description}</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<Countdown date={expiryTimestamp}/>
+									<Countdown date={expiryTimestamp} />
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>
 										<img height={17} width={17} src={'/assets/play.png'} />
 										<Typography>
-											<strong>{content.balance} PLAY</strong> funded of {content.cap} goal
+											<strong>{content.balance} PLAY</strong> funded of{' '}
+											{content.cap} goal
 										</Typography>
 									</Stack>
 								</Grid>
@@ -275,9 +276,12 @@ export function Campaign() {
 										sx={{ mr: 5 }}
 									/>
 								</Box>
-								<ParticipateButton onClick={() => createInfoNotification("Not Implemented Yet!") } variant={'contained'}>
-									{!funded && "Participate"}
-									{funded && "Funded!"}
+								<ParticipateButton
+									onClick={() => createInfoNotification('Not Implemented Yet!')}
+									variant={'contained'}
+								>
+									{!funded && 'Participate'}
+									{funded && 'Funded!'}
 								</ParticipateButton>
 							</Stack>
 						</Grid>
@@ -296,7 +300,7 @@ export function Campaign() {
 					</Grid>
 					<Grid item xs={12}>
 						<TabPanel value={value} index={0}>
-							<MarkdownViewer markdown={mdown}/>
+							<MarkdownViewer markdown={mdown} />
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<Rewards />

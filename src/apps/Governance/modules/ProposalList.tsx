@@ -5,7 +5,6 @@ import { ProposalItem } from './ProposalItem'
 
 export function ProposalList({ blockNumber }) {
 	const { proposals } = useGameDaoGovernance()
-	console.log('🚀 ~ file: ProposalList.tsx ~ line 8 ~ ProposalList ~ proposals', proposals)
 
 	return proposals ? (
 		<Paper>
