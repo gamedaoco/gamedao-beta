@@ -119,7 +119,6 @@ export function GovernanceProposalInfoPage() {
 					</Paper>
 				</>
 			) : null}
-			{proposal ? <ProposalVoterList proposal={proposal} /> : null}
 		</Stack>
 	)
 }
