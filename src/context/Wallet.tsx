@@ -63,11 +63,36 @@ const WalletProvider = ({ children }) => {
 				tx.signAndSend(state.address, { signer: state.signer }, (result) => {
 					console.log('🚀 ~ file: Wallet.tsx ~ line 64 ~ tx.signAndSend ~ result', result)
 					if (result.isError) {
+						result.events.forEach(
+							({ event: { data, method, section, meta, typeDef } }) => {
+								console.log(
+									'Wallet Transaction Result:',
+									method,
+									section,
+									data.toHuman(),
+									meta.toHuman(),
+									typeDef
+								)
+							}
+						)
 						if (callback) callback(false, result)
 						return reject()
 					}
 					if (result.status.isFinalized) {
 						if (callback) callback(true, result)
+
+						result.events.forEach(
+							({ event: { data, method, section, meta, typeDef } }) => {
+								console.log(
+									'Wallet Transaction Result:',
+									method,
+									section,
+									data.toHuman(),
+									meta.toHuman(),
+									typeDef
+								)
+							}
+						)
 						return resolve('')
 					}
 				})
