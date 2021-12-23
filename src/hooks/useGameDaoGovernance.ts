@@ -22,6 +22,8 @@ type GameDaoGovernanceState = {
 	proposalSimpleVotes: object
 	proposalStates: object
 	proposalVoters: object
+	proposalApprovers: object
+	proposalDeniers: object
 }
 
 async function queryProposalsCount(apiProvider: ApiPromise): Promise<number> {
@@ -204,6 +206,42 @@ async function queryProposalVoters(apiProvider: ApiPromise, hashes: any): Promis
 	return mapping
 }
 
+async function queryProposalApprovers(apiProvider: ApiPromise, hashes: any): Promise<any> {
+	const [error, data] = await to(apiProvider.query.gameDaoGovernance.proposalApprovers.multi(hashes))
+
+	if (error) {
+		console.error(error, hashes)
+		createErrorNotification('Error while querying the gameDaoGovernance queryProposalApprovers')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
+async function queryProposalDeniers(apiProvider: ApiPromise, hashes: any): Promise<any> {
+	const [error, data] = await to(apiProvider.query.gameDaoGovernance.proposalDeniers.multi(hashes))
+
+	if (error) {
+		console.error(error, hashes)
+		createErrorNotification('Error while querying the gameDaoGovernance queryProposalDeniers')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
 export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 	const [lastProposalsCount, setLastProposalsCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
@@ -301,6 +339,14 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 						apiProvider,
 						keys.filter((hash) => !(governanceState.proposalVoters ?? {})[hash])
 					),
+					queryProposalApprovers(
+						apiProvider,
+						keys.filter((hash) => !(governanceState.proposalApprovers ?? {})[hash])
+					),
+					queryProposalDeniers(
+						apiProvider,
+						keys.filter((hash) => !(governanceState.proposalDeniers ?? {})[hash])
+					),
 				])
 
 				setIsDataLoading(false)
@@ -333,6 +379,14 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 						proposalVoters: {
 							...(governanceState.proposalVoters ?? {}),
 							...(data[6] ?? {}),
+						},
+						proposalApprovers: {
+							...(governanceState.proposalApprovers ?? {}),
+							...(data[7] ?? {}),
+						},
+						proposalDeniers: {
+							...(governanceState.proposalDeniers ?? {}),
+							...(data[8] ?? {}),
 						},
 					})
 				}

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box, Button, Stack, Typography } from 'src/components'
+import { Box, Button, Stack, Typography, Chip, useTheme } from 'src/components'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { blockTime } from 'src/apps/lib/data'
+import { blockTime, PROPOSAL_STATE_MAPPING } from 'src/apps/lib/data'
 
 import moment from 'moment'
 import { Divider, LinearProgress } from '@mui/material'
@@ -11,13 +11,18 @@ import { normalizeNumber } from 'src/utils/normalizeNumber'
 
 export function ProposalItem({ blockNumber, proposal, showDivider }) {
 	// Get state
-	const { metadata, proposalSimpleVotes } = useGameDaoGovernance()
+	const { metadata, proposalSimpleVotes, proposalStates } = useGameDaoGovernance()
 	const { bodies } = useGameDaoControl()
 	const navigate = useNavigate()
+	const theme = useTheme()
 
 	// Proposal
 	const proposalId = proposal.proposal_id
 	const proposalMeta = metadata?.[proposalId]
+	const proposalState = +proposalStates[proposalId]
+	const proposalStateColor =
+		(theme.palette as any).proposalStates[PROPOSAL_STATE_MAPPING[proposalState]] ??
+		(theme.palette as any).proposalStates.default
 
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
@@ -40,7 +45,11 @@ export function ProposalItem({ blockNumber, proposal, showDivider }) {
 		<>
 			<Box display="flex">
 				<Stack width="100%" display="flex" flexDirection="row" justifyItems="center">
-					<Box flexBasis="45%">
+					<Box
+						flexBasis="45%"
+						onClick={() => navigate(`/app/governance/${proposalId}`)}
+						sx={{ cursor: 'pointer' }}
+					>
 						<Typography variant="h6">{proposalMeta.title}</Typography>
 						<Typography variant="body1">
 							{body.name},{' '}
@@ -68,9 +77,20 @@ export function ProposalItem({ blockNumber, proposal, showDivider }) {
 							</Typography>
 						</Box>
 					</Box>
-					<Box marginLeft="auto">
+					<Box marginLeft="auto" marginRight={1} display="flex" alignItems="center">
+						<Chip
+							sx={{
+								textTransform: 'capitalize',
+								color: proposalStateColor,
+								borderColor: proposalStateColor,
+							}}
+							variant="outlined"
+							label={PROPOSAL_STATE_MAPPING[proposalState]}
+						/>
+					</Box>
+					<Box>
 						<Button onClick={() => navigate(`/app/governance/${proposalId}`)}>
-							Vote
+							{proposalState !== 1 ? 'See Details' : 'Vote'}
 						</Button>
 					</Box>
 				</Stack>

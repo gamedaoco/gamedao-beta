@@ -14,6 +14,7 @@ import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
 import { useDispatch } from 'react-redux'
 import { clearGovernanceAction } from 'src/redux/duck/gameDaoGovernance.duck'
+import { ProposalVoterList } from './modules/ProposalVoterList'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -118,6 +119,7 @@ export function GovernanceProposalInfoPage() {
 					</Paper>
 				</>
 			) : null}
+			{proposal ? <ProposalVoterList proposal={proposal} /> : null}
 		</Stack>
 	)
 }

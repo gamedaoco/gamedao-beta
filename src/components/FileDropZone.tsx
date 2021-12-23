@@ -1,11 +1,14 @@
 import { useTheme } from '@mui/material'
 import React, { DragEvent } from 'react'
-import { Paper, Box } from '../components'
+import { Paper, Box, Button } from '../components'
+
+import { useThemeState } from 'src/context/ThemeState'
 
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
 		onDroppedFiles: (files: File[], e: any) => void
-		accept: string
+		accept: string,
+		onDeleteItem: () => void
 	}>
 > = (props) => {
 	const [hover, setHover] = React.useState(false)
@@ -32,12 +35,25 @@ export const FileDropZone: React.FC<
 	}, [])
 
 	const theme = useTheme()
-
+	const { darkmodeEnabled } = useThemeState()
 	const fileInputRef = React.useRef<HTMLInputElement>(null)
 
 	return (
 		<>
+			{(fileInputRef.current && fileInputRef.current.value !== "") && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
+				<Button
+					sx={{ zIndex: '9999' }}
+					onClick={ () => {
+							// const inputElem = document.getElementsByClassName("gamedao_filedrop_input_"+props.name)[0]
+							// inputElem.value = ""
+							fileInputRef.current.value = ""
+							props.onDeleteItem ? props.onDeleteItem() : null
+							//updateHeaderCID({})
+					}}>x</Button>
+			</Box>}
 			<input
+				//@ts-ignore
+				className={"gamedao_filedrop_input_"+props.name}
 				//@ts-ignore
 				name={props.name}
 				style={{ position: 'absolute', left: '-9999999px' }}
@@ -58,7 +74,7 @@ export const FileDropZone: React.FC<
 					justifyContent: 'center',
 					alignItems: 'center',
 					textAlign: 'center',
-					border: `1px solid ${theme.palette.background.neutral}`,
+					border: `1px dashed ${theme.palette.grey[500]}`,
 					display: 'flex',
 					flexDirection: 'column',
 					opacity: hover ? 1 : 0.6,
@@ -67,7 +83,7 @@ export const FileDropZone: React.FC<
 					padding: 4,
 					background: hover
 						? theme.palette.background.neutral
-						: theme.palette.background.paper,
+						: darkmodeEnabled ? theme.palette.grey[900] : theme.palette.background.neutral,
 					['&:hover']: {
 						background: theme.palette.background.neutral,
 						opacity: 1,

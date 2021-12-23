@@ -2,7 +2,9 @@ import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useFormik } from 'formik';
+import { useWallet } from 'src/context/Wallet'
+import { formatZero } from 'src/utils/helper'
+import { useFormik } from 'formik'
 import {
 	Box,
 	Button,
@@ -24,14 +26,13 @@ import {
 	Stepper,
 	TextField,
 	Typography,
-	Loader
+	Loader,
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
-import { useWallet } from 'src/context/Wallet'
-import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect';
+import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
 const dev = config.dev
 if (dev) console.log('dev mode')
@@ -104,17 +105,16 @@ export const Main = (props) => {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		const ls =  localStorage.getItem("gamedao-form-create-org")
-		if(ls){
+		const ls = localStorage.getItem('gamedao-form-create-org')
+		if (ls) {
 			setPersistedData(JSON.parse(ls))
 		}
 		setInitialData(random_state(account))
 	}, [account])
 
-
 	// handle file uploads to ipfs
 	const onFileChange = (files, event) => {
-		const name = event.target.getAttribute("name")
+		const name = event.target.getAttribute('name')
 
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
@@ -162,6 +162,7 @@ export const Main = (props) => {
 		const sendTX = async (cid) => {
 			setLoading(true)
 			if (dev) console.log('2. send tx')
+
 			const payload = [
 				address,
 				formik.values.treasury,
@@ -170,7 +171,7 @@ export const Main = (props) => {
 				formik.values.body,
 				formik.values.access,
 				formik.values.fee_model,
-				formik.values.fee,
+				formatZero(formik.values.fee),
 				0,
 				0,
 				formik.values.member_limit,
@@ -184,8 +185,6 @@ export const Main = (props) => {
 					error: 'Summoning failed, check your Mana.',
 				},
 				(state, result) => {
-					setLoading(false)
-					setRefresh(true)
 					if (state) {
 						setStepperState(2)
 						result.events.forEach(({ event: { data, method, section } }) => {
@@ -193,6 +192,9 @@ export const Main = (props) => {
 								navigate(`/app/organisations/${data[1].toHex()}`)
 							}
 						})
+
+						// clear localstorage
+						localStorage.removeItem("gamedao-form-create-org")
 					}
 				}
 			)
@@ -237,28 +239,33 @@ export const Main = (props) => {
 
 			if(values.treasury.length !== 47) errors.treasury = "Not a valid Account Address!"
 			if(values.treasury === values.controller) errors.treasury = "Treasury Account needs to differ from Controller Account!"
-			return errors
+
+      return errors
 		},
 		//validationSchema: validationSchema,
-		onSubmit: handleSubmit
-	});
+		onSubmit: handleSubmit,
+	})
 
 	// update json payload from form data
-	useDebouncedEffect(() => {
-		if (!formik.values) return
-		if (dev) console.log('update content json')
-		const contentJSON = {
-			name: formik.values.name,
-			description: formik.values.description,
-			website: formik.values.website,
-			email: formik.values.email,
-			repo: formik.values.repo,
-			...logoCID,
-			...headerCID,
-		}
-		setContent(contentJSON)
-		localStorage.setItem("gamedao-form-create-org", JSON.stringify(formik.values))
-	}, [logoCID, headerCID, formik.values], 2000)
+	useDebouncedEffect(
+		() => {
+			if (!formik.values) return
+			if (dev) console.log('update content json')
+			const contentJSON = {
+				name: formik.values.name,
+				description: formik.values.description,
+				website: formik.values.website,
+				email: formik.values.email,
+				repo: formik.values.repo,
+				...logoCID,
+				...headerCID,
+			}
+			setContent(contentJSON)
+			localStorage.setItem('gamedao-form-create-org', JSON.stringify(formik.values))
+		},
+		[logoCID, headerCID, formik.values],
+		2000
+	)
 
 	useEffect(() => {
 		if (!refresh) return
@@ -349,7 +356,7 @@ export const Main = (props) => {
 								))}
 							</Select>
 							<FormHelperText>{formik.touched.body && formik.errors.body}</FormHelperText>
-						</FormControl>
+            </FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormControl fullWidth error={formik.touched.country && Boolean(formik.errors.country)}>
@@ -372,31 +379,39 @@ export const Main = (props) => {
 								))}
 							</Select>
 							<FormHelperText>{formik.touched.country && formik.errors.country}</FormHelperText>
-						</FormControl>
+            </FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormSectionHeadline variant={'h5'}>Logos</FormSectionHeadline>
+						<FormSectionHeadline variant={'h5'}>Images</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
-						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
+						<FileDropZone name="logo" onDroppedFiles={onFileChange} onDeleteItem={ () => updateLogoCID({}) } >
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
-								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + logoCID.logo}
+								/>
 							)}
-							<Typography variant={'body2'} align={'center'}>
-							{!logoCID.logo ? "Pick a " : ""}logo graphic
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo && "Logo Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!logoCID.logo  && "It must be a JPG, GIF or PNG, no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						<FileDropZone name="header" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Header (1920 x 800px)</FormSectionHeadline>
+						<FileDropZone name="header" onDroppedFiles={onFileChange} onDeleteItem={ () => updateHeaderCID({}) }>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
-								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + headerCID.header}
+								/>
 							)}
-							<Typography variant={'body2'} align={'center'}>
-							{!headerCID.header ? "Pick a " : ""}header graphic
-							</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "Header Image. Drop here, or select a file."}</Typography>
+							<Typography variant={'body2'} align={'center'}>{!headerCID.header && "It must be a JPG or PNG, 1920 x 800px no larger than 200 MB."}</Typography>
 						</FileDropZone>
 					</Grid>
 
@@ -504,6 +519,7 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+
 							<FormHelperText>{formik.touched.access && formik.errors.access}</FormHelperText>
 						</FormControl>
 					</Grid>
@@ -541,6 +557,7 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
+
 							<FormHelperText>{formik.touched.fee_model && formik.touched.fee_model}</FormHelperText>
 						</FormControl>
 					</Grid>
@@ -567,7 +584,9 @@ export const Main = (props) => {
 						Create Organization
 					</Button>
 				)}
-				<Typography sx={{ color: "red" }}>{Object.keys(formik.errors).length !== 0 ? "errors present" : ""}</Typography>
+				<Typography sx={{ color: 'red' }}>
+					{Object.keys(formik.errors).length !== 0 ? 'errors present' : ''}
+				</Typography>
 			</Container>
 		</form>
 	)

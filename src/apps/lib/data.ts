@@ -24,14 +24,14 @@ export const proposal_types = [
 ]
 
 export const voting_types = [
-// majority of those who vote, 1 account, 1 vote
+	// majority of those who vote, 1 account, 1 vote
 	{ key: '0', text: 'Simple Majority', value: 0 },
-// majority of token weight
+	// majority of token weight
 	{ key: '1', text: 'Token Weight Majority', value: 1 },
-// 3. absolute majority
+	// 3. absolute majority
 	{ key: '4', text: 'Absolute Majority', value: 3 },
-// { key: '2', text: 'Quadratic', value: 2 },
-// { key: '3', text: 'Ranked Choice', value: 4 },
+	// { key: '2', text: 'Quadratic', value: 2 },
+	// { key: '3', text: 'Ranked Choice', value: 4 },
 ]
 
 // dao
@@ -123,7 +123,7 @@ export const CampaignGovernance = {
 // durations will be converted to blocks
 // where 1 day == (60 / 3) * 60 * 24 == 28800 blocks
 export const blockTime = 3
-export const blocksPerDay = 24 * 60 * 60 / blockTime
+export const blocksPerDay = (24 * 60 * 60) / blockTime
 export const blockFactor = blockTime * (60 / blockTime) * 60 * 24
 
 export const project_durations = [
@@ -134,8 +134,8 @@ export const project_durations = [
 	// { key: '4', text: '1 year', value: '365' },
 ]
 
-if(dev){
-  project_durations.push({ key: '5', text: '5 Minutes', value: '0.004' })
+if (dev) {
+	project_durations.push({ key: '5', text: '5 Minutes', value: '0.004' })
 }
 
 export const blocksToTime = (blocks: number) => {
@@ -157,9 +157,24 @@ export const campaign_states = [
 	{ key: '5', text: 'locked', value: '5' },
 ]
 
+export const proposal_states = [
+	{ key: '0', text: 'initialized', value: '0' },
+	{ key: '1', text: 'active', value: '1' },
+	{ key: '2', text: 'accepted', value: '2' },
+	{ key: '3', text: 'rejected', value: '3' },
+	{ key: '4', text: 'expired', value: '4' },
+	{ key: '5', text: 'aborted', value: '5' },
+	{ key: '6', text: 'finalized', value: '6' }, // withdrawal proposal was processed
+]
+
+export const PROPOSAL_STATE_MAPPING = proposal_states.reduce(
+	(a, b) => ({ ...(a.key ? { [+a.key]: a.text } : a), [+b.key]: b.text } as any)
+)
+
 //
 
 export const data = {
+	proposal_states,
 	collateral_types,
 	campaign_states,
 	jsonEndpoint,
@@ -170,13 +185,11 @@ export const data = {
 	curve_function,
 	project_durations,
 	blockTime,
-	blocksPerDay,
 	blockFactor,
 	dao_bodies,
 	dao_member_governance,
 	dao_fee_model,
 	voting_types,
-	proposal_types,
 }
 
 export default data
