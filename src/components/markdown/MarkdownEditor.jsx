@@ -5,6 +5,8 @@ import MarkdownIt from 'markdown-it';
 import { html5IPFSMedia } from './markdownItIPFSMediaPlugin'
 import { useThemeState } from 'src/context/ThemeState'
 
+import '../../mkEditor.css';
+
 import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
 
 
@@ -30,7 +32,7 @@ mdParser.use(html5IPFSMedia);
 async function onImageUpload(file) {
   if (!file) return
   if (dev) console.log('upload image')
-  
+
   try {
     const cid = await pinFileToIPFS(file)
     if (dev) console.log('file cid', `${gateway}${cid}`)
@@ -43,10 +45,10 @@ async function onImageUpload(file) {
 
 export const MarkdownEditor = ({onChange, value}) => {
   const { darkmodeEnabled } = useThemeState()
-  return useMemo( () => { 
-    return <MdEditor 
+  return useMemo( () => {
+    return <MdEditor
         value={value}
-        style={{ height: '500px', zIndex: 10000 }} 
+		style={{ height: '500px', '.full': {zIndex: 10000} }}
         id={darkmodeEnabled ? 'editor_dark' : 'editor_light'}
         htmlClass={darkmodeEnabled ? 'editor_dark_html custom-html-style' : 'editor_light_html custom-html-style'}
         markdownClass={darkmodeEnabled ? 'editor_dark_markdown' : 'editor_light_markdown'}
