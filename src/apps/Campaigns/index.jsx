@@ -20,7 +20,7 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
 import { useWallet } from 'src/context/Wallet'
 
-const CampaignGrid = lazy(() => import('./CampaignGrid'))
+import CampaignGrid from './CampaignGrid'
 const CreateCampaign = lazy(() => import('./Create'))
 
 //
@@ -52,18 +52,18 @@ export const Campaigns = (props) => {
 			}
 		})
 
-		content.sort(function(a, b) {
+		content.sort(function (a, b) {
 			var A = parseInt(a.expiry.replaceAll(',', ''))
 			var B = parseInt(b.expiry.replaceAll(',', ''))
 			if (A < B) {
-			  return -1;
+				return -1
 			}
 			if (A > B) {
-			  return 1;
+				return 1
 			}
-			return 0;
-		  });
-		  
+			return 0
+		})
+
 		setContent(content)
 	}, [campaignsIndex, campaignBalance, campaignState, campaigns])
 
@@ -80,17 +80,21 @@ export const Campaigns = (props) => {
 					alignItems: 'center',
 				}}
 			>
-				<Typography>Campaigns</Typography>
-				<Typography>
-					{!content || campaignsCount === 0 ? (
-						<>
-							<Loader text="" />
-						</>
-					) : (
-						<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
-					)}
-				</Typography>
-				<Box>
+				{!showCreateMode && (
+					<>
+						<Typography>Campaigns</Typography>
+						<Typography>
+							{!content || campaignsCount === 0 ? (
+								<>
+									<Loader text="" />
+								</>
+							) : (
+								<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
+							)}
+						</Typography>{' '}
+					</>
+				)}
+				<Box marginLeft="auto">
 					{showCreateMode ? (
 						<Button
 							variant="outlined"
