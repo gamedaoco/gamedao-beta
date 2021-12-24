@@ -6,6 +6,7 @@ import { ISubmittableResult, Signer } from '@polkadot/types/types'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { to } from 'await-to-js'
 import { createErrorNotification, createPromiseNotification } from 'src/utils/notification'
+import { useApiProvider } from '@substra-hooks/core'
 
 export type WalletState = {
 	allowConnect: boolean
@@ -43,6 +44,7 @@ const useWallet = () => useContext<WalletState>(WalletContext)
 const WalletProvider = ({ children }) => {
 	const [state, setState] = useState<WalletState>(INITIAL_STATE)
 	const { allowConnection } = useStore()
+	const ApiProvider = useApiProvider()
 
 	const handleUpdateWalletState = (stateData) => {
 		setState({ ...state, ...stateData })
@@ -62,24 +64,41 @@ const WalletProvider = ({ children }) => {
 			const [error] = await to(
 				tx.signAndSend(state.address, { signer: state.signer }, (result) => {
 					console.log('🚀 ~ file: Wallet.tsx ~ line 64 ~ tx.signAndSend ~ result', result)
-					if (result.isError) {
-						result.events.forEach(
-							({ event: { data, method, section, meta, typeDef } }) => {
-								console.log(
-									'Wallet Transaction Result:',
-									method,
-									section,
-									data.toHuman(),
-									meta.toHuman(),
-									typeDef
-								)
-							}
-						)
-						if (callback) callback(false, result)
-						return reject()
-					}
+
 					if (result.status.isFinalized) {
-						if (callback) callback(true, result)
+						let hasError = false
+						result.events
+							// find/filter for failed events
+							.filter(({ event }) =>
+								ApiProvider.events.system.ExtrinsicFailed.is(event)
+							)
+							// we know that data for system.ExtrinsicFailed is
+							// (DispatchError, DispatchInfo)
+							.forEach(
+								({
+									event: {
+										data: [error, info],
+									},
+								}) => {
+									hasError = true
+									if ((error as any).isModule) {
+										// for module errors, we have the section indexed, lookup
+										const decoded = ApiProvider.registry.findMetaError(
+											(error as any).asModule
+										)
+										const { docs, method, section } = decoded
+
+										console.log(
+											`Wallet Transaction Result : LOG ${section}.${method}: ${docs.join(
+												' '
+											)}`
+										)
+									} else {
+										// Other, CannotLookup, BadOrigin, no extra info
+										console.log('Wallet Transaction Result:', error.toString())
+									}
+								}
+							)
 
 						result.events.forEach(
 							({ event: { data, method, section, meta, typeDef } }) => {
@@ -93,7 +112,14 @@ const WalletProvider = ({ children }) => {
 								)
 							}
 						)
-						return resolve('')
+
+						if (hasError) {
+							if (callback) callback(false, result)
+							return reject()
+						} else {
+							if (callback) callback(true, result)
+							return resolve('')
+						}
 					}
 				})
 			)
