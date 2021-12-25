@@ -222,9 +222,9 @@ export const Main = () => {
 			setStepperState(1)
 			const errors = {}
 
-			if (!values.org || values.org === '') errors.org = 'You must choose an Organization'
+			if (!values.org || values.org === '') errors.org = 'Please choose an Organization'
 
-			if (values.description === 'Awesome Short Description')
+			if (values.description === 'Short Description')
 				errors.description = 'You can do better than that!'
 
 			if (!values.title || values.title === '')
@@ -239,19 +239,19 @@ export const Main = () => {
 			}
 
 			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-				errors.email = 'Please enter a valid e-mail address.'
+				errors.email = 'Please enter a valid email address.'
 			}
 
-			if (values.cap === '0' || values.cap === '') errors.cap = 'Please enter funding target.'
+			if (values.cap === '0' || values.cap === '') errors.cap = 'Please enter a funding target.'
 			if (values.cap && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.cap))
 				errors.cap = 'Funding target must be numerical'
 
 			if (values.deposit === '0' || values.deposit === '')
-				errors.deposit = 'Please enter funding target.'
+				errors.deposit = 'Please enter a funding target.'
 			if (values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit))
 				errors.deposit = 'Deposit must be numerical'
 
-			if (!values.accept) errors.accept = 'You must accept the Terms'
+			if (!values.accept) errors.accept = 'Please accept the Terms and Conditions'
 
 			return errors
 		},
