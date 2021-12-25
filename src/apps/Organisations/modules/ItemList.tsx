@@ -9,9 +9,12 @@ const TileWrapper = styled(Box)(({ theme }) => ({
 	rowGap: theme.spacing(2),
 	columnGap: theme.spacing(2),
 	[theme.breakpoints.up('md')]: {
-		gridTemplateColumns: '1fr 1fr 1fr',
+		gridTemplateColumns: '1fr 1fr',
 	},
 	[theme.breakpoints.up('lg')]: {
+		gridTemplateColumns: '1fr 1fr 1fr',
+	},
+	[theme.breakpoints.up('xl')]: {
 		gridTemplateColumns: '1fr 1fr 1fr 1fr',
 	},
 }))
@@ -26,7 +29,7 @@ const ListWrapper = styled(Box)(({ theme }) => ({
 export function ItemList({ data }) {
 	const [pageState, setPageState] = useState(0)
 	const [rowsPerPageState, setRowsPerPageState] = useState(25)
-	const [displayModeState, setDisplayModeState] = useState(ListTileEnum.LIST)
+	const [displayModeState, setDisplayModeState] = useState(ListTileEnum.TILE)
 	const [displayState, setDisplayState] = useState([])
 
 	useEffect(() => {
