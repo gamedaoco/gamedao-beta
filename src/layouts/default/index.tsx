@@ -22,6 +22,7 @@ const Layout = ({
 }: ComponentProps) => {
 	return (
 		<>
+			<Box flexGrow={1}>{showHeader && <Header />}</Box>
 			<Box
 				sx={{
 					height: '100%',
@@ -36,7 +37,6 @@ const Layout = ({
 				</Box>
 
 				<Box flexGrow={1}>
-					{showHeader && <Header />}
 					{noContainer ? (
 						<Box>{children}</Box>
 					) : (
@@ -46,7 +46,9 @@ const Layout = ({
 					)}
 				</Box>
 			</Box>
+
 			<Box flexGrow={1}>{showFooter && <Footer />}</Box>
+
 		</>
 	)
 }

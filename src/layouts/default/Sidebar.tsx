@@ -149,16 +149,8 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid #33383F',
 			}}
 		>
-			<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 4, marginTop: 2 }}>
-				<Link component={NavLink} to="/">
-					<Icons
-						src={darkmodeEnabled ? ICON_MAPPING.logoWhite : ICON_MAPPING.logo}
-						alt={'GameDAO'}
-						sx={{ height: '45.4px' }}
-					/>
-				</Link>
-			</Box>
-			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '2.5rem' }}>
+
+			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
 				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
