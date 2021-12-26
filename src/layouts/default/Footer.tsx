@@ -31,7 +31,7 @@ export const Footer = (props) => (
 
 				<Grid container direction="row" mt={4} mb={4}>
 
-					<Grid item xs={4} md={3} mb={4}>
+					<Grid item xs={12} md={2} mb={4}>
 						<a href="#top">
 							<img
 								alt="GameDAO"
@@ -41,11 +41,11 @@ export const Footer = (props) => (
 						</a>
 					</Grid>
 
-					<Grid item xs={4} md={3} mb={4}>
-						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
+					<Grid item xs={6} md={2} mb={4}>
+						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
 							About
 						</Typography>
-						<Typography sx={{ fontSize: '10px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography sx={{ fontSize: '0.8rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
 							<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca"> pinky paper </Link>
 							<Link href="https://blog.gamedao.co">blog</Link>
 							<Link href="https://gamedao.co">gamedao.co</Link>
@@ -56,11 +56,11 @@ export const Footer = (props) => (
 							<Link href="https://www.linkedin.com/company/gamedaoco">linkedin</Link>
 						</Typography>
 					</Grid>
-					<Grid item xs={4} md={3} mb={4}>
-						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
+					<Grid item xs={6} md={2} mb={4}>
+						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
 							How we build
 						</Typography>
-						<Typography sx={{ fontSize: '10px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography sx={{ fontSize: '0.8rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
 							<Link href="https://zero.io">zero.io</Link>
 							<Link href="https://acala.network">acala.network</Link>
 							<Link href="https://substrate.dev">substrate.dev</Link>
@@ -73,12 +73,12 @@ export const Footer = (props) => (
 							</Link>
 						</Typography>
 					</Grid>
-					<Grid item xs={12} md={3} mb={4}>
-						<Typography sx={{ fontSize: '12px', fontWeight:'800' }} mb={2}>
+					<Grid item xs={12} md={6} mb={4}>
+						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
 							GameDAO.<br />
 							For the Creator and Player Economy.
 						</Typography>
-						<Typography sx={{ fontSize: '12px', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography sx={{ fontSize: '1rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
 							Community driven ownership and creation will be a vital part of how we
 							see video games in the near future. The transition to token driven
 							economies is already in progress but is still in its early stages, only

@@ -170,7 +170,6 @@ export function Campaign() {
 	// MOCKS
 	if (id === 'koijam') return <Koijam />
 
-
 	return (
 		<Box>
 			<Box

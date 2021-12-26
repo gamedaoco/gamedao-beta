@@ -254,39 +254,6 @@ function Main({ showNavigation }: ComponentProps) {
 						<NetInfo />
 					</Box>
 				</Box>
-				<NavHeader>Social</NavHeader>
-				<Box
-					sx={{
-						paddingLeft: 2,
-						paddingRight: 2,
-						flexDirection: 'row',
-						display: 'flex',
-						justifyContent: 'flex-start',
-						a: { marginRight: '1rem', '& > *': { height: '1rem' } }
-					}}
-				>
-					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
-						<SiDiscord />
-					</a>
-					<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
-						<SiTelegram />
-					</a>
-					<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
-						<SiTwitter />
-					</a>
-					<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
-						<SiGithub />
-					</a>
-					<a
-						target="_blank"
-						rel="noreferrer"
-						href="https://www.linkedin.com/company/gamedaoco"
-					>
-						<SiLinkedin size={'20px'} />
-					</a>
-				</Box>
-				<Box sx={{ height: '40px' }} />
-				<NavHeader>Settings</NavHeader>
 
 				<Box sx={{ display: 'flex' }}>
 					<Box sx={{ flex: 1, paddingLeft: 2, paddingRight: 2 }}>
