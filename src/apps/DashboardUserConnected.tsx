@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '../context/Wallet'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useApiProvider } from '@substra-hooks/core'
+import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
@@ -20,6 +20,8 @@ import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
 import { Button, Grid, Typography, Box, Stack, Divider, Card } from 'src/components'
 
+import VerifiedIcon from '@mui/icons-material/Verified'
+
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
 	const { allowConnect, updateWalletState, account, address } = useWallet()
@@ -27,9 +29,13 @@ const Dashboard = (props) => {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 
+	// TODO: externalise and adopt to connected network
+	const convertedAddress = useEncodedAddress( address, 25 ) || ''
+
 	return (
 		<>
 			<Grid container spacing={4}>
+
 				<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
 					<Stack direction="row">
 						<Box
@@ -46,17 +52,18 @@ const Dashboard = (props) => {
 						>
 							<HeartIcon />
 						</Box>
-						<Box sx={{ marginRight: 2, marginTop: 1 }}>
-							<Typography>✅</Typography>
-						</Box>
 						<Stack>
-							<Typography variant="h5">{account && account.meta.name}</Typography>
+							{ account &&
+							<Typography variant="h5">
+								{account.meta.name} <VerifiedIcon fontSize="small" sx={{ color: '#f0f'}}/>
+							</Typography>
+							}
 							<Typography sx={{ fontWeight: '100' }} variant="body2">
 								{account &&
-									`${account.address.substring(
+									`${convertedAddress.substring(
 										0,
 										5
-									)}...${account.address.substring(account.address.length - 5)}`}
+									)}...${convertedAddress.substring(convertedAddress.length - 5)}`}
 							</Typography>
 						</Stack>
 					</Stack>

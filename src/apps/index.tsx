@@ -42,13 +42,6 @@ const Dashboard = (props) => {
 	return (
 		<>
 			<Grid container spacing={3}>
-				{/*				<Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
-					<Icons
-						src={ICON_MAPPING.logo}
-						alt={'GameDAO'}
-						sx={{ height: '64px' }}
-					/>
-				</Grid>*/}
 
 				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
 					<Typography variant="h5">Global Dashboard</Typography>
