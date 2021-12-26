@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, useState, useEffect, lazy } from 'react'
+import { useEffect, lazy } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
@@ -13,10 +13,8 @@ import {
 	Box,
 	Typography,
 	Grid,
-	Divider,
 	Chip,
 	styled,
-	Box16to9,
 	Container,
 	Button,
 	Stack,
@@ -31,7 +29,6 @@ import { TileReward } from './TileReward'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useWallet } from 'src/context/Wallet'
 import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
 const Koijam = lazy(() => import('./campaignForegrounds/koijam/Koijam'))
@@ -104,8 +101,6 @@ export function Campaign() {
 
 	const id = useParams().id
 
-	// MOCKS
-	if (id === 'koijam') return <Koijam />
 
 	// campaign specific foreground object code
 	let Foreground = foregroundContentMap.default
@@ -171,6 +166,10 @@ export function Campaign() {
 
 	const org = bodies[content.org]?.name
 	const mdown = IPFSData.markdown
+
+	// MOCKS
+	if (id === 'koijam') return <Koijam />
+
 
 	return (
 		<Box>

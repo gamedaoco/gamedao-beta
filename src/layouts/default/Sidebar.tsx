@@ -261,20 +261,21 @@ function Main({ showNavigation }: ComponentProps) {
 						paddingRight: 2,
 						flexDirection: 'row',
 						display: 'flex',
-						justifyContent: 'space-between',
+						justifyContent: 'flex-start',
+						a: { marginRight: '1rem', '& > *': { height: '1rem' } }
 					}}
 				>
 					<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
-						<SiDiscord size={'20px'} />
+						<SiDiscord />
 					</a>
 					<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
-						<SiTelegram size={'20px'} />
+						<SiTelegram />
 					</a>
 					<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
-						<SiTwitter size={'20px'} />
+						<SiTwitter />
 					</a>
 					<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
-						<SiGithub size={'20px'} />
+						<SiGithub />
 					</a>
 					<a
 						target="_blank"

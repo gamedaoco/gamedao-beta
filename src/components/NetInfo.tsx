@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Typography from '@mui/material/Typography'
-import { useApiProvider } from '@substra-hooks/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { slice, blockStateSelector } from 'src/redux/block.slice'
-
+import { useApiProvider } from '@substra-hooks/core'
+import Typography from '@mui/material/Typography'
 
 const NetInfo = () => {
 	const apiProvider = useApiProvider()
