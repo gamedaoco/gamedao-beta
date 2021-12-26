@@ -1,5 +1,10 @@
 import React from 'react'
 import { Box, Typography, Container, Link as MUILink, Grid } from '@mui/material'
+import { SiDiscord } from '@react-icons/all-files/si/SiDiscord'
+import { SiLinkedin } from '@react-icons/all-files/si/SiLinkedin'
+import { SiGithub } from '@react-icons/all-files/si/SiGithub'
+import { SiTelegram } from '@react-icons/all-files/si/SiTelegram'
+import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 
 /*
 	<Typography  variant="body1" sx={{ fontSize: '1.25em' }}>
@@ -9,6 +14,41 @@ const Link = ({ href, children }) => (
 		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
 			{children}<br />
 		</MUILink>
+)
+
+const SocialLinks = () => (
+	<Box
+		sx={{
+			flexDirection: 'row',
+			display: 'flex',
+			justifyContent: 'flex-start',
+			a: { opacity: 0.5, marginRight: '1rem', '& > *': { height: '1rem' } },
+			'a:hover': { opacity: 1 }
+		}}
+	>
+		<Typography sx={{ fontSize: '0.8rem', fontWeight:'400' }} mb={2}>
+			Connect with us<br/>
+		<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
+			<SiDiscord />
+		</a>
+		<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
+			<SiTelegram />
+		</a>
+		<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
+			<SiTwitter />
+		</a>
+		<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
+			<SiGithub />
+		</a>
+		<a
+			target="_blank"
+			rel="noreferrer"
+			href="https://www.linkedin.com/company/gamedaoco"
+		>
+			<SiLinkedin size={'20px'} />
+		</a>
+		</Typography>
+	</Box>
 )
 
 export const Footer = (props) => (
@@ -99,6 +139,10 @@ export const Footer = (props) => (
 							esports.
 						</Typography>
 					</Grid>
+				</Grid>
+
+				<Grid container direction="row">
+					<SocialLinks/>
 				</Grid>
 
 				<Grid container direction="row">

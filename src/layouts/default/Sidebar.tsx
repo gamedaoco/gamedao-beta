@@ -8,12 +8,6 @@ import ListSubHeader from '@mui/material/ListSubheader'
 import { useLocation } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 
-import { SiDiscord } from '@react-icons/all-files/si/SiDiscord'
-import { SiLinkedin } from '@react-icons/all-files/si/SiLinkedin'
-import { SiGithub } from '@react-icons/all-files/si/SiGithub'
-import { SiTelegram } from '@react-icons/all-files/si/SiTelegram'
-import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
-
 import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
