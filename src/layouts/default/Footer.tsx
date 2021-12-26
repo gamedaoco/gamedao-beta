@@ -1,13 +1,14 @@
 import React from 'react'
 import { Box, Typography, Container, Link as MUILink, Grid } from '@mui/material'
 
-const Link = ({ href, children }) => (
-	<Typography variant="body1" sx={{ fontSize: '1.25em' }}>
-		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
-			{children}
-		</MUILink>
-		<br />
+/*
+	<Typography  variant="body1" sx={{ fontSize: '1.25em' }}>
 	</Typography>
+*/
+const Link = ({ href, children }) => (
+		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
+			{children}<br />
+		</MUILink>
 )
 
 export const Footer = (props) => (
@@ -27,7 +28,6 @@ export const Footer = (props) => (
 	>
 		<Container>
 			<Grid columns={12}>
-{/*
 
 				<Grid container direction="row" mt={4} mb={4}>
 
@@ -116,7 +116,7 @@ export const Footer = (props) => (
 						{`© 2019-${new Date().getFullYear()} `}GAMEDAO AG, Vaduz, Liechtenstein. Powered by ZERO.IO
 					</Typography>
 				</Grid>
-		*/}
+
 
 			</Grid>
 		</Container>
