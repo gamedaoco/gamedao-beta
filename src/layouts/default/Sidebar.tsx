@@ -241,6 +241,7 @@ function Main({ showNavigation }: ComponentProps) {
 						</SidebarButton>
 					</Link>
 				</List>
+
 				<Box sx={{ flex: 1 }} />
 				<Box sx={{ margin: '2.5rem 0' }}>
 					<NavHeader>Network Info</NavHeader>
@@ -249,7 +250,7 @@ function Main({ showNavigation }: ComponentProps) {
 					</Box>
 				</Box>
 
-				<Box sx={{ display: 'flex' }}>
+				<Box sx={{ display: 'flex', paddingBottom: 1 }}>
 					<Box sx={{ flex: 1, paddingLeft: 2, paddingRight: 2 }}>
 						<Select value={'en'} sx={{ borderRadius: 22 }}>
 							<MenuItem value={'en'}>EN</MenuItem>
@@ -257,11 +258,11 @@ function Main({ showNavigation }: ComponentProps) {
 							<MenuItem value={'es'}>ES</MenuItem>
 						</Select>
 					</Box>
-
 					<Box sx={{ flex: 1, paddingLeft: 2, paddingRight: 2 }}>
 						<ThemeSwitcher />
 					</Box>
 				</Box>
+
 			</List>
 		</Box>
 	)
