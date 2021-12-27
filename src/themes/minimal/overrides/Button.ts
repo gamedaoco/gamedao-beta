@@ -10,10 +10,11 @@ export default function Button(theme: Theme) {
 					'&:hover': {
 						boxShadow: 'none',
 					},
-					padding: '1em 2em',
+					padding: '0.5em 1em',
 				},
 				sizeLarge: {
-					height: 48,
+					padding: '1em 2em',
+					// height: 48,
 				},
 				// contained
 				containedInherit: {

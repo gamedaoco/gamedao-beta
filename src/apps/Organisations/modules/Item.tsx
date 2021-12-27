@@ -104,7 +104,9 @@ export function Item({ data, displayMode }) {
 						{data.members || 0} {data.members || 0 > 1 ? 'Members' : 'Member'}
 					</Typography>
 				</Stack>
+
 				{displayMode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
+
 				<Interactions data={data} hideDashboard={false} />
 			</Stack>
 		)

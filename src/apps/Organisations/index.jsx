@@ -89,12 +89,12 @@ export const Main = (props) => {
 				<Box>
 					{!nonce || nonce === 0 ? (
 						nonce === 0 ? (
-							<h4>No organizations yet. Create one!</h4>
+							<h4>No organisations yet. Create one!</h4>
 						) : (
 							<h4>Loading...</h4>
 						)
 					) : (
-						<h4>Total organizations: {nonce}</h4>
+						<h4>Total organisations: {nonce}</h4>
 					)}
 				</Box>
 				<Box>
@@ -103,6 +103,7 @@ export const Main = (props) => {
 							variant="outlined"
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
+							size="large"
 						>
 							Close
 						</Button>
@@ -111,6 +112,7 @@ export const Main = (props) => {
 							variant="outlined"
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
+							size="large"
 						>
 							New DAO
 						</Button>

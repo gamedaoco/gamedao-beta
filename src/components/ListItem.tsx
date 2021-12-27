@@ -31,7 +31,10 @@ export const ListItem: React.FC<
 					<Box>
 						<Link to={props.linkTo || ''}>
 							<img
-								style={{ objectFit: 'cover' }}
+								style={{
+									objectFit: 'cover',
+									borderRadius: theme.shape.borderRadiusSm
+								}}
 								width="200px"
 								height="200px"
 								src={props.imageURL}

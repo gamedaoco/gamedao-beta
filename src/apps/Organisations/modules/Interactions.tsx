@@ -33,9 +33,9 @@ export function Interactions({ data, hideDashboard }) {
 		signAndNotify(
 			apiProvider.tx.gameDaoControl.addMember(...payload),
 			{
-				pending: 'Apply organisations in progress',
-				success: 'Apply organisations successfully',
-				error: 'Apply organisations failed',
+				pending: 'Apply to DAO in progress',
+				success: 'Apply to DAO successful',
+				error: 'Apply to DAO failed',
 			},
 			(state) => {
 				updatePageState()
@@ -69,9 +69,9 @@ export function Interactions({ data, hideDashboard }) {
 		signAndNotify(
 			apiProvider.tx.gameDaoControl.removeMember(...payload),
 			{
-				pending: 'Leave organisations in progress',
-				success: 'Leave organisations successfully',
-				error: 'Leave organisations failed',
+				pending: 'Leave DAO in progress',
+				success: 'Leave DAO successful',
+				error: 'Leave DAO failed',
 			},
 			(state) => {
 				updatePageState()
@@ -105,6 +105,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={() => navigate(`/app/organisations/${data.hash}`)}
 					value={data.access}
+					size='small'
 				>{`Dashboard`}</Button>
 			)}
 			{isMember() && !isAdmin() && (
@@ -113,6 +114,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={handleLeave}
 					value={data.access}
+					size='small'
 				>{`leave`}</Button>
 			)}
 			{!isMember() && actionType && (
@@ -121,10 +123,16 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={actionCallback}
 					value={data.access}
+					size='small'
 				>{`${actionType}`}</Button>
 			)}
 			{isAdmin() && (
-				<Button variant={'outlined'} fullWidth onClick={() => {}}>
+				<Button
+					variant={'outlined'}
+					fullWidth
+					size='small'
+					onClick={() => {}
+				}>
 					Admin
 				</Button>
 			)}
