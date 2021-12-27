@@ -1,24 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { blockStateSelector } from 'src/redux/block.slice'
+import { useApiProvider } from '@substra-hooks/core'
 import { useParams } from 'react-router-dom'
-import { TabHeader } from './modules/tabHeader'
-import { gateway } from '../lib/ipfs'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useWallet } from 'src/context/Wallet'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+
+import { gateway } from '../lib/ipfs'
+
+import { TabHeader } from './modules/tabHeader'
 import { Overview } from './modules/overview'
 import { Members } from './modules/members'
 import { Campaigns } from './modules/campaigns'
 import { Votings } from './modules/votings'
 import { to } from 'await-to-js'
-import { useWallet } from 'src/context/Wallet'
 import { Interactions } from 'src/apps/Organisations/modules/Interactions'
 import { createErrorNotification } from 'src/utils/notification'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import CreateCampaign from '../Campaigns/Create'
 import CreateProposal from '../Governance/modules/Create'
 import ClearIcon from '@mui/icons-material/Clear'
 import { Box, Stack, Paper, Typography, Button, Avatar } from '../../components'
-import { useSelector } from 'react-redux'
-import { blockStateSelector } from 'src/redux/block.slice'
 
 async function fetchMetaData(cid, setMetaData) {
 	// Invalid ipfs hash
