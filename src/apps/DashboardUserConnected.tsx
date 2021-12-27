@@ -4,6 +4,7 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+
 import { alpha, useTheme } from '@mui/material/styles'
 
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
@@ -35,9 +36,6 @@ const Dashboard = (props) => {
 
 	const theme = useTheme()
 	const bgPlain = {
-		// backdropFilter: 'blur(6px)',
-		// WebkitBackdropFilter: 'blur(6px)', // Fix on Mobile
-		// backgroundColor: alpha(theme.palette.background.default, 0.72),
 		backgroundColor: theme.palette.grey[500_16],
 	}
 

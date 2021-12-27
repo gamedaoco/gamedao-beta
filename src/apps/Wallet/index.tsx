@@ -8,7 +8,7 @@ import WalletView from './WalletView'
 
 const Component = (props) => {
 
-	const { address } = useWallet()
+	const { address, connected } = useWallet()
 
 	return (
 		<Container maxWidth="lg">
@@ -21,7 +21,7 @@ const Component = (props) => {
 				Wallet
 			</Typography>
 
-			{ !address
+			{ !address || !connected
 				? <ConnectOrInstall/>
 				: <WalletView/>
 			}
