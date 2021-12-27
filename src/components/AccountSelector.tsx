@@ -29,6 +29,7 @@ const AccountBox = styled(Box)(({ theme }) => ({
 
 const ConnectButton = styled(Button)(({ theme }) => ({
 	borderRadius: '50px',
+	padding: '1em 2em',
 	color: theme.palette.text.primary,
 	backgroundColor: theme.palette.background.neutral,
 	['&:hover']: {
