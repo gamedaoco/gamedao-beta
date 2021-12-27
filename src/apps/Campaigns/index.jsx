@@ -35,7 +35,7 @@ export const Campaigns = (props) => {
 	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
 		useCrowdfunding()
 
-	const { account } = useWallet()
+	const { account, connected } = useWallet()
 
 	const [content, setContent] = useState()
 
@@ -108,7 +108,7 @@ export const Campaigns = (props) => {
 							</Button>
 						)
 						: (
-							account
+							account && connected
 							? (
 								<Button
 									variant="outlined"
@@ -124,7 +124,7 @@ export const Campaigns = (props) => {
 				</Box>
 			</Box>
 			<br />
-			{showCreateMode && <CreateCampaign />}
+			{showCreateMode && connected && <CreateCampaign />}
 			{!showCreateMode && content && campaignsCount > 0 && (
 				<CampaignGrid content={content} />
 			)}
