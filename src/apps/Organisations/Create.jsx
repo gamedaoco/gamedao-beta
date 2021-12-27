@@ -31,6 +31,7 @@ import {
 import config from '../../config'
 import { data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
@@ -103,6 +104,9 @@ export const Main = (props) => {
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 	const navigate = useNavigate()
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	useEffect(() => {
 		const ls = localStorage.getItem('gamedao-form-create-org')
@@ -234,7 +238,7 @@ export const Main = (props) => {
 			if(values.fee && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.fee)) errors.fee = "Needs to be a number."
 
 			if(!values.description || values.description === "") errors.description = "We need a short description"
-			
+
 			if(values.controller.length !== 47) errors.controller = "Not a valid Account Address!"
 
 			if(values.treasury.length !== 47) errors.treasury = "Not a valid Account Address!"
@@ -281,7 +285,6 @@ export const Main = (props) => {
 			<Box sx={{ pb: 2 }}>
 				<Grid container spacing={3} alignItems={'center'}>
 					<Grid item xs={12} md={8}>
-						<Typography variant={'body1'}>Create Organization</Typography>
 						<Typography variant={'h3'}>
 							{formik.values.name || 'Untitled organization'}
 						</Typography>
@@ -301,7 +304,7 @@ export const Main = (props) => {
 					</Grid>
 				</Grid>
 			</Box>
-			<Paper sx={{ p: 4 }}>
+			<Paper sx={{ p: 4, ...bgPlain }}>
 				<Grid container spacing={3}>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>

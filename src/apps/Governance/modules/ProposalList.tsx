@@ -29,3 +29,4 @@ export function ProposalList() {
 		</Paper>
 	) : null
 }
+export default ProposalList

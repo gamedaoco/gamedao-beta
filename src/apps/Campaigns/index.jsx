@@ -1,26 +1,13 @@
-/**
- _______________________________ ________
- \____    /\_   _____/\______   \\_____  \
-	 /     /  |    __)_  |       _/ /   |   \
-	/     /_  |        \ |    |   \/    |    \
- /_______ \/_______  / |____|_  /\_______  /
-				 \/        \/         \/         \/
- Z  E  R  O  .  I  O     N  E  T  W  O  R  K
- © C O P Y R I O T   2 0 7 5   Z E R O . I O
-**/
-
 import React, { useEffect, useState, lazy } from 'react'
-// import { useWallet } from 'src/context/Wallet'
+import { useApiProvider } from '@substra-hooks/core'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-
 import { Button, Typography, Box, Stack, Loader } from '../../components'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useApiProvider } from '@substra-hooks/core'
-import { useWallet } from 'src/context/Wallet'
 
-import CampaignGrid from './CampaignGrid'
+const CampaignGrid = lazy(() => import('./CampaignGrid'))
 const CreateCampaign = lazy(() => import('./Create'))
 
 //

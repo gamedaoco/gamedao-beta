@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useWallet } from 'src/context/Wallet'
 import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useApiProvider } from '@substra-hooks/core'
-import { gateway, pinJSONToIPFS } from '../lib/ipfs'
-import config from '../../config'
+
+import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
+import config from '../../../config'
 import {
 	blocksPerDay,
 	project_durations,
@@ -12,7 +14,7 @@ import {
 	voting_types,
 	data,
 	rnd,
-} from '../lib/data'
+} from '../../lib/data'
 
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -22,7 +24,6 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
-import { useNavigate } from 'react-router'
 import { FormSectionHeadline, MarkdownEditor } from 'src/components'
 
 const dev = config.dev

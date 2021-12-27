@@ -3,6 +3,7 @@ import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import {
 	Box,
@@ -107,6 +108,9 @@ export const Main = () => {
 
 	// markdown editor & state
 	const [markdownValue, setMarkdownValue] = useState(defaultMarkdown)
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	function handleEditorChange({ html, text }) {
 		setMarkdownValue(text)
@@ -299,7 +303,6 @@ export const Main = () => {
 			<Box sx={{ pb: 2 }}>
 				<Grid container alignItems={'center'} spacing={3}>
 					<Grid item xs={12} md={7}>
-						<Typography variant={'body1'}>Create Campaign</Typography>
 						<Typography variant={'h3'}>
 							{formik.values.title || 'Untitled campaign'}
 						</Typography>
@@ -319,7 +322,7 @@ export const Main = () => {
 					</Grid>
 				</Grid>
 			</Box>
-			<Paper sx={{ p: 4 }}>
+			<Paper sx={{ p: 4, ...bgPlain }}>
 				<Grid container spacing={3} component="form">
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>
