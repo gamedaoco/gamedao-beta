@@ -1,11 +1,8 @@
 import { merge } from 'lodash'
 import ReactApexChart from 'react-apexcharts'
-// material
+import { alpha, useTheme } from '@mui/material/styles'
 import { Card, CardHeader, Box } from '@mui/material'
-//
 import { BaseOptionChart } from './BaseOptionChart'
-
-// ----------------------------------------------------------------------
 
 const CHART_DATA = [
 	{
@@ -26,6 +23,10 @@ const CHART_DATA = [
 ]
 
 export default function AppWebsiteVisits() {
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
 	const chartOptions = merge(BaseOptionChart(), {
 		stroke: { width: [0, 2, 3] },
 		plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
@@ -59,7 +60,7 @@ export default function AppWebsiteVisits() {
 	})
 
 	return (
-		<Card>
+		<Card sx={{ ...bgPlain, minHeight: '80px', height: '100%' }}>
 			<CardHeader title="Token" subheader="(+43%) than last year" />
 			<Box sx={{ p: 3, pb: 1 }} dir="ltr">
 				<ReactApexChart

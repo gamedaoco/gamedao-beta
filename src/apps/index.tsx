@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useWallet } from '../context/Wallet'
+import { useApiProvider } from '@substra-hooks/core'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import { useWallet } from '../context/Wallet'
+
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { Button, Grid, Typography } from 'src/components'
 import SingleChart from 'src/components/chart/SingleChart'
@@ -12,6 +14,7 @@ import { Icons, ICON_MAPPING } from 'src/components/Icons'
 import { Box, Stack, Divider, Card } from 'src/components'
 
 import MiniStats from './components/MiniStats'
+
 import AppWebsiteVisits from './components/dashboard/AppWebsiteVisits'
 import AppCurrentVisits from './components/dashboard/AppCurrentVisits'
 import AppConversionRates from './components/dashboard/AppConversionRates'
@@ -29,6 +32,9 @@ const Dashboard = (props) => {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
 	return (
 		<Grid container spacing={3}>
 
@@ -37,7 +43,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item xs={12} sm={6} md={4}>
-				<Card sx={{ height: '160px' }}>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Box
 						sx={{
 							position: 'absolute',
@@ -57,7 +63,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item sm={12} md={4}>
-				<Card sx={{ height: '160px' }}>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
 						<Typography>DAOs</Typography>
 						<Typography variant="h3">{nonce ?? 'Loading...'}</Typography>
@@ -67,7 +73,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item xs={12} sm={6} md={4}>
-				<Card sx={{ height: '160px' }}>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Box
 						sx={{
 							position: 'absolute',
@@ -87,7 +93,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Card>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 						<Typography variant="h5">Organization Updates:</Typography>
 						<Typography variant="h5">filter</Typography>
@@ -102,7 +108,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Card>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 						<Typography variant="h5">Active Campaigns</Typography>
 					</Box>
@@ -114,7 +120,7 @@ const Dashboard = (props) => {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Card>
+				<Card sx={{ ...bgPlain, height: '160px' }}>
 					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 						<Typography variant="h5">Votings Closing Soon</Typography>
 					</Box>
