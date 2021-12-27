@@ -1,21 +1,25 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+
+import { useApiProvider } from '@substra-hooks/core'
+import { useThemeState } from 'src/context/ThemeState'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+
+import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
-import { useApiProvider } from '@substra-hooks/core'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubHeader from '@mui/material/ListSubheader'
-import { useLocation } from 'react-router-dom'
-import { styled } from '@mui/material/styles'
-
-import { NavLink } from 'react-router-dom'
 import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+
 import { Divider, Paper, Typography, FontIcon, useMediaQuery, Link } from 'src/components'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
-import { useThemeState } from 'src/context/ThemeState'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import NetInfo from 'src/components/NetInfo'
 
 interface ComponentProps {
@@ -89,52 +93,22 @@ function ThemeSwitcher() {
 
 function Main({ showNavigation }: ComponentProps) {
 	const { darkmodeEnabled } = useThemeState()
-	const { campaignsCount } = useCrowdfunding()
-	const [organisationCount, setOrganisationCount] = React.useState(0)
-	const [votingCount, setVotingCount] = React.useState(0)
-	const apiProvider = useApiProvider()
 	const { pathname } = useLocation()
 
-	const isMobile = useMediaQuery('(max-width:320px)')
+	const apiProvider = useApiProvider()
+	const { campaignsCount } = useCrowdfunding()
+	const { nonce } = useGameDaoControl()
+	const { proposalsCount } = useGameDaoGovernance()
 
-	React.useEffect(() => {
-		let unsubscribe = null
-		if (!apiProvider) return
-		apiProvider?.query?.gameDaoControl
-			.nonce((n) => {
-				if (!n.isNone) {
-					setOrganisationCount(n.toNumber())
-				}
-			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [apiProvider?.query?.gameDaoControl])
-
-	React.useEffect(() => {
-		let unsubscribe = null
-		if (!apiProvider) return
-		apiProvider?.query?.gameDaoGovernance
-			.nonce((n) => {
-				if (!n.isNone) {
-					setVotingCount(n.toNumber())
-				}
-			})
-			.then((unsub) => {
-				unsubscribe = unsub
-			})
-			.catch(console.error)
-		return () => unsubscribe && unsubscribe()
-	}, [apiProvider?.query?.gameDaoGovernance])
+	const isMobile = useMediaQuery('(max-width:480px)')
 
 	return (
 		<Box
 			sx={{
 				position: 'sticky',
 				top: 0,
-				width: isMobile ? '90px' : '275px',
+				marginLeft: isMobile ? '-25px' : 0,
+				width: isMobile ? '100px' : '275px',
 				overflow: 'hidden',
 				display: 'flex',
 				flexDirection: 'column',
@@ -162,10 +136,10 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '3rem' }} name="organization" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Organisations</Typography>
-						{organisationCount > 0 ? (
+						{nonce > 0 ? (
 							<>
 								<Box />
-								<NavBadge badgeContent={organisationCount} color={'success'} />
+								<NavBadge badgeContent={nonce} color={'success'} variant='dot' />
 							</>
 						) : null}
 					</SidebarButton>
@@ -176,8 +150,8 @@ function Main({ showNavigation }: ComponentProps) {
 							<FontIcon sx={{ fontSize: '3rem' }} name="voting" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Votings</Typography>
-						{votingCount > 0 ? (
-							<NavBadge badgeContent={votingCount} color={'primary'} />
+						{proposalsCount > 0 ? (
+							<NavBadge badgeContent={proposalsCount} color={'primary'} variant='dot' />
 						) : null}
 					</SidebarButton>
 				</Link>
@@ -190,7 +164,7 @@ function Main({ showNavigation }: ComponentProps) {
 						{campaignsCount > 0 ? (
 							<>
 								<Box />
-								<NavBadge badgeContent={campaignsCount} color={'info'} />
+								<NavBadge badgeContent={campaignsCount} color={'info'} variant='dot' />
 							</>
 						) : null}
 					</SidebarButton>
