@@ -39,7 +39,7 @@ async function fetchMetaData(cid, setMetaData) {
 	setMetaData(parsedData)
 }
 
-export function OrganisationsDashboard() {
+export function Main() {
 	const [selectedTabState, setSelectedTabState] = useState('Overview')
 	const { address } = useWallet()
 	const [metaDataState, setMetaDataState] = useState()
@@ -240,4 +240,9 @@ export function OrganisationsDashboard() {
 			{createVotingState && <CreateProposal blockNumber={blockNumber} />}
 		</>
 	)
+}
+
+export default function Module(props) {
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Main {...props} /> : null
 }
