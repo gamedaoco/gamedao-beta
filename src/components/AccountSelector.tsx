@@ -69,8 +69,8 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
-		updateStore({ allowConnection: false })
-		updateWalletState({ allowConnect: false })
+		updateStore({ allowConnection: false, connected: false })
+		updateWalletState({ allowConnect: false, connected: false })
 	}
 
 	useEffect(() => {
@@ -90,7 +90,11 @@ const AccountComponent = () => {
 	useEffect(() => {
 		// Set initial account => default account 0
 		if (accounts && allowConnect) {
-			updateWalletState({ account: accounts[lastAccountIndex || 0], address: accounts[lastAccountIndex || 0]?.address })
+			updateWalletState({
+				account: accounts[lastAccountIndex || 0],
+				address: accounts[lastAccountIndex || 0]?.address,
+				connected: true
+			})
 		}
 	}, [accounts, allowConnect])
 
@@ -108,8 +112,8 @@ const AccountComponent = () => {
 	)
 
 	function copyAddress(e){
-		e.preventDefault(); 
-		navigator.clipboard.writeText(address); 
+		e.preventDefault();
+		navigator.clipboard.writeText(address);
 		createInfoNotification("Address Copied to Clipboard!")
 	}
 
@@ -201,13 +205,13 @@ const BalanceAnnotation = () => {
 	return (
 		<Stack direction={'column'}>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
-				{balanceZero || '0 Zero'}
-			</Typography>
-			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
-				{balancePlay || 0} PLAY
+				{balanceZero || '0 ZERO'}
 			</Typography>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
 				{balanceGame || 0} GAME
+			</Typography>
+			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
+				{balancePlay || 0} PLAY
 			</Typography>
 		</Stack>
 	)

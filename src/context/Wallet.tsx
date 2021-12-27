@@ -148,10 +148,11 @@ const WalletProvider = ({ children }) => {
 				setState({
 					...state,
 					signer: (await web3FromSource(state.account.meta.source))?.signer,
+					connected: true
 				})
 			})()
 		} else {
-			setState({ ...state, signer: null })
+			setState({ ...state, signer: null, connected: false })
 		}
 	}, [state.account])
 
