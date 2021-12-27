@@ -1,15 +1,19 @@
 import React from 'react'
-import { Box, Button, Stack, Typography, Chip, useTheme } from 'src/components'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { blockTime, PROPOSAL_STATE_MAPPING } from 'src/apps/lib/data'
-
-import moment from 'moment'
-import { Divider, LinearProgress } from '@mui/material'
 import { useNavigate } from 'react-router'
+import moment from 'moment'
+import { blockTime, PROPOSAL_STATE_MAPPING } from 'src/apps/lib/data'
 import { normalizeNumber } from 'src/utils/normalizeNumber'
 
-export function ProposalItem({ blockNumber, proposal, showDivider }) {
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import { useBlock } from 'src/hooks/useBlock'
+
+import { Divider, LinearProgress } from '@mui/material'
+import { Box, Button, Stack, Typography, Chip, useTheme } from 'src/components'
+
+export function ProposalItem({ proposal, showDivider }) {
+	const blockNumber = useBlock()
+
 	// Get state
 	const { metadata, proposalSimpleVotes, proposalStates } = useGameDaoGovernance()
 	const { bodies } = useGameDaoControl()

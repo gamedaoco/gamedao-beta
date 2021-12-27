@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
+import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useApiProvider } from '@substra-hooks/core'
 import { gateway, pinJSONToIPFS } from '../lib/ipfs'
@@ -25,7 +26,6 @@ import { useNavigate } from 'react-router'
 import { FormSectionHeadline, MarkdownEditor } from 'src/components'
 
 const dev = config.dev
-if (dev) console.log('dev mode')
 
 type GenericForm = {
 	id: string
@@ -93,9 +93,11 @@ const random_state = (account, campaigns = []) => {
 // 0.2 -> organisational votings
 // 0.3 -> surveys
 
-export const Main = ({ blockNumber }) => {
+export const Main = () => {
+
 	const apiProvider = useApiProvider()
 	const { account, address, signAndNotify } = useWallet()
+	const blockNumber = useBlock()
 
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
@@ -459,11 +461,11 @@ export const Main = ({ blockNumber }) => {
 	)
 }
 
-export default function Module({ blockNumber }) {
+export default function Module() {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoGovernance ? (
-		<Main blockNumber={blockNumber} />
-	) : null
+	return apiProvider && apiProvider.query.gameDaoGovernance
+		? <Main/>
+		: null
 }
 
 //

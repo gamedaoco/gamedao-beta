@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useBlock } from 'src/hooks/useBlock'
 import { alpha, useTheme } from '@mui/material/styles'
 
 import Add from '@mui/icons-material/Add'
@@ -26,29 +25,7 @@ function Main() {
 
 	const apiProvider = useApiProvider()
 	const { proposalsCount } = useGameDaoGovernance()
-	const { blockNumber } = useBlock()
 	const [showCreateMode, setCreateMode] = useState(false)
-	// const [blockNumber, setBlockNumber] = useState(0)
-
-	console.log( blockNumber )
-
-	// Why?
-	// useGameDaoControl()
-
-	// useEffect(() => {
-	// 	let unsubscribeAll
-
-	// 	apiProvider.derive.chain
-	// 		.bestNumberFinalized((number) => {
-	// 			setBlockNumber(number.toNumber())
-	// 		})
-	// 		.then((unsub) => {
-	// 			unsubscribeAll = unsub
-	// 		})
-	// 		.catch(console.error)
-
-	// 	return () => unsubscribeAll && unsubscribeAll()
-	// }, [apiProvider])
 
 	return (
 		<Stack spacing={4}>
@@ -58,7 +35,7 @@ function Main() {
 					<NavBadge badgeContent={proposalsCount} color={'primary'} />
 				) : null}
 			</Typography>
-			<Paper>
+			<Paper sx={{ ...bgPlain }}>
 				<Box display="flex" padding={4}>
 					<Stack flex="2" spacing={1}>
 						<Typography variant="h6">
@@ -82,9 +59,9 @@ function Main() {
 				</Box>
 			</Paper>
 			{showCreateMode ? (
-				<CreateProposal blockNumber={blockNumber} />
+				<CreateProposal />
 			) : (
-				<ProposalList blockNumber={blockNumber} />
+				<ProposalList />
 			)}
 		</Stack>
 	)
