@@ -151,7 +151,6 @@ export default function Dapp(props) {
 	const [name, setName] = useState('')
 
 	useEffect(() => {
-		console.log('connected',connected)
 		setName(identities?.[address]?.toHuman()?.info?.display?.Raw ?? '')
 	}, [ connected, address, identities ])
 
