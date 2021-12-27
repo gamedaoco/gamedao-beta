@@ -18,7 +18,7 @@ export const Main = (props) => {
 
 	const { address, connected } = useWallet()
 	const { account } = useWallet()
-	const [dataState, setDataState] = useState()
+	const [content, setContent] = useState()
 	const {
 		nonce,
 		bodyIndex,
@@ -41,7 +41,7 @@ export const Main = (props) => {
 			bodyAccess &&
 			bodyTreasury
 		) {
-			const data = Object.keys(bodyIndex).map((index) => {
+			const content = Object.keys(bodyIndex).map((index) => {
 				const hash = bodyIndex[index]
 				const config = bodyConfig[hash]
 				const members = bodyMemberCount[hash]
@@ -61,7 +61,7 @@ export const Main = (props) => {
 				}
 			})
 
-			setDataState(data)
+			setContent(content)
 		}
 	}, [
 		nonce,
@@ -84,6 +84,7 @@ export const Main = (props) => {
 				sx={{
 					display: 'flex',
 					justifyContent: 'space-between',
+					alignItems: 'center'
 				}}
 			>
 				<Box>
@@ -103,7 +104,6 @@ export const Main = (props) => {
 							variant="outlined"
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
-							size="large"
 						>
 							Close
 						</Button>
@@ -112,7 +112,6 @@ export const Main = (props) => {
 							variant="outlined"
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
-							size="large"
 						>
 							New DAO
 						</Button>
@@ -121,7 +120,7 @@ export const Main = (props) => {
 			</Box>
 			<br />
 			{showCreateMode && connected && <CreateDAO />}
-			{!showCreateMode && dataState && <ItemList data={dataState} />}
+			{!showCreateMode && content && <ItemList data={content} />}
 		</Container>
 	)
 }
