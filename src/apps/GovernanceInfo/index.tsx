@@ -34,7 +34,7 @@ async function fetchProposalDescription(cid, setter) {
 	setter(body.description)
 }
 
-export function GovernanceProposalInfoPage() {
+export function Main() {
 	// Get state
 	const navigate = useNavigate()
 	const { proposalId } = useParams()
@@ -121,4 +121,9 @@ export function GovernanceProposalInfoPage() {
 			) : null}
 		</Stack>
 	)
+}
+
+export default function Module(props) {
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Main {...props} /> : null
 }

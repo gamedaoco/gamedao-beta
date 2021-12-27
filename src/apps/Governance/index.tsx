@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useBlock } from 'src/hooks/useBlock'
+import { alpha, useTheme } from '@mui/material/styles'
+
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
-import CreateProposal from './Create'
 import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/components'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { ProposalList } from './modules/ProposalList'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useApiProvider } from '@substra-hooks/core'
+import CreateProposal from './Create'
 
 const NavBadge = styled(Badge)(({ theme }) => ({
 	'& .MuiBadge-badge': {
@@ -16,29 +19,36 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	},
 }))
 
-export function GovernancePage() {
-	const { proposalsCount } = useGameDaoGovernance()
-	const [showCreateMode, setCreateMode] = useState(false)
-	const [blockNumber, setBlockNumber] = useState(0)
+function Main() {
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
 	const apiProvider = useApiProvider()
+	const { proposalsCount } = useGameDaoGovernance()
+	const { blockNumber } = useBlock()
+	const [showCreateMode, setCreateMode] = useState(false)
+	// const [blockNumber, setBlockNumber] = useState(0)
 
-	useGameDaoControl()
+	console.log( blockNumber )
 
-	useEffect(() => {
-		if (!apiProvider) return
-		let unsubscribeAll
+	// Why?
+	// useGameDaoControl()
 
-		apiProvider.derive.chain
-			.bestNumberFinalized((number) => {
-				setBlockNumber(number.toNumber())
-			})
-			.then((unsub) => {
-				unsubscribeAll = unsub
-			})
-			.catch(console.error)
+	// useEffect(() => {
+	// 	let unsubscribeAll
 
-		return () => unsubscribeAll && unsubscribeAll()
-	}, [apiProvider])
+	// 	apiProvider.derive.chain
+	// 		.bestNumberFinalized((number) => {
+	// 			setBlockNumber(number.toNumber())
+	// 		})
+	// 		.then((unsub) => {
+	// 			unsubscribeAll = unsub
+	// 		})
+	// 		.catch(console.error)
+
+	// 	return () => unsubscribeAll && unsubscribeAll()
+	// }, [apiProvider])
 
 	return (
 		<Stack spacing={4}>
@@ -78,4 +88,9 @@ export function GovernancePage() {
 			)}
 		</Stack>
 	)
+}
+
+export default function Module(props) {
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Main {...props} /> : null
 }
