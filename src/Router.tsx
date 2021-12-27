@@ -3,19 +3,22 @@ import { Routes, Route } from 'react-router-dom'
 import { Loader } from './components'
 import Layout from './layouts/default'
 
-import { GovernancePage } from './apps/Governance/GovernancePage'
-import { GovernanceProposalInfoPage } from './apps/governanceProposalInfo/GovernanceProposalInfo'
-import { OrganisationsDashboard } from './apps/OrganisationsDashboard/organisationsDashboard'
-
 const Home = lazy(() => import('./apps/Home'))
 const Dashboard = lazy(() => import('./apps'))
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
+
 const Organisations = lazy(() => import('./apps/Organisations'))
+const OrganisationsDashboard = lazy(() => import('./apps/OrganisationsDashboard'))
 const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
+
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
 const Designsystem = lazy(() => import('./apps/Designsystem'))
+
+const Governance = lazy(() => import('./apps/Governance'))
+const GovernanceDetails = lazy(() => import('./apps/GovernanceInfo'))
+
 
 export interface ComponentProps {
 	children?: React.ReactNode
@@ -78,7 +81,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={<GovernancePage />}
+							element={<Governance />}
 						/>
 					}
 				></Route>
@@ -89,7 +92,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={<GovernanceProposalInfoPage />}
+							element={<GovernanceDetails />}
 						/>
 					}
 				></Route>
