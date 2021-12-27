@@ -6,10 +6,6 @@ import { SiGithub } from '@react-icons/all-files/si/SiGithub'
 import { SiTelegram } from '@react-icons/all-files/si/SiTelegram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 
-/*
-	<Typography  variant="body1" sx={{ fontSize: '1.25em' }}>
-	</Typography>
-*/
 const Link = ({ href, children }) => (
 		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
 			{children}<br />
@@ -64,6 +60,9 @@ export const Footer = (props) => (
 				theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100],
 			backgroundColor: (theme) =>
 				theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900],
+			a: { opacity: 0.8, textShadow: '15px pink'},
+			'a:hover': { color: '#fcf', opacity: 1, textShadow: '0 0 5px #f3f', borderBottom: '1px dotted #f3f' },
+			'*': { transitionTimingFunction: 'ease-in-out;', transitionDuration: '150ms' },
 		}}
 	>
 		<Container>
@@ -85,7 +84,7 @@ export const Footer = (props) => (
 						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
 							About
 						</Typography>
-						<Typography sx={{ fontSize: '0.8rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography sx={{ fontSize: '0.8rem' }} mb={2}>
 							<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca"> pinky paper </Link>
 							<Link href="https://blog.gamedao.co">blog</Link>
 							<Link href="https://gamedao.co">gamedao.co</Link>
@@ -100,7 +99,7 @@ export const Footer = (props) => (
 						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
 							How we build
 						</Typography>
-						<Typography sx={{ fontSize: '0.8rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography sx={{ fontSize: '0.8rem' }} mb={2}>
 							<Link href="https://zero.io">zero.io</Link>
 							<Link href="https://acala.network">acala.network</Link>
 							<Link href="https://substrate.dev">substrate.dev</Link>
