@@ -22,8 +22,8 @@ function Main() {
 					backgroundColor: 'background.default',
 					width: '100%',
 					height: '5rem',
-					borderBottom: '1px solid #33383F',
-					justifyContent: 'space-between',
+					borderBottom: (theme) => '1px solid ' + theme.palette.grey[500_32],
+ 					justifyContent: 'space-between',
 					alignItems: 'center',
 				}}
 

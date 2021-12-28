@@ -51,15 +51,13 @@ export const Footer = (props) => (
 	<Box
 		component="footer"
 		sx={{
-			borderTop: '1px solid #33383F',
+			borderTop: (theme) => '1px solid ' + theme.palette.grey[500_32],
 			py: 3,
 			px: 1,
 			mt: 'auto',
 			fontSize: '.8em',
-			color: (theme) =>
-				theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100],
-			backgroundColor: (theme) =>
-				theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900],
+			color: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100],
+			backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900],
 			a: { opacity: 0.8, textShadow: '15px pink'},
 			'a:hover': { color: '#fcf', opacity: 1, textShadow: '0 0 5px #f3f', borderBottom: '1px dotted #f3f' },
 			'*': { transitionTimingFunction: 'ease-in-out;', transitionDuration: '150ms' },
