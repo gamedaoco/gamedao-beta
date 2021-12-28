@@ -70,7 +70,8 @@ const ThemeSwitcher = () => {
 				backgroundColor: 'transparent',
 				margin: 'auto',
 				height: '100%',
-				p: '1rem'
+				p: '1rem',
+				'*': { transitionTimingFunction: 'ease-in-out;', transitionDuration: '150ms' },
 			}}
 		>
 			<Icons
