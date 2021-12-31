@@ -21,35 +21,6 @@ const INITIAL_STATE: BalanceState = {
 	updateBalance: () => {},
 }
 
-async function queryAccountBalance(apiProvider: ApiPromise, address: string): Promise<any> {
-	const context = apiProvider.query.assets.account
-	if (!context) return INITIAL_STATE
-
-	const [error, data] = await to(
-		apiProvider.queryMulti([
-			[apiProvider.query.system.account, address],
-			[context, [Number(0), address]],
-			[context, [Number(1), address]],
-		])
-	)
-
-	if (error) {
-		console.error(error)
-		createErrorNotification('Error while querying the account balance')
-		return INITIAL_STATE
-	}
-
-	if (data.length !== 3) return INITIAL_STATE
-
-	const [_zero, _play, _game] = data as any
-
-	return {
-		balanceZero: _zero?.data?.free?.toHuman() ?? '0',
-		balancePlay: _play?.toHuman()?.balance ?? '0',
-		balanceGame: _game?.toHuman()?.balance ?? '0',
-	}
-}
-
 // Get Account Balance for Zero, Play and game
 export function useBalance(): BalanceState {
 	const [addressState, setAddressState] = useState<string>(null)
@@ -58,24 +29,37 @@ export function useBalance(): BalanceState {
 	const { address } = useWallet()
 	const dispatch = useDispatch()
 
-	function handleUpdateBalance() {
-		queryAccountBalance(apiProvider, address).then((state) => {
-			dispatch(updateBalanceAction(state))
-			setAddressState(address)
-		})
-	}
-
 	useEffect(() => {
-		if (apiProvider && address && address !== addressState) {
-			queryAccountBalance(apiProvider, address).then((state) => {
-				dispatch(updateBalanceAction(state))
+
+		if (!apiProvider || !address) return null
+
+		let unsubscribe = null
+
+			apiProvider.queryMulti([
+				[apiProvider.query.system.account, address],
+				[apiProvider.query.assets.account, [Number(0), address]],
+				[apiProvider.query.assets.account, [Number(1), address]],
+			],([ zero, play, game ])=>{
+
+				const z = zero.toHuman() as any
+				const p = play.toHuman() as any
+				const g = game.toHuman() as any
+
+				dispatch(updateBalanceAction({
+					balanceZero: z.data.free ?? '0',
+					balancePlay: p.balance ?? '0',
+					balanceGame: g.balance ?? '0',
+				}))
 				setAddressState(address)
+
 			})
-		}
+
+		return () => unsubscribe && unsubscribe()
+
 	}, [address, apiProvider])
 
 	return {
 		...balanceState,
-		updateBalance: handleUpdateBalance,
+		// updateBalance: handleUpdateBalance,
 	} as any
 }
