@@ -1,6 +1,6 @@
 import React from 'react'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { alpha, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { Box, Paper, Stack, Typography } from 'src/components'
 import { ProposalItem } from './ProposalItem'
 

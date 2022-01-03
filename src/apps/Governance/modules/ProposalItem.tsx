@@ -28,6 +28,8 @@ export function ProposalItem({ proposal, showDivider }) {
 		(theme.palette as any).proposalStates[PROPOSAL_STATE_MAPPING[proposalState]] ??
 		(theme.palette as any).proposalStates.default
 
+console.log(proposal)
+
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
 	// Vote

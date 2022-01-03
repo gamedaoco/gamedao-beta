@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useWallet } from 'src/context/Wallet'
 import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
 
 import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
@@ -29,64 +30,34 @@ import { FormSectionHeadline, MarkdownEditor } from 'src/components'
 const dev = config.dev
 
 type GenericForm = {
-	id: string
-	purpose: string
-	description: string
-	cid: string
-	amount: number
-	duration: number
-	proposer: string
-	beneficiary: string
-	proposal_type: number
-	voting_type: number
-	collateral_type: number
-	collateral_amount: number
+	entity?: string
+	campaign?: string
+	title?: string
+	description?: string
+	cid?: string
+	amount?: number
+	duration?: number
+	beneficiary?: string
+	proposal_type?: number
+	voting_type?: number
+	collateral_type?: number
+	collateral_amount?: number
 	[key: string]: any
 }
 
-const random_state = (account, campaigns = []) => {
-	// version 0.1
-	// get a random campaign id
-	// create a random purpose
-	// create random voting duration from 7, 14, 30, 60 days
-	// create random amount to pay
-	// or
-	// voting without withdrawal ==> amount == 0
-
-	const id = campaigns[campaigns.length]
-	const purpose = ''
-	const description = ''
-	const cid = ''
-	const amount = rnd(10) * 100
-	const duration = Number(project_durations[rnd(project_durations.length)].value)
-	const proposer = account.address
-	const beneficiary = account.address
-	const voting_type = 0
-	const proposal_type = 0
-	const collateral_type = 0
-	const collateral_amount = 1
-
-	// TODO:
-	// version > 0.2
-	// create random additional data for ipfs
-	// for proofs, extra info
-	// select asset for withdrawal
-
-	const gen: GenericForm = {
-		id,
-		purpose,
-		description,
-		cid,
-		amount,
-		duration,
-		proposer,
-		beneficiary,
-		voting_type,
-		proposal_type,
-		collateral_type,
-		collateral_amount,
-	}
-	return gen
+const INITIAL_STATE: GenericForm = {
+	entity: '',
+	campaign: '',
+	title: '',
+	description: '',
+	cid: '',
+	beneficiary: '',
+	amount: 0,
+	duration: 1,
+	voting_type: 0,
+	proposal_type: 0,
+	collateral_type: 0,
+	collateral_amount: 0,
 }
 
 // proposal (flow)
@@ -97,53 +68,94 @@ const random_state = (account, campaigns = []) => {
 export const Main = () => {
 
 	const apiProvider = useApiProvider()
-	const { account, address, signAndNotify } = useWallet()
 	const blockNumber = useBlock()
+	const { account, address, signAndNotify } = useWallet()
+	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
 
+	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const [formData, updateFormData] = useState({} as GenericForm)
+	const [formData, updateFormData] = useState(INITIAL_STATE)
 	const [fileCID, updateFileCID] = useState()
 	const [content, setContent] = useState({})
-	const navigate = useNavigate()
 
-	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
+	const [activeMemberships, setActiveMemberships] = useState(null)
+	const [campaigns, setCampaigns] = useState([])
 
 	useEffect(() => {
 		if (!address) return
-
 		queryMemberships(address)
 	}, [address])
 
-	// campaign or organisation?
-	// user can choose whatever he belongs to.
-	const [entities, setEntities] = useState([])
-
 	useEffect(() => {
-		if (!apiProvider || !address) return
+		if ( formData.proposal_type !== 3 ) return
+		if ( formData.entity === '' ) return
+		if ( !apiProvider || !address ) return
+
+		console.log('query available campaigns for', bodies?.[formData.entity]?.name )
 
 		const query = async () => {
+
 			try {
-				const [memberships, contributions, successful] = await Promise.all([
-					apiProvider.query.gameDaoControl.memberships(address),
+				const [
+					_cam,
+					// owned,
+					_con,
+					_suc
+				] = await Promise.all([
+					apiProvider.query.gameDaoCrowdfunding.campaignsByBody(formData.entity),
+					// apiProvider.query.gameDaoCrowdfunding.campaignsOwnedArray(address),
 					apiProvider.query.gameDaoCrowdfunding.campaignsContributed(address),
 					apiProvider.query.gameDaoCrowdfunding.campaignsByState(3),
 				])
-				const new_entities = new Array()
-					// .concat(...memberships.toHuman())
-					.concat(...(contributions as any).toHuman())
-					.concat(...(successful as any).toHuman())
-					.map((h, i) => {
-						return { key: i, text: h, value: h }
+
+				// console.log(
+				// 	'campaigns', _cam.toHuman(),
+				// 	// 'owned', owned.toHuman(),
+				// 	'contributed', _con.toHuman(),
+				// 	'successful', _suc.toHuman(),
+				// )
+
+				// get successful campaigns for a body
+				const cam = _cam.toHuman() as any
+				const suc = _suc.toHuman() as any
+				const availableCampaigns = cam.filter( c => suc.find( s => c === s ) )
+
+				// merge contributed and owned
+				// const con = _con.toHuman() as any
+				// const own = _own.toHuman() as any
+				// const userCampaigns = own.concat(con.filter( c => own.find( o => c !== o ) )
+
+				// const campaigns = new Array()
+				// 	.concat(...(successful as any).toHuman())
+				// 	// .filter((c) => c.org === formData.entity)
+				// 	.map((h, i) => {
+				// 		console.log('available campaigns', h)
+				// 		return { key: i, text: h, value: h }
+				// 	})
+
+				const campaigns = availableCampaigns?.map(
+					( c, i ) => ({
+						key: i, text: c, value: c
 					})
-				setEntities(new_entities)
+				) ?? []
+
+				console.log('availableCampaigns',availableCampaigns)
+				console.log('campaigns',campaigns)
+
+				// TODO: only contributed/owned
+				// setCampaigns(availableCampaigns)
+				setCampaigns(campaigns)
+
 			} catch (err) {
 				console.error(err)
 			}
+
 		}
 		query()
-	}, [apiProvider, address])
+
+	}, [apiProvider, address, formData.entity, formData.proposal_type])
 
 	// form fields
 
@@ -156,10 +168,20 @@ export const Main = () => {
 		updateFormData(update)
 	}
 
+	const handleEntityChange = (e) => {
+		const { name, value } = e.target
+		const update = {
+			...formData,
+			campaign: null,
+			[name]: value,
+		}
+		updateFormData(update)
+	}
+
 	const handleMarkdownChange = ({ html, text }) => {
 		const update = {
 			...formData,
-			['description']: text,
+			description: text,
 		}
 		updateFormData(update)
 	}
@@ -168,7 +190,7 @@ export const Main = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		console.log('submit')
+		console.log('submit proposal')
 
 		setLoading(true)
 		const content = {
@@ -176,7 +198,7 @@ export const Main = () => {
 			description: formData.description,
 		}
 
-		//
+		//	CID
 
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
@@ -203,16 +225,31 @@ export const Main = () => {
 			const start = blockNumber // current block as start block
 
 			const expiry = formData.duration * blocksPerDay + start // take current block as offset
-			const { entity, purpose } = formData
+			const { entity, campaign, title, amount, proposal_type } = formData
 
 			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formData)
 			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
 			console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
 
-			const payload = [entity, purpose, cid, start, expiry]
+			let query, payload
+
+			console.log( proposal_type )
+
+			switch ( proposal_type ) {
+				case 0: query = apiProvider.tx.gameDaoGovernance.generalProposal
+						payload = [entity, title, cid, start, expiry]
+						break;
+				case 3: query = apiProvider.tx.gameDaoGovernance.withdrawProposal
+						payload = [campaign, title, cid, amount, start, expiry]
+						break;
+				default: new Error('Unknown proposal type!')
+						break;
+			}
+
+			console.log( query, payload )
 
 			signAndNotify(
-				apiProvider.tx.gameDaoGovernance.generalProposal(...payload),
+				query(...payload),
 				{
 					pending: 'Proposal creation in progress',
 					success: 'Proposal created',
@@ -231,32 +268,33 @@ export const Main = () => {
 					}
 
 					// TODO: 2075 Do we need error handling here if false?
+					// RES: Yes, we do
 				}
 			)
 		}
 	}
 
-	useEffect(() => {}, [])
-
 	useEffect(() => {
 		if (!account) return
 		if (!refresh) return
-		if (dev) console.log('refresh signal')
+		if (dev) console.log('refresh')
 		updateFileCID(null)
-		updateFormData(random_state(account))
+		// resetForm()
 		setRefresh(false)
 		setLoading(false)
+		// redirect
 	}, [account, refresh])
 
-	const [validMemberships, setValidMemberships] = useState([])
 
 	useEffect(() => {
 		if (!bodyStates || !memberships) return
 
-		setValidMemberships(
+		setActiveMemberships(
 			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
 		)
 	}, [bodyStates, memberships])
+
+
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
@@ -272,20 +310,20 @@ export const Main = () => {
 					<form>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>
-								<Divider>General Information</Divider>
+								<Divider>Context</Divider>
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
-									<InputLabel>Organization / Campaign</InputLabel>
+									<InputLabel>Organisation</InputLabel>
 									<MuiSelect
 										required
-										label="Organization / Campaign"
+										label="Organisation"
 										fullWidth
 										name="entity"
 										value={formData.entity}
-										onChange={handleOnChange}
+										onChange={handleEntityChange}
 									>
-										{validMemberships.map((e) => (
+										{activeMemberships?.map((e) => (
 											<MenuItem key={e} value={e}>
 												{bodies?.[e]?.name}
 											</MenuItem>
@@ -293,26 +331,7 @@ export const Main = () => {
 									</MuiSelect>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									name={'purpose'}
-									label={'Proposal Title'}
-									placeholder={'Title'}
-									value={formData.purpose}
-									onChange={handleOnChange}
-									fullWidth
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
-									Content Description
-								</FormSectionHeadline>
-								<MarkdownEditor
-									value={formData.description}
-									onChange={handleMarkdownChange}
-								/>
-							</Grid>
-							<Grid item xs={12} md={3}>
+							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Proposal Type</InputLabel>
 									<MuiSelect
@@ -330,7 +349,53 @@ export const Main = () => {
 									</MuiSelect>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12} md={3}>
+
+							<Grid item xs={12} md={6}>
+								{ formData.proposal_type===3 && campaigns.length > 0 &&
+									<FormControl fullWidth>
+										<InputLabel>Campaign</InputLabel>
+										<MuiSelect
+											required
+											disabled={!campaigns.length}
+											label="Campaign"
+											fullWidth
+											name="campaign"
+											value={formData.campaign}
+											onChange={handleOnChange}
+										>
+											{campaigns && campaigns.map((e,i) => (
+												<MenuItem key={i} value={campaigns[i].value}>
+													{campaigns[i].text}
+												</MenuItem>
+											))}
+										</MuiSelect>
+									</FormControl>
+								}
+							</Grid>
+							<Grid item xs={12}>
+								<Divider>Proposal</Divider>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									name={'title'}
+									label={'Proposal Title'}
+									placeholder={'Title'}
+									value={formData.title}
+									onChange={handleOnChange}
+									fullWidth
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
+									Content Description
+								</FormSectionHeadline>
+								<MarkdownEditor
+									value={formData.description}
+									onChange={handleMarkdownChange}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Voting Type</InputLabel>
 									<MuiSelect
@@ -348,42 +413,49 @@ export const Main = () => {
 									</MuiSelect>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12} md={3}>
-								<FormControl fullWidth>
-									<InputLabel>Collateral Type</InputLabel>
-									<MuiSelect
-										label={'Collateral Type'}
-										name={'collateral_types'}
-										value={`${formData.collateral_type}`}
-										onChange={handleOnChange}
-										fullWidth
-									>
-										{data.collateral_types.map((ct, i) => (
-											<MenuItem key={ct.key} value={ct.value}>
-												{ct.text}
-											</MenuItem>
-										))}
-									</MuiSelect>
-								</FormControl>
-							</Grid>
-							<Grid item xs={12} md={3}>
-								<TextField
-									type={'number'}
-									name={'collateral_amount'}
-									value={formData.collateral_amount}
-									onChange={handleOnChange}
-									fullWidth
-									label={'Collateral Amount'}
-									InputLabelProps={{ shrink: true }}
-								/>
-							</Grid>
+
+							{ formData.voting_type > 0
+
+								? <>
+									<Grid item xs={12} md={3}>
+										<FormControl fullWidth>
+											<InputLabel>Collateral Type</InputLabel>
+											<MuiSelect
+												label={'Collateral Type'}
+												name={'collateral_types'}
+												value={`${formData.collateral_type}`}
+												onChange={handleOnChange}
+												fullWidth
+											>
+												{data.collateral_types.map((ct, i) => (
+													<MenuItem key={ct.key} value={ct.value}>
+														{ct.text}
+													</MenuItem>
+												))}
+											</MuiSelect>
+										</FormControl>
+									</Grid>
+									<Grid item xs={12} md={3}>
+										<TextField
+											type={'number'}
+											name={'collateral_amount'}
+											value={formData.collateral_amount}
+											onChange={handleOnChange}
+											fullWidth
+											label={'Collateral Amount'}
+											InputLabelProps={{ shrink: true }}
+										/>
+									</Grid>
+								</>
+								: <Grid item xs={12} md={6}></Grid>
+							}
 							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Start (now)</InputLabel>
 									<MuiSelect
 										label={'Start'}
 										name={'start'}
-										value={formData.start}
+										value={0}
 										onChange={handleOnChange}
 										fullWidth
 										disabled
@@ -414,10 +486,10 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{formData.proposal_type !== 0 && (
+							{formData.proposal_type === 3 && (
 								<>
 									<Grid item xs={12}>
-										<Divider>For withdrawals and grants</Divider>
+										<Divider>Transfer</Divider>
 									</Grid>
 									<Grid item xs={12} md={6}>
 										<TextField
@@ -448,6 +520,7 @@ export const Main = () => {
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
+									size="large"
 									onClick={handleSubmit}
 									disabled={loading}
 								>
