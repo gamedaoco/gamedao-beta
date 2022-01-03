@@ -90,6 +90,16 @@ const Dashboard = (props) => {
 						}}>
 							How to get started
 						</Typography>
+
+						<Typography variant="h4" sx={{
+							mb: 2,
+							background: "-webkit-linear-gradient(45deg, #ff3300 30%, #ff9900 90%)",
+							WebkitBackgroundClip: "text",
+							WebkitTextFillColor: "transparent",
+							fontWeight:800
+						}}>
+							Wallet
+						</Typography>
 						<Typography variant="body1">
 							Getting started involves two parts,
 							the first is a general setup for your browser,
@@ -103,15 +113,45 @@ const Dashboard = (props) => {
 								<li>Try it out and give feedback on our Discord, we are building this for you!</li>
 							</ol>
 						</Typography>
+
+						<Box sx={{display: 'flex', justifyContent: 'end' }} mt='2rem'>
+							<a href="https://polkadot.js.org/extension/" target="_blank">
+								<Button size="small" sx={{borderRadius: '100px'}} variant="outlined" color="primary">
+									Get Polkadot Wallet
+								</Button>
+							</a>
+						</Box>
+						<Typography variant="h4" sx={{
+							mb: 2,
+							background: "-webkit-linear-gradient(45deg, #ff3300 30%, #ff9900 90%)",
+							WebkitBackgroundClip: "text",
+							WebkitTextFillColor: "transparent",
+							fontWeight:800
+						}}>
+							Token
+						</Typography>
+						<Typography variant="body1">
+							GameDAO works, depending on the network you are connected to,
+							with three types of tokens:
+							<ol>
+								<li>GAME Token is the access and governance token.</li>
+								<li>A stable token, depending on the network, like aUSD, kUSD, DAI, PLAY for the settlement of payments, e.g. what people contribute to a fundraising campaign.</li>
+								<li>A network token, like ZERO on zero network (where this beta runs), to pay transaction fees.</li>
+							</ol>
+							During beta you will get all of these through a faucet on Discord,
+							therefore for experimenting no real value is used to do transactions.
+							<br/><br/>
+						</Typography>
+
 						<Box sx={{display: 'flex', justifyContent: 'space-between' }} mt='2rem'>
 							<a href="https://docs.gamedao.co/" target="_blank">
 								<Button size="small" sx={{mr:2}} color="secondary">
 									Learn more in the GameDAO Docs
 								</Button>
 							</a>
-							<a href="https://polkadot.js.org/extension/" target="_blank">
+							<a href="https://discord.gg/P7NHWGzJ7r" target="_blank">
 								<Button size="small" sx={{borderRadius: '100px'}} variant="outlined" color="primary">
-									Get Polkadot Wallet
+									Get Free Test Token
 								</Button>
 							</a>
 						</Box>
@@ -120,7 +160,7 @@ const Dashboard = (props) => {
 
 			</Grid>
 
-			{ !DEV && <>
+			{ DEV && <>
 
 				<Grid item xs={12} sm={6} md={4}>
 					<Card sx={{ ...bgPlain, height: '160px' }}>
