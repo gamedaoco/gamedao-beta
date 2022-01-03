@@ -21,13 +21,15 @@ const INITIAL_STATE: BalanceState = {
 	updateBalance: () => {},
 }
 
-// Get Account Balance for Zero, Play and game
+
 export function useBalance(): BalanceState {
 	const [addressState, setAddressState] = useState<string>(null)
 	const balanceState = useSelector(balanceStateSelector)
 	const apiProvider = useApiProvider()
 	const { address } = useWallet()
 	const dispatch = useDispatch()
+
+	const handleUpdateBalance = () => { return balanceState }
 
 	useEffect(() => {
 
@@ -60,6 +62,6 @@ export function useBalance(): BalanceState {
 
 	return {
 		...balanceState,
-		// updateBalance: handleUpdateBalance,
+		updateBalance: handleUpdateBalance,
 	} as any
 }
