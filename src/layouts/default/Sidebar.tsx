@@ -127,6 +127,7 @@ function Main({ showNavigation }: ComponentProps) {
 		>
 
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
+{/*
 				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
@@ -135,6 +136,7 @@ function Main({ showNavigation }: ComponentProps) {
 						<Typography sx={{ fontSize: '1rem' }}>Dashboard</Typography>
 					</SidebarButton>
 				</Link>
+*/}
 				<Link component={NavLink} to="/app/organisations">
 					<SidebarButton
 						active={!!pathname.match(/organisations/gi)}
@@ -177,14 +179,14 @@ function Main({ showNavigation }: ComponentProps) {
 					</Link>
 				)}
 
-				<Link component={NavLink} to="/app/wallet">
+{/*				<Link component={NavLink} to="/app/wallet">
 					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="wallet" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Wallet</Typography>
 					</SidebarButton>
-				</Link>
+				</Link>*/}
 
 				<List
 					sx={{ display: 'flex', flex: 1, flexDirection: 'column', margin: '2.5rem 0' }}
