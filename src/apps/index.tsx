@@ -5,13 +5,13 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useWallet } from '../context/Wallet'
+import { DEV } from '../config'
+import { useTheme } from '@mui/material/styles'
 
-import { alpha, useTheme } from '@mui/material/styles'
-
-import { Button, Grid, Typography } from 'src/components'
+import { Button, Grid, Typography, Box, Stack, Divider, Card, Paper } from 'src/components'
 import SingleChart from 'src/components/chart/SingleChart'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
-import { Box, Stack, Divider, Card } from 'src/components'
+
 
 import MiniStats from './components/MiniStats'
 
@@ -36,116 +36,153 @@ const Dashboard = (props) => {
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	return (
-		<Grid container spacing={3}>
+		<Grid container spacing={2}>
 
-			<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
-				<Typography variant="h5">Global Dashboard</Typography>
-			</Grid>
+			<Grid item xs={12}>
+				<Box>
+					<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
+						<Typography variant="h3" sx={{
+							mb: 2,
+							background: "-webkit-linear-gradient(45deg, #ff00cc 30%, #ff9900 90%)",
+							WebkitBackgroundClip: "text",
+							WebkitTextFillColor: "transparent",
+							fontWeight:800
+						}}>
+							The Art of GameDAO
+						</Typography>
+						<Typography variant="body1">
+							GameDAO is a fundraising, coordination and ownership protocol
+							for video games, creators and teams building in the dotsama ecosystem.
+							You can use it in almost any way you want.
+							This is the public beta to build and test together with you.
+							<br/><br/>
+							Our current roadmap is based on the following features:
+							<ul>
+								<li>Create unstoppable DAO for your project and community</li>
+								<li>Let the community become a member of your DAO based on your preferences</li>
+								<li>Manage your DAO Treasury together via proposals</li>
+								<li>Create fundraising Campaigns</li>
+								<li>Let the community manage your campaigns Treasury via proposals</li>
+							</ul>
+						</Typography>
+						<Box sx={{display: 'flex', justifyContent: 'space-between' }} mt='2rem'>
+							<a href="https://blog.gamedao.co/" target="_blank">
+								<Button size="small" sx={{mr:2}} color="secondary">
+									Read more about the why and how in our Blog
+								</Button>
+							</a>
+						</Box>
 
-			<Grid item xs={12} sm={6} md={4}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Box
-						sx={{
-							position: 'absolute',
-							top: '0px',
-							left: '-0.5rem',
-							width: '115%',
-						}}
-					>
-						<SingleChart />
-					</Box>
-					<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
-						<Typography>Total Value Locked (Global)</Typography>
-						<Typography variant="h3">32'603'000'444.435</Typography>
-						<Typography>GAME</Typography>
-					</Stack>
-				</Card>
-			</Grid>
+					</Paper>
+				</Box>
 
-			<Grid item sm={12} md={4}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
-						<Typography>DAOs</Typography>
-						<Typography variant="h3">{nonce ?? 'Loading...'}</Typography>
-						<Typography></Typography>
-					</Stack>
-				</Card>
-			</Grid>
-
-			<Grid item xs={12} sm={6} md={4}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Box
-						sx={{
-							position: 'absolute',
-							top: '0px',
-							left: '-0.5rem',
-							width: '115%',
-						}}
-					>
-						<SingleChart />
-					</Box>
-					<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
-						<Typography>Total contributions</Typography>
-						<Typography variant="h3">1005.00</Typography>
-						<Typography>aUSD</Typography>
-					</Stack>
-				</Card>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						<Typography variant="h5">Organization Updates:</Typography>
-						<Typography variant="h5">filter</Typography>
-					</Box>
-				</Card>
+				<Box>
+					<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
+						<Typography variant="h3" sx={{
+							mb: 2,
+							background: "-webkit-linear-gradient(45deg, #ff00cc 30%, #ff9900 90%)",
+							WebkitBackgroundClip: "text",
+							WebkitTextFillColor: "transparent",
+							fontWeight:800
+						}}>
+							How to get started
+						</Typography>
+						<Typography variant="body1">
+							Getting started involves two parts,
+							the first is a general setup for your browser,
+							where you simply follow the five steps below.
+							Make sure to take note of your recovery phrase as nobody else will do this for you.
+							<ol>
+								<li>Get the Polkadot browser wallet</li>
+								<li>Create an account on this wallet</li>
+								<li>Connect your wallet to the GameDAO DApp (in the top right)</li>
+								<li>Get free token through the Faucet link in the sidebar (links to our Discord)</li>
+								<li>Try it out and give feedback on our Discord, we are building this for you!</li>
+							</ol>
+						</Typography>
+						<Box sx={{display: 'flex', justifyContent: 'space-between' }} mt='2rem'>
+							<a href="https://docs.gamedao.co/" target="_blank">
+								<Button size="small" sx={{mr:2}} color="secondary">
+									Learn more in the GameDAO Docs
+								</Button>
+							</a>
+							<a href="https://polkadot.js.org/extension/" target="_blank">
+								<Button size="small" sx={{borderRadius: '100px'}} variant="outlined" color="primary">
+									Get Polkadot Wallet
+								</Button>
+							</a>
+						</Box>
+					</Paper>
+				</Box>
+
 			</Grid>
 
-			<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
-				<Typography variant="h5">
-					{crowdfunding.campaignsCount ?? 'Loading...'} Campaigns
-				</Typography>
-			</Grid>
+			{ !DEV && <>
 
-			<Grid item xs={12}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						<Typography variant="h5">Active Campaigns</Typography>
-					</Box>
-				</Card>
-			</Grid>
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
+						<Box
+							sx={{
+								position: 'absolute',
+								top: '0px',
+								left: '-0.5rem',
+								width: '115%',
+							}}
+						>
+							<SingleChart />
+						</Box>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
+							<Typography>Total Value Locked (Global)</Typography>
+							<Typography variant="h3">32'603'000'444.435</Typography>
+							<Typography>GAME</Typography>
+						</Stack>
+					</Card>
+				</Grid>
 
-			<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
-				<Typography variant="h5">{proposalsCount ?? 'Loading...'} Proposals</Typography>
-			</Grid>
+				<Grid item sm={12} md={4}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
+							<Typography>DAOs</Typography>
+							<Typography variant="h3">{nonce ?? 'Loading...'}</Typography>
+							<Typography></Typography>
+						</Stack>
+					</Card>
+				</Grid>
 
-			<Grid item xs={12}>
-				<Card sx={{ ...bgPlain, height: '160px' }}>
-					<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
-						<Typography variant="h5">Votings Closing Soon</Typography>
-					</Box>
-				</Card>
-			</Grid>
+				<Grid item xs={12} sm={6} md={4}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
+						<Box
+							sx={{
+								position: 'absolute',
+								top: '0px',
+								left: '-0.5rem',
+								width: '115%',
+							}}
+						>
+							<SingleChart />
+						</Box>
+						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
+							<Typography>Total contributions</Typography>
+							<Typography variant="h3">1005.00</Typography>
+							<Typography>aUSD</Typography>
+						</Stack>
+					</Card>
+				</Grid>
 
-			<Grid item xs={12} md={6} lg={4}>
-				<AppCurrentVisits />
-			</Grid>
+				<Grid item xs={12}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
+						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
+							<Typography variant="h5">Organization Updates:</Typography>
+							<Typography variant="h5">filter</Typography>
+						</Box>
+					</Card>
+				</Grid>
 
-			<Grid item xs={12} md={6} lg={4}>
-				<AppOrderTimeline />
-			</Grid>
+			</>}
 
-			<Grid item xs={12} md={6} lg={4}>
-				<AppCurrentSubject />
-			</Grid>
-
-			<Grid item xs={12}>
-				<AppWebsiteVisits />
-			</Grid>
-
-			<Grid item xs={12}>
-				<AppConversionRates />
-			</Grid>
 		</Grid>
 	)
 }
@@ -161,7 +198,5 @@ export default function Dapp(props) {
 	}, [ connected, address, identities ])
 
 	if (!apiProvider) return null
-	return ( address && connected)
-		? <DashboardUserConnected />
-		: <Dashboard />
+	return (<Dashboard />)
 }
