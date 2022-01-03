@@ -6,7 +6,7 @@ import { ISubmittableResult, Signer } from '@polkadot/types/types'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { to } from 'await-to-js'
 import { createErrorNotification, createPromiseNotification } from 'src/utils/notification'
-import { useApiProvider } from '@substra-hooks/core'
+import { useApiProvider, useEncodedAddress} from '@substra-hooks/core'
 
 export type WalletState = {
 	allowConnect: boolean
@@ -42,9 +42,11 @@ const WalletContext = createContext<WalletState>(INITIAL_STATE)
 const useWallet = () => useContext<WalletState>(WalletContext)
 
 const WalletProvider = ({ children }) => {
+
 	const [state, setState] = useState<WalletState>(INITIAL_STATE)
 	const { allowConnection } = useStore()
 	const ApiProvider = useApiProvider()
+	const convertedAddress = useEncodedAddress( state?.account?.address, 25 ) || null
 
 	const handleUpdateWalletState = (stateData) => {
 		setState({ ...state, ...stateData })
@@ -155,6 +157,11 @@ const WalletProvider = ({ children }) => {
 			setState({ ...state, signer: null, connected: false })
 		}
 	}, [state.account])
+
+	useEffect(()=>{
+		if (!convertedAddress) return null
+		setState({ ...state, address: convertedAddress })
+	},[state.account])
 
 	return (
 		<WalletContext.Provider
