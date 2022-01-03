@@ -1,6 +1,6 @@
-import RocketIcon from '@mui/icons-material/Launch'
-import TimeIcon from '@mui/icons-material/LockClock'
-import IdentityIcon from '@mui/icons-material/PermIdentity'
+import RocketIcon from '@mui/icons-material/PlayArrowOutlined'
+import TimeIcon from '@mui/icons-material/TimerOutlined'
+import IdentityIcon from '@mui/icons-material/CircleOutlined'
 import SendIcon from '@mui/icons-material/Send'
 import TagIcon from '@mui/icons-material/Tag'
 import WarningIcon from '@mui/icons-material/Warning'
@@ -105,8 +105,8 @@ const CampaignCard = ({ displayMode, item, index }) => {
 			apiProvider.tx.gameDaoCrowdfunding.contribute(...payload),
 			{
 				pending: 'Contribute to campaign',
-				success: 'Successfully contributed',
-				error: 'Contribute to campaign failed',
+				success: 'Contribution successful',
+				error: 'Contribution failed',
 			},
 			(state) => {
 				setLoading(false)
@@ -130,23 +130,23 @@ const CampaignCard = ({ displayMode, item, index }) => {
 
 	const metaInfo = React.useMemo(() => {
 		return (
-			<Stack direction={'column'} spacing={1}>
-				<Stack direction={'row'} spacing={1}>
-					<RocketIcon />
-					<Typography>{date}</Typography>
+			<Stack direction={'column'}>
+				<Stack direction={'row'} spacing={1} alignItems="middle">
+					<RocketIcon sx={{ height: '1rem'}} />
+					<Typography sx={{ fontSize: '0.75rem'}}>{date}</Typography>
 				</Stack>
 				{state === '1' && (
-					<Stack direction={'row'} spacing={2}>
-						<TimeIcon />
-						<Typography>
+					<Stack direction={'row'} spacing={1}>
+						<TimeIcon sx={{ height: '1rem'}}/>
+						<Typography sx={{ fontSize: '0.75rem'}}>
 							{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
 						</Typography>
 					</Stack>
 				)}
 				{bodies && bodies[org] && bodies[org].name ? (
-					<Stack direction={'row'} spacing={2}>
-						<IdentityIcon />
-						<Link component={NavLink} to={`/app/organisations/${org}`}>
+					<Stack direction={'row'} spacing={1}>
+						<IdentityIcon sx={{ height: '1rem'}}/>
+						<Link sx={{ fontSize: '0.75rem'}} component={NavLink} to={`/app/organisations/${org}`}>
 							{bodies[org].name}
 						</Link>
 						<br />

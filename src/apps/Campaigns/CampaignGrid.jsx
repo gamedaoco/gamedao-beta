@@ -118,8 +118,8 @@ const CampaignGrid = ({ content }) => {
 	return (
 		<Stack direction={'column'} spacing={2}>
 			<Stack direction={'row'} spacing={2}>
-				<FilterBar filter={filter} setFilter={setFilter} />
-				<ScopeBar filter={scope} setFilter={setScope} />
+				<FilterBar sx={{ m:0 }} filter={filter} setFilter={setFilter}/>
+				{/*<ScopeBar filter={scope} setFilter={setScope} />*/}
 				<ListTileSwitch mode={displayMode} onSwitch={(mode) => setDisplayMode(mode)} />
 			</Stack>
 			<Wrapper>
