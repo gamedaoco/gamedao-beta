@@ -67,6 +67,7 @@ export const Main = () => {
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
+	const [markdownState, setMarkdownState] = useState('')
 
 	const [formData, updateFormData] = useState(INITIAL_STATE)
 	const [fileCID, updateFileCID] = useState()
@@ -170,14 +171,6 @@ export const Main = () => {
 		updateFormData(update)
 	}
 
-	const handleMarkdownChange = ({ html, text }) => {
-		const update = {
-			...formData,
-			description: text,
-		}
-		updateFormData(update)
-	}
-
 	// submit function
 
 	const handleSubmit = (e) => {
@@ -187,9 +180,10 @@ export const Main = () => {
 		setLoading(true)
 		const content = {
 			id: formData.id,
-			description: formData.description,
+			description: markdownState || '',
 		}
 
+		console.log('content', content)
 		//	CID
 
 		const getCID = async () => {
@@ -388,8 +382,8 @@ export const Main = () => {
 
 
 								<MarkdownEditor
-									value={formData.description}
-									onChange={handleMarkdownChange}
+									value={markdownState}
+									onChange={({ _html, text }) => setMarkdownState(text)}
 								/>
 							</Grid>
 
