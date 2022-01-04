@@ -16,6 +16,7 @@ import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
 import { ProposalVoterList } from './modules/ProposalVoterList'
+import { useTheme } from '@mui/material/styles'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -49,6 +50,9 @@ export function Main() {
 	const [description, setDescription] = useState<any>()
 
 	const dispatch = useDispatch()
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	// Proposal
 	const proposal = proposals?.[proposalId]
@@ -97,7 +101,7 @@ export function Main() {
 			{proposal && body && owners ? (
 				<>
 					<ProposalBodyData body={body} metadata={metadata} proposalId={proposalId} />
-					<Paper sx={{ width: '100%' }}>
+					<Paper sx={{ ...bgPlain, width: '100%' }}>
 						<Stack direction="row" padding={6} spacing={6}>
 							<Stack flex="3">
 								<Box whiteSpace="pre-line">
@@ -120,6 +124,7 @@ export function Main() {
 					</Paper>
 				</>
 			) : null}
+			{proposal ? <ProposalVoterList proposal={proposal} /> : null}
 		</Stack>
 	)
 }
