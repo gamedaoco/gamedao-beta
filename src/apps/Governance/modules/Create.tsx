@@ -3,19 +3,11 @@ import { useNavigate } from 'react-router'
 import { useWallet } from 'src/context/Wallet'
 import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useApiProvider } from '@substra-hooks/core'
 
 import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
 import config from '../../../config'
-import {
-	blocksPerDay,
-	project_durations,
-	proposal_types,
-	voting_types,
-	data,
-	rnd,
-} from '../../lib/data'
+import { blocksPerDay, data, proposal_types, voting_types } from '../../lib'
 
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -89,11 +81,11 @@ export const Main = () => {
 	}, [address])
 
 	useEffect(() => {
-		if ( formData.proposal_type !== 3 ) return
-		if ( formData.entity === '' ) return
-		if ( !apiProvider || !address ) return
+		if (formData.proposal_type !== 3) return
+		if (formData.entity === '') return
+		if (!apiProvider || !address) return
 
-		console.log('query available campaigns for', bodies?.[formData.entity]?.name )
+		console.log('query available campaigns for', bodies?.[formData.entity]?.name)
 
 		const query = async () => {
 
@@ -102,7 +94,7 @@ export const Main = () => {
 					_cam,
 					// owned,
 					_con,
-					_suc
+					_suc,
 				] = await Promise.all([
 					apiProvider.query.gameDaoCrowdfunding.campaignsByBody(formData.entity),
 					// apiProvider.query.gameDaoCrowdfunding.campaignsOwnedArray(address),
@@ -120,7 +112,7 @@ export const Main = () => {
 				// get successful campaigns for a body
 				const cam = _cam.toHuman() as any
 				const suc = _suc.toHuman() as any
-				const availableCampaigns = cam.filter( c => suc.find( s => c === s ) )
+				const availableCampaigns = cam.filter(c => suc.find(s => c === s))
 
 				// merge contributed and owned
 				// const con = _con.toHuman() as any
@@ -136,13 +128,13 @@ export const Main = () => {
 				// 	})
 
 				const campaigns = availableCampaigns?.map(
-					( c, i ) => ({
-						key: i, text: c, value: c
-					})
+					(c, i) => ({
+						key: i, text: c, value: c,
+					}),
 				) ?? []
 
-				console.log('availableCampaigns',availableCampaigns)
-				console.log('campaigns',campaigns)
+				console.log('availableCampaigns', availableCampaigns)
+				console.log('campaigns', campaigns)
 
 				// TODO: only contributed/owned
 				// setCampaigns(availableCampaigns)
@@ -233,20 +225,23 @@ export const Main = () => {
 
 			let query, payload
 
-			console.log( proposal_type )
+			console.log(proposal_type)
 
-			switch ( proposal_type ) {
-				case 0: query = apiProvider.tx.gameDaoGovernance.generalProposal
-						payload = [entity, title, cid, start, expiry]
-						break;
-				case 3: query = apiProvider.tx.gameDaoGovernance.withdrawProposal
-						payload = [campaign, title, cid, amount, start, expiry]
-						break;
-				default: new Error('Unknown proposal type!')
-						break;
+			switch (proposal_type) {
+				case 0:
+					query = apiProvider.tx.gameDaoGovernance.generalProposal
+					payload = [entity, title, cid, start, expiry]
+					break
+				case 3:
+					query = apiProvider.tx.gameDaoGovernance.withdrawProposal
+					payload = [campaign, title, cid, amount, start, expiry]
+					break
+				default:
+					new Error('Unknown proposal type!')
+					break
 			}
 
-			console.log( query, payload )
+			console.log(query, payload)
 
 			signAndNotify(
 				query(...payload),
@@ -269,7 +264,7 @@ export const Main = () => {
 
 					// TODO: 2075 Do we need error handling here if false?
 					// RES: Yes, we do
-				}
+				},
 			)
 		}
 	}
@@ -290,10 +285,9 @@ export const Main = () => {
 		if (!bodyStates || !memberships) return
 
 		setActiveMemberships(
-			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
+			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1'),
 		)
 	}, [bodyStates, memberships])
-
 
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
@@ -317,11 +311,12 @@ export const Main = () => {
 									<InputLabel>Organisation</InputLabel>
 									<MuiSelect
 										required
-										label="Organisation"
+										label='Organisation *'
 										fullWidth
-										name="entity"
+										name='entity'
 										value={formData.entity}
 										onChange={handleEntityChange}
+										error={!formData.entity}
 									>
 										{activeMemberships?.map((e) => (
 											<MenuItem key={e} value={e}>
@@ -351,19 +346,19 @@ export const Main = () => {
 							</Grid>
 
 							<Grid item xs={12} md={6}>
-								{ formData.proposal_type===3 && campaigns.length > 0 &&
+								{formData.proposal_type === 3 && campaigns.length > 0 &&
 									<FormControl fullWidth>
 										<InputLabel>Campaign</InputLabel>
 										<MuiSelect
 											required
 											disabled={!campaigns.length}
-											label="Campaign"
+											label='Campaign'
 											fullWidth
-											name="campaign"
+											name='campaign'
 											value={formData.campaign}
 											onChange={handleOnChange}
 										>
-											{campaigns && campaigns.map((e,i) => (
+											{campaigns && campaigns.map((e, i) => (
 												<MenuItem key={i} value={campaigns[i].value}>
 													{campaigns[i].text}
 												</MenuItem>
@@ -378,10 +373,11 @@ export const Main = () => {
 							<Grid item xs={12}>
 								<TextField
 									name={'title'}
-									label={'Proposal Title'}
+									label={'Proposal Title *'}
 									placeholder={'Title'}
 									value={formData.title}
 									onChange={handleOnChange}
+									error={formData.title?.length > 0 && (!formData.title || formData.title.length <= 5)}
 									fullWidth
 								/>
 							</Grid>
@@ -389,6 +385,8 @@ export const Main = () => {
 								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
 									Content Description
 								</FormSectionHeadline>
+
+
 								<MarkdownEditor
 									value={formData.description}
 									onChange={handleMarkdownChange}
@@ -414,7 +412,7 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{ formData.voting_type > 0
+							{formData.voting_type > 0
 
 								? <>
 									<Grid item xs={12} md={3}>
@@ -520,9 +518,9 @@ export const Main = () => {
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
-									size="large"
+									size='large'
 									onClick={handleSubmit}
-									disabled={loading}
+									disabled={loading || !formData.title || formData.title.length <= 5 || !formData.entity}
 								>
 									Publish Proposal
 								</Button>
@@ -538,7 +536,7 @@ export const Main = () => {
 export default function Module() {
 	const apiProvider = useApiProvider()
 	return apiProvider && apiProvider.query.gameDaoGovernance
-		? <Main/>
+		? <Main />
 		: null
 }
 
