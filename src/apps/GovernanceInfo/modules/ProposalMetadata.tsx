@@ -27,25 +27,23 @@ export function ProposalMetadata({
 	} = useGameDaoControl()
 	const { proposalStates } = useGameDaoGovernance()
 	const [hasVoted, setHasVoted] = useState(false)
-
+	const [isMemberState, setIsMemberState] = useState(false);
 	const bodyId = body.id
 	const proposalId = proposal.proposal_id
 	const proposalState = +proposalStates[proposalId]
 	const start = proposal ? (normalizeNumber(proposal.start) - blockNumber) * blockTime : null
 	const expires = proposal ? (normalizeNumber(proposal.expiry) - blockNumber) * blockTime : null
 
-	// const isMember = bodyMemberState?.[]?.[address] === '1' ?? false
-	const isMember = memberships?.[address]?.includes(isOrganisation ? bodyId : body?.org)
-
 	useEffect(() => {
+
 		;(async () => {
 			const hasVoted = (
 				await apiProvider.query.gameDaoGovernance.votedBefore([address, proposalId])
 			).toHuman()
-
 			if (address) {
 				queryBodyMemberState(isOrganisation ? bodyId : body?.org, address)
-				queryMemberships(address)
+				const memberships = await queryMemberships(address)
+				setIsMemberState(memberships?.includes(isOrganisation ? bodyId : body?.org))
 			}
 
 			setHasVoted(hasVoted)
@@ -87,7 +85,7 @@ export function ProposalMetadata({
 				{proposalState !== 1 ?
 					<Typography display='block' variant='body1'>
 						The voting is no longer active.
-					</Typography> : isMember ? (
+					</Typography> : isMemberState ? (
 						!hasVoted ? (
 							<Stack direction='row' justifyContent='space-between'>
 								<Button onClick={() => onVoteClicked(false)}>No</Button>
