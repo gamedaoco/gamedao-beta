@@ -11,7 +11,7 @@ export function ProposalVoterList({ proposal }) {
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
-	return (
+	return voters.length > 0 ? (
 		<Stack sx={{ width: '100%' }} flex="1" spacing={3}>
 			<Paper sx={{ ...bgPlain }}>
 				<Stack padding={6} spacing={3}>
@@ -51,5 +51,5 @@ export function ProposalVoterList({ proposal }) {
 				</Stack>
 			</Paper>
 		</Stack>
-	)
+	) : null
 }
