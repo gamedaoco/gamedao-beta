@@ -17,6 +17,7 @@ import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
 import { ProposalVoterList } from './modules/ProposalVoterList'
 import { useTheme } from '@mui/material/styles'
+import { useCrowdfunding } from '../../hooks/useCrowdfunding'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -46,6 +47,7 @@ export function Main() {
 
 	const { owners, metadata, proposals } = useGameDaoGovernance()
 	const { bodies, queryBodyMemberState } = useGameDaoControl()
+	const { campaigns } = useCrowdfunding();
 
 	const [description, setDescription] = useState<any>()
 
@@ -60,12 +62,14 @@ export function Main() {
 	// Orgianization
 	const bodyId = proposal?.context_id ?? null
 	const body = bodyId ? bodies?.[bodyId] : null
+	const campaign = campaigns?.[bodyId]
+	const isOrganisation = !!body;
 
 	useEffect(() => {
 		if (!bodyId) return
 
-		queryBodyMemberState(bodyId, address)
-	}, [address, bodyId])
+		queryBodyMemberState(isOrganisation ? bodyId : campaign?.org, address)
+	}, [address, bodyId, isOrganisation])
 
 	// Fetch Description
 	useEffect(() => {
@@ -86,35 +90,37 @@ export function Main() {
 			},
 			(state, result) => {
 				dispatch(clearGovernanceAction())
-			}
+			},
 		)
 	}
 
 	return (
-		<Stack spacing={3} alignItems="flex-start">
+		<Stack spacing={3} alignItems='flex-start'>
 			<Button onClick={() => navigate('/app/governance')}>
-				<ArrowBackIosIconNew fontSize="small" />
-				<Typography variant="body1" marginLeft={1}>
+				<ArrowBackIosIconNew fontSize='small' />
+				<Typography variant='body1' marginLeft={1}>
 					Back to overview
 				</Typography>
 			</Button>
-			{proposal && body && owners ? (
+			{proposal && (body || campaign) && owners ? (
 				<>
-					<ProposalBodyData body={body} metadata={metadata} proposalId={proposalId} />
+					<ProposalBodyData body={body || campaign} isOrganisation={isOrganisation}
+									  metadata={metadata} proposalId={proposalId} />
 					<Paper sx={{ ...bgPlain, width: '100%' }}>
-						<Stack direction="row" padding={6} spacing={6}>
-							<Stack flex="3">
-								<Box whiteSpace="pre-line">
+						<Stack direction='row' padding={6} spacing={6}>
+							<Stack flex='3'>
+								<Box whiteSpace='pre-line'>
 									<MarkdownViewer
 										markdown={description ?? 'Could not load the description!'}
 									/>
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />
 							</Stack>
-							<Divider orientation="vertical" sx={{ height: 'inherit' }} />
+							<Divider orientation='vertical' sx={{ height: 'inherit' }} />
 							<ProposalMetadata
 								address={address}
-								body={body}
+								body={body || campaign}
+								isOrganisation={isOrganisation}
 								proposal={proposal}
 								proposalOwner={owners[proposalId]}
 								apiProvider={apiProvider}
