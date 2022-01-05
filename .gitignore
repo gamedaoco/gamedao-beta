@@ -10,3 +10,4 @@ vendors
 *.local*
 .next
 .c9
+*.idea/
