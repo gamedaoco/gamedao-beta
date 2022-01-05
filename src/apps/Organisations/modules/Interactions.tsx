@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGameDaoControl } from '../../../hooks/useGameDaoControl'
 import { useWallet } from '../../../context/Wallet'
 import { Button } from '../../../components'
@@ -12,11 +12,12 @@ import {
 import { useBalance } from 'src/hooks/useBalance'
 
 export function Interactions({ data, hideDashboard }) {
+	const [isMemberState, setIsMemberState] = useState(false)
 	const { address, signAndNotify } = useWallet()
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
 	const navigate = useNavigate()
-	const { queryBodyMemberState, bodyMemberState, memberships, queryMemberships } =
+	const { queryBodyMemberState, queryMemberships } =
 		useGameDaoControl()
 	const refresh = useSelector(gameDaoControlRefreshSelector)
 	const dispatch = useDispatch()
@@ -42,7 +43,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -60,7 +61,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -78,28 +79,34 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
 	useEffect(() => {
-		if (address) {
-			queryBodyMemberState(data.hash, address)
-			queryMemberships(address)
-		}
+		(async () => {
+				if (address) {
+					queryBodyMemberState(data.hash, address)
+					queryMemberships(address)
+					const memberships = await queryMemberships(address)
+					setIsMemberState(memberships?.includes(data.hash))
+				}
+
+			}
+		)()
+
 	}, [address, refresh])
 
 	if (!data || !data?.access) return null
 
 	const isAdmin = () => (address === data?.controller ? true : false)
-	const isMember = () => memberships?.[address]?.includes(data.hash)
 
 	const actionType = ['join', 'apply', 'leave'][data.access]
 	const actionCallback = [handleJoin, handleApply, handleLeave][data.access]
 
 	return (
 		<>
-			{(isMember() || isAdmin()) && !hideDashboard && (
+			{(isMemberState || isAdmin()) && !hideDashboard && (
 				<Button
 					variant={'outlined'}
 					fullWidth
@@ -108,7 +115,7 @@ export function Interactions({ data, hideDashboard }) {
 					size='small'
 				>{`Dashboard`}</Button>
 			)}
-			{isMember() && !isAdmin() && (
+			{isMemberState && !isAdmin() && (
 				<Button
 					variant={'outlined'}
 					fullWidth
@@ -117,7 +124,7 @@ export function Interactions({ data, hideDashboard }) {
 					size='small'
 				>{`leave`}</Button>
 			)}
-			{!isMember() && actionType && (
+			{!isMemberState && actionType && (
 				<Button
 					variant={'outlined'}
 					fullWidth
@@ -131,8 +138,9 @@ export function Interactions({ data, hideDashboard }) {
 					variant={'outlined'}
 					fullWidth
 					size='small'
-					onClick={() => {}
-				}>
+					onClick={() => {
+					}
+					}>
 					Admin
 				</Button>
 			)}
