@@ -43,7 +43,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const blockheight = useBlock()
 	const { identities } = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
-	const { address, signAndNotify } = useWallet()
+	const { address, connected, signAndNotify } = useWallet()
 	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
@@ -173,7 +173,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const metaActions = React.useMemo(() => {
 		switch (state) {
 			case '1': {
-				return isAdmin ? null : (
+				return (isAdmin || !connected) ? null : (
 					<TextField
 						InputLabelProps={{ shrink: true }}
 						placeholder='amount'

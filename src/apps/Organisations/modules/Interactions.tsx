@@ -13,7 +13,7 @@ import { useBalance } from 'src/hooks/useBalance'
 
 export function Interactions({ data, hideDashboard }) {
 	const [isMemberState, setIsMemberState] = useState(false)
-	const { address, signAndNotify } = useWallet()
+	const { address, connected, signAndNotify } = useWallet()
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
 	const navigate = useNavigate()
@@ -97,7 +97,7 @@ export function Interactions({ data, hideDashboard }) {
 
 	}, [address, refresh])
 
-	if (!data || !data?.access) return null
+	if (!connected || !data || !data?.access) return null
 
 	const isAdmin = () => (address === data?.controller ? true : false)
 
