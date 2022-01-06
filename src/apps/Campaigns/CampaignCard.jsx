@@ -2,13 +2,11 @@ import RocketIcon from '@mui/icons-material/PlayArrowOutlined'
 import TimeIcon from '@mui/icons-material/TimerOutlined'
 import IdentityIcon from '@mui/icons-material/CircleOutlined'
 import SendIcon from '@mui/icons-material/Send'
-import TagIcon from '@mui/icons-material/Tag'
 import WarningIcon from '@mui/icons-material/Warning'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { web3FromSource } from '@polkadot/extension-dapp'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -25,6 +23,7 @@ import { Link } from '../../components'
 import { gateway } from '../lib/ipfs'
 import { BigNumber } from 'bignumber.js'
 import { useBalance } from 'src/hooks/useBalance'
+import { compareAddress } from '../../utils/helper'
 
 const CampaignCard = ({ displayMode, item, index }) => {
 	const {
@@ -44,7 +43,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const blockheight = useBlock()
 	const { identities } = useIdentity(owner)
 	const { campaignContributorsCount } = useCrowdfunding()
-	const { account, signAndNotify } = useWallet()
+	const { address, signAndNotify } = useWallet()
 	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
 	const [content, setContent] = useState()
@@ -97,6 +96,9 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
 	const date = new Date(epoch * 1).toLocaleDateString(undefined, options)
 
+	const isAdmin = compareAddress(address, item.owner ?? '')
+
+
 	const sendTx = async (amount) => {
 		if (!amount) return
 		setLoading(true)
@@ -115,7 +117,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -131,22 +133,23 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const metaInfo = React.useMemo(() => {
 		return (
 			<Stack direction={'column'}>
-				<Stack direction={'row'} spacing={1} alignItems="middle">
-					<RocketIcon sx={{ height: '1rem'}} />
-					<Typography sx={{ fontSize: '0.75rem'}}>{date}</Typography>
+				<Stack direction={'row'} spacing={1} alignItems='middle'>
+					<RocketIcon sx={{ height: '1rem' }} />
+					<Typography sx={{ fontSize: '0.75rem' }}>{date}</Typography>
 				</Stack>
 				{state === '1' && (
 					<Stack direction={'row'} spacing={1}>
-						<TimeIcon sx={{ height: '1rem'}}/>
-						<Typography sx={{ fontSize: '0.75rem'}}>
+						<TimeIcon sx={{ height: '1rem' }} />
+						<Typography sx={{ fontSize: '0.75rem' }}>
 							{Math.floor((parseInt(blocksRemain) * 3) / 60)} min remaining
 						</Typography>
 					</Stack>
 				)}
 				{bodies && bodies[org] && bodies[org].name ? (
 					<Stack direction={'row'} spacing={1}>
-						<IdentityIcon sx={{ height: '1rem'}}/>
-						<Link sx={{ fontSize: '0.75rem'}} component={NavLink} to={`/app/organisations/${org}`}>
+						<IdentityIcon sx={{ height: '1rem' }} />
+						<Link sx={{ fontSize: '0.75rem' }} component={NavLink}
+							  to={`/app/organisations/${org}`}>
 							{bodies[org].name}
 						</Link>
 						<br />
@@ -154,7 +157,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				) : (
 					<Stack direction={'row'} spacing={2}>
 						<WarningIcon />
-						<Link component={NavLink} to="/faq#unknown_entity">
+						<Link component={NavLink} to='/faq#unknown_entity'>
 							unknown dao
 						</Link>
 					</Stack>
@@ -170,15 +173,15 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const metaActions = React.useMemo(() => {
 		switch (state) {
 			case '1': {
-				return (
+				return isAdmin ? null : (
 					<TextField
 						InputLabelProps={{ shrink: true }}
-						placeholder="amount"
-						name="amount"
+						placeholder='amount'
+						name='amount'
 						value={formData.amount}
 						onChange={handleOnChange}
 						fullWidth
-						type="number"
+						type='number'
 						label={'Contribute to this campaign'}
 						InputProps={{
 							endAdornment: (
@@ -189,6 +192,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 						}}
 					/>
 				)
+
 			}
 
 			case '3': {
@@ -202,7 +206,6 @@ const CampaignCard = ({ displayMode, item, index }) => {
 
 	if (!content) return null
 
-	//console.log(content)
 
 	return displayMode === ListTileEnum.TILE ? (
 		<TileItem
