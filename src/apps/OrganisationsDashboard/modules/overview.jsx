@@ -32,8 +32,9 @@ export function Overview({
 							))}
 						</Stack>
 					) : (
-						<>
+						<Paper>
 							<Stack
+
 								direction='row'
 								justifyContent='space-between'
 								alignItems='center'
@@ -57,7 +58,7 @@ export function Overview({
 									</Button>}
 								</Box>
 							</Stack>
-						</>
+						</Paper>
 					)}
 				</Box>
 			</Paper>
