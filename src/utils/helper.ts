@@ -22,16 +22,19 @@ export function toZeroAddress(addr) {
 
 
 export function compareAddress(a, b) {
-	const aEnc = encodeAddress(
-		isHex(a)
-			? hexToU8a(a)
-			: decodeAddress(a),
-	)
-	const bEnc = encodeAddress(
-		isHex(b)
-			? hexToU8a(b)
-			: decodeAddress(b),
-	)
-
-	return aEnc === bEnc
+	try {
+		const aEnc = encodeAddress(
+			isHex(a)
+				? hexToU8a(a)
+				: decodeAddress(a),
+		)
+		const bEnc = encodeAddress(
+			isHex(b)
+				? hexToU8a(b)
+				: decodeAddress(b),
+		)
+		return aEnc === bEnc
+	} catch (e) {
+		return null
+	}
 }

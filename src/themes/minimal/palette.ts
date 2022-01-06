@@ -26,18 +26,22 @@ declare module '@mui/material/styles/createPalette' {
 	interface TypeBackground {
 		neutral: string
 	}
+
 	interface SimplePaletteColorOptions {
 		lighter: string
 		darker: string
 	}
+
 	interface PaletteColor {
 		lighter: string
 		darker: string
 	}
+
 	interface Palette {
 		gradients: GradientsPaletteOptions
 		chart: ChartPaletteOptions
 	}
+
 	interface PaletteOptions {
 		gradients: GradientsPaletteOptions
 		chart: ChartPaletteOptions
@@ -114,7 +118,7 @@ const ERROR = {
 }
 
 const GREY = {
-	0:   '#fcfcfc',
+	0: '#fcfcfc',
 	100: '#f2f0ef',
 	200: '#c2c0bf',
 	300: '#b2b0af',
@@ -181,6 +185,10 @@ const palette = {
 		text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
 		background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
 		action: { active: GREY[600], ...COMMON.action },
+		tabButton: {
+			normal: '#fff',
+			active: '#82807f29',
+		},
 		proposalStates: {
 			active: '#F9C49D',
 			expired: '#848484',
@@ -194,6 +202,10 @@ const palette = {
 		text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
 		background: { paper: '#25282B', default: GREY[900], neutral: GREY[500_16] },
 		action: { active: GREY[500], ...COMMON.action },
+		tabButton: {
+			normal: '#25282B',
+			active: '#12100f',
+		},
 		proposalStates: {
 			active: '#F9C49D',
 			expired: '#848484',
