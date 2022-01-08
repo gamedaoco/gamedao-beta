@@ -13,7 +13,6 @@ import {
 	Box,
 	Typography,
 	Grid,
-	Divider,
 	Chip,
 	styled,
 	Box16to9,

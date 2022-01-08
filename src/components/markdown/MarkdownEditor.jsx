@@ -5,14 +5,16 @@ import MarkdownIt from 'markdown-it';
 import { html5IPFSMedia } from './markdownItIPFSMediaPlugin'
 import { useThemeState } from 'src/context/ThemeState'
 
-import '../../mkEditor.css';
+// TODO: check if needed, move to theme folder
+// import '../../mkEditor.css';
 
-import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/apps/lib/ipfs'
+import { pinJSONToIPFS, pinFileToIPFS, gateway } from 'src/lib/ipfs'
 
 
+// TODO: move css to theme folder
 // import style manually
-import 'react-markdown-editor-lite/lib/index.css';
-import './MarkdownEditor.css';
+// import 'react-markdown-editor-lite/lib/index.css';
+// import './MarkdownEditor.css';
 
 
 import config from 'src/config'

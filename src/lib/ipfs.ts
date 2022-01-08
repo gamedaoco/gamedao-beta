@@ -2,8 +2,8 @@
 //	ipfs abstraction
 //
 
-import config from '../../config'
 import { create } from 'ipfs-http-client'
+import config from 'src/config'
 // const dev = config.dev
 
 // put

@@ -1,9 +1,8 @@
-import config from '../../config'
+import config from 'src/config'
 const dev = config.dev
 
 export const rnd = (top: number) => Math.round(Math.random() * (top - 1))
 
-export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 
 // dropdown content
 

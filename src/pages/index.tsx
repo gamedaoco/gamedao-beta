@@ -12,7 +12,7 @@ import {
 	Typography,
 	Container,
 } from '../components'
-import { Rainbowmesh } from './Rainbowmesh'
+// import { Rainbowmesh } from 'src/components/Rainbowmesh'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
 export default function SignIn() {
@@ -29,7 +29,9 @@ export default function SignIn() {
 					left: '0px',
 				}}
 			>
+{/*
 				<Rainbowmesh />
+*/}
 			</Box>
 			<Container component="main" maxWidth="xs">
 				<Box

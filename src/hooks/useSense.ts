@@ -1,11 +1,12 @@
-import { ApiPromise } from '@polkadot/api'
-import { useApiProvider } from '@substra-hooks/core'
 import { useState, useEffect } from 'react'
-import { useWallet } from 'src/context/Wallet'
-import { to } from 'await-to-js'
-import { createErrorNotification } from 'src/utils/notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { balanceStateSelector, updateBalanceAction } from 'src/redux/duck/balance.duck'
+
+import { ApiPromise } from '@polkadot/api'
+import { useApiProvider } from '@substra-hooks/core'
+import { to } from 'await-to-js'
+import { useWallet } from 'src/context/Wallet'
+import { createErrorNotification } from 'src/utils/notification'
 
 export type BalanceState = {
 	balanceZero: String
@@ -52,7 +53,7 @@ async function queryAccountBalance(apiProvider: ApiPromise, address: string): Pr
 
 // Get Account Balance for Zero, Play and game
 export function useBalance(): BalanceState {
-
+	
 	const [addressState, setAddressState] = useState<string>(null)
 	const balanceState = useSelector(balanceStateSelector)
 	const apiProvider = useApiProvider()

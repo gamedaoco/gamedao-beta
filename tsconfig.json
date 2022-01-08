@@ -1,31 +1,83 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      "public": [
+        "./public/"
+      ],
+      "src": [
+        "./src/"
+      ],
+      "lib": [
+        "./src/lib/"
+      ],
+      "components": [
+        "./src/components/"
+      ],
+      "containers": [
+        "./src/containers/"
+      ],
+      "layouts": [
+        "./src/layouts/"
+      ],
+      "themes": [
+        "./src/themes/"
+      ],
+      "data": [
+        "./src/data/"
+      ],
+      "config": [
+        "./src/config/"
+      ],
+      "queries": [
+        "./src/queries/"
+      ],
+      "sample-polkadotjs-typegen/*": [
+        "src/*"
+      ],
+      "@polkadot/api/augment": [
+        "src/interfaces/augment-api.ts"
+      ],
+      "@polkadot/types/augment": [
+        "src/interfaces/augment-types.ts"
+      ]
+    },
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "preserve",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
     "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedParameters": false,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": "."
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "incremental": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }

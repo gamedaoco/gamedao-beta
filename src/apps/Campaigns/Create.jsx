@@ -251,7 +251,7 @@ export const Main = () => {
 			if (values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit))
 				errors.deposit = 'Deposit must be numerical'
 
-			if (!values.accept) errors.accept = 'Please accept the Terms and Conditions'
+			if (!values.accept) errors.accept = 'Please accept the Terms and Conditions    '
 
 			return errors
 		},

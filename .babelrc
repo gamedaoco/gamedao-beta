@@ -1,5 +1,9 @@
 {
 	"plugins": [
 		"transform-export-extensions"
-	]
+	],
+	"presets": [
+		"next/babel",
+		"@babel/preset-react"
+	],
 }

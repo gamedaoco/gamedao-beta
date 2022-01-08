@@ -28,3 +28,6 @@ const config = {
 }
 
 export default config
+
+
+export const jsonEndpoint = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'

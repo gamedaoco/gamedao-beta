@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import { useThemeState } from 'src/context/ThemeState'
 import { html5IPFSMedia } from './markdownItIPFSMediaPlugin'
-import './MarkdownEditor.css';
+// import './MarkdownEditor.css';
 
 const mdParser = new MarkdownIt({
     // html: true,

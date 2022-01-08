@@ -1,8 +1,8 @@
+import React, { useMemo, useRef } from 'react'
 import { Stars } from '@react-three/drei'
-import { noise } from '../utils/perlin'
 import { useFrame, Canvas } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { noise } from '../utils/perlin'
 
 const perlin3 = noise.perlin3
 
