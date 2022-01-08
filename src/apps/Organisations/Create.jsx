@@ -334,6 +334,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -443,6 +444,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
 							helperText={formik.touched.description && formik.errors.description}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
