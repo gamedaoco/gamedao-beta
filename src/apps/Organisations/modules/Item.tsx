@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { NavLink } from 'react-router-dom'
+import { to } from 'await-to-js'
+import { gateway } from '../../lib/ipfs'
+import { dao_bodies } from '../../lib/data'
+
 import LockIcon from '@mui/icons-material/Lock'
 import OpenLockIcon from '@mui/icons-material/LockOpen'
 import WebsiteIcon from '@mui/icons-material/Web'
 import MemberIcon from '@mui/icons-material/AccountBox'
-import { NavLink } from 'react-router-dom'
-import { gateway } from '../../lib/ipfs'
-import { to } from 'await-to-js'
-import { createErrorNotification } from '../../../utils/notification'
+import { createErrorNotification } from 'src/utils/notification'
+import { Typography, Box, Stack, Link } from 'src/components'
+import { ListItem } from 'src/components/ListItem'
+import { TileItem } from 'src/components/TileItem'
 import { ListTileEnum } from 'src/apps/components/ListTileSwitch'
-import { Typography, Box, Stack, Link } from '../../../components'
-import { ListItem } from '../../../components/ListItem'
-import { TileItem } from '../../../components/TileItem'
-import { dao_bodies } from '../../lib/data'
 import { Interactions } from './Interactions'
 
 async function fetchMetaData(cid, setMetaData) {
@@ -103,7 +104,9 @@ export function Item({ data, displayMode }) {
 						{data.members || 0} {data.members || 0 > 1 ? 'Members' : 'Member'}
 					</Typography>
 				</Stack>
+
 				{displayMode === ListTileEnum.LIST && <Box sx={{ flex: 1 }} />}
+
 				<Interactions data={data} hideDashboard={false} />
 			</Stack>
 		)

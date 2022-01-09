@@ -1,19 +1,24 @@
 import React, { useEffect, useState, lazy } from 'react'
+import { useApiProvider } from '@substra-hooks/core'
+import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useWallet } from 'src/context/Wallet'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import { Button, Box, Container } from '../../components'
-import { useApiProvider } from '@substra-hooks/core'
-import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { ItemList } from './modules/ItemList'
 
 const CreateDAO = lazy(() => import('./Create'))
 
 export const Main = (props) => {
-	const { address } = useWallet()
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
+	const { address, connected } = useWallet()
 	const { account } = useWallet()
-	const [dataState, setDataState] = useState()
+	const [content, setContent] = useState()
 	const {
 		nonce,
 		bodyIndex,
@@ -36,7 +41,7 @@ export const Main = (props) => {
 			bodyAccess &&
 			bodyTreasury
 		) {
-			const data = Object.keys(bodyIndex).map((index) => {
+			const content = Object.keys(bodyIndex).map((index) => {
 				const hash = bodyIndex[index]
 				const config = bodyConfig[hash]
 				const members = bodyMemberCount[hash]
@@ -56,7 +61,7 @@ export const Main = (props) => {
 				}
 			})
 
-			setDataState(data)
+			setContent(content)
 		}
 	}, [
 		nonce,
@@ -79,17 +84,18 @@ export const Main = (props) => {
 				sx={{
 					display: 'flex',
 					justifyContent: 'space-between',
+					alignItems: 'center'
 				}}
 			>
 				<Box>
 					{!nonce || nonce === 0 ? (
 						nonce === 0 ? (
-							<h4>No organizations yet. Create one!</h4>
+							<h4>No organisations yet. Create one!</h4>
 						) : (
 							<h4>Loading...</h4>
 						)
 					) : (
-						<h4>Total organizations: {nonce}</h4>
+						<h4>Total organisations: {nonce}</h4>
 					)}
 				</Box>
 				<Box>
@@ -101,7 +107,7 @@ export const Main = (props) => {
 						>
 							Close
 						</Button>
-					) : account ? (
+					) : account && connected ? (
 						<Button
 							variant="outlined"
 							startIcon={<AddIcon />}
@@ -113,8 +119,8 @@ export const Main = (props) => {
 				</Box>
 			</Box>
 			<br />
-			{showCreateMode && <CreateDAO />}
-			{!showCreateMode && dataState && <ItemList data={dataState} />}
+			{showCreateMode && connected && <CreateDAO />}
+			{!showCreateMode && content && <ItemList data={content} />}
 		</Container>
 	)
 }

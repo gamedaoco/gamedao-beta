@@ -1,21 +1,29 @@
 import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { DEV } from './config'
 import { Loader } from './components'
 import Layout from './layouts/default'
 
-import { GovernancePage } from './apps/Governance/GovernancePage'
-import { GovernanceProposalInfoPage } from './apps/governanceProposalInfo/GovernanceProposalInfo'
-import { OrganisationsDashboard } from './apps/OrganisationsDashboard/organisationsDashboard'
-
 const Home = lazy(() => import('./apps/Home'))
-const Dashboard = lazy(() => import('./apps'))
+const App = lazy(() => import('./apps/'))
+
+const Dashboard = lazy(() => import('./apps/Dashboard'))
+
 const Campaigns = lazy(() => import('./apps/Campaigns'))
 const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
+
 const Organisations = lazy(() => import('./apps/Organisations'))
+const OrganisationsDashboard = lazy(() => import('./apps/OrganisationsDashboard'))
 const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
+
 const Tangram = lazy(() => import('./apps/Tangram'))
 const Wallet = lazy(() => import('./apps/Wallet'))
-const Designsystem = lazy(() => import('./apps/Designsystem'))
+
+const Designsystem = DEV && lazy(() => import('./apps/Designsystem'))
+
+const Governance = lazy(() => import('./apps/Governance'))
+const GovernanceDetails = lazy(() => import('./apps/GovernanceInfo'))
+
 
 export interface ComponentProps {
 	children?: React.ReactNode
@@ -57,7 +65,7 @@ const Router = (props) => {
 				<Route
 					path="/app"
 					element={
-						<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />
+						<LayoutRoute showSidebar showHeader showFooter element={<App />} />
 					}
 				></Route>
 				<Route
@@ -78,7 +86,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={<GovernancePage />}
+							element={<Governance />}
 						/>
 					}
 				></Route>
@@ -89,7 +97,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={<GovernanceProposalInfoPage />}
+							element={<GovernanceDetails />}
 						/>
 					}
 				></Route>
@@ -115,12 +123,15 @@ const Router = (props) => {
 					path="/app/wallet"
 					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}
 				></Route>
-				<Route
-					path="/app/designsystem"
-					element={
-						<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />
-					}
-				></Route>
+				{}
+				{ DEV &&
+					<Route
+						path="/app/designsystem"
+						element={
+							<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />
+						}
+					></Route>
+				}
 				<Route
 					path="/app/organisations/admin/:id"
 					element={

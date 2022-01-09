@@ -2,7 +2,8 @@ import { Image } from '@mui/icons-material'
 import { useApiProvider } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useFormik } from 'formik';
+import { useFormik } from 'formik'
+import { useTheme } from '@mui/material/styles'
 
 import {
 	Box,
@@ -12,11 +13,12 @@ import {
 	FileDropZone,
 	FormControl,
 	FormControlLabel,
-	FormSectionHeadline,
 	FormHelperText,
+	FormSectionHeadline,
 	Grid,
 	Image16to9,
 	InputLabel,
+	Loader,
 	MenuItem,
 	Paper,
 	Select,
@@ -25,14 +27,13 @@ import {
 	Stepper,
 	TextField,
 	Typography,
-	Loader
 } from '../../components'
 
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
 import { MarkdownEditor } from 'src/components/markdown/MarkdownEditor'
-import { formatZero } from 'src/utils/helper'
+import { formatZero, toZeroAddress } from 'src/utils/helper'
 import config from '../../config'
-import { data, rnd } from '../lib/data'
+import { blocksPerDay, data, rnd } from '../lib/data'
 import { gateway, pinFileToIPFS, pinJSONToIPFS } from '../lib/ipfs'
 
 import { useBlock } from 'src/hooks/useBlock'
@@ -41,7 +42,7 @@ import { useBalance } from 'src/hooks/useBalance'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect';
+import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
 const dev = config.dev
 
@@ -63,7 +64,7 @@ const random_state = (account) => {
 	const tags = ['dao', 'game']
 	const org = ''
 
-	const admin = account.address
+	const admin = toZeroAddress(account.address)
 
 	return {
 		name,
@@ -85,7 +86,6 @@ const random_state = (account) => {
 		admin,
 	}
 }
-
 
 export const Main = () => {
 	const { account, connected, signAndNotify } = useWallet()
@@ -109,25 +109,28 @@ export const Main = () => {
 	// markdown editor & state
 	const [markdownValue, setMarkdownValue] = useState(defaultMarkdown)
 
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
 	function handleEditorChange({ html, text }) {
 		setMarkdownValue(text)
 	}
 
 	useEffect(() => {
 		if (!account) return
-		const ls =  localStorage.getItem("gamedao-form-create-campaign")
-		const mls = localStorage.getItem("gamedao-markdown-create-campaign")
-		if(mls){
+		const ls = localStorage.getItem('gamedao-form-create-campaign')
+		const mls = localStorage.getItem('gamedao-markdown-create-campaign')
+		if (mls) {
 			setMarkdownValue(mls)
 		}
-		if(ls){
+		if (ls) {
 			setPersistedData(JSON.parse(ls))
 		}
 		setInitialData(random_state(account))
 	}, [account])
 
 	const onFileChange = (files, event) => {
-		const name = event.target.getAttribute("name")
+		const name = event.target.getAttribute('name')
 		if (!files?.[0]) return
 		if (dev) console.log('upload image')
 
@@ -140,7 +143,6 @@ export const Main = () => {
 			.catch((error) => {
 				console.log('Error uploading file: ', error)
 			})
-
 	}
 
 	// submit
@@ -151,7 +153,6 @@ export const Main = () => {
 		const getCID = async () => {
 			if (dev) console.log('1. upload content json')
 			try {
-				
 				const cid = await pinJSONToIPFS(content)
 				if (cid) {
 					if (dev) console.log('json cid', `${gateway}${cid}`)
@@ -165,7 +166,7 @@ export const Main = () => {
 		const sendTX = async (cid) => {
 			setLoading(true)
 			//                             day factor            a day in blocks   current block as offset
-			const campaign_end = parseFloat(formik.values.duration) * data.blocksPerDay + blockheight // take current block as offset
+			const campaign_end = parseFloat(formik.values.duration) * blocksPerDay + blockheight // take current block as offset
 
 			const payload = [
 				formik.values.org,
@@ -202,75 +203,88 @@ export const Main = () => {
 								navigate(`/app/campaigns/${data[0].toHex()}`)
 							}
 						})
+
+						// clear localstorage
+						localStorage.removeItem('gamedao-form-create-campaign')
+						localStorage.removeItem('gamedao-markdown-create-campaign')
 					}
 
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
-				}
+				},
 			)
 		}
 
 		getCID()
 	}
 
-	
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: persistedData ? persistedData : initialData,
 		validate: (values) => {
 			setStepperState(1)
 			const errors = {}
-		
-			if(!values.org || values.org === "") errors.org = "You must choose an Organization"
 
-			if(values.description === "Awesome Short Description") errors.description = "You can do better than that!"
+			if (!values.org || values.org === '') errors.org = 'Please choose an Organization'
 
-			if(!values.title || values.title === "" ) errors.title = "Please Enter a Campaign Title!"
-			if(new Blob([values.title]).size > 48) errors.title = 'Please enter a maximum of 48 bytes.'
+			if (values.description === 'Short Description')
+				errors.description = 'You can do better than that!'
 
-			if(!values.name || values.name === "" ) errors.name = "Please Enter a Name!"
-			if(values.name === "Dao Jones") errors.name = "...I dont think thats your name"
-			if(!/^[a-zA-Z\s]*$/i.test(values.name)){
-				errors.name = "Please enter only letters."
+			if (!values.title || values.title === '')
+				errors.title = 'Please Enter a Campaign Title!'
+			if (new Blob([values.title]).size > 48)
+				errors.title = 'Please enter a maximum of 48 bytes.'
+
+			if (!values.name || values.name === '') errors.name = 'Please Enter a Name!'
+			if (values.name === 'Dao Jones') errors.name = '...I dont think thats your name'
+			if (!/^[a-zA-Z\s]*$/i.test(values.name)) {
+				errors.name = 'Please enter only letters.'
 			}
 
-			if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
-				errors.email = "Please enter a valid e-mail address."
+			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+				errors.email = 'Please enter a valid email address.'
 			}
 
-			if(values.cap === "0" || values.cap === "") errors.cap = "Please enter funding target."
-			if(values.cap && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.cap)) errors.cap = "Funding target must be numerical"
-			
-			if(values.deposit === "0" || values.deposit === "") errors.deposit = "Please enter funding target."
-			if(values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit)) errors.deposit = "Deposit must be numerical"
+			if (values.cap === '0' || values.cap === '') errors.cap = 'Please enter a funding target.'
+			if (values.cap && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.cap))
+				errors.cap = 'Funding target must be numerical'
 
-			if(!values.accept) errors.accept = "You must accept the Terms"
+			if (values.deposit === '0' || values.deposit === '')
+				errors.deposit = 'Please enter a funding target.'
+			if (values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit))
+				errors.deposit = 'Deposit must be numerical'
+
+			if (!values.accept) errors.accept = 'Please accept the Terms and Conditions'
 
 			return errors
 		},
 		//validationSchema: validationSchema,
-		onSubmit: handleSubmit
-	});
+		onSubmit: handleSubmit,
+	})
 
 	// save content json and form values to localstorage
-	useDebouncedEffect(() => {
-		if (!formik.values) return
-		if (dev) console.log('update content json')
-		const contentJSON = {
-			name: formik.values.name,
-			email: formik.values.email,
-			title: formik.values.title,
-			description: formik.values.description,
-			markdown: markdownValue,
-			...logoCID,
-			...headerCID,
-		}
-		if (dev) console.log(contentJSON)
-		setContent(contentJSON)
-		localStorage.setItem("gamedao-form-create-campaign", JSON.stringify(formik.values))
-		localStorage.setItem("gamedao-markdown-create-campaign", markdownValue)
-	}, [logoCID, headerCID, formik.values, markdownValue], 2000)
+	useDebouncedEffect(
+		() => {
+			if (!formik.values) return
+			if (dev) console.log('update content json')
+			const contentJSON = {
+				name: formik.values.name,
+				email: formik.values.email,
+				title: formik.values.title,
+				description: formik.values.description,
+				markdown: markdownValue,
+				...logoCID,
+				...headerCID,
+			}
+			if (dev) console.log(contentJSON)
+			setContent(contentJSON)
+			localStorage.setItem('gamedao-form-create-campaign', JSON.stringify(formik.values))
+			localStorage.setItem('gamedao-markdown-create-campaign', markdownValue)
+		},
+		[logoCID, headerCID, formik.values, markdownValue],
+		2000,
+	)
 
 	useEffect(() => {
 		if (!refresh) return
@@ -279,7 +293,8 @@ export const Main = () => {
 		setLoading(false)
 	}, [account, refresh])
 
-	if (!daoControl || !daoControl.bodies || !formik.values ) return <Loader text="Create Campaign" />
+	if (!daoControl || !daoControl.bodies || !formik.values)
+		return <Loader text='Create Campaign' />
 
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
@@ -288,7 +303,6 @@ export const Main = () => {
 			<Box sx={{ pb: 2 }}>
 				<Grid container alignItems={'center'} spacing={3}>
 					<Grid item xs={12} md={7}>
-						<Typography variant={'body1'}>Create Campaign</Typography>
 						<Typography variant={'h3'}>
 							{formik.values.title || 'Untitled campaign'}
 						</Typography>
@@ -308,24 +322,27 @@ export const Main = () => {
 					</Grid>
 				</Grid>
 			</Box>
-			<Paper sx={{ p: 4 }}>
-				<Grid container spacing={3} component="form">
+			<Paper sx={{ p: 4, ...bgPlain }}>
+				<Grid container spacing={3} component='form'>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>
 							General Information
 						</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<FormControl fullWidth error={formik.touched.org && Boolean(formik.errors.org)}>
-							<InputLabel id="org-select-label">Organization</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.org && Boolean(formik.errors.org)}
+						>
+							<InputLabel id='org-select-label'>Organization</InputLabel>
 							<Select
 								component={Select}
-								labelId="org-select-label"
-								id="org"
+								labelId='org-select-label'
+								id='org'
 								required
-								label="Organization"
-								placeholder="Organization"
-								name="org"
+								label='Organization'
+								placeholder='Organization'
+								name='org'
 								value={formik.values.org}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -336,16 +353,18 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.touched.org && formik.errors.org}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.org && formik.errors.org}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
 							required
-							label="Campaign name"
-							placeholder="Campaign name"
-							name="title"
+							label='Campaign name'
+							placeholder='Campaign name'
+							name='title'
 							value={formik.values.title}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -359,9 +378,9 @@ export const Main = () => {
 							multiline
 							minRows={5}
 							required
-							label="Campaign Description"
-							placeholder="Tell us more about your idea..."
-							name="description"
+							label='Campaign Description'
+							placeholder='Tell us more about your idea...'
+							name='description'
 							value={formik.values.description}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -375,24 +394,52 @@ export const Main = () => {
 					</Grid>
 
 					<Grid item xs={12}>
-						<FileDropZone name="logo" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
+						<FileDropZone
+							name='logo'
+							onDroppedFiles={onFileChange}
+							onDeleteItem={() => updateLogoCID({})}
+						>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
-								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + logoCID.logo} />
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + logoCID.logo}
+								/>
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!logoCID.logo ? "Pick a " : ""}logo graphic
+								{!logoCID.logo && 'Logo Image. Drop here, or select a file.'}
+							</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!logoCID.logo &&
+									'It must be a JPG, GIF or PNG, no larger than 200 MB.'}
 							</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						<FileDropZone name="header" onDroppedFiles={onFileChange}>
+						<FormSectionHeadline variant={'h6'}>
+							Header Image (1920 x 800px)
+						</FormSectionHeadline>
+						<FileDropZone
+							name='header'
+							onDroppedFiles={onFileChange}
+							onDeleteItem={() => updateHeaderCID({})}
+						>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
-								<Image16to9 sx={{  maxHeight: "200px" }} alt={formik.values.title} src={gateway + headerCID.header} />
+								<Image16to9
+									sx={{ maxHeight: '200px' }}
+									alt={formik.values.title}
+									src={gateway + headerCID.header}
+								/>
 							)}
 							<Typography variant={'body2'} align={'center'}>
-							{!headerCID.header ? "Pick a " : ""}header graphic
+								{!headerCID.header && 'Header Image. Drop here, or select a file.'}
+							</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!headerCID.header &&
+									'It must be a JPG or PNG, 1920 x 800px no larger than 200 MB.'}
 							</Typography>
 						</FileDropZone>
 					</Grid>
@@ -418,9 +465,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label="Name"
-							placeholder="Name"
-							name="name"
+							label='Name'
+							placeholder='Name'
+							name='name'
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -431,9 +478,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label="Email"
-							placeholder="Email"
-							name="email"
+							label='Email'
+							placeholder='Email'
+							name='email'
 							value={formik.values.email}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -451,9 +498,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label="Admin Account"
-							placeholder="Admin"
-							name="admin"
+							label='Admin Account'
+							placeholder='Admin'
+							name='admin'
 							required
 							value={formik.values.admin}
 							onChange={formik.handleChange}
@@ -464,14 +511,14 @@ export const Main = () => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FormControl fullWidth>
-							<InputLabel id="usage-select-label">Usage of funds</InputLabel>
+							<InputLabel id='usage-select-label'>Usage of funds</InputLabel>
 							<Select
-								labelId="usage-select-label"
+								labelId='usage-select-label'
 								label={'Usage of funds'}
-								id="usage"
+								id='usage'
 								required
-								name="usage"
-								placeholder="Usage"
+								name='usage'
+								placeholder='Usage'
 								value={formik.values.usage}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -488,16 +535,19 @@ export const Main = () => {
 					</Grid>
 
 					<Grid item xs={12}>
-						<FormControl fullWidth error={formik.touched.protocol && Boolean(formik.errors.protocol)}>
-							<InputLabel id="protocol-select-label">Protocol</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.protocol && Boolean(formik.errors.protocol)}
+						>
+							<InputLabel id='protocol-select-label'>Protocol</InputLabel>
 							<Select
-								labelId="protocol-select-label"
-								id="protocol"
+								labelId='protocol-select-label'
+								id='protocol'
 								required
 								fullWidth
-								name="protocol"
+								name='protocol'
 								label={'protocol'}
-								placeholder="Protocol"
+								placeholder='Protocol'
 								value={formik.values.protocol}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -508,16 +558,18 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.touched.protocol && formik.errors.protocol}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.protocol && formik.errors.protocol}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label="Deposit (GAME)"
-							placeholder="Deposit"
-							name="deposit"
+							label='Deposit (GAME)'
+							placeholder='Deposit'
+							name='deposit'
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -528,9 +580,9 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label="Funding Target (PLAY)"
-							placeholder="Cap"
-							name="cap"
+							label='Funding Target (PLAY)'
+							placeholder='Cap'
+							name='cap'
 							value={formik.values.cap}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -540,15 +592,18 @@ export const Main = () => {
 					</Grid>
 
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth error={formik.touched.duration && Boolean(formik.errors.duration)}>
-							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.duration && Boolean(formik.errors.duration)}
+						>
+							<InputLabel id='duration-select-label'>Campaign Duration</InputLabel>
 							<Select
-								labelId="duration-select-label"
-								id="duration"
+								labelId='duration-select-label'
+								id='duration'
 								required
-								label="Campaign Duration"
-								placeholder="Campaign Duration"
-								name="duration"
+								label='Campaign Duration'
+								placeholder='Campaign Duration'
+								name='duration'
 								value={formik.values.duration}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -559,56 +614,62 @@ export const Main = () => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.touched.duration && formik.errors.duration}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.duration && formik.errors.duration}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 
 					<Grid item xs={12}>
-					<FormControl error={formik.touched.governance && Boolean(formik.errors.governance)}>
-						<FormControlLabel
-							label="DAO Governance"
-							control={
-								<Checkbox
-									name="governance"
-									checked={formik.values.governance}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-								/>
-							}
-						/>
-        				<FormHelperText>{formik.touched.governance && formik.errors.governance}</FormHelperText>
-      				</FormControl>
+						<FormControl
+							error={formik.touched.governance && Boolean(formik.errors.governance)}
+						>
+							<FormControlLabel
+								label='DAO Governance'
+								control={
+									<Checkbox
+										name='governance'
+										checked={formik.values.governance}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
+									/>
+								}
+							/>
+							<FormHelperText>
+								{formik.touched.governance && formik.errors.governance}
+							</FormHelperText>
+						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-					<FormControl error={formik.touched.accept && Boolean(formik.errors.accept)}>
-						<FormControlLabel
-							label="I agree to the Terms and Conditions"
-							control={
-								<Checkbox
-									required
-									name="accept"
-									checked={formik.values.accept}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-								/>
-							}
-						/>
-        				<FormHelperText>{formik.touched.accept && formik.errors.accept}</FormHelperText>
-      				</FormControl>
+						<FormControl error={formik.touched.accept && Boolean(formik.errors.accept)}>
+							<FormControlLabel
+								label='I agree to the Terms and Conditions'
+								control={
+									<Checkbox
+										required
+										name='accept'
+										checked={formik.values.accept}
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
+									/>
+								}
+							/>
+							<FormHelperText>
+								{formik.touched.accept && formik.errors.accept}
+							</FormHelperText>
+						</FormControl>
 					</Grid>
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
-				<Button 
-					type="submit"
-					variant='contained' 
-					fullWidth 
-				>
+				<Button type='submit' variant='contained' fullWidth>
 					Create Campaign
 				</Button>
-				<Typography sx={{ color: "red" }}>{Object.keys(formik.errors).length !== 0 ? "errors present" : ""}</Typography>
+				<Typography sx={{ color: 'red' }}>
+					{Object.keys(formik.errors).length !== 0 ? 'errors present' : ''}
+				</Typography>
 			</Container>
-	</form>
+		</form>
 	)
 }
 

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useApiProvider } from '@substra-hooks/core'
 import { useWallet } from 'src/context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
-import { Button, Typography, Box, Paper } from 'src/components'
+
+import { alpha, useTheme } from '@mui/material/styles'
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,6 +11,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { Button, Typography, Box, Paper } from 'src/components'
+
 
 const SmallTable = ({ data }) => {
 	if (!data) return
@@ -41,6 +44,9 @@ const SmallTable = ({ data }) => {
 }
 
 export const Component = () => {
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	const { address } = useWallet()
 	const { identities } = useIdentity(address)
@@ -89,7 +95,7 @@ export const Component = () => {
 
 	return (
 		<Box>
-			<Paper elevation={10} sx={{ my: 2, p: 4 }}>
+			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
 
 				<Box sx={{
 					display: 'flex',
@@ -119,7 +125,7 @@ export const Component = () => {
 
 			</Paper>
 
-			<Paper elevation={10} sx={{ my: 2, p: 4 }}>
+			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
 
 				<Box sx={{
 					display: 'flex',

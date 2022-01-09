@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import to from 'await-to-js'
-import ArrowBackIosIconNew from '@mui/icons-material/ArrowBackIosNew'
-import { Box, Button, Divider, MarkdownViewer, Paper, Stack, Typography } from 'src/components'
 import { useNavigate, useParams } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { clearGovernanceAction } from 'src/redux/duck/gameDaoGovernance.duck'
+import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
-import { useApiProvider } from '@substra-hooks/core'
-import { gateway } from '../lib/ipfs'
-import { createErrorNotification } from 'src/utils/notification'
 import { useWallet } from 'src/context/Wallet'
+import { createErrorNotification } from 'src/utils/notification'
+import { gateway } from '../lib/ipfs'
+import to from 'await-to-js'
+
+import ArrowBackIosIconNew from '@mui/icons-material/ArrowBackIosNew'
+import { Box, Button, Divider, MarkdownViewer, Paper, Stack, Typography } from 'src/components'
 import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
+import { useCrowdfunding } from '../../hooks/useCrowdfunding'
 
 async function fetchProposalDescription(cid, setter) {
 	// Invalid ipfs hash
@@ -31,7 +35,7 @@ async function fetchProposalDescription(cid, setter) {
 	setter(body.description)
 }
 
-export function GovernanceProposalInfoPage() {
+export function Main() {
 	// Get state
 	const navigate = useNavigate()
 	const { proposalId } = useParams()
@@ -41,8 +45,11 @@ export function GovernanceProposalInfoPage() {
 
 	const { owners, metadata, proposals } = useGameDaoGovernance()
 	const { bodies, queryBodyMemberState } = useGameDaoControl()
+	const { campaigns } = useCrowdfunding();
 
 	const [description, setDescription] = useState<any>()
+
+	const dispatch = useDispatch()
 
 	// Proposal
 	const proposal = proposals?.[proposalId]
@@ -50,12 +57,14 @@ export function GovernanceProposalInfoPage() {
 	// Orgianization
 	const bodyId = proposal?.context_id ?? null
 	const body = bodyId ? bodies?.[bodyId] : null
+	const campaign = campaigns?.[bodyId]
+	const isOrganisation = !!body;
 
 	useEffect(() => {
 		if (!bodyId) return
 
-		queryBodyMemberState(bodyId, address)
-	}, [address, bodyId])
+		queryBodyMemberState(isOrganisation ? bodyId : campaign?.org, address)
+	}, [address, bodyId, isOrganisation])
 
 	// Fetch Description
 	useEffect(() => {
@@ -75,38 +84,41 @@ export function GovernanceProposalInfoPage() {
 				error: 'Voting failed',
 			},
 			(state, result) => {
-				// TODO: 2075 Do we need error handling here if false?
-			}
+				dispatch(clearGovernanceAction())
+			},
 		)
 	}
 
 	return (
-		<Stack spacing={3} alignItems="flex-start">
+		<Stack spacing={3} alignItems='flex-start'>
 			<Button onClick={() => navigate('/app/governance')}>
-				<ArrowBackIosIconNew fontSize="small" />
-				<Typography variant="body1" marginLeft={1}>
+				<ArrowBackIosIconNew fontSize='small' />
+				<Typography variant='body1' marginLeft={1}>
 					Back to overview
 				</Typography>
 			</Button>
-			{proposal && body && owners ? (
+			{proposal && (body || campaign) && owners ? (
 				<>
-					<ProposalBodyData body={body} metadata={metadata} proposalId={proposalId} />
+					<ProposalBodyData body={body || campaign} isOrganisation={isOrganisation}
+									  metadata={metadata} proposalId={proposalId} />
 					<Paper sx={{ width: '100%' }}>
-						<Stack direction="row" padding={6} spacing={6}>
-							<Stack flex="3">
-								<Box whiteSpace="pre-line">
+						<Stack direction='row' padding={6} spacing={6}>
+							<Stack flex='3'>
+								<Box whiteSpace='pre-line'>
 									<MarkdownViewer
 										markdown={description ?? 'Could not load the description!'}
 									/>
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />
 							</Stack>
-							<Divider orientation="vertical" sx={{ height: 'inherit' }} />
+							<Divider orientation='vertical' sx={{ height: 'inherit' }} />
 							<ProposalMetadata
 								address={address}
-								body={body}
+								body={body || campaign}
+								isOrganisation={isOrganisation}
 								proposal={proposal}
 								proposalOwner={owners[proposalId]}
+								apiProvider={apiProvider}
 								onVoteClicked={onVoteClicked}
 							/>
 						</Stack>
@@ -115,4 +127,9 @@ export function GovernanceProposalInfoPage() {
 			) : null}
 		</Stack>
 	)
+}
+
+export default function Module(props) {
+	const apiProvider = useApiProvider()
+	return apiProvider ? <Main {...props} /> : null
 }

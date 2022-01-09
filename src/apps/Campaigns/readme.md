@@ -10,4 +10,8 @@ GameDAO Campaign is the fundraising interface for an onchain fundraising process
 
 ### Create
 
-Render a creation interface to create a fundraising campaing:
+Render a creation interface to create a fundraising campaign.
+
+- Markdown editor for content
+- '#' tag to create tabs: '# Tab1'
+

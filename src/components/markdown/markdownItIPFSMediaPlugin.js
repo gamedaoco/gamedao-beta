@@ -217,13 +217,13 @@ function tokenizeImagesAndMedia(state, silent, md) {
     mediaType = guessMediaType(content)
   }
 
-  const tag = mediaType == 'image' ? 'img' : mediaType;
+  const tag = mediaType === 'image' ? 'img' : mediaType;
 
   token = state.push(mediaType, tag, 0);
   token.attrs = attrs = [
     ['src', href]
   ];
-  if (mediaType == 'image')
+  if (mediaType === 'image')
     attrs.push(['alt', '']);
   token.children = tokens;
   token.content = content;
@@ -254,9 +254,9 @@ function guessMediaType(url) {
   if (extensionMatch === null)
     return 'image';
   const extension = extensionMatch[1];
-  if (validAudioExtensions.indexOf(extension.toLowerCase()) != -1)
+  if (validAudioExtensions.indexOf(extension.toLowerCase()) !== -1)
     return 'audio';
-  else if (validVideoExtensions.indexOf(extension.toLowerCase()) != -1)
+  else if (validVideoExtensions.indexOf(extension.toLowerCase()) !== -1)
     return 'video';
   else
     return 'image';
@@ -293,7 +293,7 @@ function renderMedia(tokens, idx, options, env, md) {
   const url = token.attrs[token.attrIndex('src')][1];
 
   // Title is set like this: ![descriptive text](video.mp4 "title")
-  const title = token.attrIndex('title') != -1 ?
+  const title = token.attrIndex('title') !== -1 ?
     ` title="${md.utils.escapeHtml(token.attrs[token.attrIndex('title')][1])}"` :
     '';
 

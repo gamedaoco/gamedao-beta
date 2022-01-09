@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGameDaoControl } from '../../../hooks/useGameDaoControl'
 import { useWallet } from '../../../context/Wallet'
 import { Button } from '../../../components'
@@ -12,11 +12,12 @@ import {
 import { useBalance } from 'src/hooks/useBalance'
 
 export function Interactions({ data, hideDashboard }) {
-	const { address, signAndNotify } = useWallet()
+	const [isMemberState, setIsMemberState] = useState(false)
+	const { address, connected, signAndNotify } = useWallet()
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
 	const navigate = useNavigate()
-	const { queryBodyMemberState, bodyMemberState, memberships, queryMemberships } =
+	const { queryBodyMemberState, queryMemberships } =
 		useGameDaoControl()
 	const refresh = useSelector(gameDaoControlRefreshSelector)
 	const dispatch = useDispatch()
@@ -33,16 +34,16 @@ export function Interactions({ data, hideDashboard }) {
 		signAndNotify(
 			apiProvider.tx.gameDaoControl.addMember(...payload),
 			{
-				pending: 'Apply organisations in progress',
-				success: 'Apply organisations successfully',
-				error: 'Apply organisations failed',
+				pending: 'Apply to DAO in progress',
+				success: 'Apply to DAO successful',
+				error: 'Apply to DAO failed',
 			},
 			(state) => {
 				updatePageState()
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -60,7 +61,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -69,62 +70,77 @@ export function Interactions({ data, hideDashboard }) {
 		signAndNotify(
 			apiProvider.tx.gameDaoControl.removeMember(...payload),
 			{
-				pending: 'Leave organisations in progress',
-				success: 'Leave organisations successfully',
-				error: 'Leave organisations failed',
+				pending: 'Leave DAO in progress',
+				success: 'Leave DAO successful',
+				error: 'Leave DAO failed',
 			},
 			(state) => {
 				updatePageState()
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
 	useEffect(() => {
-		if (address) {
-			queryBodyMemberState(data.hash, address)
-			queryMemberships(address)
-		}
+		(async () => {
+				if (address) {
+					queryBodyMemberState(data.hash, address)
+					queryMemberships(address)
+					const memberships = await queryMemberships(address)
+					setIsMemberState(memberships?.includes(data.hash))
+				}
+
+			}
+		)()
+
 	}, [address, refresh])
 
-	if (!data || !data?.access) return null
+	if (!connected || !data || !data?.access) return null
 
 	const isAdmin = () => (address === data?.controller ? true : false)
-	const isMember = () => memberships?.[address]?.includes(data.hash)
 
 	const actionType = ['join', 'apply', 'leave'][data.access]
 	const actionCallback = [handleJoin, handleApply, handleLeave][data.access]
 
 	return (
 		<>
-			{(isMember() || isAdmin()) && !hideDashboard && (
+			{(isMemberState || isAdmin()) && !hideDashboard && (
 				<Button
 					variant={'outlined'}
 					fullWidth
 					onClick={() => navigate(`/app/organisations/${data.hash}`)}
 					value={data.access}
+					size='small'
 				>{`Dashboard`}</Button>
 			)}
-			{isMember() && !isAdmin() && (
+			{isMemberState && !isAdmin() && (
 				<Button
 					variant={'outlined'}
 					fullWidth
 					onClick={handleLeave}
 					value={data.access}
+					size='small'
 				>{`leave`}</Button>
 			)}
-			{!isMember() && actionType && (
+			{!isMemberState && actionType && (
 				<Button
 					variant={'outlined'}
 					fullWidth
 					onClick={actionCallback}
 					value={data.access}
+					size='small'
 				>{`${actionType}`}</Button>
 			)}
 			{isAdmin() && (
-				<Button variant={'outlined'} fullWidth onClick={() => {}}>
+				<Button
+					variant={'outlined'}
+					fullWidth
+					size='small'
+					onClick={() => {
+					}
+					}>
 					Admin
 				</Button>
 			)}

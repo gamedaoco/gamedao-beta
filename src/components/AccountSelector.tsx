@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useWallet } from 'src/context/Wallet'
 import IconButton from '@mui/material/IconButton'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
@@ -9,11 +8,13 @@ import { useStore } from 'src/context/Store'
 import { useThemeState } from 'src/context/ThemeState'
 import { useBalance } from 'src/hooks/useBalance'
 import { styled } from '../components'
-import { Icons, ICON_MAPPING } from './Icons'
+import { ICON_MAPPING, Icons } from './Icons'
 import { createInfoNotification } from 'src/utils/notification'
+import { compareAddress, toZeroAddress } from '../utils/helper'
+
 
 function accountString(account) {
-	const text = account?.meta?.name || account?.address || ''
+	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
 
@@ -29,6 +30,7 @@ const AccountBox = styled(Box)(({ theme }) => ({
 
 const ConnectButton = styled(Button)(({ theme }) => ({
 	borderRadius: '50px',
+	padding: '1em 2em',
 	color: theme.palette.text.primary,
 	backgroundColor: theme.palette.background.neutral,
 	['&:hover']: {
@@ -55,7 +57,7 @@ const AccountSelect = styled(Select)(({ theme }) => ({
 
 const AccountComponent = () => {
 	const { darkmodeEnabled } = useThemeState()
-	const { updateStore, allowConnection } = useStore()
+	const { updateStore, allowConnection, lastAccountIndex } = useStore()
 	const { accounts, w3enable, w3Enabled } = usePolkadotExtension()
 	const { allowConnect, updateWalletState, account, address } = useWallet()
 
@@ -69,7 +71,8 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
-		updateWalletState({ allowConnect: false })
+		updateStore({ allowConnection: false, connected: false })
+		updateWalletState({ allowConnect: false, connected: false })
 	}
 
 	useEffect(() => {
@@ -89,27 +92,31 @@ const AccountComponent = () => {
 	useEffect(() => {
 		// Set initial account => default account 0
 		if (accounts && allowConnect) {
-			updateWalletState({ account: accounts[0], address: accounts[0]?.address })
+			updateWalletState({
+				account: accounts[lastAccountIndex || 0],
+				address: toZeroAddress(accounts[lastAccountIndex || 0]?.address ?? ''),
+				connected: true,
+			})
 		}
 	}, [accounts, allowConnect])
 
 	const handleAccountChange = React.useCallback(
 		(address: string) => {
-			const account = accounts.find((a) => a.address === address)
+			const account = accounts.find((a) => compareAddress(a.address, address))
 			if (!account) return
-
+			updateStore({ lastAccountIndex: accounts.indexOf(account) || 0 })
 			updateWalletState({
 				account,
-				address: account.address,
+				address: toZeroAddress(account.address),
 			})
 		},
-		[allowConnect, accounts]
+		[allowConnect, accounts],
 	)
 
-	function copyAddress(e){
-		e.preventDefault(); 
-		navigator.clipboard.writeText(address); 
-		createInfoNotification("Address Copied to Clipboard!")
+	function copyAddress(e) {
+		e.preventDefault()
+		navigator.clipboard.writeText(address)
+		createInfoNotification('Address Copied to Clipboard!')
 	}
 
 	return (
@@ -122,7 +129,7 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height='100%'>
 							<Box
 								sx={{
 									display: 'flex',
@@ -135,14 +142,14 @@ const AccountComponent = () => {
 									marginBottom: '4px',
 									height: '2.5rem',
 									width: '2.5rem',
-									cursor: 'pointer'
+									cursor: 'pointer',
 								}}
 							>
-								<HeartIcon onClick={copyAddress}/>
+								<HeartIcon onClick={copyAddress} />
 							</Box>
 							<AccountSelect
 								renderValue={(value) => {
-									const account = accounts.find((a) => a.address === value)
+									const account = accounts.find((a) => compareAddress(a.address, value))
 									if (!account) return 'n/a'
 									return (
 										<Box
@@ -176,8 +183,8 @@ const AccountComponent = () => {
 							<BalanceAnnotation />
 
 							<IconButton
-								size="small"
-								aria-label="disconnect"
+								size='small'
+								aria-label='disconnect'
 								onClick={handleDisconnect}
 							>
 								<Icons
@@ -200,13 +207,13 @@ const BalanceAnnotation = () => {
 	return (
 		<Stack direction={'column'}>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
-				{balanceZero || '0 Zero'}
-			</Typography>
-			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
-				{balancePlay || 0} PLAY
+				{balanceZero || '0 ZERO'}
 			</Typography>
 			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
 				{balanceGame || 0} GAME
+			</Typography>
+			<Typography sx={{ whiteSpace: 'nowrap' }} variant={'caption'}>
+				{balancePlay || 0} PLAY
 			</Typography>
 		</Stack>
 	)

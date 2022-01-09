@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-// material
+import { alpha, useTheme } from '@mui/material/styles'
 import { Card, Typography, CardHeader, CardContent } from '@mui/material'
 import {
 	Timeline,
@@ -9,7 +9,6 @@ import {
 	TimelineSeparator,
 	TimelineDot,
 } from '@mui/lab'
-// utils
 import { fDateTime } from '../../../utils/formatTime'
 
 // ----------------------------------------------------------------------
@@ -45,6 +44,7 @@ OrderItem.propTypes = {
 }
 
 function OrderItem({ item, isLast }) {
+
 	const { type, title, time } = item
 	return (
 		<TimelineItem>
@@ -72,9 +72,12 @@ function OrderItem({ item, isLast }) {
 }
 
 export default function AppOrderTimeline() {
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+
 	return (
-		<Card
-			sx={{
+		<Card sx={{ ...bgPlain, minHeight: '80px', height: '100%',
 				'& .MuiTimelineItem-missingOppositeContent:before': {
 					display: 'none',
 				},

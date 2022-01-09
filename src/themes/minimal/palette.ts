@@ -26,18 +26,22 @@ declare module '@mui/material/styles/createPalette' {
 	interface TypeBackground {
 		neutral: string
 	}
+
 	interface SimplePaletteColorOptions {
 		lighter: string
 		darker: string
 	}
+
 	interface PaletteColor {
 		lighter: string
 		darker: string
 	}
+
 	interface Palette {
 		gradients: GradientsPaletteOptions
 		chart: ChartPaletteOptions
 	}
+
 	interface PaletteOptions {
 		gradients: GradientsPaletteOptions
 		chart: ChartPaletteOptions
@@ -114,24 +118,25 @@ const ERROR = {
 }
 
 const GREY = {
-	0: '#FFFFFF',
-	100: '#F9FAFB',
-	200: '#F4F6F8',
-	300: '#DFE3E8',
-	400: '#C4CDD5',
-	500: '#919EAB',
-	600: '#637381',
-	700: '#454F5B',
-	800: '#212B36',
-	900: '#161C24',
-	500_8: alpha('#919EAB', 0.08),
-	500_12: alpha('#919EAB', 0.12),
-	500_16: alpha('#919EAB', 0.16),
-	500_24: alpha('#919EAB', 0.24),
-	500_32: alpha('#919EAB', 0.32),
-	500_48: alpha('#919EAB', 0.48),
-	500_56: alpha('#919EAB', 0.56),
-	500_80: alpha('#919EAB', 0.8),
+	0: '#fcfcfc',
+	100: '#f2f0ef',
+	200: '#c2c0bf',
+	300: '#b2b0af',
+	400: '#a2a09f',
+	500: '#82807f',
+	600: '#62605f',
+	700: '#42403f',
+	800: '#22201f',
+	900: '#12100f',
+
+	500_8: alpha('#82807f', 0.08),
+	500_12: alpha('#82807f', 0.12),
+	500_16: alpha('#82807f', 0.16),
+	500_24: alpha('#82807f', 0.24),
+	500_32: alpha('#82807f', 0.32),
+	500_48: alpha('#82807f', 0.48),
+	500_56: alpha('#82807f', 0.56),
+	500_80: alpha('#82807f', 0.8),
 }
 
 const GRADIENTS = {
@@ -151,7 +156,7 @@ const CHART_COLORS = {
 }
 
 const COMMON = {
-	common: { black: '#000', white: '#fff' },
+	common: { black: '#000', white: '#FCFCFC' },
 	primary: { ...PRIMARY, contrastText: '#fff' },
 	secondary: { ...SECONDARY, contrastText: '#fff' },
 	info: { ...INFO, contrastText: '#fff' },
@@ -180,12 +185,34 @@ const palette = {
 		text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
 		background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
 		action: { active: GREY[600], ...COMMON.action },
+		tabButton: {
+			normal: '#fff',
+			active: '#82807f29',
+		},
+		proposalStates: {
+			active: '#F9C49D',
+			expired: '#848484',
+			accepted: '#A1F1D8',
+			rejected: '#F2ADAD',
+			default: '#F9C49D',
+		},
 	},
 	dark: {
 		...COMMON,
 		text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
 		background: { paper: '#25282B', default: GREY[900], neutral: GREY[500_16] },
 		action: { active: GREY[500], ...COMMON.action },
+		tabButton: {
+			normal: '#25282B',
+			active: '#12100f',
+		},
+		proposalStates: {
+			active: '#F9C49D',
+			expired: '#848484',
+			accepted: '#A1F1D8',
+			rejected: '#F2ADAD',
+			default: '#F9C49D',
+		},
 	},
 }
 

@@ -1,14 +1,9 @@
 import { merge } from 'lodash'
 import ReactApexChart from 'react-apexcharts'
-// material
-import { useTheme, styled } from '@mui/material/styles'
+import { alpha, useTheme, styled } from '@mui/material/styles'
 import { Card, CardHeader } from '@mui/material'
-// utils
 import { fNumber } from 'src/utils/formatNumber'
-//
 import { BaseOptionChart } from './BaseOptionChart'
-
-// ----------------------------------------------------------------------
 
 const CHART_HEIGHT = 372
 const LEGEND_HEIGHT = 72
@@ -34,7 +29,9 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 const CHART_DATA = [4344, 5435, 1443, 4443]
 
 export default function AppCurrentVisits() {
+
 	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	const chartOptions = merge(BaseOptionChart(), {
 		colors: [
@@ -62,7 +59,7 @@ export default function AppCurrentVisits() {
 	})
 
 	return (
-		<Card>
+		<Card sx={{ ...bgPlain, minHeight: '80px', height: '100%' }}>
 			<CardHeader title="Voting Weight Distribution:" />
 			<ChartWrapperStyle dir="ltr">
 				<ReactApexChart

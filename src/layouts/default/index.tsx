@@ -22,6 +22,8 @@ const Layout = ({
 }: ComponentProps) => {
 	return (
 		<>
+			{ showHeader && <Box flexGrow={1}><Header /></Box> }
+
 			<Box
 				sx={{
 					height: '100%',
@@ -29,24 +31,26 @@ const Layout = ({
 					flexDirection: 'row',
 				}}
 			>
+			{ showSidebar && (
 				<Box flexGrow={0}>
-					{showSidebar && (
-						<Sidebar showNavigation={showNavigation ? showNavigation : null} />
-					)}
+					<Sidebar showNavigation={showNavigation ? showNavigation : null} />
 				</Box>
+			)}
 
-				<Box flexGrow={1}>
-					{showHeader && <Header />}
-					{noContainer ? (
-						<Box>{children}</Box>
-					) : (
-						<Container>
-							<Box sx={{ minHeight: '100vh', padding: '2rem' }}>{children}</Box>
-						</Container>
-					)}
-				</Box>
+			<Box flexGrow={1}>
+				{ noContainer
+					? ( <Box>{children}</Box> )
+					: (
+					<Container>
+						<Box sx={{ minHeight: '100vh', padding: '2rem' }}>{children}</Box>
+					</Container>
+					)
+				}
 			</Box>
-			<Box flexGrow={1}>{showFooter && <Footer />}</Box>
+
+			</Box>
+
+			{ showFooter && <Box flexGrow={1}><Footer /></Box>}
 		</>
 	)
 }

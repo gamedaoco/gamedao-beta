@@ -1,12 +1,8 @@
 import { merge } from 'lodash'
 import ReactApexChart from 'react-apexcharts'
-// material
-import { useTheme, styled } from '@mui/material/styles'
+import { alpha, useTheme, styled } from '@mui/material/styles'
 import { Card, CardHeader } from '@mui/material'
-//
 import { BaseOptionChart } from './BaseOptionChart'
-
-// ----------------------------------------------------------------------
 
 const CHART_HEIGHT = 392
 const LEGEND_HEIGHT = 72
@@ -32,20 +28,22 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 const CHART_DATA = [
-	{ name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-	{ name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-	{ name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
+	{ name: 'Europe', data: [80, 50, 30, 40, 100, 20] },
+	{ name: 'APAC', data: [20, 30, 40, 80, 20, 80] },
+	{ name: 'USA', data: [44, 76, 78, 13, 43, 10] },
 ]
 
 export default function AppCurrentSubject() {
+
 	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	const chartOptions = merge(BaseOptionChart(), {
-		stroke: { width: 2 },
+		stroke: { width: 1 },
 		fill: { opacity: 0.48 },
 		legend: { floating: true, horizontalAlign: 'center' },
 		xaxis: {
-			categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
+			categories: ['MMORPG', 'Metaverse', 'Shooter', 'Hyper Casual', 'Story', 'RPG'],
 			labels: {
 				style: {
 					colors: [
@@ -62,8 +60,8 @@ export default function AppCurrentSubject() {
 	})
 
 	return (
-		<Card>
-			<CardHeader title="Current Subject" />
+		<Card sx={{ ...bgPlain, minHeight: '80px', height: '100%' }}>
+			<CardHeader title="Popular Categories" />
 			<ChartWrapperStyle dir="ltr">
 				<ReactApexChart
 					type="radar"

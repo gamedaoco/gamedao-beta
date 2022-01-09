@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '../context/Wallet'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useApiProvider } from '@substra-hooks/core'
+import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
+
+import { alpha, useTheme } from '@mui/material/styles'
 
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 
@@ -20,6 +22,8 @@ import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
 import { Button, Grid, Typography, Box, Stack, Divider, Card } from 'src/components'
 
+import VerifiedIcon from '@mui/icons-material/Verified'
+
 const Dashboard = (props) => {
 	const apiProvider = useApiProvider()
 	const { allowConnect, updateWalletState, account, address } = useWallet()
@@ -27,17 +31,28 @@ const Dashboard = (props) => {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 
+	// TODO: externalise and adopt to connected network
+	const convertedAddress = useEncodedAddress( address, 25 ) || ''
+
+	const theme = useTheme()
+	const bgPlain = {
+		backgroundColor: theme.palette.grey[500_16],
+	}
+
 	return (
 		<>
 			<Grid container spacing={4}>
+
 				<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
-					<Stack direction="row">
+
+					<Stack direction="row" spacing={2} m={2}>
 						<Box
 							sx={{
+								...bgPlain,
 								display: 'flex',
 								alignItems: 'center',
 								justifyContent: 'center',
-								backgroundColor: '#292B2D',
+								// backgroundColor: '#22201f',
 								borderRadius: '50%',
 								marginRight: 2,
 								height: '3.5rem',
@@ -46,58 +61,42 @@ const Dashboard = (props) => {
 						>
 							<HeartIcon />
 						</Box>
-						<Box sx={{ marginRight: 2, marginTop: 1 }}>
-							<Typography>✅</Typography>
-						</Box>
 						<Stack>
-							<Typography variant="h5">{account && account.meta.name}</Typography>
-							<Typography sx={{ fontWeight: '100' }} variant="body2">
-								{account &&
-									`${account.address.substring(
-										0,
-										5
-									)}...${account.address.substring(account.address.length - 5)}`}
+							{ account &&
+							<Typography variant="h5">
+								{account.meta.name} <VerifiedIcon fontSize="small" sx={{ color: '#f0f'}}/>
+							</Typography>
+							}
+							<Typography sx={{ fontSize: '0.8rem', fontWeight: '100' }} variant="body2">
+								{account && convertedAddress }
 							</Typography>
 						</Stack>
 					</Stack>
 				</Grid>
 
 				<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'end' }}>
-					<Stack direction="row">
+					<Stack direction="row" spacing={2} m={2}>
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2">
-								Trust
-							</Typography>
-							<Typography variant="overline">Level 2</Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2"> XP </Typography>
+							<Typography variant="overline">1120</Typography>
 						</Stack>
-						<Divider
-							sx={{ mx: 2, mt: 1, height: '60%' }}
-							orientation="vertical"
-							flexItem
-						/>
-						<Typography></Typography>
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2">
-								Rep
-							</Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2"> Rep </Typography>
 							<Typography variant="overline">530</Typography>
 						</Stack>
-						<Divider sx={{ mx: 2, height: '100%' }} orientation="vertical" flexItem />
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2">
-								XP
-							</Typography>
-							<Typography variant="overline">1120</Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2"> Trust </Typography>
+							<Typography variant="overline">Level 2</Typography>
 						</Stack>
 					</Stack>
 				</Grid>
 
 				<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
-					<Typography variant="h5">Dashboard</Typography>
+					<Typography variant="h5">Overview</Typography>
 				</Grid>
 
 				<Grid item xs={12} sm={6} md={4}>
-					<Card sx={{ height: '160px' }}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
 						<Box
 							sx={{
 								position: 'absolute',
@@ -117,7 +116,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item sm={12} md={4}>
-					<Card sx={{ height: '160px' }}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
 						<Stack justifyContent="space-evenly" alignItems="center" spacing={2} mt={2}>
 							<Typography>Votings</Typography>
 							<Typography variant="h3">{proposalsCount ?? 'Loading...'}</Typography>
@@ -127,7 +126,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item xs={12} sm={6} md={4}>
-					<Card sx={{ height: '160px' }}>
+					<Card sx={{ ...bgPlain, height: '160px' }}>
 						<Box
 							sx={{
 								position: 'absolute',
@@ -147,7 +146,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item xs={12}>
-					<Card>
+					<Card sx={{...bgPlain }}>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 							<Typography variant="h5">Organizations</Typography>
 							<Typography variant="h5">Sort by ^</Typography>
@@ -159,20 +158,35 @@ const Dashboard = (props) => {
 					<Typography variant="h5">Campaigns</Typography>
 				</Grid>
 
-				<Grid item xs={12}>
-					<Card>
+				<Grid item xs={12} md={6}>
+					<Card sx={{...bgPlain }}>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 							<Typography variant="h5">My Campaigns</Typography>
 						</Box>
 					</Card>
 				</Grid>
 
-				<Grid item xs={12}>
-					<Card>
-						<SingleChart />
+				<Grid item xs={12} md={6}>
+					<Card sx={{...bgPlain, height: '160px' }}>
+
+						<Box
+							sx={{
+								position: 'absolute',
+								top: '0px',
+								left: '-0.5rem',
+								width: '115%',
+							}}
+						>
+							<SingleChart />
+						</Box>
+						<Stack justifyContent="start" alignItems="left" m={2}>
+							<Typography>Campaign Contributions over Time</Typography>
+							<Typography variant="h3">1005.00 Unit</Typography>
+						</Stack>
 					</Card>
 				</Grid>
 			</Grid>
+
 			{/*<Button
 				onClick={() => {
 					const tx = apiProvider.tx.balances.transfer(

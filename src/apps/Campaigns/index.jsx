@@ -1,24 +1,11 @@
-/**
- _______________________________ ________
- \____    /\_   _____/\______   \\_____  \
-	 /     /  |    __)_  |       _/ /   |   \
-	/     /_  |        \ |    |   \/    |    \
- /_______ \/_______  / |____|_  /\_______  /
-				 \/        \/         \/         \/
- Z  E  R  O  .  I  O     N  E  T  W  O  R  K
- © C O P Y R I O T   2 0 7 5   Z E R O . I O
-**/
-
 import React, { useEffect, useState, lazy } from 'react'
-// import { useWallet } from 'src/context/Wallet'
+import { useApiProvider } from '@substra-hooks/core'
+import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
+import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-
 import { Button, Typography, Box, Stack, Loader } from '../../components'
-import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useApiProvider } from '@substra-hooks/core'
-import { useWallet } from 'src/context/Wallet'
 
 const CampaignGrid = lazy(() => import('./CampaignGrid'))
 const CreateCampaign = lazy(() => import('./Create'))
@@ -35,7 +22,7 @@ export const Campaigns = (props) => {
 	const { campaignsCount, campaignBalance, campaignState, campaigns, campaignsIndex } =
 		useCrowdfunding()
 
-	const { account } = useWallet()
+	const { account, connected } = useWallet()
 
 	const [content, setContent] = useState()
 
@@ -52,18 +39,18 @@ export const Campaigns = (props) => {
 			}
 		})
 
-		content.sort(function(a, b) {
+		content.sort(function (a, b) {
 			var A = parseInt(a.expiry.replaceAll(',', ''))
 			var B = parseInt(b.expiry.replaceAll(',', ''))
 			if (A < B) {
-			  return -1;
+				return -1
 			}
 			if (A > B) {
-			  return 1;
+				return 1
 			}
-			return 0;
-		  });
-		  
+			return 0
+		})
+
 		setContent(content)
 	}, [campaignsIndex, campaignBalance, campaignState, campaigns])
 
@@ -80,39 +67,52 @@ export const Campaigns = (props) => {
 					alignItems: 'center',
 				}}
 			>
-				<Typography>Campaigns</Typography>
-				<Typography>
-					{!content || campaignsCount === 0 ? (
-						<>
-							<Loader text="" />
-						</>
-					) : (
-						<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
-					)}
-				</Typography>
 				<Box>
-					{showCreateMode ? (
-						<Button
-							variant="outlined"
-							startIcon={<ClearIcon />}
-							onClick={handleCloseBtn}
-						>
-							<Typography>Close</Typography>
-						</Button>
-					) : account ? (
-						<Button
-							variant="outlined"
-							startIcon={<AddIcon />}
-							onClick={handleCreateBtn}
-						>
-							<Typography>New Campaign</Typography>
-						</Button>
-					) : null}
+					{ !showCreateMode
+					? (
+						campaignsCount === 0 ? (
+							<h4>No campaigns yet. Create one!</h4>
+						) : (
+							!content
+							? <Loader text="" />
+							: <h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
+						)
+					)
+					: (
+						<h4>Create Campaign</h4>
+					)}
+				</Box>
+
+				<Box marginLeft="auto">
+					{ showCreateMode
+						? (
+							<Button
+								variant="outlined"
+								startIcon={<ClearIcon />}
+								onClick={handleCloseBtn}
+							>
+								<Typography>Close</Typography>
+							</Button>
+						)
+						: (
+							account && connected
+							? (
+								<Button
+									variant="outlined"
+									startIcon={<AddIcon />}
+									onClick={handleCreateBtn}
+								>
+									<Typography>New Campaign</Typography>
+								</Button>
+							)
+							: null
+						)
+					}
 				</Box>
 			</Box>
 			<br />
-			{showCreateMode && <CreateCampaign />}
-			{!showCreateMode && content && campaignsCount !== 0 && (
+			{showCreateMode && connected && <CreateCampaign />}
+			{!showCreateMode && content && campaignsCount > 0 && (
 				<CampaignGrid content={content} />
 			)}
 		</>
