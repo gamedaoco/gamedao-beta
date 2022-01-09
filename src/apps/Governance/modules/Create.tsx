@@ -137,15 +137,13 @@ export const Main = () => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const [initialData, setInitialData] = useState()
+	const [initialState, setInitialState]	= useState()
 	const [persistedData, setPersistedData] = useState()
 
 	const [fileCID, updateFileCID] = useState()
 	const [markdownValue, setMarkdownValue] = useState("# gamedao")
 
 	//const [formData, updateFormData] = useState(INITIAL_STATE)
-	
-	const [content, setContent] = useState({})
 
 	const [activeMemberships, setActiveMemberships] = useState(null)
 	const [campaigns, setCampaigns] = useState([])
@@ -170,7 +168,7 @@ export const Main = () => {
 			setPersistedData(JSON.parse(ls))
 		}
 		//@ts-ignore
-		setInitialData(random_state(account))
+		setInitialState(INITIAL_STATE)
 	}, [account])
 
 
@@ -299,7 +297,7 @@ export const Main = () => {
 
 	const formik = useFormik({
 		enableReinitialize: true,
-		initialValues: initialData,
+		initialValues: INITIAL_STATE,
 		validate: (values) => {
 			//setStepperState(1)
 			const errors:Partial<GenericForm> = {}
