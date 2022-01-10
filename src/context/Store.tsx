@@ -8,10 +8,11 @@ export type StoreState = {
 }
 
 const INITIAL_STATE: StoreState = {
-	darkModeState: false, // false = light mode, true = dark mode
+	darkModeState: true, // false = light mode, true = dark mode
 	allowConnection: false, // false = no connection, true = connection
 	lastAccountIndex: null,
-	updateStore: (opt) => {},
+	updateStore: (opt) => {
+	},
 }
 
 const StoreContext = createContext<StoreState>(INITIAL_STATE)
