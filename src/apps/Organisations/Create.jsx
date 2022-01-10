@@ -237,9 +237,9 @@ export const Main = (props) => {
 
 			if (!values.description || values.description === '') errors.description = 'We need a short description'
 
-			if (values.controller.length !== 47) errors.controller = 'Not a valid Account Address!'
+			if (!toZeroAddress(values.controller)) errors.controller = 'Not a valid Account Address!'
+			if (!toZeroAddress(values.treasury)) errors.treasury = 'Not a valid Account Address!'
 
-			if (values.treasury.length !== 47) errors.treasury = 'Not a valid Account Address!'
 			if (values.treasury === values.controller) errors.treasury = 'Treasury Account needs to differ from Controller Account!'
 
 			return errors
