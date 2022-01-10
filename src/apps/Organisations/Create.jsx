@@ -573,7 +573,7 @@ export const Main = (props) => {
 								))}
 							</Select>
 
-							<FormHelperText>{formik.touched.fee_model && formik.touched.fee_model}</FormHelperText>
+							<FormHelperText>{formik.touched.fee_model && formik.errors.fee_model}</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
