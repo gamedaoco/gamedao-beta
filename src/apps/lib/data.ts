@@ -21,6 +21,7 @@ export const proposal_types = [
 	// { key: '1', text: 'Multiple Choice', value: 1 },
 	// { key: '2', text: 'Membership', value: 2 },
 	{ key: '3', text: 'Withdrawal', value: 3 },
+	// { key: '4', text: 'Spending', value: 4 },
 ]
 
 export const voting_types = [
