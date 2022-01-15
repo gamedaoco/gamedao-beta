@@ -29,45 +29,11 @@
     "member_limit": "u64"
   },
 
-  "ControlType": {
-    "_enum": {
-      "INDIVIDUAL": "u8",
-      "COMPANY": "u8",
-      "DAO": "u8",
-      "HYBRID": "u8"
-    }
-  },
-  "ControlState": {
-    "_enum": {
-      "INACTIVE": "u8",
-      "ACTIVE": "u8",
-      "LOCKED": "u8"
-    }
-  },
-  "ControlMemberState": {
-    "_enum": {
-      "INACTIVE": "u8",
-      "ACTIVE": "u8",
-      "PENDING": "u8",
-      "KICKED": "u8",
-      "BANNED": "u8",
-      "EXITED": "u8"
-    }
-  },
-  "ControlFeeModel": {
-    "_enum": {
-      "NOFEES": "u8",
-      "RESERVE": "u8",
-      "TRANSFER": "u8"
-    }
-  },
-  "ControlAccessModel": {
-    "_enum": {
-      "OPEN": "u8",
-      "VOTING": "u8",
-      "CONTROLLER": "u8"
-    }
-  },
+  "ControlType": "u8",
+  "ControlState": "u8",
+  "ControlMemberState": "u8",
+  "ControlFeeModel": "u8",
+  "ControlAccessModel": "u8",
 
   "RealmIndex": "u64",
   "ClassIndex": "u64",
@@ -129,32 +95,9 @@
   },
   "EventMessage": "Vec<u8>",
   "Nonce": "u64",
-  "FlowProtocol": {
-    "_enum": {
-      "GRANT": "u8",
-      "RAISE": "u8",
-      "LEND": "u8",
-      "LOAN": "u8",
-      "SHARE": "u8",
-      "POOL": "u8"
-    }
-  },
-  "FlowGovernance": {
-    "_enum": {
-      "NO": "u8",
-      "YES": "u8"
-    }
-  },
-  "FlowState": {
-    "_enum": {
-      "INIT": "u8",
-      "ACTIVE": "u8",
-      "PAUSED": "u8",
-      "SUCCESS": "u8",
-      "FAILED": "u8",
-      "LOCKED": "u8"
-    }
-  },
+  "FlowProtocol": "u8",
+  "FlowGovernance": "u8",
+  "FlowState": "u8",
 
   "campaign_id": "Hash",
   "contribution": "Balance",
@@ -177,37 +120,9 @@
     "amount": "Balance"
   },
 
-  "ProposalState": {
-    "_enum": {
-      "INIT": "u8",
-      "ACTIVE": "u8",
-      "ACCEPTED": "u8",
-      "REJECTED": "u8",
-      "EXPIRED": "u8",
-      "ABORTED": "u8",
-      "FINALIZED": "u8"
-    }
-  },
-  "ProposalType": {
-    "_enum": {
-      "GENERAL": "u8",
-      "MULTIPLE": "u8",
-      "MEMBER": "u8",
-      "WITHDRAWAL": "u8",
-      "SPENDING": "u8"
-    }
-  },
-  "VotingType": {
-    "_enum": {
-      "SIMPLE_MAJORITY": "u8",
-      "TOKEN_MAJORITY": "u8",
-      "ABSOLUTE_MAJORITY": "u8",
-      "QUADRATIC": "u8",
-      "RANKED": "u8",
-      " CONVICTION": "u8"
-    }
-  },
-
+  "ProposalState": "u8",
+  "ProposalType": "u8",
+  "VotingType": "u8",
   "TitleText": "Vec<u8>",
   "CID": "Vec<u8>",
 
@@ -224,3 +139,4 @@
   },
   "State":"FlowState"
 }
+
