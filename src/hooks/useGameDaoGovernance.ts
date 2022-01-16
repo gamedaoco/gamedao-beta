@@ -207,7 +207,9 @@ async function queryProposalVoters(apiProvider: ApiPromise, hashes: any): Promis
 }
 
 async function queryProposalApprovers(apiProvider: ApiPromise, hashes: any): Promise<any> {
-	const [error, data] = await to(apiProvider.query.gameDaoGovernance.proposalApprovers.multi(hashes))
+	const [error, data] = await to(
+		apiProvider.query.gameDaoGovernance.proposalApprovers.multi(hashes)
+	)
 
 	if (error) {
 		console.error(error, hashes)
@@ -225,7 +227,9 @@ async function queryProposalApprovers(apiProvider: ApiPromise, hashes: any): Pro
 }
 
 async function queryProposalDeniers(apiProvider: ApiPromise, hashes: any): Promise<any> {
-	const [error, data] = await to(apiProvider.query.gameDaoGovernance.proposalDeniers.multi(hashes))
+	const [error, data] = await to(
+		apiProvider.query.gameDaoGovernance.proposalDeniers.multi(hashes)
+	)
 
 	if (error) {
 		console.error(error, hashes)
@@ -258,7 +262,7 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 
 	useEffect(() => {
 		if (refresh === true && apiProvider) {
-			setState({proposalsCount: 0});
+			setState({ proposalsCount: 0 })
 			setLastProposalsCount(null)
 			queryProposalsCount(apiProvider).then((proposalsCount) => {
 				setState({ proposalsCount: proposalsCount ?? 0 })

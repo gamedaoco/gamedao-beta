@@ -7,7 +7,7 @@ import { useThemeState } from 'src/context/ThemeState'
 export const FileDropZone: React.FC<
 	React.PropsWithChildren<{
 		onDroppedFiles: (files: File[], e: any) => void
-		accept: string,
+		accept: string
 		onDeleteItem: () => void
 	}>
 > = (props) => {
@@ -40,20 +40,25 @@ export const FileDropZone: React.FC<
 
 	return (
 		<>
-			{(fileInputRef.current && fileInputRef.current.value !== "") && <Box sx={{ mb: '-52px', display: 'flex', justifyContent: "end" }}>
-				<Button
-					sx={{ zIndex: '9999' }}
-					onClick={ () => {
+			{fileInputRef.current && fileInputRef.current.value !== '' && (
+				<Box sx={{ mb: '-52px', display: 'flex', justifyContent: 'end' }}>
+					<Button
+						sx={{ zIndex: '9999' }}
+						onClick={() => {
 							// const inputElem = document.getElementsByClassName("gamedao_filedrop_input_"+props.name)[0]
 							// inputElem.value = ""
-							fileInputRef.current.value = ""
+							fileInputRef.current.value = ''
 							props.onDeleteItem ? props.onDeleteItem() : null
 							//updateHeaderCID({})
-					}}>x</Button>
-			</Box>}
+						}}
+					>
+						x
+					</Button>
+				</Box>
+			)}
 			<input
 				//@ts-ignore
-				className={"gamedao_filedrop_input_"+props.name}
+				className={'gamedao_filedrop_input_' + props.name}
 				//@ts-ignore
 				name={props.name}
 				style={{ position: 'absolute', left: '-9999999px' }}
@@ -83,7 +88,9 @@ export const FileDropZone: React.FC<
 					padding: 4,
 					background: hover
 						? theme.palette.background.neutral
-						: darkmodeEnabled ? theme.palette.grey[900] : theme.palette.background.neutral,
+						: darkmodeEnabled
+						? theme.palette.grey[900]
+						: theme.palette.background.neutral,
 					['&:hover']: {
 						background: theme.palette.background.neutral,
 						opacity: 1,

@@ -23,7 +23,6 @@ const CHART_DATA = [
 ]
 
 export default function AppWebsiteVisits() {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 

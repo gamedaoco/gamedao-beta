@@ -8,7 +8,6 @@ import { BaseOptionChart } from './BaseOptionChart'
 const CHART_DATA = [{ data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380] }]
 
 export default function AppConversionRates() {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 

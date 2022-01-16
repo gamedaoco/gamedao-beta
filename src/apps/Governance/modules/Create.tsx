@@ -58,7 +58,6 @@ const INITIAL_STATE: GenericForm = {
 // 0.3 -> surveys
 
 export const Main = () => {
-
 	const apiProvider = useApiProvider()
 	const blockNumber = useBlock()
 	const { account, address, signAndNotify } = useWallet()
@@ -89,7 +88,6 @@ export const Main = () => {
 		console.log('query available campaigns for', bodies?.[formData.entity]?.name)
 
 		const query = async () => {
-
 			try {
 				const [
 					_cam,
@@ -113,7 +111,7 @@ export const Main = () => {
 				// get successful campaigns for a body
 				const cam = _cam.toHuman() as any
 				const suc = _suc.toHuman() as any
-				const availableCampaigns = cam.filter(c => suc.find(s => c === s))
+				const availableCampaigns = cam.filter((c) => suc.find((s) => c === s))
 
 				// merge contributed and owned
 				// const con = _con.toHuman() as any
@@ -128,11 +126,12 @@ export const Main = () => {
 				// 		return { key: i, text: h, value: h }
 				// 	})
 
-				const campaigns = availableCampaigns?.map(
-					(c, i) => ({
-						key: i, text: c, value: c,
-					}),
-				) ?? []
+				const campaigns =
+					availableCampaigns?.map((c, i) => ({
+						key: i,
+						text: c,
+						value: c,
+					})) ?? []
 
 				console.log('availableCampaigns', availableCampaigns)
 				console.log('campaigns', campaigns)
@@ -140,14 +139,11 @@ export const Main = () => {
 				// TODO: only contributed/owned
 				// setCampaigns(availableCampaigns)
 				setCampaigns(campaigns)
-
 			} catch (err) {
 				console.error(err)
 			}
-
 		}
 		query()
-
 	}, [apiProvider, address, formData.entity, formData.proposal_type])
 
 	// form fields
@@ -258,7 +254,7 @@ export const Main = () => {
 
 					// TODO: 2075 Do we need error handling here if false?
 					// RES: Yes, we do
-				},
+				}
 			)
 		}
 	}
@@ -274,15 +270,13 @@ export const Main = () => {
 		// redirect
 	}, [account, refresh])
 
-
 	useEffect(() => {
 		if (!bodyStates || !memberships) return
 
 		setActiveMemberships(
-			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1'),
+			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
 		)
 	}, [bodyStates, memberships])
-
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
@@ -305,9 +299,9 @@ export const Main = () => {
 									<InputLabel>Organisation</InputLabel>
 									<MuiSelect
 										required
-										label='Organisation *'
+										label="Organisation *"
 										fullWidth
-										name='entity'
+										name="entity"
 										value={formData.entity}
 										onChange={handleEntityChange}
 										error={!formData.entity}
@@ -340,26 +334,27 @@ export const Main = () => {
 							</Grid>
 
 							<Grid item xs={12} md={6}>
-								{formData.proposal_type === 3 && campaigns.length > 0 &&
+								{formData.proposal_type === 3 && campaigns.length > 0 && (
 									<FormControl fullWidth>
 										<InputLabel>Campaign</InputLabel>
 										<MuiSelect
 											required
 											disabled={!campaigns.length}
-											label='Campaign'
+											label="Campaign"
 											fullWidth
-											name='campaign'
+											name="campaign"
 											value={formData.campaign}
 											onChange={handleOnChange}
 										>
-											{campaigns && campaigns.map((e, i) => (
-												<MenuItem key={i} value={campaigns[i].value}>
-													{campaigns[i].text}
-												</MenuItem>
-											))}
+											{campaigns &&
+												campaigns.map((e, i) => (
+													<MenuItem key={i} value={campaigns[i].value}>
+														{campaigns[i].text}
+													</MenuItem>
+												))}
 										</MuiSelect>
 									</FormControl>
-								}
+								)}
 							</Grid>
 							<Grid item xs={12}>
 								<Divider>Proposal</Divider>
@@ -371,7 +366,10 @@ export const Main = () => {
 									placeholder={'Title'}
 									value={formData.title}
 									onChange={handleOnChange}
-									error={formData.title?.length > 0 && (!formData.title || formData.title.length <= 5)}
+									error={
+										formData.title?.length > 0 &&
+										(!formData.title || formData.title.length <= 5)
+									}
 									fullWidth
 								/>
 							</Grid>
@@ -379,7 +377,6 @@ export const Main = () => {
 								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
 									Content Description
 								</FormSectionHeadline>
-
 
 								<MarkdownEditor
 									value={markdownState}
@@ -406,9 +403,8 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{formData.voting_type > 0
-
-								? <>
+							{formData.voting_type > 0 ? (
+								<>
 									<Grid item xs={12} md={3}>
 										<FormControl fullWidth>
 											<InputLabel>Collateral Type</InputLabel>
@@ -439,8 +435,9 @@ export const Main = () => {
 										/>
 									</Grid>
 								</>
-								: <Grid item xs={12} md={6}></Grid>
-							}
+							) : (
+								<Grid item xs={12} md={6}></Grid>
+							)}
 							<Grid item xs={12} md={6}>
 								<FormControl fullWidth>
 									<InputLabel>Start (now)</InputLabel>
@@ -512,9 +509,14 @@ export const Main = () => {
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
-									size='large'
+									size="large"
 									onClick={handleSubmit}
-									disabled={loading || !formData.title || formData.title.length <= 5 || !formData.entity}
+									disabled={
+										loading ||
+										!formData.title ||
+										formData.title.length <= 5 ||
+										!formData.entity
+									}
 								>
 									Publish Proposal
 								</Button>
@@ -529,9 +531,7 @@ export const Main = () => {
 
 export default function Module() {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoGovernance
-		? <Main />
-		: null
+	return apiProvider && apiProvider.query.gameDaoGovernance ? <Main /> : null
 }
 
 //

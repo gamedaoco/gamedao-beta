@@ -28,7 +28,6 @@ export const TileItem: React.FC<
 		linkTo?: string
 	}>
 > = (props) => {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 

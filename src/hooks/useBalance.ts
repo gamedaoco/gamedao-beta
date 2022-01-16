@@ -21,7 +21,6 @@ const INITIAL_STATE: BalanceState = {
 	updateBalance: () => {},
 }
 
-
 export function useBalance(): BalanceState {
 	const [addressState, setAddressState] = useState<string>(null)
 	const balanceState = useSelector(balanceStateSelector)
@@ -29,35 +28,38 @@ export function useBalance(): BalanceState {
 	const { address } = useWallet()
 	const dispatch = useDispatch()
 
-	const handleUpdateBalance = () => { return balanceState }
+	const handleUpdateBalance = () => {
+		return balanceState
+	}
 
 	useEffect(() => {
-
 		if (!apiProvider || !address) return null
 
 		let unsubscribe = null
 
-			apiProvider.queryMulti([
+		apiProvider.queryMulti(
+			[
 				[apiProvider.query.system.account, address],
 				[apiProvider.query.assets.account, [Number(0), address]],
 				[apiProvider.query.assets.account, [Number(1), address]],
-			],([ zero, play, game ])=>{
-
+			],
+			([zero, play, game]) => {
 				const z = zero.toHuman() as any
 				const p = play.toHuman() as any
 				const g = game.toHuman() as any
 
-				dispatch(updateBalanceAction({
-					balanceZero: z.data.free ?? '0',
-					balancePlay: p.balance ?? '0',
-					balanceGame: g.balance ?? '0',
-				}))
+				dispatch(
+					updateBalanceAction({
+						balanceZero: z.data.free ?? '0',
+						balancePlay: p.balance ?? '0',
+						balanceGame: g.balance ?? '0',
+					})
+				)
 				setAddressState(address)
-
-			})
+			}
+		)
 
 		return () => unsubscribe && unsubscribe()
-
 	}, [address, apiProvider])
 
 	return {

@@ -28,19 +28,21 @@ interface ComponentProps {
 	showNavigation?: boolean
 }
 
-const SidebarButton = styled(ListItemButton)<{ active?: string|boolean }>(({ theme, active }) => ({
-	padding: theme.spacing(1),
-	marginLeft: theme.spacing(1),
-	marginRight: theme.spacing(1),
-	marginTop: theme.spacing(0.5),
-	marginBottom: theme.spacing(0.5),
-	borderRadius: '2rem',
-	color: active ? theme.palette.grey[500] : theme.palette.grey[500_48],
-	backgroundColor: active ? theme.palette.grey[500_16] : 'transparent',
-	'&:hover': {
-		color: theme.palette.text.primary,
-	},
-}))
+const SidebarButton = styled(ListItemButton)<{ active?: string | boolean }>(
+	({ theme, active }) => ({
+		padding: theme.spacing(1),
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1),
+		marginTop: theme.spacing(0.5),
+		marginBottom: theme.spacing(0.5),
+		borderRadius: '2rem',
+		color: active ? theme.palette.grey[500] : theme.palette.grey[500_48],
+		backgroundColor: active ? theme.palette.grey[500_16] : 'transparent',
+		'&:hover': {
+			color: theme.palette.text.primary,
+		},
+	})
+)
 
 const NavHeader = styled(ListSubHeader)(({ theme }) => ({
 	backgroundColor: 'transparent',
@@ -156,7 +158,10 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</Link>
 				<Link component={NavLink} to="/app/governance">
-					<SidebarButton active={!!pathname.match(/governance/gi) ? 'active' : null} sx={{ mx: 4, py: 0 }}>
+					<SidebarButton
+						active={!!pathname.match(/governance/gi) ? 'active' : null}
+						sx={{ mx: 4, py: 0 }}
+					>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="voting" />
 						</ListItemIcon>
@@ -172,7 +177,10 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</Link>
 				<Link component={NavLink} to="/app/campaigns">
-					<SidebarButton active={!!pathname.match(/campaigns/gi) ? 'active' : null} sx={{ mx: 4, py: 0 }}>
+					<SidebarButton
+						active={!!pathname.match(/campaigns/gi) ? 'active' : null}
+						sx={{ mx: 4, py: 0 }}
+					>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="campaign" />
 						</ListItemIcon>
@@ -190,7 +198,10 @@ function Main({ showNavigation }: ComponentProps) {
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
 					<Link component={NavLink} to="/app/tangram">
-						<SidebarButton active={!!pathname.match(/tangram/gi) ? 'active' : null} sx={{ mx: 4, py: 0 }}>
+						<SidebarButton
+							active={!!pathname.match(/tangram/gi) ? 'active' : null}
+							sx={{ mx: 4, py: 0 }}
+						>
 							<ListItemIcon>
 								<FontIcon sx={{ ...sideBar }} name="tangram" />
 							</ListItemIcon>

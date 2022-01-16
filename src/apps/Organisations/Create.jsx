@@ -198,7 +198,7 @@ export const Main = (props) => {
 						// clear localstorage
 						localStorage.removeItem('gamedao-form-create-org')
 					}
-				},
+				}
 			)
 		}
 
@@ -218,7 +218,8 @@ export const Main = (props) => {
 			const errors = {}
 			console.log(values)
 
-			if (new Blob([values.name]).size > 48) errors.name = 'Please enter a maximum of 48 bytes.'
+			if (new Blob([values.name]).size > 48)
+				errors.name = 'Please enter a maximum of 48 bytes.'
 			if (!values.name || values.name === '') errors.name = 'You must choose a Name'
 
 			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
@@ -229,18 +230,24 @@ export const Main = (props) => {
 				errors.website = 'Please enter a valid URL.'
 			}
 
-			if (!values.member_limit || values.member_limit === '') errors.member_limit = 'Please enter the maximum number of members.'
-			if (values.member_limit && isNaN(parseInt(values.member_limit))) errors.member_limit = 'Needs to be a number.'
+			if (!values.member_limit || values.member_limit === '')
+				errors.member_limit = 'Please enter the maximum number of members.'
+			if (values.member_limit && isNaN(parseInt(values.member_limit)))
+				errors.member_limit = 'Needs to be a number.'
 
 			if (!values.fee || values.fee === '') errors.fee = 'Please enter the membership fee.'
-			if (values.fee && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.fee)) errors.fee = 'Needs to be a number.'
+			if (values.fee && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.fee))
+				errors.fee = 'Needs to be a number.'
 
-			if (!values.description || values.description === '') errors.description = 'We need a short description'
+			if (!values.description || values.description === '')
+				errors.description = 'We need a short description'
 
-			if (!toZeroAddress(values.controller)) errors.controller = 'Not a valid Account Address!'
+			if (!toZeroAddress(values.controller))
+				errors.controller = 'Not a valid Account Address!'
 			if (!toZeroAddress(values.treasury)) errors.treasury = 'Not a valid Account Address!'
 
-			if (values.treasury === values.controller) errors.treasury = 'Treasury Account needs to differ from Controller Account!'
+			if (values.treasury === values.controller)
+				errors.treasury = 'Treasury Account needs to differ from Controller Account!'
 
 			return errors
 		},
@@ -266,7 +273,7 @@ export const Main = (props) => {
 			localStorage.setItem('gamedao-form-create-org', JSON.stringify(formik.values))
 		},
 		[logoCID, headerCID, formik.values],
-		2000,
+		2000
 	)
 
 	useEffect(() => {
@@ -276,7 +283,7 @@ export const Main = (props) => {
 		setLoading(false)
 	}, [account, refresh])
 
-	if (!formik.values) return <Loader text='Create Organization' />
+	if (!formik.values) return <Loader text="Create Organization" />
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
@@ -311,10 +318,10 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							label='Name'
+							label="Name"
 							fullWidth
-							placeholder='Name'
-							name='name'
+							placeholder="Name"
+							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -325,10 +332,10 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							label='Contact Email'
+							label="Contact Email"
 							fullWidth
-							placeholder='email'
-							name='email'
+							placeholder="email"
+							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -338,15 +345,17 @@ export const Main = (props) => {
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth
-									 error={formik.touched.body && Boolean(formik.errors.body)}>
-							<InputLabel id='body-select-label'>Organizational Body</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.body && Boolean(formik.errors.body)}
+						>
+							<InputLabel id="body-select-label">Organizational Body</InputLabel>
 							<Select
-								label='Organizational Body'
-								name='body'
-								placeholder='Organizational Body'
-								labelId='body-select-label'
-								id='body'
+								label="Organizational Body"
+								name="body"
+								placeholder="Organizational Body"
+								labelId="body-select-label"
+								id="body"
 								value={formik.values.body}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -358,19 +367,23 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.touched.body && formik.errors.body}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.body && formik.errors.body}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth
-									 error={formik.touched.country && Boolean(formik.errors.country)}>
-							<InputLabel id='country-select-label'>Country</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.country && Boolean(formik.errors.country)}
+						>
+							<InputLabel id="country-select-label">Country</InputLabel>
 							<Select
-								label='Country'
-								name='country'
-								placeholder='Country'
-								labelId='country-select-label'
-								id='country'
+								label="Country"
+								name="country"
+								placeholder="Country"
+								labelId="country-select-label"
+								id="country"
 								value={formik.values.country}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -382,7 +395,9 @@ export const Main = (props) => {
 									</MenuItem>
 								))}
 							</Select>
-							<FormHelperText>{formik.touched.country && formik.errors.country}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.country && formik.errors.country}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
@@ -390,8 +405,11 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
-						<FileDropZone name='logo' onDroppedFiles={onFileChange}
-									  onDeleteItem={() => updateLogoCID({})}>
+						<FileDropZone
+							name="logo"
+							onDroppedFiles={onFileChange}
+							onDeleteItem={() => updateLogoCID({})}
+						>
 							{!logoCID.logo && <Image />}
 							{logoCID.logo && (
 								<Image16to9
@@ -400,17 +418,24 @@ export const Main = (props) => {
 									src={gateway + logoCID.logo}
 								/>
 							)}
-							<Typography variant={'body2'}
-										align={'center'}>{!logoCID.logo && 'Logo Image. Drop here, or select a file.'}</Typography>
-							<Typography variant={'body2'}
-										align={'center'}>{!logoCID.logo && 'It must be a JPG, GIF or PNG, no larger than 200 MB.'}</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!logoCID.logo && 'Logo Image. Drop here, or select a file.'}
+							</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!logoCID.logo &&
+									'It must be a JPG, GIF or PNG, no larger than 200 MB.'}
+							</Typography>
 						</FileDropZone>
 					</Grid>
 					<Grid item xs={12}>
-						<FormSectionHeadline variant={'h6'}>Header (1920 x
-							800px)</FormSectionHeadline>
-						<FileDropZone name='header' onDroppedFiles={onFileChange}
-									  onDeleteItem={() => updateHeaderCID({})}>
+						<FormSectionHeadline variant={'h6'}>
+							Header (1920 x 800px)
+						</FormSectionHeadline>
+						<FileDropZone
+							name="header"
+							onDroppedFiles={onFileChange}
+							onDeleteItem={() => updateHeaderCID({})}
+						>
 							{!headerCID.header && <Image />}
 							{headerCID.header && (
 								<Image16to9
@@ -419,10 +444,13 @@ export const Main = (props) => {
 									src={gateway + headerCID.header}
 								/>
 							)}
-							<Typography variant={'body2'}
-										align={'center'}>{!headerCID.header && 'Header Image. Drop here, or select a file.'}</Typography>
-							<Typography variant={'body2'}
-										align={'center'}>{!headerCID.header && 'It must be a JPG or PNG, 1920 x 800px no larger than 200 MB.'}</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!headerCID.header && 'Header Image. Drop here, or select a file.'}
+							</Typography>
+							<Typography variant={'body2'} align={'center'}>
+								{!headerCID.header &&
+									'It must be a JPG or PNG, 1920 x 800px no larger than 200 MB.'}
+							</Typography>
 						</FileDropZone>
 					</Grid>
 
@@ -432,14 +460,14 @@ export const Main = (props) => {
 					<Grid item xs={12}>
 						<TextField
 							multiline
-							aria-label='Short Description'
+							aria-label="Short Description"
 							minRows={3}
-							placeholder='Minimum 3 rows'
+							placeholder="Minimum 3 rows"
 							fullWidth
-							label='Short Description'
-							name='description'
+							label="Short Description"
+							name="description"
 							value={formik.values.description}
-							placeholder='Tell us more'
+							placeholder="Tell us more"
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
@@ -449,11 +477,11 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							label='Website'
-							placeholder='https://your.website.xyz'
-							isInjected='website'
+							label="Website"
+							placeholder="https://your.website.xyz"
+							isInjected="website"
 							fullWidth
-							name='website'
+							name="website"
 							value={formik.values.website}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -463,11 +491,11 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							label='Code Repository'
-							placeholder='repo'
-							id='repo'
+							label="Code Repository"
+							placeholder="repo"
+							id="repo"
 							fullWidth
-							name='repo'
+							name="repo"
 							value={formik.values.repo}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -480,11 +508,11 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
-							id='controller'
+							id="controller"
 							fullWidth
-							name='controller'
-							placeholder='Controller'
-							label='Controller Account'
+							name="controller"
+							placeholder="Controller"
+							label="Controller Account"
 							value={formik.values.controller}
 							helperText={
 								'Note: In case you want to create a DAO, the controller must be the organization.'
@@ -498,11 +526,11 @@ export const Main = (props) => {
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
-							id='treasury'
-							name='treasury'
-							placeholder='Treasury'
+							id="treasury"
+							name="treasury"
+							placeholder="Treasury"
 							fullWidth
-							label='Treasury Account'
+							label="Treasury Account"
 							value={formik.values.treasury}
 							onChange={formik.handleChange}
 							required
@@ -510,18 +538,22 @@ export const Main = (props) => {
 							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
 							helperText={formik.touched.treasury && formik.errors.treasury}
 						/>
-						<Typography variant='caption'>Note: The treasury account may not be the same
-							as the controller account.</Typography>
+						<Typography variant="caption">
+							Note: The treasury account may not be the same as the controller
+							account.
+						</Typography>
 					</Grid>
 					<Grid item xs={12}>
-						<FormControl fullWidth
-									 error={formik.touched.access && Boolean(formik.errors.access)}>
-							<InputLabel id='member-select-label'>Member Access Control</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.access && Boolean(formik.errors.access)}
+						>
+							<InputLabel id="member-select-label">Member Access Control</InputLabel>
 							<Select
-								labelId='member-select-label'
-								id='member-select'
-								label='Member Access Control'
-								name='access'
+								labelId="member-select-label"
+								id="member-select"
+								label="Member Access Control"
+								name="access"
 								value={formik.values.access}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
@@ -534,33 +566,39 @@ export const Main = (props) => {
 								))}
 							</Select>
 
-							<FormHelperText>{formik.touched.access && formik.errors.access}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.access && formik.errors.access}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
 						<TextField
-							id='member_limit'
-							name='member_limit'
-							placeholder='100'
-							label='Member Limit'
+							id="member_limit"
+							name="member_limit"
+							placeholder="100"
+							label="Member Limit"
 							value={formik.values.member_limit}
 							onChange={formik.handleChange}
 							fullWidth
 							required
 							onBlur={formik.handleBlur}
-							error={formik.touched.member_limit && Boolean(formik.errors.member_limit)}
+							error={
+								formik.touched.member_limit && Boolean(formik.errors.member_limit)
+							}
 							helperText={formik.touched.member_limit && formik.errors.member_limit}
 						/>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						<FormControl fullWidth
-									 error={formik.touched.fee_model && Boolean(formik.errors.fee_model)}>
-							<InputLabel id='fee_model-label'>Fee Model</InputLabel>
+						<FormControl
+							fullWidth
+							error={formik.touched.fee_model && Boolean(formik.errors.fee_model)}
+						>
+							<InputLabel id="fee_model-label">Fee Model</InputLabel>
 							<Select
-								labelId='fee_model-label'
-								id='fee_model'
-								label='Fee Model'
-								name='fee_model'
+								labelId="fee_model-label"
+								id="fee_model"
+								label="Fee Model"
+								name="fee_model"
 								value={formik.values.fee_model}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
@@ -573,15 +611,17 @@ export const Main = (props) => {
 								))}
 							</Select>
 
-							<FormHelperText>{formik.touched.fee_model && formik.touched.fee_model}</FormHelperText>
+							<FormHelperText>
+								{formik.touched.fee_model && formik.touched.fee_model}
+							</FormHelperText>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={4}>
 						<TextField
-							id='fee'
-							name='fee'
-							label='Membership Fee'
-							placeholder='10'
+							id="fee"
+							name="fee"
+							label="Membership Fee"
+							placeholder="10"
 							fullWidth
 							value={formik.values.fee}
 							onChange={formik.handleChange}
@@ -595,7 +635,7 @@ export const Main = (props) => {
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
 				{account && (
-					<Button type='submit' fullWidth variant={'contained'}>
+					<Button type="submit" fullWidth variant={'contained'}>
 						Create Organization
 					</Button>
 				)}

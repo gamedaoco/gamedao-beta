@@ -12,7 +12,12 @@ const PaddedBox = styled(Box)(({ theme }) => ({
 }))
 
 export function Image16to9({ src, sx }) {
-	return <PaddedBox sx={{...sx}}  style={{ backgroundImage: `url(${src || 'https://picsum.photos/1240'})` }} />
+	return (
+		<PaddedBox
+			sx={{ ...sx }}
+			style={{ backgroundImage: `url(${src || 'https://picsum.photos/1240'})` }}
+		/>
+	)
 }
 
 export function Box16to9({ children, sx }) {

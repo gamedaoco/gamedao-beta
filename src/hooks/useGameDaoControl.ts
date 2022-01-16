@@ -51,12 +51,9 @@ const INITIAL_STATE: GameDaoControlState = {
 	bodyMemberState: null,
 	bodyMembers: null,
 
-	queryMemberships: (accountId) => {
-	},
-	queryBodyMemberState(hash, accountId) {
-	},
-	queryControlledBodies: (accountId) => {
-	},
+	queryMemberships: (accountId) => {},
+	queryBodyMemberState(hash, accountId) {},
+	queryControlledBodies: (accountId) => {},
 }
 
 async function queryNonce(apiProvider: ApiPromise): Promise<number> {
@@ -303,10 +300,10 @@ async function queryControllerdBodies(apiProvider: ApiPromise, accountId: string
 async function queryBodyMemberState(
 	apiProvider: ApiPromise,
 	hash: string,
-	accountId: string,
+	accountId: string
 ): Promise<any> {
 	const [error, data] = await to(
-		apiProvider.query.gameDaoControl.bodyMemberState([hash, accountId]),
+		apiProvider.query.gameDaoControl.bodyMemberState([hash, accountId])
 	)
 
 	if (error) {
@@ -381,8 +378,8 @@ export const useGameDaoControl = (): GameDaoControlState => {
 			queryBodyByNonce(
 				apiProvider,
 				[...new Array(gameDaoControlState.nonce - lastBodyCount ?? 0)].map(
-					(_, i) => i + lastBodyCount ?? 0,
-				),
+					(_, i) => i + lastBodyCount ?? 0
+				)
 			).then((opt) => {
 				if (isMountedRef) {
 					setState({
@@ -410,39 +407,39 @@ export const useGameDaoControl = (): GameDaoControlState => {
 				const data = await Promise.all([
 					queryBodies(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodies ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodies ?? {})[hash])
 					),
 					queryBodyAccess(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyAccess ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyAccess ?? {})[hash])
 					),
 					queryBodyConfig(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyConfig ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyConfig ?? {})[hash])
 					),
 					queryBodyController(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyController ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyController ?? {})[hash])
 					),
 					queryBodyCreator(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyCreator ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyCreator ?? {})[hash])
 					),
 					queryBodyMemberCount(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyMemberCount ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyMemberCount ?? {})[hash])
 					),
 					queryBodyTreasury(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyTreasury ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyTreasury ?? {})[hash])
 					),
 					queryBodyStates(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyStates ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyStates ?? {})[hash])
 					),
 					queryBodyMembers(
 						apiProvider,
-						keys.filter((hash) => !(gameDaoControlState.bodyMembers ?? {})[hash]),
+						keys.filter((hash) => !(gameDaoControlState.bodyMembers ?? {})[hash])
 					),
 				])
 

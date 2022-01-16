@@ -12,7 +12,6 @@ import { ItemList } from './modules/ItemList'
 const CreateDAO = lazy(() => import('./Create'))
 
 export const Main = (props) => {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
@@ -84,7 +83,7 @@ export const Main = (props) => {
 				sx={{
 					display: 'flex',
 					justifyContent: 'space-between',
-					alignItems: 'center'
+					alignItems: 'center',
 				}}
 			>
 				<Box>

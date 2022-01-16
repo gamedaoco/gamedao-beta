@@ -68,53 +68,42 @@ export const Campaigns = (props) => {
 				}}
 			>
 				<Box>
-					{ !showCreateMode
-					? (
+					{!showCreateMode ? (
 						campaignsCount === 0 ? (
 							<h4>No campaigns yet. Create one!</h4>
+						) : !content ? (
+							<Loader text="" />
 						) : (
-							!content
-							? <Loader text="" />
-							: <h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
+							<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
 						)
-					)
-					: (
+					) : (
 						<h4>Create Campaign</h4>
 					)}
 				</Box>
 
 				<Box marginLeft="auto">
-					{ showCreateMode
-						? (
-							<Button
-								variant="outlined"
-								startIcon={<ClearIcon />}
-								onClick={handleCloseBtn}
-							>
-								<Typography>Close</Typography>
-							</Button>
-						)
-						: (
-							account && connected
-							? (
-								<Button
-									variant="outlined"
-									startIcon={<AddIcon />}
-									onClick={handleCreateBtn}
-								>
-									<Typography>New Campaign</Typography>
-								</Button>
-							)
-							: null
-						)
-					}
+					{showCreateMode ? (
+						<Button
+							variant="outlined"
+							startIcon={<ClearIcon />}
+							onClick={handleCloseBtn}
+						>
+							<Typography>Close</Typography>
+						</Button>
+					) : account && connected ? (
+						<Button
+							variant="outlined"
+							startIcon={<AddIcon />}
+							onClick={handleCreateBtn}
+						>
+							<Typography>New Campaign</Typography>
+						</Button>
+					) : null}
 				</Box>
 			</Box>
 			<br />
 			{showCreateMode && connected && <CreateCampaign />}
-			{!showCreateMode && content && campaignsCount > 0 && (
-				<CampaignGrid content={content} />
-			)}
+			{!showCreateMode && content && campaignsCount > 0 && <CampaignGrid content={content} />}
 		</>
 	)
 }
