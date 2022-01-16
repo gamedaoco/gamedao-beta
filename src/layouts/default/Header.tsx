@@ -9,9 +9,7 @@ import { Box, Link } from 'src/components'
 import AccountSelector from 'src/components/AccountSelector'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
-
 function Main() {
-
 	const { darkmodeEnabled } = useThemeState()
 
 	return (
@@ -23,10 +21,9 @@ function Main() {
 					width: '100%',
 					height: '5rem',
 					borderBottom: (theme) => '1px solid ' + theme.palette.grey[500_32],
- 					justifyContent: 'space-between',
+					justifyContent: 'space-between',
 					alignItems: 'center',
 				}}
-
 			>
 				<Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 2, marginTop: 1 }}>
 					<Link component={NavLink} to="/app">
