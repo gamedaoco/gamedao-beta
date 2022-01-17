@@ -28,7 +28,6 @@ export const Campaigns = (props) => {
 
 	useEffect(() => {
 		if (!campaignsIndex || !campaignBalance || !campaignState || !campaigns) return
-
 		const content = Object.keys(campaignsIndex).map((index) => {
 			const itemHash = campaignsIndex[index]
 
@@ -40,6 +39,8 @@ export const Campaigns = (props) => {
 		})
 
 		content.sort(function (a, b) {
+			if (!a.expiry || !b.expiry) return 0
+
 			var A = parseInt(a.expiry.replaceAll(',', ''))
 			var B = parseInt(b.expiry.replaceAll(',', ''))
 			if (A < B) {

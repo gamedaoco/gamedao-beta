@@ -148,6 +148,7 @@ export function Campaign() {
 		fetch(gateway + content.cid)
 			.then((res) => res.json())
 			.then((data) => setIPFSData(data))
+			.catch((e) => console.error(`Couldn't load content of campaign ${content}`, e))
 	}, [content])
 
 	if (!content || !IPFSData || !bodies) return null

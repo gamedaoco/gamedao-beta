@@ -39,6 +39,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		balance,
 		state,
 	} = item
+
 	const apiProvider = useApiProvider()
 	const blockheight = useBlock()
 	const { identities } = useIdentity(owner)
@@ -88,11 +89,11 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		})
 	}, [identities])
 
-	const blocksRemain = parseInt(expiry.replaceAll(',', '')) - blockheight
+	const blocksRemain = parseInt(expiry?.replaceAll(',', '') || blockheight) - blockheight
 
 	const tags = ['game', '2d', 'pixel', 'steam']
 
-	const epoch = created.replaceAll(',', '')
+	const epoch = created?.replaceAll(',', '') || '0'
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
 	const date = new Date(epoch * 1).toLocaleDateString(undefined, options)
 
