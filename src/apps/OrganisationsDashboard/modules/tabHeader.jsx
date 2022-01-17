@@ -3,54 +3,50 @@ import { Button, Stack, styled, useTheme } from '../../../components'
 
 const TabContainer = styled(Stack)(
 	({
-		 theme: {
-			 palette: {
-				 background: { paper },
-			 },
-		 },
-	 }) => ({
+		theme: {
+			palette: {
+				background: { paper },
+			},
+		},
+	}) => ({
 		backgroundColor: paper,
 		border: '1px solid #30353C',
 		boxSizing: 'border-box',
 		boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
 		borderRadius: '68px',
 		padding: '0.2rem',
-	}),
+	})
 )
 
-const TabButton = styled(Button)((
-		{
-			theme: {
-				palette: {
-					text: {
-						primary,
-					},
-				},
+const TabButton = styled(Button)(
+	({
+		theme: {
+			palette: {
+				text: { primary },
 			},
 		},
-	) => ({
+	}) => ({
 		borderRadius: '68px',
 		color: primary,
 		padding: '0.5rem 1.5rem',
-	}),
+	})
 )
 
 export function TabHeader({
-							  selectedTab,
-							  setSelectedTab,
-							  isAdmin,
-							  campaignsCount,
-							  votingCount,
-							  memberCount,
-						  }) {
-
+	selectedTab,
+	setSelectedTab,
+	isAdmin,
+	campaignsCount,
+	votingCount,
+	memberCount,
+}) {
 	const {
 		palette: {
 			tabButton: { normal, active },
 		},
 	} = useTheme()
 	return (
-		<TabContainer direction='row' justifyContent='space-between'>
+		<TabContainer direction="row" justifyContent="space-between">
 			<TabButton
 				sx={{ backgroundColor: selectedTab === 'Overview' ? active : normal }}
 				onClick={() => setSelectedTab('Overview')}

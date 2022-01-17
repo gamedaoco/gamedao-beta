@@ -24,7 +24,6 @@ const Designsystem = DEV && lazy(() => import('./apps/Designsystem'))
 const Governance = lazy(() => import('./apps/Governance'))
 const GovernanceDetails = lazy(() => import('./apps/GovernanceInfo'))
 
-
 export interface ComponentProps {
 	children?: React.ReactNode
 	path?: string
@@ -64,9 +63,7 @@ const Router = (props) => {
 				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route
 					path="/app"
-					element={
-						<LayoutRoute showSidebar showHeader showFooter element={<App />} />
-					}
+					element={<LayoutRoute showSidebar showHeader showFooter element={<App />} />}
 				></Route>
 				<Route
 					path="/app/organisations"
@@ -82,12 +79,7 @@ const Router = (props) => {
 				<Route
 					path="/app/governance"
 					element={
-						<LayoutRoute
-							showSidebar
-							showHeader
-							showFooter
-							element={<Governance />}
-						/>
+						<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />
 					}
 				></Route>
 				<Route
@@ -124,14 +116,19 @@ const Router = (props) => {
 					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}
 				></Route>
 				{}
-				{ DEV &&
+				{DEV && (
 					<Route
 						path="/app/designsystem"
 						element={
-							<LayoutRoute showSidebar showHeader showFooter element={<Designsystem />} />
+							<LayoutRoute
+								showSidebar
+								showHeader
+								showFooter
+								element={<Designsystem />}
+							/>
 						}
 					></Route>
-				}
+				)}
 				<Route
 					path="/app/organisations/admin/:id"
 					element={

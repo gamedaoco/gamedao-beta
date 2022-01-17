@@ -37,10 +37,10 @@ export function ProposalBodyData({ body, metadata, proposalId, isOrganisation })
 	}, [body])
 
 	return (
-		<Stack direction='row' justifyContent='space-between' width='100%'>
-			<Typography variant='h4'>{proposalMeta.title}</Typography>
+		<Stack direction="row" justifyContent="space-between" width="100%">
+			<Typography variant="h4">{proposalMeta.title}</Typography>
 			{imageState ? (
-				<img width='200px' height='100%' src={`${gateway}${imageState}`} />
+				<img width="200px" height="100%" src={`${gateway}${imageState}`} />
 			) : null}
 		</Stack>
 	)

@@ -28,19 +28,21 @@ interface ComponentProps {
 	showNavigation?: boolean
 }
 
-const SidebarButton = styled(ListItemButton)<{ active?: boolean }>(({ theme, active }) => ({
-	padding: theme.spacing(1),
-	marginLeft: theme.spacing(1),
-	marginRight: theme.spacing(1),
-	marginTop: theme.spacing(0.5),
-	marginBottom: theme.spacing(0.5),
-	borderRadius: '2rem',
-	color: active ? theme.palette.grey[500] : theme.palette.grey[500_48],
-	backgroundColor: active ? theme.palette.grey[500_16] : 'transparent',
-	'&:hover': {
-		color: theme.palette.text.primary,
-	},
-}))
+const SidebarButton = styled(ListItemButton)<{ active?: string | boolean }>(
+	({ theme, active }) => ({
+		padding: theme.spacing(1),
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1),
+		marginTop: theme.spacing(0.5),
+		marginBottom: theme.spacing(0.5),
+		borderRadius: '2rem',
+		color: active ? theme.palette.grey[500] : theme.palette.grey[500_48],
+		backgroundColor: active ? theme.palette.grey[500_16] : 'transparent',
+		'&:hover': {
+			color: theme.palette.text.primary,
+		},
+	})
+)
 
 const NavHeader = styled(ListSubHeader)(({ theme }) => ({
 	backgroundColor: 'transparent',
@@ -125,9 +127,8 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid ' + theme.palette.grey[500_32],
 			}}
 		>
-
 			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
-{/*
+				{/*
 				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
@@ -139,38 +140,68 @@ function Main({ showNavigation }: ComponentProps) {
 */}
 				<Link component={NavLink} to="/app/organisations">
 					<SidebarButton
-						active={!!pathname.match(/organisations/gi)}
+						active={!!pathname.match(/organisations/gi) ? 'active' : null}
 						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="organization" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Organisations</Typography>
-						{ nonce > 0 && <NavBadge sx={{ ml: '0.5rem'}} badgeContent={ nonce } color={ 'success' } variant='dot' /> }
+						{nonce > 0 && (
+							<NavBadge
+								sx={{ ml: '0.5rem' }}
+								badgeContent={nonce}
+								color={'success'}
+								variant="dot"
+							/>
+						)}
 					</SidebarButton>
 				</Link>
 				<Link component={NavLink} to="/app/governance">
-					<SidebarButton active={!!pathname.match(/governance/gi)} sx={{ mx: 4, py: 0 }}>
+					<SidebarButton
+						active={!!pathname.match(/governance/gi) ? 'active' : null}
+						sx={{ mx: 4, py: 0 }}
+					>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="voting" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Votings</Typography>
-						{ proposalsCount > 0 && <NavBadge sx={{ ml: '0.5rem'}} badgeContent={proposalsCount} color={'primary'} variant='dot' />}
+						{proposalsCount > 0 && (
+							<NavBadge
+								sx={{ ml: '0.5rem' }}
+								badgeContent={proposalsCount}
+								color={'primary'}
+								variant="dot"
+							/>
+						)}
 					</SidebarButton>
 				</Link>
 				<Link component={NavLink} to="/app/campaigns">
-					<SidebarButton active={!!pathname.match(/campaigns/gi)} sx={{ mx: 4, py: 0 }}>
+					<SidebarButton
+						active={!!pathname.match(/campaigns/gi) ? 'active' : null}
+						sx={{ mx: 4, py: 0 }}
+					>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="campaign" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Campaigns</Typography>
-						{ campaignsCount > 0 && <NavBadge sx={{ ml: '0.5rem'}} badgeContent={campaignsCount} color={'info'} variant='dot' /> }
+						{campaignsCount > 0 && (
+							<NavBadge
+								sx={{ ml: '0.5rem' }}
+								badgeContent={campaignsCount}
+								color={'info'}
+								variant="dot"
+							/>
+						)}
 					</SidebarButton>
 				</Link>
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
 					<Link component={NavLink} to="/app/tangram">
-						<SidebarButton active={!!pathname.match(/tangram/gi)} sx={{ mx: 4, py: 0 }}>
+						<SidebarButton
+							active={!!pathname.match(/tangram/gi) ? 'active' : null}
+							sx={{ mx: 4, py: 0 }}
+						>
 							<ListItemIcon>
 								<FontIcon sx={{ ...sideBar }} name="tangram" />
 							</ListItemIcon>
@@ -179,8 +210,8 @@ function Main({ showNavigation }: ComponentProps) {
 					</Link>
 				)}
 
-{/*				<Link component={NavLink} to="/app/wallet">
-					<SidebarButton active={!!pathname.match(/wallet/gi)} sx={{ mx: 4, py: 0 }}>
+				{/*				<Link component={NavLink} to="/app/wallet">
+					<SidebarButton active={!!pathname.match(/wallet/gi) ? 'active' : null} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="wallet" />
 						</ListItemIcon>
@@ -218,31 +249,36 @@ function Main({ showNavigation }: ComponentProps) {
 
 				<Box sx={{ flex: 1 }} />
 
-				{ !isMobile &&
+				{!isMobile && (
 					<Box sx={{ p: '2rem 0' }}>
 						<NavHeader>Network Info</NavHeader>
 						<Box sx={{ px: 2 }}>
 							<NetInfo />
 						</Box>
 					</Box>
-				}
+				)}
 
-				{ !isMobile &&
-					<Box sx={{ display: 'flex', pb: '1rem', alignItems:'center' }}>
+				{!isMobile && (
+					<Box sx={{ display: 'flex', pb: '1rem', alignItems: 'center' }}>
 						<Box sx={{ flex: 1, px: '1rem' }}>
 							<Select value={'en'} sx={{ borderRadius: '1rem' }}>
 								<MenuItem value={'en'}>EN</MenuItem>
-								<MenuItem disabled value={'de'}>DE</MenuItem>
-								<MenuItem disabled value={'jp'}>JP</MenuItem>
-								<MenuItem disabled value={'es'}>ES</MenuItem>
+								<MenuItem disabled value={'de'}>
+									DE
+								</MenuItem>
+								<MenuItem disabled value={'jp'}>
+									JP
+								</MenuItem>
+								<MenuItem disabled value={'es'}>
+									ES
+								</MenuItem>
 							</Select>
 						</Box>
 						<Box sx={{ flex: 1, px: '1rem' }}>
 							<ThemeSwitcher />
 						</Box>
 					</Box>
-				}
-
+				)}
 			</List>
 		</Box>
 	)

@@ -24,9 +24,7 @@ import AppOrderTimeline from './components/dashboard/AppOrderTimeline'
 
 import DashboardUserConnected from './DashboardUserConnected'
 
-
 const Dashboard = (props) => {
-
 	const apiProvider = useApiProvider()
 	const crowdfunding = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
@@ -37,7 +35,6 @@ const Dashboard = (props) => {
 
 	return (
 		<Grid container spacing={3}>
-
 			<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'start' }}>
 				<Typography variant="h5">Global Dashboard</Typography>
 			</Grid>
@@ -158,10 +155,8 @@ export default function Dapp(props) {
 
 	useEffect(() => {
 		setName(identities?.[address]?.toHuman()?.info?.display?.Raw ?? '')
-	}, [ connected, address, identities ])
+	}, [connected, address, identities])
 
 	if (!apiProvider) return null
-	return ( address && connected)
-		? <DashboardUserConnected />
-		: <Dashboard />
+	return address && connected ? <DashboardUserConnected /> : <Dashboard />
 }

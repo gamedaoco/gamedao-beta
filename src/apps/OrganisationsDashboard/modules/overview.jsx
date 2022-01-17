@@ -7,13 +7,13 @@ import { ProposalItem } from '../../Governance/modules/ProposalItem'
 import { useWallet } from '../../../context/Wallet'
 
 export function Overview({
-							 metaData,
-							 campaigns,
-							 votings,
-							 blockNumber,
-							 setCreateCampaignState,
-							 setCreateVoatingState,
-						 }) {
+	metaData,
+	campaigns,
+	votings,
+	blockNumber,
+	setCreateCampaignState,
+	setCreateVoatingState,
+}) {
 	const { connected } = useWallet()
 	return (
 		<>
@@ -26,7 +26,7 @@ export function Overview({
 				<Box padding={4}>
 					{votings?.length > 0 ? (
 						<Stack spacing={2}>
-							<Typography variant='h5'>Votings</Typography>
+							<Typography variant="h5">Votings</Typography>
 							{votings.slice(0, 2).map((proposals, i) => (
 								<ProposalItem blockNumber={blockNumber} proposal={proposals} />
 							))}
@@ -34,13 +34,12 @@ export function Overview({
 					) : (
 						<Paper>
 							<Stack
-
-								direction='row'
-								justifyContent='space-between'
-								alignItems='center'
+								direction="row"
+								justifyContent="space-between"
+								alignItems="center"
 							>
-								<Stack spacing={2} maxWidth='60%'>
-									<Typography variant='h5'>No proposals yet. </Typography>
+								<Stack spacing={2} maxWidth="60%">
+									<Typography variant="h5">No proposals yet. </Typography>
 									<Typography>
 										Decisions are governed by proposals and voting to ensure
 										everyone in the organisation has a voice. Create a new
@@ -48,14 +47,16 @@ export function Overview({
 									</Typography>
 								</Stack>
 								<Box>
-									{connected && <Button
-										variant='contained'
-										startIcon={<AddIcon />}
-										sx={{ whiteSpace: 'nowrap' }}
-										onClick={() => setCreateVoatingState(true)}
-									>
-										New Proposal
-									</Button>}
+									{connected && (
+										<Button
+											variant="contained"
+											startIcon={<AddIcon />}
+											sx={{ whiteSpace: 'nowrap' }}
+											onClick={() => setCreateVoatingState(true)}
+										>
+											New Proposal
+										</Button>
+									)}
 								</Box>
 							</Stack>
 						</Paper>
@@ -66,7 +67,7 @@ export function Overview({
 				<Box padding={4}>
 					{campaigns?.length > 0 ? (
 						<Stack spacing={2}>
-							<Typography variant='h5'>Campaigns</Typography>
+							<Typography variant="h5">Campaigns</Typography>
 							{campaigns.slice(0, 2).map((campaign, i) => (
 								<CampaignCard
 									displayMode={ListTileEnum.LIST}
@@ -79,12 +80,12 @@ export function Overview({
 					) : (
 						<>
 							<Stack
-								direction='row'
-								justifyContent='space-between'
-								alignItems='center'
+								direction="row"
+								justifyContent="space-between"
+								alignItems="center"
 							>
-								<Stack spacing={2} maxWidth='60%'>
-									<Typography variant='h5'>Campaigns</Typography>
+								<Stack spacing={2} maxWidth="60%">
+									<Typography variant="h5">Campaigns</Typography>
 									<Typography>
 										Pretty empty here :(. Create your first campain and unleash
 										the power of the community.
@@ -92,7 +93,7 @@ export function Overview({
 								</Stack>
 								<Box>
 									<Button
-										variant='contained'
+										variant="contained"
 										startIcon={<AddIcon />}
 										sx={{ whiteSpace: 'nowrap' }}
 										onClick={() => setCreateCampaignState(true)}

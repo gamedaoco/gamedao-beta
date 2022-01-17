@@ -12,31 +12,30 @@ const CHART_DATA = [
 		name: 'GAME',
 		type: 'area',
 		data: [3, 10, 12, 16, 12, 15, 20, 21, 23, 27, 34],
-	}
+	},
 ]
 
 const color = []
 
 export default function SingleChart() {
 	const theme = useTheme()
-	const colors = [theme.palette.success.light, theme.palette.info.light, theme.palette.primary.light]
+	const colors = [
+		theme.palette.success.light,
+		theme.palette.info.light,
+		theme.palette.primary.light,
+	]
 	const randomColor = colors[Math.floor(Math.random() * colors.length)]
 	const chartOptions = merge(ChartBaseOptions(), {
 		stroke: { width: [0] },
-		fill: { 
+		fill: {
 			colors: [randomColor],
-			type: ['gradient'] 
+			type: ['gradient'],
 		},
 	})
 
 	return (
-			<Box dir="ltr">
-				<ReactApexChart
-					type="line"
-					series={CHART_DATA}
-					options={chartOptions}
-					height={175}
-				/>
-			</Box>
+		<Box dir="ltr">
+			<ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={175} />
+		</Box>
 	)
 }

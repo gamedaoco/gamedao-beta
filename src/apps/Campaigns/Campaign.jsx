@@ -101,7 +101,6 @@ export function Campaign() {
 
 	const id = useParams().id
 
-
 	// campaign specific foreground object code
 	let Foreground = foregroundContentMap.default
 

@@ -5,4 +5,3 @@ export function useBlock() {
 	const blockheight = useSelector(blockStateSelector)
 	return blockheight
 }
-

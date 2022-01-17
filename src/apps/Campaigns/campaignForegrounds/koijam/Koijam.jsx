@@ -19,7 +19,7 @@ import {
 	Stack,
 	Slider,
 	Image16to9,
-	Countdown
+	Countdown,
 } from '../../../../components'
 
 import { TileReward } from '../../TileReward'
@@ -167,7 +167,7 @@ export function Campaign() {
 									</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<Countdown date={Date.now()+10000}/>
+									<Countdown date={Date.now() + 10000} />
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>

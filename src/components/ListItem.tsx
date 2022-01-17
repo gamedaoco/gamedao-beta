@@ -14,13 +14,12 @@ export const ListItem: React.FC<
 		linkTo?: string
 	}>
 > = (props) => {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	return (
 		<>
-			<Card sx={{ p: 2, ...bgPlain }} >
+			<Card sx={{ p: 2, ...bgPlain }}>
 				<Box
 					sx={{
 						display: 'grid',
@@ -33,7 +32,7 @@ export const ListItem: React.FC<
 							<img
 								style={{
 									objectFit: 'cover',
-									borderRadius: theme.shape.borderRadiusSm
+									borderRadius: theme.shape.borderRadiusSm,
 								}}
 								width="200px"
 								height="200px"

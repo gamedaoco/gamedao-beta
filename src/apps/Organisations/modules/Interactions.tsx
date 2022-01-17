@@ -17,8 +17,7 @@ export function Interactions({ data, hideDashboard }) {
 	const { updateBalance } = useBalance()
 	const apiProvider = useApiProvider()
 	const navigate = useNavigate()
-	const { queryBodyMemberState, queryMemberships } =
-		useGameDaoControl()
+	const { queryBodyMemberState, queryMemberships } = useGameDaoControl()
 	const refresh = useSelector(gameDaoControlRefreshSelector)
 	const dispatch = useDispatch()
 
@@ -43,7 +42,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			},
+			}
 		)
 	}
 
@@ -61,7 +60,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			},
+			}
 		)
 	}
 
@@ -79,22 +78,19 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			},
+			}
 		)
 	}
 
 	useEffect(() => {
-		(async () => {
-				if (address) {
-					queryBodyMemberState(data.hash, address)
-					queryMemberships(address)
-					const memberships = await queryMemberships(address)
-					setIsMemberState(memberships?.includes(data.hash))
-				}
-
+		;(async () => {
+			if (address) {
+				queryBodyMemberState(data.hash, address)
+				queryMemberships(address)
+				const memberships = await queryMemberships(address)
+				setIsMemberState(memberships?.includes(data.hash))
 			}
-		)()
-
+		})()
 	}, [address, refresh])
 
 	if (!connected || !data || !data?.access) return null
@@ -112,7 +108,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={() => navigate(`/app/organisations/${data.hash}`)}
 					value={data.access}
-					size='small'
+					size="small"
 				>{`Dashboard`}</Button>
 			)}
 			{isMemberState && !isAdmin() && (
@@ -121,7 +117,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={handleLeave}
 					value={data.access}
-					size='small'
+					size="small"
 				>{`leave`}</Button>
 			)}
 			{!isMemberState && actionType && (
@@ -130,17 +126,11 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={actionCallback}
 					value={data.access}
-					size='small'
+					size="small"
 				>{`${actionType}`}</Button>
 			)}
 			{isAdmin() && (
-				<Button
-					variant={'outlined'}
-					fullWidth
-					size='small'
-					onClick={() => {
-					}
-					}>
+				<Button variant={'outlined'} fullWidth size="small" onClick={() => {}}>
 					Admin
 				</Button>
 			)}

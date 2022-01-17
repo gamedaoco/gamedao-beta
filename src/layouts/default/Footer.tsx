@@ -7,9 +7,10 @@ import { SiTelegram } from '@react-icons/all-files/si/SiTelegram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 
 const Link = ({ href, children }) => (
-		<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
-			{children}<br />
-		</MUILink>
+	<MUILink variant="inherit" href={href} target="_blank" underline="none" color="inherit">
+		{children}
+		<br />
+	</MUILink>
 )
 
 const SocialLinks = () => (
@@ -19,30 +20,27 @@ const SocialLinks = () => (
 			display: 'flex',
 			justifyContent: 'flex-start',
 			a: { opacity: 0.5, marginRight: '1rem', '& > *': { height: '1rem' } },
-			'a:hover': { opacity: 1 }
+			'a:hover': { opacity: 1 },
 		}}
 	>
-		<Typography sx={{ fontSize: '0.8rem', fontWeight:'400' }} mb={2}>
-			Connect with us<br/>
-		<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
-			<SiDiscord />
-		</a>
-		<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
-			<SiTelegram />
-		</a>
-		<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
-			<SiTwitter />
-		</a>
-		<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
-			<SiGithub />
-		</a>
-		<a
-			target="_blank"
-			rel="noreferrer"
-			href="https://www.linkedin.com/company/gamedaoco"
-		>
-			<SiLinkedin size={'20px'} />
-		</a>
+		<Typography sx={{ fontSize: '0.8rem', fontWeight: '400' }} mb={2}>
+			Connect with us
+			<br />
+			<a target="_blank" rel="noreferrer" href="https://discord.gg/P7NHWGzJ7r">
+				<SiDiscord />
+			</a>
+			<a target="_blank" rel="noreferrer" href="https://t.me/gamedaoco">
+				<SiTelegram />
+			</a>
+			<a target="_blank" rel="noreferrer" href="https://twitter.com/gamedaoco">
+				<SiTwitter />
+			</a>
+			<a target="_blank" rel="noreferrer" href="https://github.com/gamedaoco">
+				<SiGithub />
+			</a>
+			<a target="_blank" rel="noreferrer" href="https://www.linkedin.com/company/gamedaoco">
+				<SiLinkedin size={'20px'} />
+			</a>
 		</Typography>
 	</Box>
 )
@@ -56,18 +54,23 @@ export const Footer = (props) => (
 			px: 1,
 			mt: 'auto',
 			fontSize: '.8em',
-			color: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100],
-			backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900],
-			a: { opacity: 0.8, textShadow: '15px pink'},
-			'a:hover': { color: '#fcf', opacity: 1, textShadow: '0 0 5px #f3f', borderBottom: '1px dotted #f3f' },
+			color: (theme) =>
+				theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[100],
+			backgroundColor: (theme) =>
+				theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.grey[900],
+			a: { opacity: 0.8, textShadow: '15px pink' },
+			'a:hover': {
+				color: '#fcf',
+				opacity: 1,
+				textShadow: '0 0 5px #f3f',
+				borderBottom: '1px dotted #f3f',
+			},
 			'*': { transitionTimingFunction: 'ease-in-out;', transitionDuration: '150ms' },
 		}}
 	>
 		<Container>
 			<Grid columns={12}>
-
 				<Grid container direction="row" mt={4} mb={4}>
-
 					<Grid item xs={12} md={2} mb={4}>
 						<a href="#top">
 							<img
@@ -79,11 +82,14 @@ export const Footer = (props) => (
 					</Grid>
 
 					<Grid item xs={6} md={2} mb={4}>
-						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
+						<Typography sx={{ fontSize: '1rem', fontWeight: '800' }} mb={2}>
 							About
 						</Typography>
 						<Typography sx={{ fontSize: '0.8rem' }} mb={2}>
-							<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca"> pinky paper </Link>
+							<Link href="https://blog.gamedao.co/the-gamedao-pinky-paper-8dcda7f2e1ca">
+								{' '}
+								pinky paper{' '}
+							</Link>
 							<Link href="https://blog.gamedao.co">blog</Link>
 							<Link href="https://gamedao.co">gamedao.co</Link>
 							<br />
@@ -94,7 +100,7 @@ export const Footer = (props) => (
 						</Typography>
 					</Grid>
 					<Grid item xs={6} md={2} mb={4}>
-						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
+						<Typography sx={{ fontSize: '1rem', fontWeight: '800' }} mb={2}>
 							How we build
 						</Typography>
 						<Typography sx={{ fontSize: '0.8rem' }} mb={2}>
@@ -111,11 +117,18 @@ export const Footer = (props) => (
 						</Typography>
 					</Grid>
 					<Grid item xs={12} md={6} mb={4}>
-						<Typography sx={{ fontSize: '1rem', fontWeight:'800' }} mb={2}>
-							GameDAO.<br />
+						<Typography sx={{ fontSize: '1rem', fontWeight: '800' }} mb={2}>
+							GameDAO.
+							<br />
 							For the Creator and Player Economy.
 						</Typography>
-						<Typography sx={{ fontSize: '1rem', 'a:hover': { borderBottom: '1px dotted white' } }} mb={2}>
+						<Typography
+							sx={{
+								fontSize: '1rem',
+								'a:hover': { borderBottom: '1px dotted white' },
+							}}
+							mb={2}
+						>
 							Community driven ownership and creation will be a vital part of how we
 							see video games in the near future. The transition to token driven
 							economies is already in progress but is still in its early stages, only
@@ -139,7 +152,7 @@ export const Footer = (props) => (
 				</Grid>
 
 				<Grid container direction="row">
-					<SocialLinks/>
+					<SocialLinks />
 				</Grid>
 
 				<Grid container direction="row">
@@ -154,11 +167,10 @@ export const Footer = (props) => (
 									: theme.palette.grey[100],
 						}}
 					>
-						{`© 2019-${new Date().getFullYear()} `}GAMEDAO AG, Vaduz, Liechtenstein. Powered by ZERO.IO
+						{`© 2019-${new Date().getFullYear()} `}GAMEDAO AG, Vaduz, Liechtenstein.
+						Powered by ZERO.IO
 					</Typography>
 				</Grid>
-
-
 			</Grid>
 		</Container>
 	</Box>

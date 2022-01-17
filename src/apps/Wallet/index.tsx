@@ -7,28 +7,24 @@ import ConnectOrInstall from './ConnectOrInstall'
 import WalletView from './WalletView'
 
 const Component = (props) => {
-
 	const { address, connected } = useWallet()
 
 	return (
 		<Container maxWidth="lg">
-
-			<Typography variant="h3" sx={{
-				mb: 2,
-				opacity: ( address ) ? 1 : 0.1,
-				transition: '150ms'
-			}}>
+			<Typography
+				variant="h3"
+				sx={{
+					mb: 2,
+					opacity: address ? 1 : 0.1,
+					transition: '150ms',
+				}}
+			>
 				Wallet
 			</Typography>
 
-			{ !address || !connected
-				? <ConnectOrInstall/>
-				: <WalletView/>
-			}
-
+			{!address || !connected ? <ConnectOrInstall /> : <WalletView />}
 		</Container>
 	)
-
 }
 
 export default function Dapp(props) {

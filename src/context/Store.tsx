@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 export type StoreState = {
 	darkModeState: boolean
 	allowConnection: boolean
-	lastAccountIndex: number,
+	lastAccountIndex: number
 	updateStore: Function
 }
 
@@ -11,8 +11,7 @@ const INITIAL_STATE: StoreState = {
 	darkModeState: true, // false = light mode, true = dark mode
 	allowConnection: false, // false = no connection, true = connection
 	lastAccountIndex: null,
-	updateStore: (opt) => {
-	},
+	updateStore: (opt) => {},
 }
 
 const StoreContext = createContext<StoreState>(INITIAL_STATE)
