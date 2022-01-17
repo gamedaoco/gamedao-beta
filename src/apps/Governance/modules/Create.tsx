@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem'
 import MuiSelect from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { FormSectionHeadline, MarkdownEditor } from 'src/components'
+import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
 
 const dev = config.dev
 
@@ -62,6 +63,7 @@ export const Main = () => {
 	const blockNumber = useBlock()
 	const { account, address, signAndNotify } = useWallet()
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
+	const { campaigns: campaignsList } = useCrowdfunding()
 
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
@@ -127,11 +129,13 @@ export const Main = () => {
 				// 	})
 
 				const campaigns =
-					availableCampaigns?.map((c, i) => ({
-						key: i,
-						text: c,
-						value: c,
-					})) ?? []
+					availableCampaigns?.map((c, i) => {
+						return {
+							key: i,
+							text: campaignsList?.[c].name ?? c,
+							value: c,
+						}
+					}) ?? []
 
 				console.log('availableCampaigns', availableCampaigns)
 				console.log('campaigns', campaigns)
