@@ -337,7 +337,7 @@ export const useGameDaoGovernance = (): GameDaoGovernanceState => {
 					),
 					queryProposals(
 						apiProvider,
-						keys.filter((hash) => !(governanceState.proposalStates ?? {})[hash])
+						keys.filter((hash) => !(governanceState.proposals ?? {})[hash])
 					),
 					queryProposalVoters(
 						apiProvider,
