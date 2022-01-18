@@ -15,6 +15,8 @@ import { Box, Button, Divider, MarkdownViewer, Paper, Stack, Typography } from '
 import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
+import { ProposalVoterList } from './modules/ProposalVoterList'
+import { useTheme } from '@mui/material/styles'
 import { useCrowdfunding } from '../../hooks/useCrowdfunding'
 
 async function fetchProposalDescription(cid, setter) {
@@ -50,6 +52,9 @@ export function Main() {
 	const [description, setDescription] = useState<any>()
 
 	const dispatch = useDispatch()
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	// Proposal
 	const proposal = proposals?.[proposalId]
@@ -99,16 +104,12 @@ export function Main() {
 			</Button>
 			{proposal && (body || campaign) && owners ? (
 				<>
-					<ProposalBodyData
-						body={body || campaign}
-						isOrganisation={isOrganisation}
-						metadata={metadata}
-						proposalId={proposalId}
-					/>
-					<Paper sx={{ width: '100%' }}>
-						<Stack direction="row" padding={6} spacing={6}>
-							<Stack flex="3">
-								<Box whiteSpace="pre-line">
+					<ProposalBodyData body={body || campaign} isOrganisation={isOrganisation}
+									  metadata={metadata} proposalId={proposalId} />
+					<Paper sx={{ ...bgPlain, width: '100%' }}>
+						<Stack direction='row' padding={6} spacing={6}>
+							<Stack flex='3'>
+								<Box whiteSpace='pre-line'>
 									<MarkdownViewer
 										markdown={description ?? 'Could not load the description!'}
 									/>
@@ -129,6 +130,7 @@ export function Main() {
 					</Paper>
 				</>
 			) : null}
+			{proposal ? <ProposalVoterList proposal={proposal} /> : null}
 		</Stack>
 	)
 }
