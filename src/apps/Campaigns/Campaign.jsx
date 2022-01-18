@@ -104,7 +104,7 @@ export function Campaign() {
 	// campaign specific foreground object code
 	let Foreground = foregroundContentMap.default
 
-	if (id === '0xd05e980cffef3bf9d00984d92ba5023b2e7e57de39718b3bc0abb6e961f4de3a') {
+	if (id === '0x609be75c9a89951c734db8f69302c4ff08c2b800b88237ef0ae6ee328faa5cb9') {
 		Foreground = foregroundContentMap.koijam
 	}
 	if (id === '0xd22b4578b3b6d82a9b2e2ce13cc49f4b20806a34b31dcf08060cd815fcc43bcc') {
