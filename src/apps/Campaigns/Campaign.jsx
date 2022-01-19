@@ -274,13 +274,13 @@ export function Campaign() {
 										sx={{ mr: 5 }}
 									/>
 								</Box>
-								<ParticipateButton
-									onClick={() => createInfoNotification('Not Implemented Yet!')}
+								{ funded && <ParticipateButton
+									/*onClick={() => createInfoNotification('Not Implemented Yet!')}*/
 									variant={'contained'}
 								>
-									{!funded && 'Participate'}
+									{/*!funded && 'Participate'*/}
 									{funded && 'Funded!'}
-								</ParticipateButton>
+								</ParticipateButton>}
 							</Stack>
 						</Grid>
 					</Grid>
@@ -300,7 +300,7 @@ export function Campaign() {
 						<TabPanel value={value} index={0}>
 							<MarkdownViewer markdown={mdown} />
 						</TabPanel>
-						<TabPanel value={value} index={1}>
+						{/*<TabPanel value={value} index={1}>
 							<Rewards />
 						</TabPanel>
 						<TabPanel value={value} index={2}>
@@ -308,7 +308,7 @@ export function Campaign() {
 						</TabPanel>
 						<TabPanel value={value} index={3}>
 							<Funding />
-						</TabPanel>
+						</TabPanel>*/}
 					</Grid>
 				</Grid>
 			</Container>
