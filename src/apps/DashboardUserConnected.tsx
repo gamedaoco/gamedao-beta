@@ -32,7 +32,7 @@ const Dashboard = (props) => {
 	const { proposalsCount } = useGameDaoGovernance()
 
 	// TODO: externalise and adopt to connected network
-	const convertedAddress = useEncodedAddress( address, 25 ) || ''
+	const convertedAddress = useEncodedAddress(address, 25) || ''
 
 	const theme = useTheme()
 	const bgPlain = {
@@ -42,9 +42,7 @@ const Dashboard = (props) => {
 	return (
 		<>
 			<Grid container spacing={4}>
-
 				<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
-
 					<Stack direction="row" spacing={2} m={2}>
 						<Box
 							sx={{
@@ -62,13 +60,17 @@ const Dashboard = (props) => {
 							<HeartIcon />
 						</Box>
 						<Stack>
-							{ account &&
-							<Typography variant="h5">
-								{account.meta.name} <VerifiedIcon fontSize="small" sx={{ color: '#f0f'}}/>
-							</Typography>
-							}
-							<Typography sx={{ fontSize: '0.8rem', fontWeight: '100' }} variant="body2">
-								{account && convertedAddress }
+							{account && (
+								<Typography variant="h5">
+									{account.meta.name}{' '}
+									<VerifiedIcon fontSize="small" sx={{ color: '#f0f' }} />
+								</Typography>
+							)}
+							<Typography
+								sx={{ fontSize: '0.8rem', fontWeight: '100' }}
+								variant="body2"
+							>
+								{account && convertedAddress}
 							</Typography>
 						</Stack>
 					</Stack>
@@ -77,15 +79,24 @@ const Dashboard = (props) => {
 				<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'end' }}>
 					<Stack direction="row" spacing={2} m={2}>
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2"> XP </Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">
+								{' '}
+								XP{' '}
+							</Typography>
 							<Typography variant="overline">1120</Typography>
 						</Stack>
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2"> Rep </Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">
+								{' '}
+								Rep{' '}
+							</Typography>
 							<Typography variant="overline">530</Typography>
 						</Stack>
 						<Stack>
-							<Typography sx={{ fontWeight: '100' }} variant="body2"> Trust </Typography>
+							<Typography sx={{ fontWeight: '100' }} variant="body2">
+								{' '}
+								Trust{' '}
+							</Typography>
 							<Typography variant="overline">Level 2</Typography>
 						</Stack>
 					</Stack>
@@ -146,7 +157,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item xs={12}>
-					<Card sx={{...bgPlain }}>
+					<Card sx={{ ...bgPlain }}>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 							<Typography variant="h5">Organizations</Typography>
 							<Typography variant="h5">Sort by ^</Typography>
@@ -159,7 +170,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item xs={12} md={6}>
-					<Card sx={{...bgPlain }}>
+					<Card sx={{ ...bgPlain }}>
 						<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 							<Typography variant="h5">My Campaigns</Typography>
 						</Box>
@@ -167,8 +178,7 @@ const Dashboard = (props) => {
 				</Grid>
 
 				<Grid item xs={12} md={6}>
-					<Card sx={{...bgPlain, height: '160px' }}>
-
+					<Card sx={{ ...bgPlain, height: '160px' }}>
 						<Box
 							sx={{
 								position: 'absolute',

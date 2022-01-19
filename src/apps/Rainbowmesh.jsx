@@ -78,7 +78,7 @@ const Terrain = () => {
 						noise.simplex2((i + 200) / 50, j / 50) * Math.pow(ex, 1) +
 						noise.simplex2((i + 400) / 25, j / 25) * Math.pow(ex, 2) +
 						noise.simplex2((i + 600) / 12.5, j / 12.5) * Math.pow(ex, 3) +
-						(noise.simplex2((i + 800) / 6.25, j / 6.25) * Math.pow(ex, 4))) /
+						noise.simplex2((i + 800) / 6.25, j / 6.25) * Math.pow(ex, 4)) /
 					2
 			}
 		}
@@ -247,7 +247,7 @@ export function Anim() {
 		return {
 			r: z,
 			g: z / 8,
-			b: Math.sqrt( x ** 2 + y ** 2 ) / 64,
+			b: Math.sqrt(x ** 2 + y ** 2) / 64,
 		}
 	}
 

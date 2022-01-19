@@ -20,7 +20,6 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 }))
 
 function Main() {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
@@ -33,33 +32,31 @@ function Main() {
 	return (
 		<Stack spacing={4}>
 			<Paper sx={{ ...bgPlain }}>
-				<Box display='flex' padding={4}>
-					<Stack flex='2' spacing={1}>
-						<Typography variant='h6'>
+				<Box display="flex" padding={4}>
+					<Stack flex="2" spacing={1}>
+						<Typography variant="h6">
 							{proposalsCount === 0
 								? 'No proposals yet. Create one!'
 								: `Total proposals: ${proposalsCount ?? 0}`}
 						</Typography>
-						<Typography variant='body2'>
+						<Typography variant="body2">
 							Decisions are governed by proposals and voting to ensure everyone in the
 							organisation has a voice.
 						</Typography>
 					</Stack>
-					<Box display='flex' justifyContent='flex-end' alignItems='center' flex='1'>
-						{connected && <Button
-							onClick={() => setCreateMode(!showCreateMode)}
-							startIcon={showCreateMode ? <Close /> : <Add />}
-						>
-							{showCreateMode ? 'Cancel' : 'New Proposal'}
-						</Button>}
+					<Box display="flex" justifyContent="flex-end" alignItems="center" flex="1">
+						{connected && (
+							<Button
+								onClick={() => setCreateMode(!showCreateMode)}
+								startIcon={showCreateMode ? <Close /> : <Add />}
+							>
+								{showCreateMode ? 'Cancel' : 'New Proposal'}
+							</Button>
+						)}
 					</Box>
 				</Box>
 			</Paper>
-			{showCreateMode && connected ? (
-				<CreateProposal />
-			) : (
-				<ProposalList />
-			)}
+			{showCreateMode && connected ? <CreateProposal /> : <ProposalList />}
 		</Stack>
 	)
 }

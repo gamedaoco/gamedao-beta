@@ -39,6 +39,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		balance,
 		state,
 	} = item
+
 	const apiProvider = useApiProvider()
 	const blockheight = useBlock()
 	const { identities } = useIdentity(owner)
@@ -88,16 +89,15 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		})
 	}, [identities])
 
-	const blocksRemain = parseInt(expiry.replaceAll(',', '')) - blockheight
+	const blocksRemain = parseInt(expiry?.replaceAll(',', '') || blockheight) - blockheight
 
 	const tags = ['game', '2d', 'pixel', 'steam']
 
-	const epoch = created.replaceAll(',', '')
+	const epoch = created?.replaceAll(',', '') || '0'
 	const options = { year: 'numeric', month: 'long', day: 'numeric' }
 	const date = new Date(epoch * 1).toLocaleDateString(undefined, options)
 
 	const isAdmin = compareAddress(address, item.owner ?? '')
-
 
 	const sendTx = async (amount) => {
 		if (!amount) return
@@ -117,7 +117,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			},
+			}
 		)
 	}
 
@@ -133,7 +133,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const metaInfo = React.useMemo(() => {
 		return (
 			<Stack direction={'column'}>
-				<Stack direction={'row'} spacing={1} alignItems='middle'>
+				<Stack direction={'row'} spacing={1} alignItems="middle">
 					<RocketIcon sx={{ height: '1rem' }} />
 					<Typography sx={{ fontSize: '0.75rem' }}>{date}</Typography>
 				</Stack>
@@ -148,8 +148,11 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				{bodies && bodies[org] && bodies[org].name ? (
 					<Stack direction={'row'} spacing={1}>
 						<IdentityIcon sx={{ height: '1rem' }} />
-						<Link sx={{ fontSize: '0.75rem' }} component={NavLink}
-							  to={`/app/organisations/${org}`}>
+						<Link
+							sx={{ fontSize: '0.75rem' }}
+							component={NavLink}
+							to={`/app/organisations/${org}`}
+						>
 							{bodies[org].name}
 						</Link>
 						<br />
@@ -157,7 +160,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				) : (
 					<Stack direction={'row'} spacing={2}>
 						<WarningIcon />
-						<Link component={NavLink} to='/faq#unknown_entity'>
+						<Link component={NavLink} to="/faq#unknown_entity">
 							unknown dao
 						</Link>
 					</Stack>
@@ -173,15 +176,15 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	const metaActions = React.useMemo(() => {
 		switch (state) {
 			case '1': {
-				return (isAdmin || !connected) ? null : (
+				return isAdmin || !connected ? null : (
 					<TextField
 						InputLabelProps={{ shrink: true }}
-						placeholder='amount'
-						name='amount'
+						placeholder="amount"
+						name="amount"
 						value={formData.amount}
 						onChange={handleOnChange}
 						fullWidth
-						type='number'
+						type="number"
 						label={'Contribute to this campaign'}
 						InputProps={{
 							endAdornment: (
@@ -192,7 +195,6 @@ const CampaignCard = ({ displayMode, item, index }) => {
 						}}
 					/>
 				)
-
 			}
 
 			case '3': {
@@ -205,7 +207,6 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	}, [content, state, formData])
 
 	if (!content) return null
-
 
 	return displayMode === ListTileEnum.TILE ? (
 		<TileItem

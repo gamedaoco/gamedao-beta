@@ -82,7 +82,6 @@ async function queryCampaigns(apiProvider: ApiPromise, hashes: any): Promise<obj
 	if (!Array.isArray(hashes) || hashes.length === 0) return null
 
 	const [error, data] = await to(apiProvider.query.gameDaoCrowdfunding.campaigns.multi(hashes))
-
 	if (error) {
 		console.error(error)
 		createErrorNotification('Error while querying the gameDaoCrowdfunding campaigns')

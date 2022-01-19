@@ -11,7 +11,7 @@ import config from '../../../config'
 import { blocksPerDay, data, proposal_types, voting_types } from '../../lib'
 import { rnd } from '../../lib/data'
 
-import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
+// import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 
 import { 
 	Button,
@@ -28,6 +28,8 @@ import {
 	Loader
 } from "src/components"
 
+
+import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
 
 const dev = config.dev
 
@@ -127,11 +129,11 @@ const INITIAL_STATE: GenericForm = {
 // 0.3 -> surveys
 
 export const Main = () => {
-
 	const apiProvider = useApiProvider()
 	const blockNumber = useBlock()
 	const { account, address, signAndNotify } = useWallet()
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
+	const { campaigns: campaignsList } = useCrowdfunding()
 
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
@@ -288,7 +290,7 @@ export const Main = () => {
 
 					// TODO: 2075 Do we need error handling here if false?
 					// RES: Yes, we do
-				},
+				}
 			)
 		}
 	}
@@ -365,11 +367,14 @@ export const Main = () => {
 				// 		return { key: i, text: h, value: h }
 				// 	})
 
-				const campaigns = availableCampaigns?.map(
-					(c, i) => ({
-						key: i, text: c, value: c,
-					}),
-				) ?? []
+				const campaigns =
+					availableCampaigns?.map((c, i) => {
+						return {
+							key: i,
+							text: campaignsList?.[c].name ?? c,
+							value: c,
+						}
+					}) ?? []
 
 				console.log('availableCampaigns', availableCampaigns)
 				console.log('campaigns', campaigns)
@@ -399,15 +404,13 @@ export const Main = () => {
 		// redirect
 	}, [account, refresh])
 
-
 	useEffect(() => {
 		if (!bodyStates || !memberships) return
 
 		setActiveMemberships(
-			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1'),
+			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1')
 		)
 	}, [bodyStates, memberships])
-
 
 	// const campaigns = availableCampaigns.map((c,i)=>{
 	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
@@ -430,7 +433,7 @@ export const Main = () => {
 									<InputLabel>Organisation</InputLabel>
 									<Select
 										required
-										label='Organisation *'
+										label="Organisation *"
 										fullWidth
 										name="entity"
 										value={formik.values.entity}
@@ -474,7 +477,7 @@ export const Main = () => {
 										<Select
 											required
 											disabled={!campaigns.length}
-											label='Campaign'
+											label="Campaign"
 											fullWidth
 											name='campaign'
 											value={formik.values.campaign}
@@ -542,9 +545,8 @@ export const Main = () => {
 								</FormControl>
 							</Grid>
 
-							{formik.values.voting_type > 0
-
-								? <>
+							{formik.values.voting_type > 0 ? (
+								<>
 									<Grid item xs={12} md={3}>
 										<FormControl fullWidth error={formik.touched.collateral_type && Boolean(formik.errors.collateral_type)}>
 											<InputLabel>Collateral Type</InputLabel>
@@ -581,8 +583,9 @@ export const Main = () => {
 										/>
 									</Grid>
 								</>
-								: <Grid item xs={12} md={6}></Grid>
-							}
+							) : (
+								<Grid item xs={12} md={6}></Grid>
+							)}
 							<Grid item xs={12} md={6}>
 								<FormControl fullWidth error={formik.touched.start && Boolean(formik.errors.start)}>
 									<InputLabel>Start (now)</InputLabel>

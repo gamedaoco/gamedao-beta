@@ -12,7 +12,6 @@ import { ICON_MAPPING, Icons } from './Icons'
 import { createInfoNotification } from 'src/utils/notification'
 import { compareAddress, toZeroAddress } from '../utils/helper'
 
-
 function accountString(account) {
 	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
@@ -110,7 +109,7 @@ const AccountComponent = () => {
 				address: toZeroAddress(account.address),
 			})
 		},
-		[allowConnect, accounts],
+		[allowConnect, accounts]
 	)
 
 	function copyAddress(e) {
@@ -129,7 +128,7 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'} height='100%'>
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
 							<Box
 								sx={{
 									display: 'flex',
@@ -149,7 +148,9 @@ const AccountComponent = () => {
 							</Box>
 							<AccountSelect
 								renderValue={(value) => {
-									const account = accounts.find((a) => compareAddress(a.address, value))
+									const account = accounts.find((a) =>
+										compareAddress(a.address, value)
+									)
 									if (!account) return 'n/a'
 									return (
 										<Box
@@ -183,8 +184,8 @@ const AccountComponent = () => {
 							<BalanceAnnotation />
 
 							<IconButton
-								size='small'
-								aria-label='disconnect'
+								size="small"
+								aria-label="disconnect"
 								onClick={handleDisconnect}
 							>
 								<Icons

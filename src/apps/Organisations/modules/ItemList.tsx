@@ -62,7 +62,7 @@ export function ItemList({ data }) {
 				</Wrapper>
 			</Box>
 			<TablePagination
-			sx={{ borderTop: 'none'}}
+				sx={{ borderTop: 'none' }}
 				count={data.length}
 				rowsPerPage={rowsPerPageState}
 				page={pageState}

@@ -15,6 +15,8 @@ import { Box, Button, Divider, MarkdownViewer, Paper, Stack, Typography } from '
 import { ProposalMetadata } from './modules/ProposalMetadata'
 import { ProposalVoteProgress } from './modules/ProposalVoteProgress'
 import { ProposalBodyData } from './modules/ProposalBodyData'
+import { ProposalVoterList } from './modules/ProposalVoterList'
+import { useTheme } from '@mui/material/styles'
 import { useCrowdfunding } from '../../hooks/useCrowdfunding'
 
 async function fetchProposalDescription(cid, setter) {
@@ -45,11 +47,14 @@ export function Main() {
 
 	const { owners, metadata, proposals } = useGameDaoGovernance()
 	const { bodies, queryBodyMemberState } = useGameDaoControl()
-	const { campaigns } = useCrowdfunding();
+	const { campaigns } = useCrowdfunding()
 
 	const [description, setDescription] = useState<any>()
 
 	const dispatch = useDispatch()
+
+	const theme = useTheme()
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	// Proposal
 	const proposal = proposals?.[proposalId]
@@ -58,7 +63,7 @@ export function Main() {
 	const bodyId = proposal?.context_id ?? null
 	const body = bodyId ? bodies?.[bodyId] : null
 	const campaign = campaigns?.[bodyId]
-	const isOrganisation = !!body;
+	const isOrganisation = !!body
 
 	useEffect(() => {
 		if (!bodyId) return
@@ -85,15 +90,15 @@ export function Main() {
 			},
 			(state, result) => {
 				dispatch(clearGovernanceAction())
-			},
+			}
 		)
 	}
 
 	return (
-		<Stack spacing={3} alignItems='flex-start'>
+		<Stack spacing={3} alignItems="flex-start">
 			<Button onClick={() => navigate('/app/governance')}>
-				<ArrowBackIosIconNew fontSize='small' />
-				<Typography variant='body1' marginLeft={1}>
+				<ArrowBackIosIconNew fontSize="small" />
+				<Typography variant="body1" marginLeft={1}>
 					Back to overview
 				</Typography>
 			</Button>
@@ -101,7 +106,7 @@ export function Main() {
 				<>
 					<ProposalBodyData body={body || campaign} isOrganisation={isOrganisation}
 									  metadata={metadata} proposalId={proposalId} />
-					<Paper sx={{ width: '100%' }}>
+					<Paper sx={{ ...bgPlain, width: '100%' }}>
 						<Stack direction='row' padding={6} spacing={6}>
 							<Stack flex='3'>
 								<Box whiteSpace='pre-line'>
@@ -111,7 +116,7 @@ export function Main() {
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />
 							</Stack>
-							<Divider orientation='vertical' sx={{ height: 'inherit' }} />
+							<Divider orientation="vertical" sx={{ height: 'inherit' }} />
 							<ProposalMetadata
 								address={address}
 								body={body || campaign}
@@ -125,6 +130,7 @@ export function Main() {
 					</Paper>
 				</>
 			) : null}
+			{proposal ? <ProposalVoterList proposal={proposal} /> : null}
 		</Stack>
 	)
 }
