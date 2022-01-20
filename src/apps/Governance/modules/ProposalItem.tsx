@@ -40,7 +40,7 @@ export function ProposalItem({ proposal, showDivider }) {
 	]
 	const voteCount = yesCount + noCount
 
-	// Orgianization
+	// Organization
 	const bodyId = proposal.context_id
 	const body = bodies?.[bodyId]
 	const campaign = campaigns?.[bodyId]
@@ -56,10 +56,10 @@ export function ProposalItem({ proposal, showDivider }) {
 				<Grid container spacing={2}>
 					<Grid
 						item
+						sx={{ flexDirection: 'column' }}
 						xs={12}
 						md={4}
 						justifyContent="center"
-						direction="column"
 						display="flex"
 					>
 						<Box
@@ -81,10 +81,10 @@ export function ProposalItem({ proposal, showDivider }) {
 					</Grid>
 					<Grid
 						item
+						sx={{ flexDirection: 'column' }}
 						xs={12}
 						md={4}
 						justifyContent="center"
-						direction="column"
 						display="flex"
 					>
 						<Box display="flex" flexBasis="30%" alignItems="center">
@@ -107,10 +107,10 @@ export function ProposalItem({ proposal, showDivider }) {
 					</Grid>
 					<Grid
 						item
+						sx={{ flexDirection: 'column' }}
 						xs={6}
 						md={2}
 						justifyContent="center"
-						direction="column"
 						display="flex"
 					>
 						<Box
@@ -133,10 +133,10 @@ export function ProposalItem({ proposal, showDivider }) {
 					</Grid>
 					<Grid
 						item
+						sx={{ flexDirection: 'column' }}
 						xs={6}
 						md={2}
 						justifyContent="center"
-						direction="column"
 						display="flex"
 					>
 						<Box sx={{ verticalAlign: 'middle' }}>

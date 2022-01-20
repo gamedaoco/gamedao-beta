@@ -1,7 +1,6 @@
 import React, { lazy, useState } from 'react'
 import { useApiProvider } from '@substra-hooks/core'
 import { useWallet } from 'src/context/Wallet'
-import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useTheme } from '@mui/material/styles'
 
 import Add from '@mui/icons-material/Add'
@@ -23,10 +22,9 @@ function Main() {
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
-	const apiProvider = useApiProvider()
-	const { account, connected } = useWallet()
+	const { connected } = useWallet()
 
-	const { proposalsCount } = useGameDaoGovernance()
+	const [proposalCount, setProposalCount] = useState(0)
 	const [showCreateMode, setCreateMode] = useState(false)
 
 	return (
@@ -35,9 +33,9 @@ function Main() {
 				<Box display="flex" padding={4}>
 					<Stack flex="2" spacing={1}>
 						<Typography variant="h6">
-							{proposalsCount === 0
+							{proposalCount === 0
 								? 'No proposals yet. Create one!'
-								: `Total proposals: ${proposalsCount ?? 0}`}
+								: `Total proposals: ${proposalCount ?? 0}`}
 						</Typography>
 						<Typography variant="body2">
 							Decisions are governed by proposals and voting to ensure everyone in the
@@ -56,7 +54,11 @@ function Main() {
 					</Box>
 				</Box>
 			</Paper>
-			{showCreateMode && connected ? <CreateProposal /> : <ProposalList />}
+			{showCreateMode && connected ? (
+				<CreateProposal />
+			) : (
+				<ProposalList setProposalCount={setProposalCount} />
+			)}
 		</Stack>
 	)
 }

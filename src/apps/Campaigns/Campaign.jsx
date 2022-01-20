@@ -142,7 +142,8 @@ export function Campaign() {
 	}, [campaignBalance, campaignState, campaigns])
 
 	useEffect(() => {
-		if (!content) return
+		// ToDo: When cid not valid output an error on the page?
+		if (!content || (content.cid?.length ?? 0) < 4) return
 
 		// fetch json from ipfs
 		fetch(gateway + content.cid)
