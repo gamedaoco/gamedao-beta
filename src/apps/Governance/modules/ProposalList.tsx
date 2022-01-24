@@ -14,7 +14,7 @@ export function ProposalList({ setProposalCount }) {
 	const { address } = useWallet()
 	const { proposals } = useGameDaoGovernance()
 	const { memberships, queryMemberships } = useGameDaoControl()
-	const { campaigns } = useCrowdfunding()
+	const { campaigns, campaignContributors, campaignState } = useCrowdfunding()
 
 	const [filteredProposals, setFilteredProposals] = useState([])
 
@@ -34,7 +34,16 @@ export function ProposalList({ setProposalCount }) {
 				case '0':
 					return membershipIds.includes(proposal.context_id)
 				case '3':
-					return membershipIds.includes(campaigns?.[proposal.context_id]?.org ?? null)
+					const campaign = campaigns?.[proposal.context_id]
+					if (campaign?.org) {
+						return (
+							membershipIds.includes(campaign.org) ||
+							(campaignState?.[campaign.id] === '3' &&
+								campaignContributors?.[campaign.id]?.includes(address))
+						)
+					}
+
+					return false
 			}
 
 			console.error(`Invalid proposal type: ${proposal.proposal_type}`, proposal)
@@ -43,7 +52,7 @@ export function ProposalList({ setProposalCount }) {
 
 		setProposalCount(filteredProposals.length)
 		setFilteredProposals(filteredProposals)
-	}, [proposals, memberships])
+	}, [proposals, memberships, campaignContributors])
 
 	return proposals ? (
 		<Paper sx={{ ...bgPlain }}>

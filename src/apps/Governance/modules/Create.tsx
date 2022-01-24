@@ -63,7 +63,7 @@ export const Main = () => {
 	const blockNumber = useBlock()
 	const { account, address, signAndNotify } = useWallet()
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
-	const { campaigns: campaignsList } = useCrowdfunding()
+	const { campaigns: campaignsList, campaignContributors } = useCrowdfunding()
 
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
@@ -136,9 +136,6 @@ export const Main = () => {
 							value: c,
 						}
 					}) ?? []
-
-				console.log('availableCampaigns', availableCampaigns)
-				console.log('campaigns', campaigns)
 
 				// TODO: only contributed/owned
 				// setCampaigns(availableCampaigns)

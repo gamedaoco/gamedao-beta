@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { blockStateSelector } from 'src/redux/block.slice'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from '../../../hooks/useGameDaoGovernance'
+import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
 
 export function ProposalMetadata({
 	address,
@@ -22,6 +23,7 @@ export function ProposalMetadata({
 	const { bodyMemberState, memberships, queryBodyMemberState, queryMemberships } =
 		useGameDaoControl()
 	const { proposalStates } = useGameDaoGovernance()
+	const { campaignContributors, campaignState } = useCrowdfunding()
 	const [hasVoted, setHasVoted] = useState(false)
 	const [isMemberState, setIsMemberState] = useState(false)
 	const bodyId = body.id
@@ -38,7 +40,13 @@ export function ProposalMetadata({
 			if (address) {
 				queryBodyMemberState(isOrganisation ? bodyId : body?.org, address)
 				const memberships = await queryMemberships(address)
-				setIsMemberState(memberships?.includes(isOrganisation ? bodyId : body?.org))
+				if (isOrganisation) {
+					setIsMemberState(memberships?.includes(bodyId))
+				} else {
+					setIsMemberState(
+						memberships?.includes(body?.org) && campaignState?.[body?.org] === '3'
+					)
+				}
 			}
 
 			setHasVoted(hasVoted)
