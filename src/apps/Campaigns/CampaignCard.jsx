@@ -24,6 +24,8 @@ import { gateway } from '../lib/ipfs'
 import { BigNumber } from 'bignumber.js'
 import { useBalance } from 'src/hooks/useBalance'
 import { compareAddress } from '../../utils/helper'
+import { clearGovernanceAction } from '../../redux/duck/gameDaoGovernance.duck'
+import { useDispatch } from 'react-redux'
 
 const CampaignCard = ({ displayMode, item, index }) => {
 	const {
@@ -41,9 +43,10 @@ const CampaignCard = ({ displayMode, item, index }) => {
 	} = item
 
 	const apiProvider = useApiProvider()
+	const dispatch = useDispatch()
 	const blockheight = useBlock()
 	const { identities } = useIdentity(owner)
-	const { campaignContributorsCount } = useCrowdfunding()
+	const { campaignContributorsCount, updateCampaigns } = useCrowdfunding()
 	const { address, connected, signAndNotify } = useWallet()
 	const [metadata, setMetadata] = useState(null)
 	const [imageURL, setImageURL] = useState(null)
@@ -113,6 +116,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 			(state) => {
 				setLoading(false)
 				updateBalance()
+				dispatch(() => updateCampaigns([id]))
 
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
