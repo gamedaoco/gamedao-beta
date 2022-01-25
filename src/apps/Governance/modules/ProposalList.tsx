@@ -27,6 +27,7 @@ export function ProposalList({ setProposalCount }) {
 
 	// Filter proposals by membership of an DAO
 	useEffect(() => {
+		if(!proposals) return
 		const membershipIds = memberships?.[address] ?? []
 
 		const filteredProposals = Object.values(proposals).filter((proposal) => {
