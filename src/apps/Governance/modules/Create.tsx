@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useFormik } from 'formik';
+import { useFormik } from 'formik'
 import { useNavigate } from 'react-router'
 import { useWallet } from 'src/context/Wallet'
 import { useBlock } from 'src/hooks/useBlock'
@@ -13,21 +13,20 @@ import { rnd } from '../../lib/data'
 
 // import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 
-import { 
+import {
 	Button,
 	Divider,
-	FormControl, 
-	Grid, 
-	InputLabel, 
-	MenuItem, 
-	Select, 
+	FormControl,
+	Grid,
+	InputLabel,
+	MenuItem,
+	Select,
 	TextField,
-	FormSectionHeadline, 
+	FormSectionHeadline,
 	MarkdownEditor,
 	FormHelperText,
-	Loader
-} from "src/components"
-
+	Loader,
+} from 'src/components'
 
 import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
 
@@ -139,13 +138,9 @@ export const Main = () => {
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(true)
 
-	const [initialState, setInitialState]	= useState()
 	const [persistedData, setPersistedData] = useState()
 
-	const [fileCID, updateFileCID] = useState()
-	const [markdownValue, setMarkdownValue] = useState("# gamedao")
-
-	//const [formData, updateFormData] = useState(INITIAL_STATE)
+	const [markdownValue, setMarkdownValue] = useState('# gamedao')
 
 	const [activeMemberships, setActiveMemberships] = useState(null)
 	const [campaigns, setCampaigns] = useState([])
@@ -161,42 +156,15 @@ export const Main = () => {
 
 	useEffect(() => {
 		if (!account) return
-		const ls =  localStorage.getItem("gamedao-form-create-governance")
-		const mls = localStorage.getItem("gamedao-markdown-create-governance")
-		if(mls){
+		const ls = localStorage.getItem('gamedao-form-create-governance')
+		const mls = localStorage.getItem('gamedao-markdown-create-governance')
+		if (mls) {
 			setMarkdownValue(mls)
 		}
-		if(ls){
+		if (ls) {
 			setPersistedData(JSON.parse(ls))
 		}
-		//@ts-ignore
-		setInitialState(INITIAL_STATE)
 	}, [account])
-
-
-	// form fields
-
-	/*
-	  const handleOnChange = (e) => {
-		const { name, value } = e.target
-		const update = {
-			...formData,
-			[name]: value,
-		}
-		updateFormData(update)
-	}
-
-
-	const handleEntityChange = (e) => {
-		const { name, value } = e.target
-		const update = {
-			...formData,
-			campaign: null,
-			[name]: value,
-		}
-		updateFormData(update)
-	}
-	*/
 
 	// submit function
 
@@ -204,11 +172,10 @@ export const Main = () => {
 		console.log('submit proposal')
 
 		setLoading(true)
-		console.log(values)
 
 		const content = {
 			id: values.id,
-			description: markdownValue
+			description: markdownValue,
 		}
 
 		console.log('content', content)
@@ -228,7 +195,7 @@ export const Main = () => {
 				console.log('Error uploading file: ', err)
 			}
 		}
-		
+
 		getCID()
 
 		// send it
@@ -264,8 +231,6 @@ export const Main = () => {
 					break
 			}
 
-			console.log(query, payload)
-
 			signAndNotify(
 				query(...payload),
 				{
@@ -285,7 +250,7 @@ export const Main = () => {
 						})
 
 						// clear localstorage
-						localStorage.removeItem("gamedao-form-create-governance")
+						localStorage.removeItem('gamedao-form-create-governance')
 					}
 
 					// TODO: 2075 Do we need error handling here if false?
@@ -299,24 +264,34 @@ export const Main = () => {
 
 	const formik = useFormik({
 		enableReinitialize: true,
-		initialValues: INITIAL_STATE,
+		initialValues: persistedData || INITIAL_STATE,
 		validate: (values) => {
-			//setStepperState(1)
-			const errors:Partial<GenericForm> = {}
-			//console.log(values)
+			const errors: Partial<GenericForm> = {}
 
-			if(!values.purpose || values.purpose === "") errors.purpose = "You must have a purpose."
+			if (!values.entity || values.entity === '') errors.org = 'Please choose an Organization'
 
+			// Check campaign
+			if (values.proposal_type === 3) {
+				if (!values.campaign || values.campaign === '')
+					errors.org = 'Please choose a Campaign'
+			}
 
+			if (values.title.length <= 5) errors.title = 'Please enter a minimum of 6 characters.'
+
+			if (new Blob([values.title]).size > 48)
+				errors.title = 'Please enter a maximum of 48 bytes.'
+			console.log(markdownValue, markdownValue.length)
+			if (markdownValue.length < 30)
+				errors.description = 'Please enter a minimum of 30 characters.'
+			console.log(errors)
 			return errors
 		},
 		//validationSchema: validationSchema,
-		onSubmit: handleSubmit
-	});
+		onSubmit: handleSubmit,
+	})
 
 	// campaign or organisation?
 	// user can choose whatever he belongs to.
-	const [entities, setEntities] = useState([])
 
 	useEffect(() => {
 		if (formik.values.proposal_type !== 3) return
@@ -326,7 +301,6 @@ export const Main = () => {
 		console.log('query available campaigns for', bodies?.[formik.values.entity]?.name)
 
 		const query = async () => {
-
 			try {
 				const [
 					_cam,
@@ -335,37 +309,16 @@ export const Main = () => {
 					_suc,
 				] = await Promise.all([
 					apiProvider.query.gameDaoCrowdfunding.campaignsByBody(formik.values.entity),
-					// apiProvider.query.gameDaoCrowdfunding.campaignsOwnedArray(address),
 					apiProvider.query.gameDaoCrowdfunding.campaignsContributed(address),
 					apiProvider.query.gameDaoCrowdfunding.campaignsByState(3),
 				])
-
-				// console.log(
-				// 	'campaigns', _cam.toHuman(),
-				// 	// 'owned', owned.toHuman(),
-				// 	'contributed', _con.toHuman(),
-				// 	'successful', _suc.toHuman(),
-				// )
 
 				// get successful campaigns for a body
 				/* @ts-ignore */
 				const cam = _cam.toHuman() as any
 				/* @ts-ignore */
 				const suc = _suc.toHuman() as any
-				const availableCampaigns = cam.filter(c => suc.find(s => c === s))
-
-				// merge contributed and owned
-				// const con = _con.toHuman() as any
-				// const own = _own.toHuman() as any
-				// const userCampaigns = own.concat(con.filter( c => own.find( o => c !== o ) )
-
-				// const campaigns = new Array()
-				// 	.concat(...(successful as any).toHuman())
-				// 	// .filter((c) => c.org === formData.entity)
-				// 	.map((h, i) => {
-				// 		console.log('available campaigns', h)
-				// 		return { key: i, text: h, value: h }
-				// 	})
+				const availableCampaigns = cam.filter((c) => suc.find((s) => c === s))
 
 				const campaigns =
 					availableCampaigns?.map((c, i) => {
@@ -379,24 +332,18 @@ export const Main = () => {
 				console.log('availableCampaigns', availableCampaigns)
 				console.log('campaigns', campaigns)
 
-				// TODO: only contributed/owned
-				// setCampaigns(availableCampaigns)
 				setCampaigns(campaigns)
-
 			} catch (err) {
 				console.error(err)
 			}
-
 		}
 		query()
-
 	}, [apiProvider, address, formik.values.entity, formik.values.proposal_type])
 
 	useEffect(() => {
 		if (!account) return
 		if (!refresh) return
 		if (dev) console.log('refresh')
-		updateFileCID(null)
 		// updateFormData(random_state(account))
 		// resetForm()
 		setRefresh(false)
@@ -412,12 +359,7 @@ export const Main = () => {
 		)
 	}, [bodyStates, memberships])
 
-	// const campaigns = availableCampaigns.map((c,i)=>{
-	// 	return { key: data.orgs.length + i, text: c, value: data.orgs.length + i }
-	// })
-	// const entities = { ...data.orgs, ...campaigns }
-
-	if (!formik || !formik.values) return <Loader text="Create Proposal"/>
+	if (!formik || !formik.values) return <Loader text="Create Proposal" />
 
 	return (
 		<React.Fragment>
@@ -429,7 +371,10 @@ export const Main = () => {
 								<Divider>Context</Divider>
 							</Grid>
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth error={formik.touched.entity && Boolean(formik.errors.entity)}>
+								<FormControl
+									fullWidth
+									error={formik.touched.entity && Boolean(formik.errors.entity)}
+								>
 									<InputLabel>Organisation</InputLabel>
 									<Select
 										required
@@ -446,11 +391,19 @@ export const Main = () => {
 											</MenuItem>
 										))}
 									</Select>
-									<FormHelperText>{formik.touched.entity && formik.errors.entity}</FormHelperText>
+									<FormHelperText>
+										{formik.touched.entity && formik.errors.entity}
+									</FormHelperText>
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth error={formik.touched.proposal_type && Boolean(formik.errors.proposal_type)}>
+								<FormControl
+									fullWidth
+									error={
+										formik.touched.proposal_type &&
+										Boolean(formik.errors.proposal_type)
+									}
+								>
 									<InputLabel>Proposal Type</InputLabel>
 									<Select
 										label={'Proposal Type'}
@@ -466,33 +419,49 @@ export const Main = () => {
 											</MenuItem>
 										))}
 									</Select>
-									<FormHelperText>{formik.touched.proposal_type && formik.errors.proposal_type}</FormHelperText>
+									<FormHelperText>
+										{formik.touched.proposal_type &&
+											formik.errors.proposal_type}
+									</FormHelperText>
 								</FormControl>
 							</Grid>
-	
+
 							<Grid item xs={12} md={6}>
-								{formik.values.proposal_type === 3 && campaigns.length > 0 &&
-									<FormControl fullWidth error={formik.touched.campaign && Boolean(formik.errors.campaign)}>
+								{formik.values.proposal_type === 3 && campaigns.length > 0 && (
+									<FormControl
+										fullWidth
+										error={
+											formik.touched.campaign &&
+											Boolean(formik.errors.campaign)
+										}
+									>
 										<InputLabel>Campaign</InputLabel>
 										<Select
 											required
 											disabled={!campaigns.length}
 											label="Campaign"
 											fullWidth
-											name='campaign'
+											name="campaign"
+											error={
+												formik.touched.campaign &&
+												Boolean(formik.errors.campaign)
+											}
 											value={formik.values.campaign}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
 										>
-											{campaigns && campaigns.map((e, i) => (
-												<MenuItem key={i} value={campaigns[i].value}>
-													{campaigns[i].text}
-												</MenuItem>
-											))}
+											{campaigns &&
+												campaigns.map((e, i) => (
+													<MenuItem key={i} value={campaigns[i].value}>
+														{campaigns[i].text}
+													</MenuItem>
+												))}
 										</Select>
-										<FormHelperText>{formik.touched.campaign && formik.errors.campaign}</FormHelperText>
+										<FormHelperText>
+											{formik.touched.campaign && formik.errors.campaign}
+										</FormHelperText>
 									</FormControl>
-								}
+								)}
 							</Grid>
 
 							<Grid item xs={12}>
@@ -512,7 +481,7 @@ export const Main = () => {
 									fullWidth
 								/>
 							</Grid>
-		
+
 							<Grid item xs={12}>
 								<FormSectionHeadline paddingTop={'0 !important'} variant={'h6'}>
 									Content Description
@@ -520,12 +489,21 @@ export const Main = () => {
 
 								<MarkdownEditor
 									value={markdownValue}
-									onChange={handleMarkdownChange}
+									onChange={({ text }, e) => {
+										setMarkdownValue(text)
+										formik.handleChange(e)
+									}}
 								/>
 							</Grid>
 
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth error={formik.touched.voting_type && Boolean(formik.errors.voting_type)}>
+								<FormControl
+									fullWidth
+									error={
+										formik.touched.voting_type &&
+										Boolean(formik.errors.voting_type)
+									}
+								>
 									<InputLabel>Voting Type</InputLabel>
 									<Select
 										label={'Voting Type'}
@@ -541,14 +519,22 @@ export const Main = () => {
 											</MenuItem>
 										))}
 									</Select>
-									<FormHelperText>{formik.touched.voting_type && formik.errors.voting_type}</FormHelperText>
+									<FormHelperText>
+										{formik.touched.voting_type && formik.errors.voting_type}
+									</FormHelperText>
 								</FormControl>
 							</Grid>
 
 							{formik.values.voting_type > 0 ? (
 								<>
 									<Grid item xs={12} md={3}>
-										<FormControl fullWidth error={formik.touched.collateral_type && Boolean(formik.errors.collateral_type)}>
+										<FormControl
+											fullWidth
+											error={
+												formik.touched.collateral_type &&
+												Boolean(formik.errors.collateral_type)
+											}
+										>
 											<InputLabel>Collateral Type</InputLabel>
 											<Select
 												label={'Collateral Type'}
@@ -564,7 +550,10 @@ export const Main = () => {
 													</MenuItem>
 												))}
 											</Select>
-											<FormHelperText>{formik.touched.collateral_type && formik.errors.collateral_type}</FormHelperText>
+											<FormHelperText>
+												{formik.touched.collateral_type &&
+													formik.errors.collateral_type}
+											</FormHelperText>
 										</FormControl>
 									</Grid>
 
@@ -575,8 +564,14 @@ export const Main = () => {
 											value={formik.values.collateral_amount}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
-											error={formik.touched.collateral_amount && Boolean(formik.errors.collateral_amount)}
-											helperText={formik.touched.collateral_amount && formik.errors.collateral_amount}
+											error={
+												formik.touched.collateral_amount &&
+												Boolean(formik.errors.collateral_amount)
+											}
+											helperText={
+												formik.touched.collateral_amount &&
+												formik.errors.collateral_amount
+											}
 											fullWidth
 											label={'Collateral Amount'}
 											InputLabelProps={{ shrink: true }}
@@ -587,7 +582,10 @@ export const Main = () => {
 								<Grid item xs={12} md={6}></Grid>
 							)}
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth error={formik.touched.start && Boolean(formik.errors.start)}>
+								<FormControl
+									fullWidth
+									error={formik.touched.start && Boolean(formik.errors.start)}
+								>
 									<InputLabel>Start (now)</InputLabel>
 									<Select
 										label={'Start'}
@@ -602,12 +600,19 @@ export const Main = () => {
 											now
 										</MenuItem>
 									</Select>
-									<FormHelperText>{formik.touched.start && formik.errors.start}</FormHelperText>
+									<FormHelperText>
+										{formik.touched.start && formik.errors.start}
+									</FormHelperText>
 								</FormControl>
 							</Grid>
 
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth error={formik.touched.duration && Boolean(formik.errors.duration)}>
+								<FormControl
+									fullWidth
+									error={
+										formik.touched.duration && Boolean(formik.errors.duration)
+									}
+								>
 									<InputLabel>Duration</InputLabel>
 									<Select
 										label={'Duration'}
@@ -623,7 +628,9 @@ export const Main = () => {
 											</MenuItem>
 										))}
 									</Select>
-									<FormHelperText>{formik.touched.duration && formik.errors.duration}</FormHelperText>
+									<FormHelperText>
+										{formik.touched.duration && formik.errors.duration}
+									</FormHelperText>
 								</FormControl>
 							</Grid>
 
@@ -639,8 +646,13 @@ export const Main = () => {
 											value={formik.values.amount}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
-											error={formik.touched.amount && Boolean(formik.errors.amount)}
-											helperText={formik.touched.amount && formik.errors.amount}
+											error={
+												formik.touched.amount &&
+												Boolean(formik.errors.amount)
+											}
+											helperText={
+												formik.touched.amount && formik.errors.amount
+											}
 											fullWidth
 											label={'Amount to transfer on success'}
 											InputLabelProps={{ shrink: true }}
@@ -653,8 +665,14 @@ export const Main = () => {
 											value={formik.values.beneficiary}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
-											error={formik.touched.beneficiary && Boolean(formik.errors.beneficiary)}
-											helperText={formik.touched.beneficiary && formik.errors.beneficiary}
+											error={
+												formik.touched.beneficiary &&
+												Boolean(formik.errors.beneficiary)
+											}
+											helperText={
+												formik.touched.beneficiary &&
+												formik.errors.beneficiary
+											}
 											fullWidth
 											label={'Beneficiary Account'}
 											InputLabelProps={{ shrink: true }}
@@ -668,9 +686,14 @@ export const Main = () => {
 									variant={'contained'}
 									fullWidth
 									color={'primary'}
-									size='large'
-									// onClick={handleSubmit}
-									disabled={loading || !formik.values.title || formik.values.title.length <= 5 || !formik.values.entity}
+									size="large"
+									disabled={
+										loading ||
+										!formik.values.title ||
+										formik.values.title.length <= 5 ||
+										!formik.values.entity ||
+										Object.keys(formik.errors).length > 0
+									}
 								>
 									Publish Proposal
 								</Button>
@@ -685,7 +708,5 @@ export const Main = () => {
 
 export default function Module() {
 	const apiProvider = useApiProvider()
-	return apiProvider && apiProvider.query.gameDaoGovernance
-		? <Main />
-		: null
+	return apiProvider && apiProvider.query.gameDaoGovernance ? <Main /> : null
 }
