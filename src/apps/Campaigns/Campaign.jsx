@@ -102,7 +102,7 @@ export function Campaign() {
 	const id = useParams().id
 
 	// campaign specific foreground object code
-	let Foreground = foregroundContentMap.default
+	let Foreground = null
 
 	if (id === '0x609be75c9a89951c734db8f69302c4ff08c2b800b88237ef0ae6ee328faa5cb9') {
 		Foreground = foregroundContentMap.koijam
@@ -169,7 +169,7 @@ export function Campaign() {
 	const mdown = IPFSData.markdown
 
 	// MOCKS
-	if (id === 'koijam') return <Koijam />
+	// if (id === 'koijam') return <Koijam />
 
 	return (
 		<Box>
