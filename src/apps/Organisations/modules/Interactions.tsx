@@ -42,7 +42,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -60,7 +60,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -78,7 +78,7 @@ export function Interactions({ data, hideDashboard }) {
 				if (!state) {
 					// TODO: 2075 Do we need error handling here?
 				}
-			}
+			},
 		)
 	}
 
@@ -97,8 +97,8 @@ export function Interactions({ data, hideDashboard }) {
 
 	const isAdmin = () => (address === data?.controller ? true : false)
 
-	const actionType = ['join', 'apply', 'leave'][data.access]
-	const actionCallback = [handleJoin, handleApply, handleLeave][data.access]
+	const actionType = ['join', 'apply', 'join'][data.access]
+	const actionCallback = [handleJoin, handleApply, handleJoin][data.access]
 
 	return (
 		<>
@@ -108,7 +108,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={() => navigate(`/app/organisations/${data.hash}`)}
 					value={data.access}
-					size="small"
+					size='small'
 				>{`Dashboard`}</Button>
 			)}
 			{isMemberState && !isAdmin() && (
@@ -117,7 +117,7 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={handleLeave}
 					value={data.access}
-					size="small"
+					size='small'
 				>{`leave`}</Button>
 			)}
 			{!isMemberState && actionType && (
@@ -126,11 +126,12 @@ export function Interactions({ data, hideDashboard }) {
 					fullWidth
 					onClick={actionCallback}
 					value={data.access}
-					size="small"
+					size='small'
 				>{`${actionType}`}</Button>
 			)}
 			{isAdmin() && (
-				<Button variant={'outlined'} fullWidth size="small" onClick={() => {}}>
+				<Button variant={'outlined'} fullWidth size='small' onClick={() => {
+				}}>
 					Admin
 				</Button>
 			)}
