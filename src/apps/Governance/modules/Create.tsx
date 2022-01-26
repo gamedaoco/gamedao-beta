@@ -132,7 +132,7 @@ export const Main = () => {
 	const blockNumber = useBlock()
 	const { account, address, signAndNotify } = useWallet()
 	const { bodies, bodyStates, queryMemberships, memberships } = useGameDaoControl()
-	const { campaigns: campaignsList } = useCrowdfunding()
+	const { campaigns: campaignsList, campaignContributors } = useCrowdfunding()
 
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
@@ -144,10 +144,6 @@ export const Main = () => {
 
 	const [activeMemberships, setActiveMemberships] = useState(null)
 	const [campaigns, setCampaigns] = useState([])
-
-	function handleMarkdownChange({ html, text }) {
-		setMarkdownValue(text)
-	}
 
 	useEffect(() => {
 		if (!address) return

@@ -102,7 +102,7 @@ export function Campaign() {
 	const id = useParams().id
 
 	// campaign specific foreground object code
-	let Foreground = foregroundContentMap.default
+	let Foreground = null
 
 	if (id === '0x609be75c9a89951c734db8f69302c4ff08c2b800b88237ef0ae6ee328faa5cb9') {
 		Foreground = foregroundContentMap.koijam
@@ -142,7 +142,8 @@ export function Campaign() {
 	}, [campaignBalance, campaignState, campaigns])
 
 	useEffect(() => {
-		if (!content) return
+		// ToDo: When cid not valid output an error on the page?
+		if (!content || (content.cid?.length ?? 0) < 4) return
 
 		// fetch json from ipfs
 		fetch(gateway + content.cid)
@@ -168,7 +169,7 @@ export function Campaign() {
 	const mdown = IPFSData.markdown
 
 	// MOCKS
-	if (id === 'koijam') return <Koijam />
+	// if (id === 'koijam') return <Koijam />
 
 	return (
 		<Box>
@@ -271,16 +272,16 @@ export function Campaign() {
 											},
 										}}
 										value={campaignProgress}
-										sx={{ mr: 5 }}
+									/*sx={{ mr: 5 }}*/
 									/>
 								</Box>
-								<ParticipateButton
-									onClick={() => createInfoNotification('Not Implemented Yet!')}
+								{ funded && <ParticipateButton
+									/*onClick={() => createInfoNotification('Not Implemented Yet!')}*/
 									variant={'contained'}
 								>
-									{!funded && 'Participate'}
+									{/*!funded && 'Participate'*/}
 									{funded && 'Funded!'}
-								</ParticipateButton>
+								</ParticipateButton>}
 							</Stack>
 						</Grid>
 					</Grid>
@@ -291,16 +292,16 @@ export function Campaign() {
 					<Grid item xs={12}>
 						<Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
 							<Tab label="Description" {...a11yProps(0)} />
-							<Tab label="Rewards" {...a11yProps(1)} />
+							{/*<Tab label="Rewards" {...a11yProps(1)} />
 							<Tab label="Milestones" {...a11yProps(2)} />
-							<Tab label="Funding" {...a11yProps(2)} />
+							<Tab label="Funding" {...a11yProps(2)} />*/}
 						</Tabs>
 					</Grid>
 					<Grid item xs={12}>
 						<TabPanel value={value} index={0}>
 							<MarkdownViewer markdown={mdown} />
 						</TabPanel>
-						<TabPanel value={value} index={1}>
+						{/*<TabPanel value={value} index={1}>
 							<Rewards />
 						</TabPanel>
 						<TabPanel value={value} index={2}>
@@ -308,7 +309,7 @@ export function Campaign() {
 						</TabPanel>
 						<TabPanel value={value} index={3}>
 							<Funding />
-						</TabPanel>
+						</TabPanel>*/}
 					</Grid>
 				</Grid>
 			</Container>
