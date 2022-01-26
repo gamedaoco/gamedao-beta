@@ -21,6 +21,7 @@ type CrowdfundingState = {
 	campaignBalance: object
 	campaignState: object
 	campaignContributorsCount: object
+	campaignContributors: object
 	updateCampaigns: (hashes: Array<string>) => void
 }
 
@@ -32,6 +33,7 @@ const INITIAL_STATE: CrowdfundingState = {
 	campaignBalance: null,
 	campaignState: null,
 	campaignContributorsCount: null,
+	campaignContributors: null,
 	updateCampaigns: () => {},
 }
 
@@ -167,6 +169,28 @@ async function queryCampaignContributorsCount(
 	return mapping
 }
 
+async function queryCampaignContributors(apiProvider: ApiPromise, hashes: any): Promise<object> {
+	if (!Array.isArray(hashes) || hashes.length === 0) return null
+
+	const [error, data] = await to(
+		apiProvider.query.gameDaoCrowdfunding.campaignContributors.multi(hashes)
+	)
+
+	if (error) {
+		console.error(error)
+		createErrorNotification('Error while querying the gameDaoCrowdfunding campaignContributors')
+		return null
+	}
+
+	const mapping = {}
+	const formatedData = data.map((c) => c.toHuman())
+	hashes.forEach((hash: any, i) => {
+		mapping[hash] = formatedData?.[i] ?? null
+	})
+
+	return mapping
+}
+
 export const useCrowdfunding = () => {
 	const [lastCampaignsCount, setLastCampaignsCount] = useState<number>(null)
 	const [isDataLoading, setIsDataLoading] = useState<boolean>(false)
@@ -186,6 +210,7 @@ export const useCrowdfunding = () => {
 			queryCampaignBalance(apiProvider, hashes),
 			queryCampaignState(apiProvider, hashes),
 			queryCampaignContributorsCount(apiProvider, hashes),
+			queryCampaignContributors(apiProvider, hashes),
 		])
 
 		if (isMountedRef) {
@@ -205,6 +230,10 @@ export const useCrowdfunding = () => {
 				campaignContributorsCount: {
 					...(crowdfundingState.campaignContributorsCount ?? {}),
 					...(data[3] ?? {}),
+				},
+				campaignContributors: {
+					...(crowdfundingState.campaignContributors ?? {}),
+					...(data[4] ?? {}),
 				},
 			})
 		}
@@ -262,6 +291,7 @@ export const useCrowdfunding = () => {
 					queryCampaignBalance(apiProvider, newHashes),
 					queryCampaignState(apiProvider, newHashes),
 					queryCampaignContributorsCount(apiProvider, newHashes),
+					queryCampaignContributors(apiProvider, newHashes),
 				])
 
 				setIsDataLoading(false)
@@ -283,6 +313,10 @@ export const useCrowdfunding = () => {
 						campaignContributorsCount: {
 							...(crowdfundingState.campaignContributorsCount ?? {}),
 							...(data[3] ?? {}),
+						},
+						campaignContributors: {
+							...(crowdfundingState.campaignContributors ?? {}),
+							...(data[4] ?? {}),
 						},
 					})
 				}
