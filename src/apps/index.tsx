@@ -72,7 +72,7 @@ const Dashboard = (props) => {
 							</ul>
 						</Typography>
 						<Box sx={{ display: 'flex', justifyContent: 'space-between' }} mt="2rem">
-							<a href="https://blog.gamedao.co/" target="_blank">
+							<a href="https://blog.gamedao.co/" target="_blank" rel="noreferrer">
 								<Button size="small" sx={{ mr: 2 }} color="secondary">
 									Read more about the why and how in our Blog
 								</Button>
@@ -132,7 +132,7 @@ const Dashboard = (props) => {
 						</Typography>
 
 						<Box sx={{ display: 'flex', justifyContent: 'end' }} mt="2rem">
-							<a href="https://polkadot.js.org/extension/" target="_blank">
+							<a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}
@@ -178,12 +178,12 @@ const Dashboard = (props) => {
 						</Typography>
 
 						<Box sx={{ display: 'flex', justifyContent: 'space-between' }} mt="2rem">
-							<a href="https://docs.gamedao.co/" target="_blank">
+							<a href="https://docs.gamedao.co/" target="_blank" rel="noreferrer">
 								<Button size="small" sx={{ mr: 2 }} color="secondary">
 									Learn more in the GameDAO Docs
 								</Button>
 							</a>
-							<a href="https://discord.gg/P7NHWGzJ7r" target="_blank">
+							<a href="https://discord.gg/P7NHWGzJ7r" target="_blank" rel="noreferrer">
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}

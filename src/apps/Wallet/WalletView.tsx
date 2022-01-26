@@ -33,7 +33,7 @@ const SmallTable = ({ data }) => {
 						</TableCell>
 						<TableCell align="right">
 							{d[2] ? (
-								<a href={d[2]} target="_blank">
+								<a href={d[2]} target="_blank" rel="noreferrer">
 									{d[1]}
 								</a>
 							) : (
