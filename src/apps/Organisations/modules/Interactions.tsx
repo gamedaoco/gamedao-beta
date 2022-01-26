@@ -130,7 +130,7 @@ export function Interactions({ data, hideDashboard }) {
 				>{`${actionType}`}</Button>
 			)}
 			{isAdmin() && (
-				<Button variant={'outlined'} fullWidth size='small' onClick={() => {
+				<Button disabled variant={'outlined'} fullWidth size='small' onClick={() => {
 				}}>
 					Admin
 				</Button>

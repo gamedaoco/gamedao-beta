@@ -17,6 +17,7 @@ import {
 	Button,
 	Divider,
 	FormControl,
+	Typography,
 	Grid,
 	InputLabel,
 	MenuItem,
@@ -262,7 +263,7 @@ export const Main = () => {
 		enableReinitialize: true,
 		initialValues: persistedData || INITIAL_STATE,
 		validate: (values) => {
-			/*
+			
 			const errors: Partial<GenericForm> = {}
 
 			if (!values.entity || values.entity === '') errors.org = 'Please choose an Organization'
@@ -275,14 +276,8 @@ export const Main = () => {
 
 			if (values.title.length <= 5) errors.title = 'Please enter a minimum of 6 characters.'
 
-			if (new Blob([values.title]).size > 48)
-				errors.title = 'Please enter a maximum of 48 bytes.'
-			console.log(markdownValue, markdownValue.length)
-			if (markdownValue.length < 30)
-				errors.description = 'Please enter a minimum of 30 characters.'
 			console.log(errors)
 			return errors
-			*/
 		},
 		//validationSchema: validationSchema,
 		onSubmit: handleSubmit,
@@ -685,16 +680,11 @@ export const Main = () => {
 									fullWidth
 									color={'primary'}
 									size="large"
-									disabled={
-										loading ||
-										!formik.values.title ||
-										formik.values.title.length <= 5 ||
-										!formik.values.entity ||
-										Object.keys(formik.errors).length > 0
-									}
+									disabled={loading}
 								>
 									Publish Proposal
 								</Button>
+								{Object.keys(formik.errors).length !== 0 && <Typography style={{color: "red"}}>Errors Present</Typography>}
 							</Grid>
 						</Grid>
 					</form>
