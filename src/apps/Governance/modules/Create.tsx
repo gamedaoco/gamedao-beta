@@ -262,6 +262,7 @@ export const Main = () => {
 		enableReinitialize: true,
 		initialValues: persistedData || INITIAL_STATE,
 		validate: (values) => {
+			/*
 			const errors: Partial<GenericForm> = {}
 
 			if (!values.entity || values.entity === '') errors.org = 'Please choose an Organization'
@@ -281,6 +282,7 @@ export const Main = () => {
 				errors.description = 'Please enter a minimum of 30 characters.'
 			console.log(errors)
 			return errors
+			*/
 		},
 		//validationSchema: validationSchema,
 		onSubmit: handleSubmit,
