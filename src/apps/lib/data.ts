@@ -133,12 +133,18 @@ export const project_durations = [
 	{ key: '0', text: '1 day', value: '1' },
 	{ key: '1', text: '7 days', value: '7' },
 	{ key: '2', text: '30 days', value: '30' },
-	// { key: '3', text: '100 days', value: '100' },
-	// { key: '4', text: '1 year', value: '365' },
+	// { key: '5', text: '100 days', value: '100' },
+	// { key: '6', text: '1 year', value: '365' },
 ]
 
+// add 30min window for beta users
+const isBeta = true
+if(isBeta){
+	project_durations.push({ key: '3', text: '20 Minutes', value: '0.016' })
+}
+
 if (dev) {
-	project_durations.push({ key: '5', text: '5 Minutes', value: '0.004' })
+	project_durations.push({ key: '4', text: '5 Minutes', value: '0.004' })
 }
 
 export const blocksToTime = (blocks: number) => {
