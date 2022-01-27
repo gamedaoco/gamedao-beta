@@ -29,7 +29,7 @@ const FilterBar = ({ filter, setFilter }) => {
 	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.campaign_states)
 
 	return (
-		<Select value={filter} fullWidth onChange={handleOnChange}>
+		<Select native value={filter} fullWidth onChange={handleOnChange}>
 			{options.map((o) => (
 				<MenuItem key={o.key} value={o.value}>
 					{o.text}
@@ -45,7 +45,7 @@ const ScopeBar = ({ filter, setFilter }) => {
 	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.protocol_types)
 
 	return (
-		<Select value={filter} fullWidth onChange={handleOnChange}>
+		<Select native value={filter} fullWidth onChange={handleOnChange}>
 			{options.map((o) => (
 				<MenuItem key={o.key} value={o.value}>
 					{o.text}

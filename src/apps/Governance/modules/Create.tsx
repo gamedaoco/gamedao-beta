@@ -20,7 +20,6 @@ import {
 	Typography,
 	Grid,
 	InputLabel,
-	MenuItem,
 	Select,
 	TextField,
 	FormSectionHeadline,
@@ -370,8 +369,9 @@ export const Main = () => {
 								>
 									<InputLabel>Organisation</InputLabel>
 									<Select
+										native
 										required
-										label="Organisation *"
+										label="Organisation"
 										fullWidth
 										name="entity"
 										value={formik.values.entity}
@@ -379,9 +379,9 @@ export const Main = () => {
 										onBlur={formik.handleBlur}
 									>
 										{activeMemberships?.map((e) => (
-											<MenuItem key={e} value={e}>
+											<option key={e} value={e}>
 												{bodies?.[e]?.name}
-											</MenuItem>
+											</option>
 										))}
 									</Select>
 									<FormHelperText>
@@ -399,6 +399,7 @@ export const Main = () => {
 								>
 									<InputLabel>Proposal Type</InputLabel>
 									<Select
+										native
 										label={'Proposal Type'}
 										name={'proposal_type'}
 										value={`${formik.values.proposal_type}`}
@@ -407,9 +408,9 @@ export const Main = () => {
 										fullWidth
 									>
 										{proposal_types.map((pt) => (
-											<MenuItem key={pt.key} value={pt.value}>
+											<option key={pt.key} value={pt.value}>
 												{pt.text}
-											</MenuItem>
+											</option>
 										))}
 									</Select>
 									<FormHelperText>
@@ -430,6 +431,7 @@ export const Main = () => {
 									>
 										<InputLabel>Campaign</InputLabel>
 										<Select
+											native
 											required
 											disabled={!campaigns.length}
 											label="Campaign"
@@ -445,9 +447,9 @@ export const Main = () => {
 										>
 											{campaigns &&
 												campaigns.map((e, i) => (
-													<MenuItem key={i} value={campaigns[i].value}>
+													<option key={i} value={campaigns[i].value}>
 														{campaigns[i].text}
-													</MenuItem>
+													</option>
 												))}
 										</Select>
 										<FormHelperText>
@@ -499,6 +501,7 @@ export const Main = () => {
 								>
 									<InputLabel>Voting Type</InputLabel>
 									<Select
+										native
 										label={'Voting Type'}
 										name={'voting_type'}
 										value={`${formik.values.voting_type}`}
@@ -507,9 +510,9 @@ export const Main = () => {
 										fullWidth
 									>
 										{voting_types.map((vt) => (
-											<MenuItem key={vt.key} value={vt.value}>
+											<option key={vt.key} value={vt.value}>
 												{vt.text}
-											</MenuItem>
+											</option>
 										))}
 									</Select>
 									<FormHelperText>
@@ -530,6 +533,7 @@ export const Main = () => {
 										>
 											<InputLabel>Collateral Type</InputLabel>
 											<Select
+												native
 												label={'Collateral Type'}
 												name={'collateral_type'}
 												value={`${formik.values.collateral_type}`}
@@ -538,9 +542,9 @@ export const Main = () => {
 												fullWidth
 											>
 												{data.collateral_types.map((ct, i) => (
-													<MenuItem key={ct.key} value={ct.value}>
+													<option key={ct.key} value={ct.value}>
 														{ct.text}
-													</MenuItem>
+													</option>
 												))}
 											</Select>
 											<FormHelperText>
@@ -581,6 +585,7 @@ export const Main = () => {
 								>
 									<InputLabel>Start (now)</InputLabel>
 									<Select
+										native
 										label={'Start'}
 										name={'start'}
 										value={formik.values.start}
@@ -589,9 +594,9 @@ export const Main = () => {
 										fullWidth
 										disabled
 									>
-										<MenuItem key={1} value={0}>
+										<option key={1} value={0}>
 											now
-										</MenuItem>
+										</option>
 									</Select>
 									<FormHelperText>
 										{formik.touched.start && formik.errors.start}
@@ -608,6 +613,7 @@ export const Main = () => {
 								>
 									<InputLabel>Duration</InputLabel>
 									<Select
+										native
 										label={'Duration'}
 										name={'duration'}
 										value={formik.values.duration}
@@ -616,9 +622,9 @@ export const Main = () => {
 										fullWidth
 									>
 										{data.project_durations.map((pd) => (
-											<MenuItem key={pd.key} value={pd.value}>
+											<option key={pd.key} value={pd.value}>
 												{pd.text}
-											</MenuItem>
+											</option>
 										))}
 									</Select>
 									<FormHelperText>

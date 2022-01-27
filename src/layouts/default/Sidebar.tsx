@@ -261,7 +261,7 @@ function Main({ showNavigation }: ComponentProps) {
 				{!isMobile && (
 					<Box sx={{ display: 'flex', pb: '1rem', alignItems: 'center' }}>
 						<Box sx={{ flex: 1, px: '1rem' }}>
-							<Select value={'en'} sx={{ borderRadius: '1rem' }}>
+							<Select native value={'en'} sx={{ borderRadius: '1rem' }}>
 								<MenuItem value={'en'}>EN</MenuItem>
 								<MenuItem disabled value={'de'}>
 									DE

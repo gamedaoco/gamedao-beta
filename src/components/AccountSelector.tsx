@@ -147,37 +147,15 @@ const AccountComponent = () => {
 								<HeartIcon onClick={copyAddress} />
 							</Box>
 							<AccountSelect
-								renderValue={(value) => {
-									const account = accounts.find((a) =>
-										compareAddress(a.address, value)
-									)
-									if (!account) return 'n/a'
-									return (
-										<Box
-											sx={{
-												display: 'flex',
-												height: '100%',
-												alignItems: 'center',
-											}}
-										>
-											<Box
-												sx={{
-													marginLeft: '1rem',
-												}}
-											>
-												{accountString(account)}
-											</Box>
-										</Box>
-									)
-								}}
+								native
 								value={account?.address}
 								name={'account'}
 								onChange={(e) => handleAccountChange(e.target.value as string)}
 							>
 								{accounts?.map((a, index) => (
-									<MenuItem key={index} value={a?.address} title={a?.address}>
+									<option key={index} value={a?.address} title={a?.address}>
 										{accountString(a)}
-									</MenuItem>
+									</option>
 								))}
 							</AccountSelect>
 

@@ -17,7 +17,6 @@ import {
 	Image16to9,
 	InputLabel,
 	Loader,
-	MenuItem,
 	Paper,
 	Select,
 	Step,
@@ -351,6 +350,7 @@ export const Main = (props) => {
 						>
 							<InputLabel id="body-select-label">Organizational Body</InputLabel>
 							<Select
+								native
 								label="Organizational Body"
 								name="body"
 								placeholder="Organizational Body"
@@ -359,12 +359,11 @@ export const Main = (props) => {
 								value={formik.values.body}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
-								required
 							>
 								{data.dao_bodies.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 							<FormHelperText>
@@ -379,6 +378,7 @@ export const Main = (props) => {
 						>
 							<InputLabel id="country-select-label">Country</InputLabel>
 							<Select
+								native
 								label="Country"
 								name="country"
 								placeholder="Country"
@@ -390,9 +390,9 @@ export const Main = (props) => {
 								required
 							>
 								{data.countries.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 							<FormHelperText>
@@ -550,6 +550,7 @@ export const Main = (props) => {
 						>
 							<InputLabel id="member-select-label">Member Access Control</InputLabel>
 							<Select
+								native
 								labelId="member-select-label"
 								id="member-select"
 								label="Member Access Control"
@@ -560,9 +561,9 @@ export const Main = (props) => {
 								required
 							>
 								{data.dao_member_governance.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 
@@ -595,6 +596,7 @@ export const Main = (props) => {
 						>
 							<InputLabel id="fee_model-label">Fee Model</InputLabel>
 							<Select
+								native
 								labelId="fee_model-label"
 								id="fee_model"
 								label="Fee Model"
@@ -605,9 +607,9 @@ export const Main = (props) => {
 								required
 							>
 								{data.dao_fee_model.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 

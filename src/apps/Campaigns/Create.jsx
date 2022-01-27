@@ -19,7 +19,6 @@ import {
 	Image16to9,
 	InputLabel,
 	Loader,
-	MenuItem,
 	Paper,
 	Select,
 	Step,
@@ -350,9 +349,9 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.org && Boolean(formik.errors.org)}
 						>
-							<InputLabel id='org-select-label'>Organization</InputLabel>
+							<InputLabel id='org-select-label'>Organisation</InputLabel>
 							<Select
-								component={Select}
+								native
 								labelId='org-select-label'
 								id='org'
 								required
@@ -364,9 +363,9 @@ export const Main = () => {
 								onBlur={formik.handleBlur}
 							>
 								{activeMemberships?.map((e) => (
-									<MenuItem key={e} value={e}>
+									<option key={e} value={e}>
 										{bodies?.[e]?.name}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 							<FormHelperText>
@@ -529,6 +528,7 @@ export const Main = () => {
 						<FormControl fullWidth>
 							<InputLabel id='usage-select-label'>Usage of funds</InputLabel>
 							<Select
+								native
 								labelId='usage-select-label'
 								label={'Usage of funds'}
 								id='usage'
@@ -542,9 +542,9 @@ export const Main = () => {
 								helperText={formik.touched.usage && formik.errors.usage}
 							>
 								{data.project_types.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 						</FormControl>
@@ -557,6 +557,7 @@ export const Main = () => {
 						>
 							<InputLabel id='protocol-select-label'>Protocol</InputLabel>
 							<Select
+								native
 								labelId='protocol-select-label'
 								id='protocol'
 								required
@@ -569,9 +570,9 @@ export const Main = () => {
 								onBlur={formik.handleBlur}
 							>
 								{data.protocol_types.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 							<FormHelperText>
@@ -614,6 +615,7 @@ export const Main = () => {
 						>
 							<InputLabel id='duration-select-label'>Campaign Duration</InputLabel>
 							<Select
+								native
 								labelId='duration-select-label'
 								id='duration'
 								required
@@ -625,9 +627,9 @@ export const Main = () => {
 								onBlur={formik.handleBlur}
 							>
 								{data.project_durations.map((item) => (
-									<MenuItem key={item.key} value={item.value}>
+									<option key={item.key} value={item.value}>
 										{item.text}
-									</MenuItem>
+									</option>
 								))}
 							</Select>
 							<FormHelperText>
