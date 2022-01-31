@@ -23,12 +23,12 @@ export const Component = () => {
 					wallet or install the Extension.
 				</Typography>
 				<Box sx={{ display: 'flex', justifyContent: 'end' }}>
-					<a href="https://docs.gamedao.co/" target="_blank">
+					<a href="https://docs.gamedao.co/" target="_blank" rel="noreferrer">
 						<Button size="small" sx={{ mr: 2 }}>
 							Learn More
 						</Button>
 					</a>
-					<a href="https://polkadot.js.org/extension/" target="_blank">
+					<a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
 						<Button size="small" sx={{ borderRadius: '100px' }} variant="outlined">
 							Download
 						</Button>
