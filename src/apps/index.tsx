@@ -8,7 +8,7 @@ import { useWallet } from '../context/Wallet'
 import { DEV } from '../config'
 import { useTheme } from '@mui/material/styles'
 
-import { Button, Grid, Typography, Box, Stack, Divider, Card, Paper } from 'src/components'
+import { Button, Grid, Typography, Box, Stack, Divider, Card, Paper, Link } from 'src/components'
 import SingleChart from 'src/components/chart/SingleChart'
 import { Icons, ICON_MAPPING } from 'src/components/Icons'
 
@@ -36,6 +36,20 @@ const Dashboard = (props) => {
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<Box>
+					<Paper>
+						<Box
+							sx={{
+								width: "100%",
+								height: "300px",
+								background: 'url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bcd42d10-94a0-4474-9ee2-0b0dcf350ae5/dc9f9e2-78e59682-8259-4b7d-889c-aa2d3f651107.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2JjZDQyZDEwLTk0YTAtNDQ3NC05ZWUyLTBiMGRjZjM1MGFlNVwvZGM5ZjllMi03OGU1OTY4Mi04MjU5LTRiN2QtODg5Yy1hYTJkM2Y2NTExMDcucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.gt1tANmDrv5im_JCvV9Feaood2myyYfHAkOGGKDu-Lk")',
+								backgroundPositionY: "bottom",
+								backgroundPositionX: "center",
+								backgroundSize: "cover"
+							}}
+						>
+
+						</Box>
+					</Paper>
 					<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
 						<Typography
 							variant="h3"
@@ -73,11 +87,11 @@ const Dashboard = (props) => {
 							</ul>
 						</Typography>
 						<Box sx={{ display: 'flex', justifyContent: 'space-between' }} mt="2rem">
-							<a href="https://blog.gamedao.co/" target="_blank" rel="noreferrer">
+							<Link href="https://blog.gamedao.co/" target="_blank" rel="noreferrer">
 								<Button size="small" sx={{ mr: 2 }} color="secondary">
 									Read more about the why and how in our Blog
 								</Button>
-							</a>
+							</Link>
 						</Box>
 					</Paper>
 				</Box>
@@ -134,7 +148,7 @@ const Dashboard = (props) => {
 						</Typography>
 
 						<Box sx={{ display: 'flex', justifyContent: 'end' }} mt="2rem">
-							<a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
+							<Link href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}
@@ -143,7 +157,7 @@ const Dashboard = (props) => {
 								>
 									Get Polkadot Wallet
 								</Button>
-							</a>
+							</Link>
 						</Box>
 						<Typography
 							variant="h4"
@@ -180,12 +194,12 @@ const Dashboard = (props) => {
 						</Typography>
 
 						<Box sx={{ display: 'flex', justifyContent: 'space-between' }} mt="2rem">
-							<a href="https://docs.gamedao.co/" target="_blank" rel="noreferrer">
+							<Link href="https://docs.gamedao.co/" target="_blank" rel="noreferrer">
 								<Button size="small" sx={{ mr: 2 }} color="secondary">
 									Learn more in the GameDAO Docs
 								</Button>
-							</a>
-							<a href="https://discord.gg/P7NHWGzJ7r" target="_blank" rel="noreferrer">
+							</Link>
+							<Link href="https://discord.gg/P7NHWGzJ7r" target="_blank" rel="noreferrer">
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}
@@ -194,7 +208,7 @@ const Dashboard = (props) => {
 								>
 									Get Free Test Token
 								</Button>
-							</a>
+							</Link>
 						</Box>
 					</Paper>
 				</Box>
@@ -267,14 +281,14 @@ const Dashboard = (props) => {
 						</Card>
 					</Grid>
 
-					<Grid item xs={12}>
+					{/*<Grid item xs={12}>
 						<Card sx={{ ...bgPlain, height: '160px' }}>
 							<Box sx={{ justifyContent: 'space-between', display: 'flex', p: 4 }}>
 								<Typography variant="h5">Organization Updates:</Typography>
 								<Typography variant="h5">filter</Typography>
 							</Box>
 						</Card>
-					</Grid>
+					</Grid>*/}
 				</>
 			)}
 		</Grid>
