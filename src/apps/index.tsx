@@ -40,6 +40,7 @@ const Dashboard = (props) => {
 						<Typography
 							variant="h3"
 							sx={{
+								width: "200px",
 								mb: 2,
 								background:
 									'-webkit-linear-gradient(45deg, #ff00cc 30%, #ff9900 90%)',
@@ -88,6 +89,7 @@ const Dashboard = (props) => {
 						<Typography
 							variant="h3"
 							sx={{
+								width: "200px",
 								mb: 2,
 								background:
 									'-webkit-linear-gradient(45deg, #ff00cc 30%, #ff9900 90%)',
@@ -96,7 +98,7 @@ const Dashboard = (props) => {
 								fontWeight: 800,
 							}}
 						>
-							How to get started
+							Quests
 						</Typography>
 
 						<Typography
@@ -104,7 +106,7 @@ const Dashboard = (props) => {
 							sx={{
 								mb: 2,
 								background:
-									'-webkit-linear-gradient(45deg, #ff3300 30%, #ff9900 90%)',
+									'-webkit-linear-gradient(45deg, #ff9900 0%,  #ff00cc 20%)',
 								WebkitBackgroundClip: 'text',
 								WebkitTextFillColor: 'transparent',
 								fontWeight: 800,
@@ -148,7 +150,7 @@ const Dashboard = (props) => {
 							sx={{
 								mb: 2,
 								background:
-									'-webkit-linear-gradient(45deg, #ff3300 30%, #ff9900 90%)',
+									'-webkit-linear-gradient(45deg, #ff9900 0%,  #ff00cc 20%)',
 								WebkitBackgroundClip: 'text',
 								WebkitTextFillColor: 'transparent',
 								fontWeight: 800,
