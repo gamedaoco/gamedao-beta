@@ -9,7 +9,7 @@ const data = {
     country: "ch",
     logo: "e2e/testerchan.jpg",
     description: `This DAO was created by botchan. 
-    its a swiss open dao without fees!
+    Its a swiss open dao without fees!
     Automated Testing Bot. Hai!`,
     website: "https://zero.io"
 }
