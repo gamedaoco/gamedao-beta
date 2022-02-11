@@ -25,3 +25,7 @@ export function compareAddress(a, b) {
 		return null
 	}
 }
+
+export function decodeAddressAsString(address) {
+	return decodeAddress(address).toString()
+}

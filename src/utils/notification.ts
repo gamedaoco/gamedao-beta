@@ -16,11 +16,21 @@ export function createInfoNotification(message: string) {
 	return toast.info(message)
 }
 
+export function createQuestNotification(message: string) {
+	return toast.info(message, {
+		icon: '📖',
+		// Quest close time 15sec
+		autoClose: 15000,
+		// TODO: Replace mit quest icon
+		// icon: ({theme, type}) =>  <img src="url"/>
+	})
+}
+
 export async function createPromiseNotification(
 	promise: Promise<any>,
 	pendingMessage: string,
 	successMessage: string,
-	errorMessage: string
+	errorMessage: string,
 ) {
 	return toast.promise(promise, {
 		pending: pendingMessage,

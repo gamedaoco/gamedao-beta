@@ -15,6 +15,7 @@ import { NetworkProvider } from './context/Network'
 
 // Toastify css
 import './Toastify.css'
+import { QuestProvider } from './context/Quest'
 
 function Wrapper({ children }) {
 	const { darkmodeEnabled } = useThemeState()
@@ -31,7 +32,7 @@ function Wrapper({ children }) {
 								className: 'react-icon',
 							}}
 						>
-							{children}
+							<QuestProvider>{children}</QuestProvider>
 						</IconContext.Provider>
 					</BrowserRouter>
 				</WalletProvider>
