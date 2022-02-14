@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import { useTheme } from '@mui/material/styles'
+import * as Yup from 'yup';
 
 import {
 	Box,
@@ -47,10 +48,10 @@ import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 const dev = config.dev
 
 const random_state = (account) => {
-	const name = 'Dao Jones'
-	const email = 'daojones@gamedao.co'
-	const title = 'Great Campaign Title'
-	const description = 'Awesome Short Description'
+	const name = ''
+	const email = ''
+	const title = ''
+	const description = ''
 	const country = data.countries[rnd(data.countries.length)].value
 	const entity = data.project_entities[rnd(data.project_entities.length)].value
 	const usage = data.project_types[rnd(data.project_types.length)].value
@@ -234,48 +235,35 @@ export const Main = () => {
 		getCID()
 	}
 
+  const validationSchema = Yup.object().shape({
+    org: Yup.string().required('Please choose an Organization'),
+    description: Yup.string().required('Please create a description'),
+    title: Yup.string().max(75).required('Please Enter a Campaign Title!'),
+    name: Yup.string().matches(/^[a-zA-Z\s]*$/i,'Please enter only letters.').required('Please Enter a Name!'),
+    email: Yup.string().email('Please enter a valid e-mail address.').required(),
+    cap: Yup.number().integer('Funding target must be numerical.')
+      .min(1, 'Funding target must be greater than 0').required('Funding Target is required.'),
+    deposit: Yup.number().integer('Deposit must be numerical.')
+      .min(1, 'Deposit must be greater than 0').required('Deposit is required.'),
+    accept: Yup.boolean().test(
+      'is-terms-checked',
+      'Please accept the Terms and Conditions',
+      (value)=> {
+        return value === true
+      }),
+    admin: Yup.string().test(
+        'is-valid-admin-address',
+        'Not a valid Account Address!',
+        (value)=> {
+          const test = toZeroAddress(value)
+          return test
+        }),
+  });
+
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: persistedData ? persistedData : initialData,
-		validate: (values) => {
-			setStepperState(1)
-			const errors = {}
-
-			if (!values.org || values.org === '') errors.org = 'Please choose an Organization'
-
-			if (values.description === 'Short Description')
-				errors.description = 'You can do better than that!'
-
-			if (!values.title || values.title === '')
-				errors.title = 'Please Enter a Campaign Title!'
-			if (new Blob([values.title]).size > 48)
-				errors.title = 'Please enter a maximum of 48 bytes.'
-
-			if (!values.name || values.name === '') errors.name = 'Please Enter a Name!'
-			if (values.name === 'Dao Jones') errors.name = '...I dont think thats your name'
-			if (!/^[a-zA-Z\s]*$/i.test(values.name)) {
-				errors.name = 'Please enter only letters.'
-			}
-
-			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-				errors.email = 'Please enter a valid email address.'
-			}
-
-			if (values.cap === '0' || values.cap === '')
-				errors.cap = 'Please enter a funding target.'
-			if (values.cap && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.cap))
-				errors.cap = 'Funding target must be numerical'
-
-			if (values.deposit === '0' || values.deposit === '')
-				errors.deposit = 'Please enter a funding target.'
-			if (values.deposit && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.deposit))
-				errors.deposit = 'Deposit must be numerical'
-
-			if (!values.accept) errors.accept = 'Please accept the Terms and Conditions'
-
-			return errors
-		},
-		//validationSchema: validationSchema,
+		validationSchema: validationSchema,
 		onSubmit: handleSubmit,
 	})
 
@@ -377,9 +365,8 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							required
 							label='Campaign name'
-							placeholder='Campaign name'
+							placeholder='Give your campaign a name...'
 							name='title'
 							value={formik.values.title}
 							onChange={formik.handleChange}
@@ -393,7 +380,6 @@ export const Main = () => {
 							fullWidth
 							multiline
 							minRows={5}
-							required
 							label='Campaign Description'
 							placeholder='Tell us more about your idea...'
 							name='description'
@@ -517,7 +503,6 @@ export const Main = () => {
 							label='Admin Account'
 							placeholder='Admin'
 							name='admin'
-							required
 							value={formik.values.admin}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -662,7 +647,6 @@ export const Main = () => {
 								label='I agree to the Terms and Conditions'
 								control={
 									<Checkbox
-										required
 										name='accept'
 										checked={formik.values.accept}
 										onChange={formik.handleChange}

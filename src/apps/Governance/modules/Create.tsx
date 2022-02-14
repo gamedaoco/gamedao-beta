@@ -6,10 +6,12 @@ import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useApiProvider } from '@substra-hooks/core'
 
+import { toZeroAddress } from 'src/utils/helper'
 import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
 import config from '../../../config'
 import { blocksPerDay, data, proposal_types, voting_types } from '../../lib'
 import { rnd } from '../../lib/data'
+import * as Yup from 'yup';
 
 // import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 
@@ -30,6 +32,7 @@ import {
 } from 'src/components'
 
 import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
+import { max } from 'bn.js'
 
 const dev = config.dev
 
@@ -257,6 +260,20 @@ export const Main = () => {
 		}
 	}
 
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().min(6).max(130).required('Proposal title is required.'),
+    entity: Yup.string().required('Please choose an organisation.'),
+    // TODO: validate max length of description
+    // TODO: Conditional validation for optionally present fields
+    // beneficiary: Yup.string().test(
+    //   'is-valid-beneficiary-address',
+    //   'Not a valid Beneficiary Address!',
+    //   (value)=> {
+    //     const test = toZeroAddress(value)
+    //     return typeof test === "string"
+    //   }),
+  });
+
 	useEffect(() => {}, [])
 
 	const formik = useFormik({
@@ -266,20 +283,19 @@ export const Main = () => {
 			
 			const errors: Partial<GenericForm> = {}
 
-			if (!values.entity || values.entity === '') errors.org = 'Please choose an Organization'
-
 			// Check campaign
 			if (values.proposal_type === 3) {
 				if (!values.campaign || values.campaign === '')
 					errors.org = 'Please choose a Campaign'
-			}
 
-			if (values.title.length <= 5) errors.title = 'Please enter a minimum of 6 characters.'
+        if (!toZeroAddress(values.beneficiary))
+          errors.beneficiary = 'Not a valid Beneficiary Address!'
+			}
 
 			console.log(errors)
 			return errors
 		},
-		//validationSchema: validationSchema,
+		validationSchema: validationSchema,
 		onSubmit: handleSubmit,
 	})
 
