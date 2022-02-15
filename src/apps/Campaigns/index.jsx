@@ -1,14 +1,14 @@
-import React, { useEffect, useState, lazy } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApiProvider } from '@substra-hooks/core'
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-import { Button, Typography, Box, Stack, Loader } from '../../components'
+import { Box, Button, Loader, Typography } from '../../components'
 
-const CampaignGrid = lazy(() => import('./CampaignGrid'))
-const CreateCampaign = lazy(() => import('./Create'))
+import CampaignGrid from './CampaignGrid'
+import CreateCampaign from './Create'
 
 //
 // campaigns component
@@ -38,7 +38,7 @@ export const Campaigns = (props) => {
 			}
 		})
 
-		content.sort(function (a, b) {
+		content.sort(function(a, b) {
 			if (!a.expiry || !b.expiry) return 0
 
 			var A = parseInt(a.expiry.replaceAll(',', ''))
@@ -73,19 +73,19 @@ export const Campaigns = (props) => {
 						campaignsCount === 0 ? (
 							<h4>No campaigns yet. Create one!</h4>
 						) : !content ? (
-							<Loader text="" />
+							<Loader text='' />
 						) : (
-							<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
+							<h4>Total campaigns: {campaignsCount ?? <Loader text='' />}</h4>
 						)
 					) : (
 						<h4>Create Campaign</h4>
 					)}
 				</Box>
 
-				<Box marginLeft="auto">
+				<Box marginLeft='auto'>
 					{showCreateMode ? (
 						<Button
-							variant="outlined"
+							variant='outlined'
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
 						>
@@ -93,7 +93,7 @@ export const Campaigns = (props) => {
 						</Button>
 					) : account && connected ? (
 						<Button
-							variant="outlined"
+							variant='outlined'
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
 						>

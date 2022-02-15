@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { useWallet } from 'src/context/Wallet'
@@ -9,8 +9,10 @@ import { useThemeState } from 'src/context/ThemeState'
 import { useBalance } from 'src/hooks/useBalance'
 import { styled } from '../components'
 import { ICON_MAPPING, Icons } from './Icons'
-import { createInfoNotification } from 'src/utils/notification'
-import { compareAddress, toZeroAddress } from '../utils/helper'
+import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
+import { compareAddress, toKusamaAddress, toZeroAddress } from '../utils/helper'
+import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 function accountString(account) {
 	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
@@ -54,11 +56,56 @@ const AccountSelect = styled(Select)(({ theme }) => ({
 	},
 }))
 
+async function checkForAccessNFT(accounts: string[]) {
+	const headers = {
+		'Content-Type': 'application/json',
+		Accept: 'application/json',
+	}
+
+	const query = {
+		query: `query($id:String, $owner: [String!] ) {
+			collections(
+				where: {
+					id: { _eq: $id }
+					nfts: { owner: { _in: $owner } }
+				}
+			) {
+				id
+			}
+		}`,
+		variables: {
+			// TODO: Replace NFT Collection
+			id: 'b6e98494bff52d3b1e-SPIRIT',
+			owner: accounts,
+		},
+	}
+
+	try {
+		const req = await fetch('https://gql-rmrk-prod.graphcdn.app', {
+			method: 'POST',
+			headers,
+			body: JSON.stringify(query),
+		})
+		const parsed = await req.json()
+		if (parsed.data.collections.length > 0) {
+			// NFT is contained in collection
+			return true
+		}
+	} catch (e) {
+		console.error(e)
+		return false
+	}
+
+}
+
 const AccountComponent = () => {
 	const { darkmodeEnabled } = useThemeState()
 	const { updateStore, allowConnection, lastAccountIndex } = useStore()
 	const { accounts, w3enable, w3Enabled } = usePolkadotExtension()
 	const { allowConnect, updateWalletState, account, address } = useWallet()
+	const [questState, setQuestState] = useState(false)
+	const navigate = useNavigate()
+	const { pathname } = useLocation()
 
 	const handleConnect = (e) => {
 		e.stopPropagation()
@@ -70,6 +117,7 @@ const AccountComponent = () => {
 	}
 	const handleDisconnect = (e) => {
 		e.stopPropagation()
+		setQuestState(false)
 		updateStore({ allowConnection: false, connected: false })
 		updateWalletState({ allowConnect: false, connected: false })
 	}
@@ -91,10 +139,34 @@ const AccountComponent = () => {
 	useEffect(() => {
 		// Set initial account => default account 0
 		if (accounts && allowConnect) {
-			updateWalletState({
-				account: accounts[lastAccountIndex || 0],
-				address: toZeroAddress(accounts[lastAccountIndex || 0]?.address ?? ''),
-				connected: true,
+			;(async () => {
+				// Return true to override Access key check
+				// return true
+
+				return await checkForAccessNFT(accounts.map((acc) => toKusamaAddress(acc.address)))
+			})().then((result: boolean) => {
+				if (result) {
+					// Finely connect wallet
+					updateWalletState({
+						account: accounts[lastAccountIndex || 0],
+						address: toZeroAddress(accounts[lastAccountIndex || 0]?.address ?? ''),
+						connected: true,
+					})
+					if (!questState) {
+						setQuestState(true)
+						navigate('/app/quest')
+					}
+				} else {
+					// Reset wallet state
+					updateStore({ allowConnection: false, connected: false })
+					updateWalletState({ allowConnect: false, connected: false })
+					createErrorNotification(
+						'Connection failed, seems like you dont own an access key.',
+					)
+					if (pathname !== '/app') {
+						navigate('/app')
+					}
+				}
 			})
 		}
 	}, [accounts, allowConnect])
@@ -109,7 +181,7 @@ const AccountComponent = () => {
 				address: toZeroAddress(account.address),
 			})
 		},
-		[allowConnect, accounts]
+		[allowConnect, accounts],
 	)
 
 	function copyAddress(e) {
@@ -128,7 +200,7 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height='100%'>
 							<Box
 								sx={{
 									display: 'flex',
@@ -149,7 +221,7 @@ const AccountComponent = () => {
 							<AccountSelect
 								renderValue={(value) => {
 									const account = accounts.find((a) =>
-										compareAddress(a.address, value)
+										compareAddress(a.address, value),
 									)
 									if (!account) return 'n/a'
 									return (
@@ -184,8 +256,8 @@ const AccountComponent = () => {
 							<BalanceAnnotation />
 
 							<IconButton
-								size="small"
-								aria-label="disconnect"
+								size='small'
+								aria-label='disconnect'
 								onClick={handleDisconnect}
 							>
 								<Icons

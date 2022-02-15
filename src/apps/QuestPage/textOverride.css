@@ -1,0 +1,97 @@
+.quest-page__title-color {
+	background: linear-gradient(88.28deg, #21E19D 0.14%, #A0E3CC 52.47%);
+	font-family: 'Noto Sans' !important;
+	font-style: normal !important;
+	font-weight: 800 !important;
+	font-size: 4rem !important;
+	background-clip: text !important;
+	text-fill-color: transparent !important;
+	-webkit-background-clip: text !important;
+	-webkit-text-fill-color: transparent !important;
+}
+
+
+.quest-page__container {
+	width: 100%;
+	position: relative !important;
+}
+
+.quest-page__item {
+	position: relative !important;
+	width: 100%;
+	padding-left: 5%;
+	padding-right: 25%;
+
+}
+
+.quest-page__item * {
+	z-index: 2 !important;
+	position: relative;
+	filter: brightness(70%);
+}
+
+.quest-page__item::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	left: 0;
+	right: 0;
+	border-bottom: 2px dashed #fff;
+	z-index: 1;
+}
+
+.quest-page__item--active * {
+	filter: brightness(100%);
+}
+
+.quest-page__item--first,
+.quest-page__item--last {
+	padding-right: 0 !important;
+	padding-left: 30% !important;
+}
+
+.quest-page__item--rtl {
+	padding-right: 5%;
+	padding-left: 25%;
+}
+
+.quest-page__divider--1 {
+	position: absolute;
+	border-right: 2px dashed #fff;
+	top: 3rem;
+	left: -1px;
+	height: 12rem;
+}
+
+.quest-page__divider--2 {
+	position: absolute;
+	border-left: 2px dashed #fff;
+	top: 15rem;
+	right: -1px;
+	height: 12rem;
+}
+
+.quest-page__divider--3 {
+	position: absolute;
+	border-right: 2px dashed #fff;
+	top: 27rem;
+	left: -1px;
+	height: 12rem;
+}
+
+.quest-page__divider--4 {
+	position: absolute;
+	border-left: 2px dashed #fff;
+	top: 39rem;
+	right: -1px;
+	height: 12rem;
+}
+
+.quest-page__divider--6 {
+	position: absolute;
+	border-right: 2px dashed #fff;
+	top: 51rem;
+	left: -1px;
+	height: 12rem;
+}

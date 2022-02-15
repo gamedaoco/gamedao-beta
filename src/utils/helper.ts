@@ -16,6 +16,14 @@ export function toZeroAddress(addr) {
 	}
 }
 
+export function toKusamaAddress(addr) {
+	try {
+		return encodeAddress(isHex(addr) ? hexToU8a(addr) : decodeAddress(addr), 5)
+	} catch (e) {
+		return null
+	}
+}
+
 export function compareAddress(a, b) {
 	try {
 		const aEnc = encodeAddress(isHex(a) ? hexToU8a(a) : decodeAddress(a))

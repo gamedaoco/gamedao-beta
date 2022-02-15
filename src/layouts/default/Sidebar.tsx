@@ -1,6 +1,5 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 import { useApiProvider } from '@substra-hooks/core'
 import { useThemeState } from 'src/context/ThemeState'
@@ -8,9 +7,7 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
-import { alpha, useTheme } from '@mui/material/styles'
-
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -20,9 +17,10 @@ import Badge from '@mui/material/Badge'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { Divider, Paper, Typography, FontIcon, useMediaQuery, Link } from 'src/components'
-import { Icons, ICON_MAPPING } from 'src/components/Icons'
+import { Divider, FontIcon, Link, Paper, Typography, useMediaQuery } from 'src/components'
+import { ICON_MAPPING, Icons } from 'src/components/Icons'
 import NetInfo from 'src/components/NetInfo'
+import { useWallet } from '../../context/Wallet'
 
 interface ComponentProps {
 	showNavigation?: boolean
@@ -41,7 +39,7 @@ const SidebarButton = styled(ListItemButton)<{ active?: string | boolean }>(
 		'&:hover': {
 			color: theme.palette.text.primary,
 		},
-	})
+	}),
 )
 
 const NavHeader = styled(ListSubHeader)(({ theme }) => ({
@@ -78,17 +76,17 @@ const ThemeSwitcher = () => {
 		>
 			<Icons
 				src={ICON_MAPPING.moon}
-				alt="moon"
+				alt='moon'
 				sx={{
 					cursor: 'pointer',
 					filter: darkmodeEnabled ? 'invert(0)' : 'invert(0.5)',
 				}}
 				onClick={() => setDarkmodeEnabled(true)}
 			/>
-			<Divider orientation="vertical" variant="middle" flexItem />
+			<Divider orientation='vertical' variant='middle' flexItem />
 			<Icons
 				src={ICON_MAPPING.sun}
-				alt="sun"
+				alt='sun'
 				sx={{
 					cursor: 'pointer',
 					filter: darkmodeEnabled ? 'invert(0.5)' : 'invert(1)',
@@ -108,7 +106,7 @@ function Main({ showNavigation }: ComponentProps) {
 	const { campaignsCount } = useCrowdfunding()
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
-
+	const { connected } = useWallet()
 	const isMobile = useMediaQuery('(max-width:640px)')
 	const sideBar = { fontSize: isMobile ? '2rem' : '3rem' }
 
@@ -138,13 +136,21 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</Link>
 */}
-				<Link component={NavLink} to="/app/organisations">
+				{connected && <Link component={NavLink} to='/app/quest'>
+					<SidebarButton active={pathname === '/app/quest'} sx={{ mx: 4, py: 0 }}>
+						<ListItemIcon>
+							<FontIcon sx={{ ...sideBar }} name='dashboard' />
+						</ListItemIcon>
+						<Typography sx={{ fontSize: '1rem' }}>Quests</Typography>
+					</SidebarButton>
+				</Link>}
+				<Link component={NavLink} to='/app/organisations'>
 					<SidebarButton
 						active={!!pathname.match(/organisations/gi) ? 'active' : null}
 						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
-							<FontIcon sx={{ ...sideBar }} name="organization" />
+							<FontIcon sx={{ ...sideBar }} name='organization' />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Organisations</Typography>
 						{nonce > 0 && (
@@ -152,18 +158,18 @@ function Main({ showNavigation }: ComponentProps) {
 								sx={{ ml: '0.5rem' }}
 								badgeContent={nonce}
 								color={'success'}
-								variant="dot"
+								variant='dot'
 							/>
 						)}
 					</SidebarButton>
 				</Link>
-				<Link component={NavLink} to="/app/governance">
+				<Link component={NavLink} to='/app/governance'>
 					<SidebarButton
 						active={!!pathname.match(/governance/gi) ? 'active' : null}
 						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
-							<FontIcon sx={{ ...sideBar }} name="voting" />
+							<FontIcon sx={{ ...sideBar }} name='voting' />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Votings</Typography>
 						{proposalsCount > 0 && (
@@ -171,18 +177,18 @@ function Main({ showNavigation }: ComponentProps) {
 								sx={{ ml: '0.5rem' }}
 								badgeContent={proposalsCount}
 								color={'primary'}
-								variant="dot"
+								variant='dot'
 							/>
 						)}
 					</SidebarButton>
 				</Link>
-				<Link component={NavLink} to="/app/campaigns">
+				<Link component={NavLink} to='/app/campaigns'>
 					<SidebarButton
 						active={!!pathname.match(/campaigns/gi) ? 'active' : null}
 						sx={{ mx: 4, py: 0 }}
 					>
 						<ListItemIcon>
-							<FontIcon sx={{ ...sideBar }} name="campaign" />
+							<FontIcon sx={{ ...sideBar }} name='campaign' />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Campaigns</Typography>
 						{campaignsCount > 0 && (
@@ -190,20 +196,20 @@ function Main({ showNavigation }: ComponentProps) {
 								sx={{ ml: '0.5rem' }}
 								badgeContent={campaignsCount}
 								color={'info'}
-								variant="dot"
+								variant='dot'
 							/>
 						)}
 					</SidebarButton>
 				</Link>
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
-					<Link component={NavLink} to="/app/tangram">
+					<Link component={NavLink} to='/app/tangram'>
 						<SidebarButton
 							active={!!pathname.match(/tangram/gi) ? 'active' : null}
 							sx={{ mx: 4, py: 0 }}
 						>
 							<ListItemIcon>
-								<FontIcon sx={{ ...sideBar }} name="tangram" />
+								<FontIcon sx={{ ...sideBar }} name='tangram' />
 							</ListItemIcon>
 							<Typography sx={{ fontSize: '1rem' }}>Tangram</Typography>
 						</SidebarButton>
@@ -223,24 +229,24 @@ function Main({ showNavigation }: ComponentProps) {
 					sx={{ display: 'flex', flex: 1, flexDirection: 'column', margin: '2.5rem 0' }}
 				>
 					<a
-						target="_blank"
-						rel="noreferrer"
-						href="https://discord.gg/P7NHWGzJ7r"
+						target='_blank'
+						rel='noreferrer'
+						href='https://discord.gg/P7NHWGzJ7r'
 						style={{
 							color: 'transparent',
 						}}
 					>
 						<SidebarButton sx={{ mx: 4, py: 0 }}>
 							<ListItemIcon>
-								<FontIcon sx={{ ...sideBar }} name="store" />
+								<FontIcon sx={{ ...sideBar }} name='store' />
 							</ListItemIcon>
 							<Typography sx={{ fontSize: '1rem' }}>Faucet</Typography>
 						</SidebarButton>
 					</a>
-					<Link href="https://docs.gamedao.co" target="_blank" rel="noreferrer">
+					<Link href='https://docs.gamedao.co' target='_blank' rel='noreferrer'>
 						<SidebarButton sx={{ mx: 4, py: 0 }}>
 							<ListItemIcon>
-								<FontIcon sx={{ ...sideBar }} name="document" />
+								<FontIcon sx={{ ...sideBar }} name='document' />
 							</ListItemIcon>
 							<Typography sx={{ fontSize: '1rem' }}>Documentation</Typography>
 						</SidebarButton>

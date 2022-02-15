@@ -37,7 +37,8 @@ function Wrapper({ children }) {
 					</BrowserRouter>
 				</WalletProvider>
 			</SubstrateContextProvider>
-			<ToastContainer position="bottom-right" theme={darkmodeEnabled ? 'dark' : 'light'} />
+			<ToastContainer autoClose={10000} position='bottom-right'
+							theme={darkmodeEnabled ? 'dark' : 'light'} />
 		</ThemeProvider>
 	)
 }

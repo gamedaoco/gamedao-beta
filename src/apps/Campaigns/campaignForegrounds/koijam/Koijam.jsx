@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, useState, useEffect, lazy } from 'react'
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
@@ -8,18 +8,16 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import {
 	Box,
-	Typography,
-	Grid,
-	Divider,
-	Chip,
-	styled,
-	Box16to9,
-	Container,
 	Button,
-	Stack,
-	Slider,
-	Image16to9,
+	Chip,
+	Container,
 	Countdown,
+	Grid,
+	Image16to9,
+	Slider,
+	Stack,
+	styled,
+	Typography,
 } from '../../../../components'
 
 import { TileReward } from '../../TileReward'
@@ -27,7 +25,6 @@ import { TileReward } from '../../TileReward'
 import Renderer from './Render'
 
 import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
-import { useWallet } from 'src/context/Wallet'
 
 const Headline = styled(Typography)(({ theme }) => {
 	return {
@@ -301,14 +298,19 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Image16to9 src="https://ipfs.gamedao.co/gateway/QmV1Tx2Mwfbkk2YrGQKtnoavCjtUzGpn8wBEzsQTBVjnED" />
+				<Image16to9
+					src="https://ipfs.gamedao.co/gateway/QmV1Tx2Mwfbkk2YrGQKtnoavCjtUzGpn8wBEzsQTBVjnED" />
 			</Grid>
 			<Grid item xs={12}>
 				<Stack direction="row" spacing={2}>
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmUsbJDYF3xQAVH6oYTr6uSQTgzecER8fqHmD9BgCASv61" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmccBBLNtHPXz8ciLU87wB6L3PLsWWDJABX9pas3SYNTga" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmRfeBhnHWhbhJsKiNmn1ACSWSWStVbCa289rWkEDESNo5" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmUsbJDYF3xQAVH6oYTr6uSQTgzecER8fqHmD9BgCASv61" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmccBBLNtHPXz8ciLU87wB6L3PLsWWDJABX9pas3SYNTga" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmRfeBhnHWhbhJsKiNmn1ACSWSWStVbCa289rWkEDESNo5" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt" />
 				</Stack>
 			</Grid>
 
@@ -327,19 +329,25 @@ function Description() {
 				</Typography>
 			</Grid>
 			<Grid item xs={12}>
-				<Image16to9 src="https://ipfs.gamedao.co/gateway/QmTSnyrJr9JRj1uZB999ai5fGu9TjoyJskaM2vqK3h4gt1" />
+				<Image16to9
+					src="https://ipfs.gamedao.co/gateway/QmTSnyrJr9JRj1uZB999ai5fGu9TjoyJskaM2vqK3h4gt1" />
 			</Grid>
 			<Grid item xs={12}>
 				<Stack direction="row" spacing={2}>
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmQXakkDJWic7XNizVrTzMKD7d77RjAyN9xhHyuYjehX9t" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/Qme1ExJMUvkHVxgtvuFJX7ET1owJ3bmydTTtJ6Vd5FFfP7" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmT8ey3ZSUHfkR9AfxSZdGTXJH3ALykyawvpPrT59QgjNM" />
-					<Image16to9 src="https://ipfs.gamedao.co/gateway/QmS6pFs8qh7tYFAnix6jPqj8mwt54YVVVQHRhpfwhGQSve" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmQXakkDJWic7XNizVrTzMKD7d77RjAyN9xhHyuYjehX9t" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/Qme1ExJMUvkHVxgtvuFJX7ET1owJ3bmydTTtJ6Vd5FFfP7" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmT8ey3ZSUHfkR9AfxSZdGTXJH3ALykyawvpPrT59QgjNM" />
+					<Image16to9
+						src="https://ipfs.gamedao.co/gateway/QmS6pFs8qh7tYFAnix6jPqj8mwt54YVVVQHRhpfwhGQSve" />
 				</Stack>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Image16to9 src="https://ipfs.gamedao.co/gateway/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt" />
+				<Image16to9
+					src="https://ipfs.gamedao.co/gateway/QmdCKzxo3evWV2pgucEtqWZWryE3yK5nRcQhu1NTLcRLpt" />
 			</Grid>
 		</Grid>
 	)

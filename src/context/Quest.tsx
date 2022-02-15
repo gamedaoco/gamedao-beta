@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useWallet } from './Wallet'
 import { decodeAddressAsString } from '../utils/helper'
 import { useApiProvider } from '@substra-hooks/core'
@@ -24,6 +24,7 @@ const INITIAL_VALUE: QuestState = {
 	hasAllQuestsCompleted: false,
 }
 const QuestContext = createContext<QuestState>(INITIAL_VALUE)
+export const useQuestContext = () => useContext<QuestState>(QuestContext)
 
 // Handle quests
 function handleQuests(state: QuestState, apiProvider, address, updateQuestState) {

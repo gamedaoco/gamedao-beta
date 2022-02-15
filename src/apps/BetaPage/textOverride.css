@@ -1,0 +1,45 @@
+.beta-page__title-color {
+	background: linear-gradient(88.28deg, #21E19D 0.14%, #A0E3CC 52.47%);
+	font-family: 'Noto Sans' !important;
+	font-style: normal !important;
+	font-weight: 800 !important;
+	font-size: 4rem !important;
+	background-clip: text !important;
+	text-fill-color: transparent !important;
+	-webkit-background-clip: text !important;
+	-webkit-text-fill-color: transparent !important;
+}
+
+.beta-page__ellipse {
+	width: 4rem;
+	min-width: 4rem;
+	height: 4rem;
+	border: 2px solid #FFFFFF;
+	box-sizing: border-box;
+	position: relative;
+	border-radius: 50%;
+}
+
+.beta-page__ellipse--1::after {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 1.5rem;
+	content: "1";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.beta-page__ellipse--2::after {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 1.5rem;
+	content: "2";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
