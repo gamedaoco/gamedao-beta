@@ -14,6 +14,8 @@ import { compareAddress, toKusamaAddress, toZeroAddress } from '../utils/helper'
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router'
 
+const COLLECTIONS = 'a0afbe96d2541b6446-1337'
+
 function accountString(account) {
 	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
@@ -74,8 +76,7 @@ async function checkForAccessNFT(accounts: string[]) {
 			}
 		}`,
 		variables: {
-			// TODO: Replace NFT Collection
-			id: 'b6e98494bff52d3b1e-SPIRIT',
+			id: COLLECTIONS,
 			owner: accounts,
 		},
 	}

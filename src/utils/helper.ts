@@ -18,7 +18,7 @@ export function toZeroAddress(addr) {
 
 export function toKusamaAddress(addr) {
 	try {
-		return encodeAddress(isHex(addr) ? hexToU8a(addr) : decodeAddress(addr), 5)
+		return encodeAddress(isHex(addr) ? hexToU8a(addr) : decodeAddress(addr), 2)
 	} catch (e) {
 		return null
 	}
