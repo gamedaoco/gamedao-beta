@@ -44,13 +44,17 @@ async function main(){
     t.ok(gamedaoPage, "GameDAO Loaded")
   
     const enter = await gamedaoPage.waitForSelector('button')
-    await gamedaoPage.waitForTimeout(500)
+    await gamedaoPage.waitForTimeout(500000)
+
     await enter.click()
+
     // click connect and allow access with polkateer for gameDAO
     const connect = await gamedaoPage.waitForSelector("button")
     await connect.click()
     await pteer.allow(pteer.page);
     await gamedaoPage.bringToFront()
+
+    await gamedaoPage.waitForTimeout(1000)
   
     t.ok(true, "Allow Wallet Access for gameDAO")
 
@@ -63,11 +67,8 @@ async function main(){
     await gamedaoPage.keyboard.press('ArrowDown');
     await gamedaoPage.keyboard.press('Enter');
     
-
     await createNoFeesOpenDAO(gamedaoPage)
-    
     await closeBrowser()
-
     t.end()
   })
 
