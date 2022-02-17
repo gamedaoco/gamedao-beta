@@ -6,9 +6,9 @@ import { useCallback } from 'react'
 import { useWallet } from '../../context/Wallet'
 import { useStore } from '../../context/Store'
 
-import keyboard from "../QuestPage/modules/resources/keyboard.png"
+import cassette from "../QuestPage/modules/resources/cassette.png"
 import datasette from "../QuestPage/modules/resources/datasette.png"
-import monitor from "../QuestPage/modules/resources/monitor.png"
+import joystick from "../QuestPage/modules/resources/joystick.png"
 
 export function BetaPage() {
 	const theme = useTheme()
@@ -30,9 +30,9 @@ export function BetaPage() {
 		<Stack spacing={4}>
 			<Card>
 				<Stack direction={"row"}>
-					<CardMedia style={{ width: "33.3%" }} component="img" alt="hero" image={keyboard} />
+					<CardMedia style={{ width: "33.3%" }} component="img" alt="hero" image={cassette} />
 					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={datasette} />
-					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={monitor} />
+					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={joystick} />
 				</Stack>
 				<CardContent>
 					<Stack spacing={4} padding={4}>
