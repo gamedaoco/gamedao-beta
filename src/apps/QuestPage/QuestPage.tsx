@@ -1,20 +1,71 @@
 import { QuestItem } from './modules/questItem'
-import { Box, Paper, Stack } from '@mui/material'
 import './textOverride.css'
-import { Typography } from '../../components'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import useScrollPosition from '@react-hook/window-scroll'
+import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
+import { useRef, useMemo, useEffect, createRef, useState } from 'react'
+import { Typography,  Box, Paper, Stack } from '../../components'
 import { useQuestContext } from '../../context/Quest'
+import Headerscene from "./modules/Headerscene"
+import { Hover3D } from './modules/Hover3D'
+import datasette from './modules/resources/datasette_s.png'
+import delorean from './modules/resources/delorean_s.png'
+import joystick from './modules/resources/joystick_s.png'
 
+  
 export function QuestPage() {
 	const questState = useQuestContext()
 
+	useEffect( () => {
+		let myHover3D = new Hover3D(".questicon");
+	}, [])
+
+	const pos = useScrollPosition(24)
+	const parallax = useRef<IParallax>(null!)
+
+	useEffect( () => {
+		if(!parallax.current) return
+		document.getElementById('parallax').onwheel = function(){ return false; }
+		document.getElementById("parallax").scrollTo(0, pos)
+	}, [pos])
+
+	/*
+	useEffect( () => {
+		if(!parallax.current) return
+		// scroll to page 2 at 500px
+		if(pos > 500) parallax.current.scrollTo(2)
+	}, [pos])
+	*/
+	
+
 	return (
+	<>
+		<Parallax id={"parallax"} ref={parallax} style={{ width: "50vw", height: '100%', overflow: "hidden" }} pages={2}>
+				<ParallaxLayer offset={1} speed={1} />
+				<ParallaxLayer offset={2} speed={1} />
+
+				<ParallaxLayer offset={1.3} speed={-0.3} style={{ pointerEvents: 'none' }}>
+				<img className="floatfast" src={joystick} style={{ width: '15%' }} />
+				</ParallaxLayer>
+
+
+				<ParallaxLayer offset={3} speed={0.3} style={{ pointerEvents: 'none' }}>
+				<img className="float" src={joystick} style={{ width: '15%', marginLeft: '50%' }} />
+				</ParallaxLayer>
+
+
+				<ParallaxLayer
+				offset={2}
+				speed={-0.3}
+				/>
+			</Parallax>
 		<Stack spacing={4}>
 			<Box
-				component={'img'}
-				src={'https://picsum.photos/200/300'}
-				sx={{ height: '30vh' }}
-				alt={'hero'}
-			></Box>
+				sx={{ height: '40vh' }}
+			>
+				<Headerscene/>
+			</Box>
+
 			<Paper>
 				<Stack padding={6} spacing={4}>
 					<Typography className="quest-page__title-color">Headline</Typography>
@@ -31,7 +82,7 @@ export function QuestPage() {
 				<QuestItem
 					active={questState.hasQuest1Completed}
 					first={true}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={delorean}
 					title={'Quest #1'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -39,7 +90,7 @@ export function QuestPage() {
 				<div className="quest-page__divider--1" />
 				<QuestItem
 					active={questState.hasQuest2Completed}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={joystick}
 					title={'Quest #2'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
@@ -47,7 +98,7 @@ export function QuestPage() {
 				<div className="quest-page__divider--2" />
 				<QuestItem
 					active={questState.hasQuest3Completed}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={datasette}
 					title={'Quest #3'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -79,5 +130,6 @@ export function QuestPage() {
 				/>
 			</Stack>
 		</Stack>
+		</>
 	)
 }

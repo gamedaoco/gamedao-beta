@@ -32,6 +32,7 @@ export function QuestItem({
 			<Stack component={Paper} padding={4} spacing={4}>
 				<Stack spacing={8} direction={rtl ? 'row-reverse' : 'row'}>
 					<Icons
+						className={"questicon"}
 						src={active ? activeImage : ICON_MAPPING.quest}
 						alt={'QuestIcon'}
 						sx={{ height: '6rem', width: '6rem' }}
