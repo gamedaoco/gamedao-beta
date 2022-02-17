@@ -15,6 +15,7 @@ import {
 	FormControl,
 	FormHelperText,
 	FormSectionHeadline,
+	InputAdornment,
 	Grid,
 	Image16to9,
 	InputLabel,
@@ -613,6 +614,9 @@ export const Main = (props) => {
 							label="Membership Fee"
 							placeholder="10"
 							fullWidth
+							InputProps={{
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+							}}
 							value={formik.values.fee}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}

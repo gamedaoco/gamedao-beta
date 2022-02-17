@@ -24,6 +24,7 @@ import {
 	InputLabel,
 	MenuItem,
 	Select,
+	InputAdornment,
 	TextField,
 	FormSectionHeadline,
 	MarkdownEditor,
@@ -573,6 +574,9 @@ export const Main = () => {
 											value={formik.values.collateral_amount}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
+											InputProps={{
+												endAdornment: <InputAdornment position="end">GAME</InputAdornment>
+											}}
 											error={
 												formik.touched.collateral_amount &&
 												Boolean(formik.errors.collateral_amount)
@@ -662,6 +666,9 @@ export const Main = () => {
 											helperText={
 												formik.touched.amount && formik.errors.amount
 											}
+											InputProps={{
+												endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+											}}
 											fullWidth
 											label={'Amount to transfer on success'}
 											InputLabelProps={{ shrink: true }}

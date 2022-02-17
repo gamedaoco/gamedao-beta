@@ -7,7 +7,7 @@ export type ThemeState = {
 }
 
 const INITIAL_STATE: ThemeState = {
-	darkmodeEnabled: false,
+	darkmodeEnabled: true,
 	setDarkmodeEnabled: (enabled: boolean) => {},
 }
 
