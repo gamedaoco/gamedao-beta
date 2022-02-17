@@ -4,13 +4,19 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import useScrollPosition from '@react-hook/window-scroll'
 import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
 import { useRef, useMemo, useEffect, createRef, useState } from 'react'
+
 import { Typography,  Box, Paper, Stack } from '../../components'
 import { useQuestContext } from '../../context/Quest'
+
 import Headerscene from "./modules/Headerscene"
 import { Hover3D } from './modules/Hover3D'
-import datasette from './modules/resources/datasette_s.png'
-import delorean from './modules/resources/delorean_s.png'
+
 import joystick from './modules/resources/joystick_s.png'
+import datasette from './modules/resources/datasette_s.png'
+// import monitor from './modules/resources/monitor_s.png'
+// import cassette from './modules/resources/delorean_s.png'
+// import keyboard from './modules/resources/keyboard_s.png'
+import delorean from './modules/resources/delorean_s.png'
 
   
 export function QuestPage() {
@@ -40,17 +46,18 @@ export function QuestPage() {
 
 	return (
 	<>
-		<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '200%', overflow: "hidden" }} pages={4}>
+		<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '200%', overflow: "hidden" }} pages={3}>
 			<ParallaxLayer offset={1} style={{ pointerEvents: 'none' }}>
 			</ParallaxLayer>
+
+			<ParallaxLayer offset={1} speed={1.5} style={{ pointerEvents: 'none' }}>
+				<img className="float" src={delorean} style={{ rotate: "26deg" ,width: '40%', marginTop: "-100px" }} />
+			</ParallaxLayer>
 			
-			<ParallaxLayer offset={1} speed={-0.5} style={{ pointerEvents: 'none' }}>
-				<img className="float" src={joystick} style={{ width: '15%', marginLeft: "200px" }} />
+			<ParallaxLayer offset={3} speed={-0.5} style={{ pointerEvents: 'none' }}>
+				
 			</ParallaxLayer>
 
-			<ParallaxLayer offset={2.4} speed={0.5} style={{ pointerEvents: 'none' }}>
-				<img className="float" src={datasette} style={{ width: '25%' }} />
-			</ParallaxLayer>
 		</Parallax>
 		<Stack spacing={4}>
 			<Box
@@ -75,7 +82,7 @@ export function QuestPage() {
 				<QuestItem
 					active={questState.hasQuest1Completed}
 					first={true}
-					activeImage={delorean}
+					activeImage={joystick}
 					title={'Quest #1'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -83,7 +90,7 @@ export function QuestPage() {
 				<div className="quest-page__divider--1" />
 				<QuestItem
 					active={questState.hasQuest2Completed}
-					activeImage={joystick}
+					activeImage={datasette}
 					title={'Quest #2'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
@@ -99,7 +106,7 @@ export function QuestPage() {
 				<div className="quest-page__divider--3" />
 				<QuestItem
 					active={questState.hasQuest4Completed}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={datasette}
 					title={'Quest #4'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
@@ -107,7 +114,7 @@ export function QuestPage() {
 				<div className="quest-page__divider--4" />
 				<QuestItem
 					active={questState.hasQuest5Completed}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={datasette}
 					title={'Quest #5'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -116,7 +123,7 @@ export function QuestPage() {
 				<QuestItem
 					active={questState.hasQuest6Completed}
 					last={true}
-					activeImage={'https://picsum.photos/200'}
+					activeImage={delorean}
 					title={'Quest #6'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}

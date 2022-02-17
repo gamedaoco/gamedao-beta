@@ -19,6 +19,8 @@ import Wallet from './apps/Wallet'
 import Governance from './apps/Governance'
 import GovernanceDetails from './apps/GovernanceInfo'
 
+import { Starfield } from './apps/Rainbowmesh'
+
 
 export interface ComponentProps {
 	children?: React.ReactNode
@@ -146,7 +148,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={'404 Not Found'}
+							element={<div style={{height: "90vh", textAlign: "center" }}>404 Not Found... Or Wallet Disconnected?<Starfield/></div>}
 						/>
 					}
 				></Route>
