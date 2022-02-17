@@ -100,14 +100,13 @@ function Main({ showNavigation }: ComponentProps) {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 	const { connected } = useWallet()
-	const isMobile = useMediaQuery('(max-width:1200px)')
+	const isMobile = useMediaQuery('(max-width:1024px)')
 	const sideBar = { fontSize: isMobile ? '2rem' : '3rem' }
 
 	const [isHover, hoverProps] = useHover();
 
 	return (
 		<Box
-			{...hoverProps} aria-describedby="overlay"
 			sx={{
 				position: 'sticky',
 				top: 0,
@@ -121,7 +120,7 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid ' + theme.palette.grey[500_32],
 			}}
 		>
-			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
+			<List {...hoverProps} aria-describedby="overlay" sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
 				{/*
 				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
@@ -131,7 +130,7 @@ function Main({ showNavigation }: ComponentProps) {
 						<Typography sx={{ fontSize: '1rem' }}>Dashboard</Typography>
 					</SidebarButton>
 				</Link>
-*/}
+				*/}
 				{connected && <Link component={NavLink} to='/app/quest'>
 					<SidebarButton active={pathname === '/app/quest'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>

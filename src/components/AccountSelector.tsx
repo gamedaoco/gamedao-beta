@@ -142,7 +142,7 @@ const AccountComponent = () => {
 		if (accounts && allowConnect) {
 			;(async () => {
 				// Return true to override Access key check
-				// return true
+				//return true
 
 				return await checkForAccessNFT(accounts.map((acc) => toKusamaAddress(acc.address)))
 			})().then((result: boolean) => {
@@ -235,7 +235,7 @@ const AccountComponent = () => {
 										>
 											<Box
 												sx={{
-													marginLeft: '1rem',
+													marginLeft: '1rem'
 												}}
 											>
 												{accountString(account)}
