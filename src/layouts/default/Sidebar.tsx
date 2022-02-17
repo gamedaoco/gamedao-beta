@@ -107,9 +107,11 @@ function Main({ showNavigation }: ComponentProps) {
 
 	return (
 		<Box
+			{...hoverProps} aria-describedby="overlay" // adds hover state on this elem
 			sx={{
 				position: 'sticky',
 				top: 0,
+				transition: "ease 0.2s all",
 				marginLeft: (isMobile ) ? '-2rem' : 0,
 				width: isMobile ? isHover ? '20rem' : '5rem' : '20rem',
 				overflow: 'hidden',
@@ -120,7 +122,7 @@ function Main({ showNavigation }: ComponentProps) {
 				borderRight: '1px solid ' + theme.palette.grey[500_32],
 			}}
 		>
-			<List {...hoverProps} aria-describedby="overlay" sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
+			<List sx={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: '1.5rem' }}>
 				{/*
 				<Link component={NavLink} to="/app">
 					<SidebarButton active={pathname === '/app'} sx={{ mx: 4, py: 0 }}>
