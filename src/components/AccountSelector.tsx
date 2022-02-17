@@ -96,7 +96,6 @@ async function checkForAccessNFT(accounts: string[]) {
 		console.error(e)
 		return false
 	}
-
 }
 
 const AccountComponent = () => {
@@ -162,7 +161,7 @@ const AccountComponent = () => {
 					updateStore({ allowConnection: false, connected: false })
 					updateWalletState({ allowConnect: false, connected: false })
 					createErrorNotification(
-						'Connection failed, seems like you dont own an access key.',
+						'Connection failed, seems like you dont own an access key.'
 					)
 					if (pathname !== '/app') {
 						navigate('/app')
@@ -182,7 +181,7 @@ const AccountComponent = () => {
 				address: toZeroAddress(account.address),
 			})
 		},
-		[allowConnect, accounts],
+		[allowConnect, accounts]
 	)
 
 	function copyAddress(e) {
@@ -201,7 +200,7 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'} height='100%'>
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
 							<Box
 								sx={{
 									display: 'flex',
@@ -222,7 +221,7 @@ const AccountComponent = () => {
 							<AccountSelect
 								renderValue={(value) => {
 									const account = accounts.find((a) =>
-										compareAddress(a.address, value),
+										compareAddress(a.address, value)
 									)
 									if (!account) return 'n/a'
 									return (
@@ -235,7 +234,7 @@ const AccountComponent = () => {
 										>
 											<Box
 												sx={{
-													marginLeft: '1rem'
+													marginLeft: '1rem',
 												}}
 											>
 												{accountString(account)}
@@ -257,8 +256,8 @@ const AccountComponent = () => {
 							<BalanceAnnotation />
 
 							<IconButton
-								size='small'
-								aria-label='disconnect'
+								size="small"
+								aria-label="disconnect"
 								onClick={handleDisconnect}
 							>
 								<Icons
