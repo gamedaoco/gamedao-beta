@@ -20,6 +20,7 @@ import Governance from './apps/Governance'
 import GovernanceDetails from './apps/GovernanceInfo'
 
 import { Starfield } from './apps/Rainbowmesh'
+import { ScrollToTop } from './Providers'
 
 
 export interface ComponentProps {
@@ -148,7 +149,7 @@ const Router = (props) => {
 							showSidebar
 							showHeader
 							showFooter
-							element={<div style={{height: "90vh", textAlign: "center" }}>404 Not Found... Or Wallet Disconnected?<Starfield/></div>}
+							element={<div style={{height: "90vh", textAlign: "center" }}>404 Not Found... Or Wallet Disconnected?<Starfield/><ScrollToTop/></div>}
 						/>
 					}
 				></Route>

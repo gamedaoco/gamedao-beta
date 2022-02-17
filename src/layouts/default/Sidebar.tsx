@@ -8,21 +8,14 @@ import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 
 import { styled, useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListSubHeader from '@mui/material/ListSubheader'
-import Badge from '@mui/material/Badge'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
 
-import { Divider, FontIcon, Link, Paper, Typography, useMediaQuery } from 'src/components'
+import { Divider, FontIcon, Link, Paper, Typography, useMediaQuery, Box, List, ListSubheader, ListItemIcon, ListItemButton, Badge, Select, MenuItem } from 'src/components'
 import { ICON_MAPPING, Icons } from 'src/components/Icons'
 import NetInfo from 'src/components/NetInfo'
+import useHover from 'src/hooks/useHover'
 import { useWallet } from '../../context/Wallet'
 
-interface ComponentProps {
+interface ComponentProps {	
 	showNavigation?: boolean
 }
 
@@ -42,7 +35,7 @@ const SidebarButton = styled(ListItemButton)<{ active?: string | boolean }>(
 	}),
 )
 
-const NavHeader = styled(ListSubHeader)(({ theme }) => ({
+const NavHeader = styled(ListSubheader)(({ theme }) => ({
 	backgroundColor: 'transparent',
 	textTransform: 'uppercase',
 	color: theme.palette.text.primary,
@@ -107,16 +100,19 @@ function Main({ showNavigation }: ComponentProps) {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 	const { connected } = useWallet()
-	const isMobile = useMediaQuery('(max-width:640px)')
+	const isMobile = useMediaQuery('(max-width:1300px)')
 	const sideBar = { fontSize: isMobile ? '2rem' : '3rem' }
+
+	const [isHover, hoverProps] = useHover();
 
 	return (
 		<Box
+			{...hoverProps} aria-describedby="overlay"
 			sx={{
 				position: 'sticky',
 				top: 0,
-				marginLeft: isMobile ? '-2rem' : 0,
-				width: isMobile ? '5rem' : '20rem',
+				marginLeft: (isMobile ) ? '-2rem' : 0,
+				width: isMobile ? isHover ? '20rem' : '5rem' : '20rem',
 				overflow: 'hidden',
 				display: 'flex',
 				flexDirection: 'column',

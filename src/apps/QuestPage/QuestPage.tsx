@@ -5,7 +5,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
 import { useRef, useMemo, useEffect, createRef, useState } from 'react'
 
-import { Typography,  Box, Paper, Stack } from '../../components'
+import { Typography,  Box, Paper, Stack, useMediaQuery } from '../../components'
 import { useQuestContext } from '../../context/Quest'
 
 import Headerscene from "./modules/Headerscene"
@@ -42,6 +42,8 @@ export function QuestPage() {
 		if(pos > 500) parallax.current.scrollTo(2)
 	}, [pos])
 	*/
+
+	const isMobile = useMediaQuery('(max-width:600px)');
 	
 
 	return (
@@ -87,7 +89,7 @@ export function QuestPage() {
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
 				/>
-				<div className="quest-page__divider--1" />
+				{ !isMobile && <div className="quest-page__divider--1" /> }
 				<QuestItem
 					active={questState.hasQuest2Completed}
 					activeImage={datasette}
@@ -95,7 +97,7 @@ export function QuestPage() {
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
 				/>
-				<div className="quest-page__divider--2" />
+				{ !isMobile && <div className="quest-page__divider--2" /> }
 				<QuestItem
 					active={questState.hasQuest3Completed}
 					activeImage={datasette}
@@ -103,7 +105,7 @@ export function QuestPage() {
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
 				/>
-				<div className="quest-page__divider--3" />
+				{ !isMobile && <div className="quest-page__divider--3" /> }
 				<QuestItem
 					active={questState.hasQuest4Completed}
 					activeImage={datasette}
@@ -111,7 +113,7 @@ export function QuestPage() {
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
 				/>
-				<div className="quest-page__divider--4" />
+				{ !isMobile && <div className="quest-page__divider--4" /> }
 				<QuestItem
 					active={questState.hasQuest5Completed}
 					activeImage={datasette}
@@ -119,7 +121,7 @@ export function QuestPage() {
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
 				/>
-				<div className="quest-page__divider--6" />
+				{ !isMobile && <div className="quest-page__divider--6" /> }
 				<QuestItem
 					active={questState.hasQuest6Completed}
 					last={true}
