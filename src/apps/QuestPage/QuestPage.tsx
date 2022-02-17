@@ -40,28 +40,21 @@ export function QuestPage() {
 
 	return (
 	<>
-		<Parallax id={"parallax"} ref={parallax} style={{ width: "50vw", height: '100%', overflow: "hidden" }} pages={2}>
-				<ParallaxLayer offset={1} speed={1} />
-				<ParallaxLayer offset={2} speed={1} />
+		<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '200%', overflow: "hidden" }} pages={4}>
+			<ParallaxLayer offset={1} style={{ pointerEvents: 'none' }}>
+			</ParallaxLayer>
+			
+			<ParallaxLayer offset={1} speed={-0.5} style={{ pointerEvents: 'none' }}>
+				<img className="float" src={joystick} style={{ width: '15%', marginLeft: "200px" }} />
+			</ParallaxLayer>
 
-				<ParallaxLayer offset={1.3} speed={-0.3} style={{ pointerEvents: 'none' }}>
-				<img className="floatfast" src={joystick} style={{ width: '15%' }} />
-				</ParallaxLayer>
-
-
-				<ParallaxLayer offset={3} speed={0.3} style={{ pointerEvents: 'none' }}>
-				<img className="float" src={joystick} style={{ width: '15%', marginLeft: '50%' }} />
-				</ParallaxLayer>
-
-
-				<ParallaxLayer
-				offset={2}
-				speed={-0.3}
-				/>
-			</Parallax>
+			<ParallaxLayer offset={2.4} speed={0.5} style={{ pointerEvents: 'none' }}>
+				<img className="float" src={datasette} style={{ width: '25%' }} />
+			</ParallaxLayer>
+		</Parallax>
 		<Stack spacing={4}>
 			<Box
-				sx={{ height: '40vh' }}
+				sx={{ height: '60vh' }}
 			>
 				<Headerscene/>
 			</Box>
