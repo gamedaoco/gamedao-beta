@@ -3,8 +3,8 @@ export class Hover3D
     constructor(id)
     {
         this.id = id;
-        this.xOffset = 10;
-        this.yOffset = 10;
+        this.xOffset = 3;
+        this.yOffset = 3;
         this.attack = 0.1;
         this.release = 1;
         this.perspective = 300;
