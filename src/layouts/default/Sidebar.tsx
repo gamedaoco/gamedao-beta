@@ -100,7 +100,7 @@ function Main({ showNavigation }: ComponentProps) {
 	const { nonce } = useGameDaoControl()
 	const { proposalsCount } = useGameDaoGovernance()
 	const { connected } = useWallet()
-	const isMobile = useMediaQuery('(max-width:1300px)')
+	const isMobile = useMediaQuery('(max-width:1200px)')
 	const sideBar = { fontSize: isMobile ? '2rem' : '3rem' }
 
 	const [isHover, hoverProps] = useHover();

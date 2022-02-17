@@ -43,7 +43,7 @@ export function QuestPage() {
 	}, [pos])
 	*/
 
-	const isMobile = useMediaQuery('(max-width:600px)');
+	const isMobile = useMediaQuery('(max-width:1200px)');
 	
 
 	return (
@@ -53,7 +53,7 @@ export function QuestPage() {
 			</ParallaxLayer>
 
 			<ParallaxLayer offset={1} speed={1.5} style={{ pointerEvents: 'none' }}>
-				<img className="float" src={delorean} style={{ rotate: "26deg" ,width: '40%', marginTop: "-100px" }} />
+				<img className="float" src={delorean} style={{ rotate: "26deg" , width: '33%', marginLeft: "50px" }} />
 			</ParallaxLayer>
 			
 			<ParallaxLayer offset={3} speed={-0.5} style={{ pointerEvents: 'none' }}>
