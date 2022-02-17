@@ -6,6 +6,10 @@ import { useCallback } from 'react'
 import { useWallet } from '../../context/Wallet'
 import { useStore } from '../../context/Store'
 
+import keyboard from "../QuestPage/modules/resources/keyboard.png"
+import datasette from "../QuestPage/modules/resources/datasette.png"
+import monitor from "../QuestPage/modules/resources/monitor.png"
+
 export function BetaPage() {
 	const theme = useTheme()
 	const { updateWalletState, connected } = useWallet()
@@ -25,7 +29,11 @@ export function BetaPage() {
 	return (
 		<Stack spacing={4}>
 			<Card>
-				<CardMedia component="img" alt="hero" image="https://picsum.photos/1200/500" />
+				<Stack direction={"row"}>
+					<CardMedia style={{ width: "33.3%" }} component="img" alt="hero" image={keyboard} />
+					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={datasette} />
+					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={monitor} />
+				</Stack>
 				<CardContent>
 					<Stack spacing={4} padding={4}>
 						<Typography className="beta-page__title-color">
