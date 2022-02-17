@@ -139,9 +139,13 @@ export const Main = () => {
 	useEffect(() => {
 		if (!bodyStates || !memberships) return
 
-		setActiveMemberships(
-			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1'),
-		)
+		// Show only own created daos
+		if (apiProvider?.query?.gameDaoControl) {
+			;(async () => {
+				const daos = await apiProvider.query.gameDaoControl.controlledBodies(address)
+				setActiveMemberships(daos.toHuman())
+			})()
+		}
 	}, [bodyStates, memberships])
 
 	const onFileChange = (files, event) => {
@@ -227,7 +231,7 @@ export const Main = () => {
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
-				},
+				}
 			)
 		}
 
@@ -299,7 +303,7 @@ export const Main = () => {
 			localStorage.setItem('gamedao-markdown-create-campaign', markdownValue)
 		},
 		[logoCID, headerCID, formik.values, markdownValue],
-		2000,
+		2000
 	)
 
 	useEffect(() => {
@@ -310,7 +314,7 @@ export const Main = () => {
 	}, [account, refresh])
 
 	if (!daoControl || !daoControl.bodies || !formik.values)
-		return <Loader text='Create Campaign' />
+		return <Loader text="Create Campaign" />
 
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
@@ -339,7 +343,7 @@ export const Main = () => {
 				</Grid>
 			</Box>
 			<Paper sx={{ p: 4, ...bgPlain }}>
-				<Grid container spacing={3} component='form'>
+				<Grid container spacing={3} component="form">
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>
 							General Information
@@ -350,15 +354,15 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.org && Boolean(formik.errors.org)}
 						>
-							<InputLabel id='org-select-label'>Organization</InputLabel>
+							<InputLabel id="org-select-label">Organization</InputLabel>
 							<Select
 								component={Select}
-								labelId='org-select-label'
-								id='org'
+								labelId="org-select-label"
+								id="org"
 								required
-								label='Organization'
-								placeholder='Organization'
-								name='org'
+								label="Organization"
+								placeholder="Organization"
+								name="org"
 								value={formik.values.org}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -378,9 +382,9 @@ export const Main = () => {
 						<TextField
 							fullWidth
 							required
-							label='Campaign name'
-							placeholder='Campaign name'
-							name='title'
+							label="Campaign name"
+							placeholder="Campaign name"
+							name="title"
 							value={formik.values.title}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -394,9 +398,9 @@ export const Main = () => {
 							multiline
 							minRows={5}
 							required
-							label='Campaign Description'
-							placeholder='Tell us more about your idea...'
-							name='description'
+							label="Campaign Description"
+							placeholder="Tell us more about your idea..."
+							name="description"
 							value={formik.values.description}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -412,7 +416,7 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
 						<FileDropZone
-							name='logo'
+							name="logo"
 							onDroppedFiles={onFileChange}
 							onDeleteItem={() => updateLogoCID({})}
 						>
@@ -438,7 +442,7 @@ export const Main = () => {
 							Header Image (1920 x 800px)
 						</FormSectionHeadline>
 						<FileDropZone
-							name='header'
+							name="header"
 							onDroppedFiles={onFileChange}
 							onDeleteItem={() => updateHeaderCID({})}
 						>
@@ -481,9 +485,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Name'
-							placeholder='Name'
-							name='name'
+							label="Name"
+							placeholder="Name"
+							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -494,9 +498,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Email'
-							placeholder='Email'
-							name='email'
+							label="Email"
+							placeholder="Email"
+							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -514,9 +518,9 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Admin Account'
-							placeholder='Admin'
-							name='admin'
+							label="Admin Account"
+							placeholder="Admin"
+							name="admin"
 							required
 							value={formik.values.admin}
 							onChange={formik.handleChange}
@@ -527,14 +531,14 @@ export const Main = () => {
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FormControl fullWidth>
-							<InputLabel id='usage-select-label'>Usage of funds</InputLabel>
+							<InputLabel id="usage-select-label">Usage of funds</InputLabel>
 							<Select
-								labelId='usage-select-label'
+								labelId="usage-select-label"
 								label={'Usage of funds'}
-								id='usage'
+								id="usage"
 								required
-								name='usage'
-								placeholder='Usage'
+								name="usage"
+								placeholder="Usage"
 								value={formik.values.usage}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -555,15 +559,15 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.protocol && Boolean(formik.errors.protocol)}
 						>
-							<InputLabel id='protocol-select-label'>Protocol</InputLabel>
+							<InputLabel id="protocol-select-label">Protocol</InputLabel>
 							<Select
-								labelId='protocol-select-label'
-								id='protocol'
+								labelId="protocol-select-label"
+								id="protocol"
 								required
 								fullWidth
-								name='protocol'
+								name="protocol"
 								label={'protocol'}
-								placeholder='Protocol'
+								placeholder="Protocol"
 								value={formik.values.protocol}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -583,9 +587,9 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Deposit (GAME)'
-							placeholder='Deposit'
-							name='deposit'
+							label="Deposit (GAME)"
+							placeholder="Deposit"
+							name="deposit"
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -596,9 +600,9 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Funding Target (PLAY)'
-							placeholder='Cap'
-							name='cap'
+							label="Funding Target (PLAY)"
+							placeholder="Cap"
+							name="cap"
 							value={formik.values.cap}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -612,14 +616,14 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.duration && Boolean(formik.errors.duration)}
 						>
-							<InputLabel id='duration-select-label'>Campaign Duration</InputLabel>
+							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
 							<Select
-								labelId='duration-select-label'
-								id='duration'
+								labelId="duration-select-label"
+								id="duration"
 								required
-								label='Campaign Duration'
-								placeholder='Campaign Duration'
-								name='duration'
+								label="Campaign Duration"
+								placeholder="Campaign Duration"
+								name="duration"
 								value={formik.values.duration}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -641,10 +645,10 @@ export const Main = () => {
 							error={formik.touched.governance && Boolean(formik.errors.governance)}
 						>
 							<FormControlLabel
-								label='DAO Governance'
+								label="DAO Governance"
 								control={
 									<Checkbox
-										name='governance'
+										name="governance"
 										checked={formik.values.governance}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -659,11 +663,11 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormControl error={formik.touched.accept && Boolean(formik.errors.accept)}>
 							<FormControlLabel
-								label='I agree to the Terms and Conditions'
+								label="I agree to the Terms and Conditions"
 								control={
 									<Checkbox
 										required
-										name='accept'
+										name="accept"
 										checked={formik.values.accept}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -678,7 +682,7 @@ export const Main = () => {
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
-				<Button type='submit' variant='contained' fullWidth>
+				<Button type="submit" variant="contained" fullWidth>
 					Create Campaign
 				</Button>
 				<Typography sx={{ color: 'red' }}>
