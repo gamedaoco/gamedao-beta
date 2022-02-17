@@ -8,7 +8,7 @@ import bgUrl from './resources/bg.jpg'
 import starsUrl from './resources/stars.png'
 import groundUrl from './resources/ground.png'
 
-import desk from './resources/desk.png'
+import desk from './resources/preview_s.png'
 import tris1 from './resources/tris1.png'
 import tris2 from './resources/tris2.png'
 
@@ -58,10 +58,10 @@ extend({ LayerMaterial })
 
 
 function Scene({ dof }) {
-  const scaleN = useAspect(1600, 1000, 1.05)
-  const scaleW = useAspect(2200, 1000, 1.05)
-  console.log(scaleN, scaleW)
-  const textures = useTexture([starsUrl, tris2, tris2, desk, tris1, tris2])
+  const scaleHero = useAspect(2759, 1219, 1)
+  const scaleW = useAspect(2200, 1000, 1)
+
+  const textures = useTexture([desk, tris1, tris2])
   const subject = useRef()
   const group = useRef()
   const layersRef = useRef([])
@@ -69,12 +69,12 @@ function Scene({ dof }) {
   const [temp] = useState(() => new THREE.Vector3())
   const [focus] = useState(() => new THREE.Vector3())
   const layers = [
-    { texture: textures[0], z: 0, factor: 0.005, scale: scaleW },
+   /*{ texture: textures[0], z: 0, factor: 0.005, scale: scaleW },
     { texture: textures[1], z: 10, factor: 0.005, scale: scaleW },
-    { texture: textures[2], z: 0, scale: scaleW },
-    { texture: textures[3], x: 25, y: 20, z: 30, ref: subject, scaleFactor: 0.8, scale: scaleN },
-    { texture: textures[4], x: 25, y: 20, factor: 0.1, scaleFactor: 0.7, z: 40, wiggle: 0.1, scale: scaleW },
-    { texture: textures[5], x: 25, y: 20, factor: 0.04, scaleFactor: 0.7, z: 49, wiggle: 0.3, scale: scaleW },
+    { texture: textures[2], z: 0, scale: scaleW },*/
+    { texture: textures[0], z: 30, ref: subject, scaleFactor: 0.9, scale: scaleHero },
+    { texture: textures[1], x: 25, y: 20, factor: 0.1, scaleFactor: 0.7, z: 40, wiggle: 0.1, scale: scaleW },
+    { texture: textures[2], x: 25, y: 20, factor: 0.04, scaleFactor: 0.7, z: 49, wiggle: 0.3, scale: scaleW },
   ]
 
   useFrame((state, delta) => {
@@ -83,7 +83,7 @@ function Scene({ dof }) {
     // group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse.x * 20, 0.2)
     group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.mouse.y / 10, 0.2)
     group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, -state.mouse.x / 10, 0.2)
-    layersRef.current[4].uniforms.time.value = layersRef.current[5].uniforms.time.value += delta
+    layersRef.current[1].uniforms.time.value = layersRef.current[2].uniforms.time.value += delta
   }, 1)
 
   return (
