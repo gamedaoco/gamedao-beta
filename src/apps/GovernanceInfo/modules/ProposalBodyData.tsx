@@ -38,7 +38,9 @@ export function ProposalBodyData({ body, metadata, proposalId, isOrganisation })
 
 	return (
 		<Stack direction="row" justifyContent="space-between" width="100%">
-			<Typography variant="h4">{proposalMeta.title}</Typography>
+			<Typography variant="h4" sx={{ wordBreak: 'break-word' }}>
+				{proposalMeta.title}
+			</Typography>
 			{imageState ? (
 				<img width="200px" height="100%" src={`${gateway}${imageState}`} />
 			) : null}

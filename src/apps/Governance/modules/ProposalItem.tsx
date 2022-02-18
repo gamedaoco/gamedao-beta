@@ -69,7 +69,9 @@ export function ProposalItem({ proposal, showDivider }) {
 							<Typography sx={{ fontSize: '0.75rem', opacity: 0.3 }} variant="body1">
 								{(body || campaign).name}
 							</Typography>
-							<Typography variant="body1">{proposalMeta.title}</Typography>
+							<Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
+								{proposalMeta.title}
+							</Typography>
 							<Typography sx={{ fontSize: '0.75rem' }} variant="body1">
 								{expires < 0
 									? '' // proposalStateToString(proposalState)
