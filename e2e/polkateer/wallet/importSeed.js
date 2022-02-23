@@ -32,6 +32,13 @@ exports.importSeed = (page) => (options) => __awaiter(void 0, void 0, void 0, fu
     const seedPhraseInput = yield page.waitForSelector('textarea');
     yield seedPhraseInput.click();
     yield seedPhraseInput.type(seed);
+    if (options.derivationPath) {
+        const advanced = yield page.waitForSelector(".advancedToggle");
+        yield advanced.click();
+        const pathInput = yield page.waitForSelector(".derivationPath input");
+        yield pathInput.focus();
+        yield pathInput.type(options.derivationPath);
+    }
     yield page.waitForSelector('button');
     yield page.evaluate(() => document.querySelector("button").click());
     const acc = yield page.waitForSelector("input");

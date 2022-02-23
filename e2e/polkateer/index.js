@@ -74,10 +74,32 @@ function setupPolkadotjs(browser, options = defaultPolkadotjsOptions) {
         const page = yield getExtensionPage(browser);
         page.bringToFront();
         yield confirmWelcomeScreen(page);
+        const polkaDevSeed = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
+        const password = "password1234";
+        // Setup Polkadot Standard Dev Accounts 
         yield importSeed_1.importSeed(page)({
-            seed: options.seed || 'bottom drive obey lake curtain smoke basket hold race lonely fit walk',
-            password: options.password || 'password1234',
-            name: options.name || "Alice",
+            seed: polkaDevSeed,
+            password,
+            name: "Alice",
+            derivationPath: "//Alice"
+        });
+        yield importSeed_1.importSeed(page)({
+            seed: polkaDevSeed,
+            password,
+            name: "Alice_stash",
+            derivationPath: "//Alice//stash"
+        });
+        yield importSeed_1.importSeed(page)({
+            seed: polkaDevSeed,
+            password,
+            name: "Bob",
+            derivationPath: "//Bob"
+        });
+        yield importSeed_1.importSeed(page)({
+            seed: polkaDevSeed,
+            password,
+            name: "Bob_stash",
+            derivationPath: "//Bob//stash"
         });
         return wallet_1.getPolkadotjs(page);
     });
