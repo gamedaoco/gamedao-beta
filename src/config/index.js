@@ -5,6 +5,7 @@ import types from './types.json'
 // const types = typeBundleForPolkadot.types.pop().types
 
 // const configEnv = require(`./production.json`)
+console.log(process.env.NODE_ENV)
 const configEnv = require(`./${process.env.NODE_ENV}.json`)
 const dockerEnv = process.env.DOCKER === true ? require('./docker.json') : {}
 

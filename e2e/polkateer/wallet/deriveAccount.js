@@ -9,41 +9,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importSeed = void 0;
+exports.deriveAccount = void 0;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-exports.importSeed = (page) => (options) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!options.seed)
-        throw Error("Seed is Mandatory");
-    if (!options.password)
-        throw Error("Password is Mandatory");
-    if (!options.name)
-        throw Error("Name is Mandatory");
-    const { seed, password, name } = options;
+exports.deriveAccount = (page) => (options) => __awaiter(void 0, void 0, void 0, function* () {
+    const password = (options === null || options === void 0 ? void 0 : options.password) || "password1234";
+    const name = (options === null || options === void 0 ? void 0 : options.name) || "DerivedAccount_" + Date.now().toString();
     yield page.waitForSelector('.popupToggle');
     yield page.evaluate(() => {
         /* @ts-ignore */
         document.querySelectorAll(".popupToggle")[0].click();
     });
-    yield page.waitForSelector('svg[data-icon=key]');
+    yield page.waitForSelector('svg[data-icon=code-branch]');
     yield page.evaluate(() => {
         /* @ts-ignore */
-        document.querySelector("svg[data-icon=key]").parentElement.click();
+        document.querySelector("svg[data-icon=code-branch]").parentElement.click();
     });
-    const seedPhraseInput = yield page.waitForSelector('textarea');
-    yield seedPhraseInput.click();
-    yield seedPhraseInput.type(seed);
-    yield page.waitForSelector('button');
-    yield page.evaluate(() => document.querySelector("button").click());
-    const acc = yield page.waitForSelector("input");
-    yield acc.focus();
-    yield acc.type(name);
-    const inputPw = yield page.waitForSelector("input[type='password']");
-    yield inputPw.click();
-    yield inputPw.type(password);
+    const pw = yield page.waitForSelector("input");
+    yield pw.focus();
+    yield pw.type("password1234");
+    yield page.waitForTimeout(500);
+    yield page.evaluate(() => {
+        const btn = document.querySelectorAll("button")[1];
+        btn.click();
+        return;
+    });
+    const nameInput = yield page.waitForSelector("input");
+    yield nameInput.focus();
+    yield nameInput.type(name);
+    const pwDerived = yield page.waitForSelector("input[type=password]");
+    yield pwDerived.focus();
+    yield pwDerived.type(password);
+    yield page.waitForTimeout(500);
     const validatePw = yield page.$$("input[type='password']");
     yield validatePw[1].click();
     yield validatePw[1].type(password);
+    yield page.waitForTimeout(500);
     const buttons = yield page.$$("button");
-    yield buttons[1].click(); // next button is 2nd
+    yield buttons[1].click();
+    yield page.waitForTimeout(1000);
     return;
 });

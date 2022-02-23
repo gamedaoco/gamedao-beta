@@ -28,11 +28,14 @@ async function main(){
 
   // onmousemove = function(e){console.log(`mouse location = X: ${e.x}, Y: ${e.y}`)}
 
-  // create accounts froms eeds
+  // create accounts froms seeds
   await createAccounts()
 
   // polkadot js apps for executing calls and getting state
-  // global.explorer = await openExplorer()
+  global.explorer = await openExplorer()
+
+  await explorer.bringToFront()
+  await explorer.waitForTimeout(200000)
   
   // tests
   await test("test gameDAO", async t => {

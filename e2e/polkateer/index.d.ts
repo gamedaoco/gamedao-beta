@@ -30,6 +30,7 @@ export declare type Polkateer = {
     importSeed: (options: importSeedOptions) => Promise<void>;
     switchNetwork: (network: string) => Promise<void>;
     confirmTransaction: (password: string) => Promise<void>;
+    deriveAccount: (deriveAccountOptions: any) => Promise<void>;
     page: Page;
 };
 export declare type TransactionOptions = {

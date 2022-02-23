@@ -75,9 +75,9 @@ function setupPolkadotjs(browser, options = defaultPolkadotjsOptions) {
         page.bringToFront();
         yield confirmWelcomeScreen(page);
         yield importSeed_1.importSeed(page)({
-            seed: options.seed || 'hope clutch worth stone glue frown humble sport minute bid dynamic chicken',
+            seed: options.seed || 'bottom drive obey lake curtain smoke basket hold race lonely fit walk',
             password: options.password || 'password1234',
-            name: options.name || "Polkateer_Account_0",
+            name: options.name || "Alice",
         });
         return wallet_1.getPolkadotjs(page);
     });

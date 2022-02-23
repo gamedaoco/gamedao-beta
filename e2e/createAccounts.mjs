@@ -7,28 +7,13 @@ export async function createAccounts(){
         const pteer = global.polkateer
         // change network to ZERO
         await pteer.switchNetwork('24'); // TODO clearnames as options?
+        
         await pteer.page.reload()
-      
-        await pteer.importSeed({
-          seed: seeds.treasury,
-          name: "Controller",
-          password
-        })
-      
-        await pteer.importSeed({
-          seed: seeds.controller,
-          name: "Treasury",
-          password
-        })
-      
-        await pteer.importSeed({
-          seed: seeds.bot,
-          name: "Bot",
-          password
-        })
+
+        await pteer.page.deriveAccount()
       
         t.ok(true, "network is ZERO (24)")
-        t.ok(true, "created 3 accounts")
+        t.ok(true, "created 2 accounts")
       
         t.end()
       })

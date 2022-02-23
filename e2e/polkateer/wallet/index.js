@@ -13,6 +13,7 @@ exports.getPolkadotjs = void 0;
 const allow_1 = require("./allow");
 const confirmTransaction_1 = require("./confirmTransaction");
 const getAccountsData_1 = require("./getAccountsData");
+const deriveAccount_1 = require("./deriveAccount");
 const importSeed_1 = require("./importSeed");
 const switchNetwork_1 = require("./switchNetwork");
 exports.getPolkadotjs = (page, version) => __awaiter(void 0, void 0, void 0, function* () {
@@ -24,6 +25,7 @@ exports.getPolkadotjs = (page, version) => __awaiter(void 0, void 0, void 0, fun
         openAccountsPopup: openAccountsPopup(page),
         openSettingsPopup: openSettingsPopup(page),
         getAccountsData: getAccountsData_1.getAccountsData(page),
+        deriveAccount: deriveAccount_1.deriveAccount(page),
         page,
     };
 });

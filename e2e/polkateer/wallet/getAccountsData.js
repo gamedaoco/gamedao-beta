@@ -13,6 +13,9 @@ exports.getAccountsData = void 0;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 exports.getAccountsData = (page) => () => __awaiter(void 0, void 0, void 0, function* () {
     yield page.bringToFront();
+    yield page.waitForTimeout(1000);
+    yield page.reload();
+    yield page.waitForSelector(".address");
     const accounts = yield page.evaluate(() => {
         const items = document.querySelectorAll(".address");
         const data = Array.prototype.map.call(items, (item) => {

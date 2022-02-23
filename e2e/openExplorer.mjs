@@ -5,7 +5,7 @@ export async function openExplorer(){
         const pteer = global.polkateer
     
         const explorerPage = await browser.newPage()
-        await explorerPage.goto("https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Falphaville.zero.io#/explorer")
+        await explorerPage.goto("https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/explorer")
     
         t.ok(explorerPage, "Zero Explorer Loaded")
         
