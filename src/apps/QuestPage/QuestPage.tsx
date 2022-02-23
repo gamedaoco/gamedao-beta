@@ -7,6 +7,7 @@ import { useRef, useMemo, useEffect, createRef, useState } from 'react'
 
 import { Typography,  Box, Paper, Stack, useMediaQuery } from '../../components'
 import { useQuestContext } from '../../context/Quest'
+import { gateway } from '../lib/ipfs'
 
 import Headerscene from "./modules/Headerscene"
 import { Hover3D } from './modules/Hover3D'
@@ -17,6 +18,8 @@ import datasette from './modules/resources/datasette_s.png'
 // import cassette from './modules/resources/delorean_s.png'
 // import keyboard from './modules/resources/keyboard_s.png'
 import delorean from './modules/resources/delorean_s.png'
+
+import { ipfsImageCIDs } from "./modules/ipfsImageCIDs"
 
   
 export function QuestPage() {
@@ -63,9 +66,12 @@ export function QuestPage() {
 		</Parallax>
 		<Stack spacing={4}>
 			<Box
-				sx={{ height: '60vh' }}
+				sx={{ 
+					height: '60vh',
+					backgroundImage: `url(${gateway}${ipfsImageCIDs["1"]})`
+				}}
 			>
-				<Headerscene/>
+				{/* 3D Scene three js <Headerscene/> */}
 			</Box>
 
 			<Paper>
