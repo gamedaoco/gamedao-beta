@@ -21,6 +21,39 @@ import delorean from './modules/resources/delorean_s.png'
 
 import { ipfsImageCIDs } from "./modules/ipfsImageCIDs"
 
+
+function AnimatedHeader(props){
+	const imageNum = props.imageNum
+	const [animated, setAnimated] = useState(false)
+
+	let frame = ""
+
+	if(animated){
+		frame = ".1"
+	}
+
+	const path = "header"+imageNum+frame
+
+	useEffect( () => {
+		if(imageNum === "1" || imageNum === "2" || imageNum === "3"){
+			return
+		}
+		const id = setInterval( () => {
+			setAnimated(!animated)
+		}, 1000)
+		return () => clearInterval(id)
+	})
+
+	return <Box
+		sx={{ 
+			height: '60vh',
+			backgroundImage: `url(${gateway}${ipfsImageCIDs[path]})`,
+			backgroundPosition: "center",
+			backgroundSize: "contain",
+			backgroundRepeat: "no-repeat"
+		}}
+	/>
+}
   
 export function QuestPage() {
 	const questState = useQuestContext()
@@ -41,6 +74,8 @@ export function QuestPage() {
 	*/
 
 	const isMobile = useMediaQuery('(max-width:1200px)');
+
+	const headerStateNum = "4" // 2,3,4,5
 	
 
 	return (
@@ -59,15 +94,7 @@ export function QuestPage() {
 
 		</Parallax>*/}
 		<Stack spacing={4}>
-			<Box
-				sx={{ 
-					height: '60vh',
-					backgroundImage: `url(${gateway}${ipfsImageCIDs["1"]})`
-				}}
-			>
-				{/* 3D Scene three js <Headerscene/> */}
-			</Box>
-
+			<AnimatedHeader imageNum={headerStateNum} />
 			<Paper>
 				<Stack padding={6} spacing={4}>
 					<Typography className="quest-page__title-color">Headline</Typography>

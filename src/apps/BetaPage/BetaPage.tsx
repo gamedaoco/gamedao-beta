@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles'
 import { useCallback } from 'react'
 import { useWallet } from '../../context/Wallet'
 import { useStore } from '../../context/Store'
+import { gateway } from '../lib/ipfs'
 
 import cassette from "../QuestPage/modules/resources/cassette.png"
 
@@ -26,12 +27,16 @@ export function BetaPage() {
 
 	return (
 		<Stack spacing={4}>
+			<Box
+				sx={{
+					height: '60vh',
+					backgroundImage: `url(${gateway}QmTM1KtPPGYyZXw4GkNt6V6QqqGPyRrQCwtUadqL6C4RHD)`,
+					backgroundPosition: "center",
+					backgroundSize: "contain",
+					backgroundRepeat: "no-repeat"
+				}}
+			/>
 			<Card>
-				<Stack direction={"row"}>
-					<CardMedia style={{ width: "33.3%" }} component="img" alt="hero" image={cassette} />
-					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={cassette} />
-					<CardMedia style={{ borderLeft: "2.5px dashed white", width: "33.3%" }} component="img" alt="hero" image={cassette} />
-				</Stack>
 				<CardContent>
 					<Stack spacing={4} padding={4}>
 						<Typography className="beta-page__title-color">
