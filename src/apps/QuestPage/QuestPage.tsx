@@ -29,6 +29,7 @@ export function QuestPage() {
 		let myHover3D = new Hover3D(".questicon");
 	}, [])
 
+	/* sync parallax layer with scrollbars
 	const pos = useScrollPosition(24)
 	const parallax = useRef<IParallax>(null!)
 
@@ -37,13 +38,6 @@ export function QuestPage() {
 		document.getElementById('parallax').onwheel = function(){ return false; }
 		document.getElementById("parallax").scrollTo(0, pos)
 	}, [pos])
-
-	/*
-	useEffect( () => {
-		if(!parallax.current) return
-		// scroll to page 2 at 500px
-		if(pos > 500) parallax.current.scrollTo(2)
-	}, [pos])
 	*/
 
 	const isMobile = useMediaQuery('(max-width:1200px)');
@@ -51,7 +45,7 @@ export function QuestPage() {
 
 	return (
 	<>
-		<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '200%', overflow: "hidden" }} pages={3}>
+		{/*<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '300%', overflow: "hidden" }} pages={3}>
 			<ParallaxLayer offset={1} style={{ pointerEvents: 'none' }}>
 			</ParallaxLayer>
 
@@ -63,7 +57,7 @@ export function QuestPage() {
 				
 			</ParallaxLayer>
 
-		</Parallax>
+		</Parallax>*/}
 		<Stack spacing={4}>
 			<Box
 				sx={{ 
