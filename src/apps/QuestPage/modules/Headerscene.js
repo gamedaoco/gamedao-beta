@@ -4,13 +4,6 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Plane, useAspect, useTexture } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Vignette } from '@react-three/postprocessing'
 
-import bgUrl from './resources/bg.jpg'
-import starsUrl from './resources/stars.png'
-import groundUrl from './resources/ground.png'
-
-import desk from './resources/preview_s.png'
-import tris1 from './resources/tris1.png'
-import tris2 from './resources/tris2.png'
 
 import { shaderMaterial } from '@react-three/drei'
 import { extend } from '@react-three/fiber'

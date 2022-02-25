@@ -9,20 +9,10 @@ import { Typography,  Box, Paper, Stack, useMediaQuery } from '../../components'
 import { useQuestContext } from '../../context/Quest'
 import { gateway } from '../lib/ipfs'
 
-import Headerscene from "./modules/Headerscene"
-import { Hover3D } from './modules/Hover3D'
-
-import joystick from './modules/resources/joystick_s.png'
-import datasette from './modules/resources/datasette_s.png'
-// import monitor from './modules/resources/monitor_s.png'
-// import cassette from './modules/resources/delorean_s.png'
-// import keyboard from './modules/resources/keyboard_s.png'
-import delorean from './modules/resources/delorean_s.png'
-
 import { ipfsImageCIDs } from "./modules/ipfsImageCIDs"
 
 
-function AnimatedHeader(props){
+function AnimatedImage(props){
 	const imageNum = props.imageNum
 	const [animated, setAnimated] = useState(false)
 
@@ -58,9 +48,11 @@ function AnimatedHeader(props){
 export function QuestPage() {
 	const questState = useQuestContext()
 
+	/*
 	useEffect( () => {
 		let myHover3D = new Hover3D(".questicon");
 	}, [])
+	*/
 
 	/* sync parallax layer with scrollbars
 	const pos = useScrollPosition(24)
@@ -75,7 +67,8 @@ export function QuestPage() {
 
 	const isMobile = useMediaQuery('(max-width:1200px)');
 
-	const headerStateNum = "4" // 2,3,4,5
+	// this is quaest progress
+	const headerQuestProgress = "4" // 2,3,4,5
 	
 
 	return (
@@ -94,7 +87,7 @@ export function QuestPage() {
 
 		</Parallax>*/}
 		<Stack spacing={4}>
-			<AnimatedHeader imageNum={headerStateNum} />
+			<AnimatedImage imageNum={headerQuestProgress} />
 			<Paper>
 				<Stack padding={6} spacing={4}>
 					<Typography className="quest-page__title-color">Headline</Typography>
@@ -111,7 +104,7 @@ export function QuestPage() {
 				<QuestItem
 					active={questState.hasQuest1Completed}
 					first={true}
-					activeImage={joystick}
+					activeImage={}
 					title={'Quest #1'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -119,7 +112,7 @@ export function QuestPage() {
 				{ !isMobile && <div className="quest-page__divider--1" /> }
 				<QuestItem
 					active={questState.hasQuest2Completed}
-					activeImage={datasette}
+					activeImage={}
 					title={'Quest #2'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
@@ -127,7 +120,7 @@ export function QuestPage() {
 				{ !isMobile && <div className="quest-page__divider--2" /> }
 				<QuestItem
 					active={questState.hasQuest3Completed}
-					activeImage={datasette}
+					activeImage={}
 					title={'Quest #3'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -135,7 +128,7 @@ export function QuestPage() {
 				{ !isMobile && <div className="quest-page__divider--3" /> }
 				<QuestItem
 					active={questState.hasQuest4Completed}
-					activeImage={datasette}
+					activeImage={}
 					title={'Quest #4'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
@@ -143,7 +136,7 @@ export function QuestPage() {
 				{ !isMobile && <div className="quest-page__divider--4" /> }
 				<QuestItem
 					active={questState.hasQuest5Completed}
-					activeImage={datasette}
+					activeImage={}
 					title={'Quest #5'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={false}
@@ -152,7 +145,7 @@ export function QuestPage() {
 				<QuestItem
 					active={questState.hasQuest6Completed}
 					last={true}
-					activeImage={delorean}
+					activeImage={}
 					title={'Quest #6'}
 					description={'Connect your wallet and get your personal access key'}
 					rtl={true}
