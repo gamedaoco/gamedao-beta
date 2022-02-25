@@ -15,7 +15,6 @@ const data = {
 }
 
 
-
 export async function createNoFeesOpenDAO(page){
 
     await test("Navigate to Create Organisation Page", async  t => {
@@ -73,8 +72,8 @@ export async function createNoFeesOpenDAO(page){
         const website = await page.$("input[name=website]")
         await website.type(data.website)
 
-        const ctrl = accounts.find( x => x.name === "Controller")
-        const treasure = accounts.find( x => x.name === "Treasury")
+        const ctrl = accounts.find( x => x.name === "Alice")
+        const treasure = accounts.find( x => x.name === "Alice_stash")
         
         await page.bringToFront()
 
@@ -109,7 +108,7 @@ export async function createNoFeesOpenDAO(page){
         await global.polkateer.confirmTransaction("password1234")
 
         await page.bringToFront()
-        await page.waitForTimeout(6000)
+        await page.waitForTimeout(3000)
         
         t.ok(true, "Form Data Entered and Validated")
         t.end()

@@ -33,10 +33,7 @@ async function main(){
 
   // polkadot js apps for executing calls and getting state
   global.explorer = await openExplorer()
-
-  await explorer.bringToFront()
-  await explorer.waitForTimeout(200000)
-  
+    
   // tests
   await test("test gameDAO", async t => {
     // gameDAO
@@ -47,7 +44,6 @@ async function main(){
     t.ok(gamedaoPage, "GameDAO Loaded")
   
     const enter = await gamedaoPage.waitForSelector('button')
-    await gamedaoPage.waitForTimeout(500000)
 
     await enter.click()
 
@@ -63,12 +59,11 @@ async function main(){
 
     const acc = await gamedaoPage.waitForSelector("select[name=account]")
 
-    // Click on account selector coords
+    /* select account
     await gamedaoPage.mouse.click(635, 35);
     await gamedaoPage.keyboard.press('ArrowDown');
-    await gamedaoPage.keyboard.press('ArrowDown');
-    await gamedaoPage.keyboard.press('ArrowDown');
     await gamedaoPage.keyboard.press('Enter');
+    */
     
     await createNoFeesOpenDAO(gamedaoPage)
     await closeBrowser()
