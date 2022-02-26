@@ -50,11 +50,11 @@ export function AnimatedHeader(props){
 function MonitorButton(props){
 	const { children, disabled } = props
 	
-	return <>
+	return <Box style={{ position: "relative" }}>
 		<img src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} />
 		{ disabled && <img src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} /> }
-		<span>{children}</span>
-	</>
+		<span style={{ position: "absolute" }}>{children}</span>
+	</Box>
 }
   
 export function QuestPage() {
