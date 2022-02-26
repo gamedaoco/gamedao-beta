@@ -49,6 +49,7 @@
 		"@react-three/fiber": "7.0.21",
 		"@react-spring/parallax": "9.4.3",
 		"@react-three/postprocessing": "2.0.0",
+		"react-use-size": "2.0.4",
 		"postprocessing": "6.21.3",
 		"@reduxjs/toolkit": "1.6.2",
 		"@substra-hooks/core": "^0.0.28",

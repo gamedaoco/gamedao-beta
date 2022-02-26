@@ -1,9 +1,10 @@
-import { QuestItem } from './modules/questItem'
+// import { QuestItem } from './modules/questItem'
 import './textOverride.css'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import useScrollPosition from '@react-hook/window-scroll'
-// import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
+// import { Canvas, useFrame, useThree } from '@react-three/fiber'
+// import useScrollPosition from '@react-hook/window-scroll'
 import { useRef, useMemo, useEffect, createRef, useState } from 'react'
+import { useComponentSize } from "react-use-size";
+// import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
 
 import { Typography,  Box, Paper, Stack, useMediaQuery } from '../../components'
 import { useQuestContext } from '../../context/Quest'
@@ -45,12 +46,26 @@ export function AnimatedHeader(props){
 		}}
 	/>
 }
+
+function MonitorButton(props){
+	const { children, disabled } = props
+	
+	return <>
+		<img src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} />
+		{ disabled && <img src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} /> }
+		<span>{children}</span>
+	</>
+}
   
 export function QuestPage() {
 	const questState = useQuestContext()
-	const isMobile = useMediaQuery('(max-width:1200px)');
+	const isLarge = useMediaQuery('(min-width:1300px)');
 	const headerQuestProgress = "5" // 2,3,4,5
+	const { ref: screenRef, height, width } = useComponentSize();
+
 	console.log(questState)
+	console.log(width, height)
+
 
 	/*
 	useEffect( () => {
@@ -97,6 +112,7 @@ export function QuestPage() {
 			>
 				{/* Screen */}
 				<Box
+					ref={screenRef}
 					sx={{ 
 						position: "relative",
 						height: '100%',
@@ -111,23 +127,24 @@ export function QuestPage() {
 					<Box
 						sx={{
 							margin: "0 auto",
-							width: "90%",
+							width: isLarge ? "calc( 70% )" : "calc( 90% )",
 							height: "80%",
 							marginTop: "10%",
 							display: "flex",
 						}}
 					>
-						<Stack>
+						<Stack sx={{ margin: "auto" }}>
 							<img src={`${gateway}${ipfsImageCIDs["step0"]}`} />
 						</Stack>
 
 						<Box sx={{ 
 							width: "100%",
-							overflowY: "scroll"
+							overflowY: "scroll",
+							overflowX: "hidden"
 						}}>
-							<span>Story</span>
-							<img src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} />
-							<img src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} />
+							<span style={{ fontFamily: "monospace", color: "#54fad0" }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>
+							<MonitorButton>OK!</MonitorButton>
+							<MonitorButton disabled >OK!</MonitorButton>
 							<img src={`${gateway}${ipfsImageCIDs["cassette"]}`} />
 						</Box>
 					</Box>
