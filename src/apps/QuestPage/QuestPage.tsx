@@ -2,7 +2,7 @@ import { QuestItem } from './modules/questItem'
 import './textOverride.css'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import useScrollPosition from '@react-hook/window-scroll'
-import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
+// import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax'
 import { useRef, useMemo, useEffect, createRef, useState } from 'react'
 
 import { Typography,  Box, Paper, Stack, useMediaQuery } from '../../components'
@@ -12,8 +12,9 @@ import { gateway } from '../lib/ipfs'
 import { ipfsImageCIDs } from "./modules/ipfsImageCIDs"
 
 
-function AnimatedImage(props){
-	const imageNum = props.imageNum
+
+export function AnimatedHeader(props){
+	const imageNum = props.questProgress
 	const [animated, setAnimated] = useState(false)
 
 	let frame = ""
@@ -47,6 +48,9 @@ function AnimatedImage(props){
   
 export function QuestPage() {
 	const questState = useQuestContext()
+	const isMobile = useMediaQuery('(max-width:1200px)');
+	const headerQuestProgress = "5" // 2,3,4,5
+	console.log(questState)
 
 	/*
 	useEffect( () => {
@@ -64,13 +68,7 @@ export function QuestPage() {
 		document.getElementById("parallax").scrollTo(0, pos)
 	}, [pos])
 	*/
-
-	const isMobile = useMediaQuery('(max-width:1200px)');
-
-	// this is quaest progress
-	const headerQuestProgress = "4" // 2,3,4,5
 	
-
 	return (
 	<>
 		{/*<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '300%', overflow: "hidden" }} pages={3}>
@@ -86,72 +84,126 @@ export function QuestPage() {
 			</ParallaxLayer>
 
 		</Parallax>*/}
-		<Stack spacing={4}>
-			<AnimatedImage imageNum={headerQuestProgress} />
-			<Paper>
-				<Stack padding={6} spacing={4}>
-					<Typography className="quest-page__title-color">Headline</Typography>
-					<Typography>
-						We need your help! During our last update we lost our tangram key. Help us
-						find the missing pieces to unlock the next chapter of GameDAO. By finding
-						all pieces of the key and providing your valuable feedback GameDAO will be
-						able to level up to the next version!
-					</Typography>
-				</Stack>
-			</Paper>
 
-			<Stack spacing={4} className="quest-page__container ">
-				<QuestItem
-					active={questState.hasQuest1Completed}
-					first={true}
-					activeImage={}
-					title={'Quest #1'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={false}
+		<Stack spacing={4}>
+			<AnimatedHeader questProgress={headerQuestProgress} />
+
+			<Box
+				sx={{
+					position: "relative",
+					width: '100%',
+					height: '90vh',
+				}}
+			>
+				{/* Screen */}
+				<Box
+					sx={{ 
+						position: "relative",
+						height: '100%',
+						width: "100%",
+						backgroundImage: `url(${gateway}${ipfsImageCIDs["screen"]})`,
+						backgroundPosition: "center",
+						backgroundSize: "contain",
+						backgroundRepeat: "no-repeat",
+						overflow: "hidden"
+					}}
+				>
+					<Box
+						sx={{
+							margin: "0 auto",
+							width: "90%",
+							height: "80%",
+							marginTop: "10%",
+							display: "flex",
+						}}
+					>
+						<Stack>
+							<img src={`${gateway}${ipfsImageCIDs["step0"]}`} />
+						</Stack>
+
+						<Box sx={{ 
+							width: "100%",
+							overflowY: "scroll"
+						}}>
+							<span>Story</span>
+							<img src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} />
+							<img src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} />
+							<img src={`${gateway}${ipfsImageCIDs["cassette"]}`} />
+						</Box>
+					</Box>
+				</Box>
+
+				{/* Scanlines */}
+				<Box
+					sx={{
+						top: "0px",
+						right: "0px",
+						position: "absolute",
+						pointerEvents: "none",
+						height: '100%',
+						width: '100%',
+						backgroundImage: `url(${gateway}${ipfsImageCIDs["scanlines"]})`,
+						backgroundPosition: "center",
+						backgroundSize: "contain",
+						backgroundRepeat: "no-repeat"
+					}}
 				/>
-				{ !isMobile && <div className="quest-page__divider--1" /> }
-				<QuestItem
-					active={questState.hasQuest2Completed}
-					activeImage={}
-					title={'Quest #2'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={true}
-				/>
-				{ !isMobile && <div className="quest-page__divider--2" /> }
-				<QuestItem
-					active={questState.hasQuest3Completed}
-					activeImage={}
-					title={'Quest #3'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={false}
-				/>
-				{ !isMobile && <div className="quest-page__divider--3" /> }
-				<QuestItem
-					active={questState.hasQuest4Completed}
-					activeImage={}
-					title={'Quest #4'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={true}
-				/>
-				{ !isMobile && <div className="quest-page__divider--4" /> }
-				<QuestItem
-					active={questState.hasQuest5Completed}
-					activeImage={}
-					title={'Quest #5'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={false}
-				/>
-				{ !isMobile && <div className="quest-page__divider--6" /> }
-				<QuestItem
-					active={questState.hasQuest6Completed}
-					last={true}
-					activeImage={}
-					title={'Quest #6'}
-					description={'Connect your wallet and get your personal access key'}
-					rtl={true}
-				/>
-			</Stack>
+
+			</Box>
 		</Stack>
 		</>
 	)
 }
+
+
+
+/*
+
+				<QuestItem
+					active={questState.hasQuest1Completed}
+					questImage={`${gateway}${ipfsImageCIDs["joystick"]}`}
+					title={'Quest #1'}
+					story={'Connect your wallet and get your personal access key'}
+					
+				/>
+
+				<QuestItem
+					active={questState.hasQuest2Completed}
+					questImage={`${gateway}${ipfsImageCIDs["datasette"]}`}
+					title={'Quest #2'}
+					story={'Connect your wallet and get your personal access key'}
+					
+				/>
+
+				<QuestItem
+					active={questState.hasQuest3Completed}
+					questImage={`${gateway}${ipfsImageCIDs["monitor"]}`}
+					title={'Quest #3'}
+					story={'Connect your wallet and get your personal access key'}
+					
+				/>
+
+				<QuestItem
+					active={questState.hasQuest4Completed}
+					questImage={`${gateway}${ipfsImageCIDs["cassette"]}`}
+					title={'Quest #4'}
+					story={'Connect your wallet and get your personal access key'}
+					
+				/>
+
+				<QuestItem
+					active={questState.hasQuest5Completed}
+					questImage={`${gateway}${ipfsImageCIDs["keyboard"]}`}
+					title={'Quest #5'}
+					story={'Connect your wallet and get your personal access key'}
+					
+				/>
+
+				<QuestItem
+					active={questState.hasQuest6Completed}
+					questImage={`${gateway}${ipfsImageCIDs["delorean"]}`}
+					title={'Quest #6'}
+					story={'Connect your wallet and get your personal access key'}
+				/>
+
+				*/

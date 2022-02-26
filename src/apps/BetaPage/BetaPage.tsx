@@ -7,7 +7,7 @@ import { useWallet } from '../../context/Wallet'
 import { useStore } from '../../context/Store'
 import { gateway } from '../lib/ipfs'
 
-import cassette from "../QuestPage/modules/resources/cassette.png"
+import { AnimatedHeader } from "../QuestPage/QuestPage"
 
 export function BetaPage() {
 	const theme = useTheme()
@@ -27,15 +27,7 @@ export function BetaPage() {
 
 	return (
 		<Stack spacing={4}>
-			<Box
-				sx={{
-					height: '60vh',
-					backgroundImage: `url(${gateway}QmTM1KtPPGYyZXw4GkNt6V6QqqGPyRrQCwtUadqL6C4RHD)`,
-					backgroundPosition: "center",
-					backgroundSize: "contain",
-					backgroundRepeat: "no-repeat"
-				}}
-			/>
+			<AnimatedHeader questProgress={"4"} />
 			<Card>
 				<CardContent>
 					<Stack spacing={4} padding={4}>
