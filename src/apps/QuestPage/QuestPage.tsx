@@ -51,10 +51,10 @@ function MonitorStep(props){
 	const { children, disabled, active, done } = props
 	
 	return <Box style={{ position: "relative" }}>
-		{ active && <img src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
+		{ active && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
 		{ active && <span style={{ position: "absolute" }}>{children}</span> }
-		{ disabled && <img src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
-		{ done && <img src={`${gateway}${ipfsImageCIDs["stepDone"]}`} /> }
+		{ (disabled || (!active && !disabled)) && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
+		{ done && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDone"]}`} /> }
 	</Box>
 }
 
@@ -62,10 +62,10 @@ function MonitorStep(props){
 function MonitorButton(props){
 	const { children, disabled } = props
 	
-	return <Box style={{ position: "relative" }}>
-		<img src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} />
-		{ disabled && <img src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} /> }
-		<span style={{ position: "absolute" }}>{children}</span>
+	return <Box style={{ position: "relative", maxWidth: "304px", margin: "0 auto" }}>
+		{ !disabled && <img width="100%" src={`${gateway}${ipfsImageCIDs["defaultButton"]}`} /> }
+		{ disabled  && <img width="100%" src={`${gateway}${ipfsImageCIDs["disabledButton"]}`} /> }
+		<span style={{ width: "100%", color: "black", top: "33%", left: "0%", position: "absolute", textAlign: "center" }}>{children}</span>
 	</Box>
 }
   
@@ -143,12 +143,12 @@ export function QuestPage() {
 						position: "absolute",
 						top: "9%",
 						bottom: "9%",
-						left: "9%",
+						left: "6%",
 						right: "9%"
 					}}
 				>
 					<Stack sx={{ margin: "auto" }}>
-						{[0,1,2,3,4,5].map( () => <MonitorButton/> )}
+						{[0,1,2,3,4,5].map( () => <MonitorStep/> )}
 					</Stack>
 
 					<Box 
