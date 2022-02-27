@@ -95,3 +95,8 @@
 	left: -1px;
 	height: 12rem;
 }
+
+.questMonitorTextContainer::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+}

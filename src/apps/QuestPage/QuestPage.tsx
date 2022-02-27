@@ -47,6 +47,18 @@ export function AnimatedHeader(props){
 	/>
 }
 
+function MonitorStep(props){
+	const { children, disabled, active, done } = props
+	
+	return <Box style={{ position: "relative" }}>
+		{ active && <img src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
+		{ active && <span style={{ position: "absolute" }}>{children}</span> }
+		{ disabled && <img src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
+		{ done && <img src={`${gateway}${ipfsImageCIDs["stepDone"]}`} /> }
+	</Box>
+}
+
+
 function MonitorButton(props){
 	const { children, disabled } = props
 	
@@ -65,7 +77,6 @@ export function QuestPage() {
 
 	console.log(questState)
 	console.log(width, height)
-
 
 	/*
 	useEffect( () => {
@@ -106,65 +117,67 @@ export function QuestPage() {
 			<Box
 				sx={{
 					position: "relative",
-					width: '100%',
-					height: '90vh',
 				}}
 			>
 				{/* Screen */}
-				<Box
+				<img
+					src={`${gateway}${ipfsImageCIDs["screen"]}`}
 					ref={screenRef}
-					sx={{ 
-						position: "relative",
-						height: '100%',
-						width: "100%",
-						backgroundImage: `url(${gateway}${ipfsImageCIDs["screen"]})`,
-						backgroundPosition: "center",
-						backgroundSize: "contain",
-						backgroundRepeat: "no-repeat",
-						overflow: "hidden"
-					}}
-				>
-					<Box
-						sx={{
-							margin: "0 auto",
-							width: isLarge ? "calc( 70% )" : "calc( 90% )",
-							height: "80%",
-							marginTop: "10%",
-							display: "flex",
-						}}
-					>
-						<Stack sx={{ margin: "auto" }}>
-							<img src={`${gateway}${ipfsImageCIDs["step0"]}`} />
-						</Stack>
+					alt="monitor"
+					width="100%"
+					// sx={{ 
+					// 	position: "relative",
+					// 	width: "100%",
+					// 	src: `url(${gateway}${ipfsImageCIDs["screen"]})`,
+					// 	backgroundPosition: "center",
+					// 	backgroundSize: "contain",
+					// 	backgroundRepeat: "no-repeat",
+					// 	overflow: "hidden"
+					// }}
+				/>
 
-						<Box sx={{ 
-							width: "100%",
-							overflowY: "scroll",
-							overflowX: "hidden"
-						}}>
-							<span style={{ fontFamily: "monospace", color: "#54fad0" }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>
-							<MonitorButton>OK!</MonitorButton>
-							<MonitorButton disabled >OK!</MonitorButton>
-							<img src={`${gateway}${ipfsImageCIDs["cassette"]}`} />
-						</Box>
-					</Box>
-				</Box>
-
-				{/* Scanlines */}
 				<Box
 					sx={{
-						top: "0px",
-						right: "0px",
+						margin: "0 auto",
+						display: "flex",
 						position: "absolute",
+						top: "9%",
+						bottom: "9%",
+						left: "9%",
+						right: "9%"
+					}}
+				>
+					<Stack sx={{ margin: "auto" }}>
+						{[0,1,2,3,4,5].map( () => <MonitorButton/> )}
+					</Stack>
+
+					<Box 
+					className="questMonitorTextContainer"
+					sx={{ 
+						width: "100%",
+						overflowX: "hidden"
+					}}>
+						<span style={{ fontFamily: "monospace", color: "#54fad0" }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>
+						<MonitorButton>OK!</MonitorButton>
+						<MonitorButton disabled >OK!</MonitorButton>
+						<img width="100%" src={`${gateway}${ipfsImageCIDs["cassette"]}`} />
+					</Box>
+				</Box>
+				
+
+				{/* Scanlines */}
+				<img
+					src={`${gateway}${ipfsImageCIDs["scanlines"]}`}
+					alt="scanlines"
+					width="100%"
+					style={{
 						pointerEvents: "none",
-						height: '100%',
-						width: '100%',
-						backgroundImage: `url(${gateway}${ipfsImageCIDs["scanlines"]})`,
-						backgroundPosition: "center",
-						backgroundSize: "contain",
-						backgroundRepeat: "no-repeat"
+						position: "absolute",
+						top: "5%",
+						left: "0%"
 					}}
 				/>
+				
 
 			</Box>
 		</Stack>

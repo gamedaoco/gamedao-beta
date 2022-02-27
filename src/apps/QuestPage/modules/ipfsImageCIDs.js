@@ -38,4 +38,7 @@ export const ipfsImageCIDs = {
     "step6": "QmRiTBB6yJdkt15wAtzc9XbD12N3DdzhPkYLF447RnP2eD",
     "step6done": "QmbMzkof6Vve6kyHiBk8nmFRPPf6nTcTso4K2461LKATtp",
 
+    "stepActive": "QmczKj8F6YxeSttsE1SwRNGcb6u8mGUD67RCiXwkk95PEf",
+    "stepDisabled": "QmNNT17qbT2p3dpumGL28bxMFi2CbGXZVJpD9vfKK86DaU",
+    "stepDone": "QmSUSxMVpqKBiQdYq9wdj6Bxtg7aH3FDz1JCYkKYXkUWbQ"
 }
