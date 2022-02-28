@@ -41,16 +41,10 @@ function handleQuests(state: QuestState, apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest6Completed) {
 		checkSixthQuest(apiProvider, address, updateQuestState)
 	} else if (
-		!state.hasAllQuestsCompleted &&
-		state.hasQuest1Completed &&
-		state.hasQuest2Completed &&
-		state.hasQuest3Completed &&
-		state.hasQuest4Completed &&
-		state.hasQuest5Completed &&
-		state.hasQuest6Completed
+		!state.hasAllQuestsCompleted
 	) {
-		updateQuestState({ hasAllQuestsCompleted: true })
-		createQuestNotification('Congratulations: 🎉🎉🎉 You have mastered all quests 🎉🎉🎉')
+		checkFinalQuestQuest(apiProvider, address, updateQuestState)
+
 	}
 }
 
@@ -62,7 +56,7 @@ async function checkFirstQuest(apiProvider, address, updateQuestState) {
 		if (task.toHuman().data.free?.split(' ')[0] > 0) {
 			updateQuestState({ hasQuest1Completed: true })
 			createQuestNotification(
-				'You have successfully completed the first quest more information can be found on the quest site'
+				'You have successfully completed the first quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
@@ -78,7 +72,7 @@ async function checkSecondQuest(apiProvider, address, updateQuestState) {
 		if (task.toNumber() > 0) {
 			updateQuestState({ hasQuest2Completed: true })
 			createQuestNotification(
-				'You have successfully completed the second quest more information can be found on the quest site'
+				'You have successfully completed the second quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
@@ -102,7 +96,7 @@ async function checkThirdQuest(apiProvider, address, updateQuestState) {
 		if (taskCompleted) {
 			updateQuestState({ hasQuest3Completed: true })
 			createQuestNotification(
-				'You have successfully completed the third quest more information can be found on the quest site'
+				'You have successfully completed the third quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
@@ -128,7 +122,7 @@ async function checkFourthQuest(apiProvider, address, updateQuestState) {
 		if (taskCompleted) {
 			updateQuestState({ hasQuest4Completed: true })
 			createQuestNotification(
-				'You have successfully completed the fourth quest more information can be found on the quest site'
+				'You have successfully completed the fourth quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
@@ -159,7 +153,7 @@ async function checkFifthQuest(apiProvider, address, updateQuestState) {
 		if (taskCompleted) {
 			updateQuestState({ hasQuest5Completed: true })
 			createQuestNotification(
-				'You have successfully completed the fifth quest more information can be found on the quest site'
+				'You have successfully completed the fifth quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
@@ -171,17 +165,55 @@ async function checkFifthQuest(apiProvider, address, updateQuestState) {
 // Connected wallet has created a proposal
 async function checkSixthQuest(apiProvider, address, updateQuestState) {
 	try {
-		const task = await apiProvider.query.gameDaoGovernance.proposalsByOwnerCount(address)
-		if (task.toNumber() > 0) {
+		const task = await apiProvider.querygameDaoGovernance.proposalsByOwnerCount(address)
+		const proposals = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
+			[...new Array(task.toNumber())].map((_, i) => [address, i]),
+		)
+		const proposalsData = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
+			proposals.toHuman(),
+		)
+
+		const data = proposalsData.toHuman().find((prop) => prop['proposal_type'] == 3)
+
+		if (data) {
 			updateQuestState({ hasQuest6Completed: true })
 			createQuestNotification(
-				'You have successfully completed the sixth quest more information can be found on the quest site'
+				'You have successfully completed the sixth quest more information can be found on the quest site',
 			)
 		}
 	} catch (e) {
 		return
 	}
 }
+
+// Final quest
+// Solved if withdrawal proposal was passed with majority of YES votings
+async function checkFinalQuestQuest(apiProvider, address, updateQuestState) {
+	try {
+		const task = await apiProvider.querygameDaoGovernance.proposalsByOwnerCount(address)
+		const proposals = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
+			[...new Array(task.toNumber())].map((_, i) => [address, i]),
+		)
+		const proposalsData = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
+			proposals.toHuman(),
+		)
+
+		const data = proposalsData.toHuman().filter((prop) => prop['proposal_type'] == 3)
+		const state = await apiProvider.query.gameDaoGovernance.proposalStates.multi(
+			data.map((props) => props['proposal_id']),
+		)
+
+		const taskComp = state.toHuman().find((stateData) => stateData == 6)
+
+		if (taskComp) {
+			updateQuestState({ hasAllQuestsCompleted: true })
+			createQuestNotification('Congratulations: 🎉🎉🎉 You have mastered all quests 🎉🎉🎉')
+		}
+	} catch (e) {
+		return
+	}
+}
+
 
 export function QuestProvider({ children }) {
 	const [state, setState] = useState<QuestState>(INITIAL_VALUE)
@@ -203,7 +235,7 @@ export function QuestProvider({ children }) {
 			localStorage.setItem('STORE_QUEST_STATE', JSON.stringify(storeData))
 			setState(newState)
 		},
-		[state, setState, address]
+		[state, setState, address],
 	)
 
 	useEffect(() => {
@@ -246,7 +278,7 @@ export function QuestProvider({ children }) {
 				state,
 				apiProvider,
 				address,
-				updateQuestState
+				updateQuestState,
 			)
 		}
 	}, [apiProvider, address, state, updateQuestState])
