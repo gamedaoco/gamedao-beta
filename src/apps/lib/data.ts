@@ -141,6 +141,8 @@ export const project_durations = [
 const isBeta = true
 if(isBeta){
 	project_durations.push({ key: '3', text: '20 Minutes', value: '0.016' })
+	project_durations.push({ key: '4', text: '60 Minutes', value: '0.048' })
+	project_durations.push({ key: '5', text: '120 Minutes',value: '0.096' })
 }
 
 if (dev) {
