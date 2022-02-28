@@ -28,6 +28,7 @@ export { default as Checkbox } from '@mui/material/Checkbox'
 export { default as Select } from '@mui/material/Select'
 export { default as MenuItem } from '@mui/material/MenuItem'
 export { default as TextareaAutosize } from '@mui/material/TextareaAutosize'
+export { default as InputAdornment } from '@mui/material/InputAdornment'
 
 export { default as Table } from '@mui/material/Table'
 export { default as TableBody } from '@mui/material/TableBody'

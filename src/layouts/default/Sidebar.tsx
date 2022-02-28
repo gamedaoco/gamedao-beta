@@ -85,7 +85,7 @@ const ThemeSwitcher = () => {
 				}}
 				onClick={() => setDarkmodeEnabled(true)}
 			/>
-			<Divider orientation="vertical" variant="middle" flexItem />
+			{/*<Divider orientation="vertical" variant="middle" flexItem />
 			<Icons
 				src={ICON_MAPPING.sun}
 				alt="sun"
@@ -94,7 +94,7 @@ const ThemeSwitcher = () => {
 					filter: darkmodeEnabled ? 'invert(0.5)' : 'invert(1)',
 				}}
 				onClick={() => setDarkmodeEnabled(false)}
-			/>
+			/>*/}
 		</Paper>
 	)
 }

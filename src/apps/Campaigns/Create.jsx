@@ -16,6 +16,7 @@ import {
 	FormControlLabel,
 	FormHelperText,
 	FormSectionHeadline,
+	InputAdornment,
 	Grid,
 	Image16to9,
 	InputLabel,
@@ -568,9 +569,12 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Deposit (GAME)'
+							label='Deposit'
 							placeholder='Deposit'
 							name='deposit'
+							InputProps={{
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+							}}
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -581,9 +585,12 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Funding Target (PLAY)'
+							label='Funding Target'
 							placeholder='Cap'
 							name='cap'
+							InputProps={{
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+							}}
 							value={formik.values.cap}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
