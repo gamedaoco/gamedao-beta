@@ -100,3 +100,31 @@
 	width: 0px;
 	height: 0px;
 }
+
+.Typewriter {
+	width: 100%;
+}
+
+.monitor-button {
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.monitor-button:hover {
+	filter: brightness(0.8);
+}
+
+.monitor-button:hover span {
+	color: blueviolet !important;
+}
+
+
+.monitor-text--you {
+	color: #FF5BBE !important;
+	white-space: pre-line;
+}
+
+.monitor-text--hawkins {
+	color: #FFEF63 !important;
+	white-space: pre-line;
+}
