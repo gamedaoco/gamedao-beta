@@ -11,6 +11,7 @@ import { useQuestContext } from '../../context/Quest'
 import { gateway } from '../lib/ipfs'
 
 import { ipfsImageCIDs } from "./modules/ipfsImageCIDs"
+import { questStory } from "./modules/questStory"
 
 
 
@@ -48,13 +49,22 @@ export function AnimatedHeader(props){
 }
 
 function MonitorStep(props){
-	const { children, disabled, active, done } = props
+	const { children, id, questState, onClick } = props
+
+	const hasCompleted = questState[`hasQuest${id}Completed`]
+	const lastStepCompleted = !hasCompleted && questState[`hasQuest${id-1}Completed`]
+	const isActive = !hasCompleted && lastStepCompleted
+
+	console.log(hasCompleted, isActive)
 	
-	return <Box style={{ position: "relative" }}>
-		{ active && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
-		{ active && <span style={{ position: "absolute" }}>{children}</span> }
-		{ (disabled || (!active && !disabled)) && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
-		{ done && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDone"]}`} /> }
+	return <Box onClick={ (e) => { onClick(e) } } style={{ position: "relative" }}>
+		{ hasCompleted && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDone"]}`} /> }
+
+		{ isActive && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepActive"]}`} /> }
+		{ isActive && <span style={{ position: "absolute" }}>{children}</span> }
+
+		{ (!hasCompleted && !lastStepCompleted) && <img width="100%" src={`${gateway}${ipfsImageCIDs["stepDisabled"]}`} /> }
+		{ (!hasCompleted && !lastStepCompleted) && <span style={{ position: "absolute" }}>{children}</span> }
 	</Box>
 }
 
@@ -71,46 +81,18 @@ function MonitorButton(props){
   
 export function QuestPage() {
 	const questState = useQuestContext()
-	const isLarge = useMediaQuery('(min-width:1300px)');
-	const headerQuestProgress = "5" // 2,3,4,5
 	const { ref: screenRef, height, width } = useComponentSize();
+	const isLarge = useMediaQuery('(min-width:1300px)');
+	const [progress, setProgress] = useState('1')
+	const headerQuestProgress = progress
+	const currentStory = questStory[progress]
+	const contentScale = (!isLarge && width < 400) ? 0.8 : 1.0
 
 	console.log(questState)
 	console.log(width, height)
-
-	/*
-	useEffect( () => {
-		let myHover3D = new Hover3D(".questicon");
-	}, [])
-	*/
-
-	/* sync parallax layer with scrollbars
-	const pos = useScrollPosition(24)
-	const parallax = useRef<IParallax>(null!)
-
-	useEffect( () => {
-		if(!parallax.current) return
-		document.getElementById('parallax').onwheel = function(){ return false; }
-		document.getElementById("parallax").scrollTo(0, pos)
-	}, [pos])
-	*/
 	
 	return (
 	<>
-		{/*<Parallax id={"parallax"} ref={parallax} style={{ width: "66vw", height: '300%', overflow: "hidden" }} pages={3}>
-			<ParallaxLayer offset={1} style={{ pointerEvents: 'none' }}>
-			</ParallaxLayer>
-
-			<ParallaxLayer offset={1} speed={1.5} style={{ pointerEvents: 'none' }}>
-				<img className="float" src={delorean} style={{ rotate: "26deg" , width: '33%', marginLeft: "50px" }} />
-			</ParallaxLayer>
-			
-			<ParallaxLayer offset={3} speed={-0.5} style={{ pointerEvents: 'none' }}>
-				
-			</ParallaxLayer>
-
-		</Parallax>*/}
-
 		<Stack spacing={4}>
 			<AnimatedHeader questProgress={headerQuestProgress} />
 
@@ -125,15 +107,6 @@ export function QuestPage() {
 					ref={screenRef}
 					alt="monitor"
 					width="100%"
-					// sx={{ 
-					// 	position: "relative",
-					// 	width: "100%",
-					// 	src: `url(${gateway}${ipfsImageCIDs["screen"]})`,
-					// 	backgroundPosition: "center",
-					// 	backgroundSize: "contain",
-					// 	backgroundRepeat: "no-repeat",
-					// 	overflow: "hidden"
-					// }}
 				/>
 
 				<Box
@@ -144,18 +117,21 @@ export function QuestPage() {
 						top: "9%",
 						bottom: "9%",
 						left: "6%",
-						right: "9%"
+						right: "9%",
 					}}
 				>
-					<Stack sx={{ margin: "auto" }}>
-						{[0,1,2,3,4,5].map( () => <MonitorStep/> )}
+					<Stack sx={{ transform: `scale(${contentScale})`, margin: "auto" }}>
+						{[0,1,2,3,4,5].map( (id) => {
+							return <MonitorStep id={id} questState={questState} onClick={ () => { console.log(id); setProgress(id.toString()) }} /> 
+						})}
 					</Stack>
 
 					<Box 
 					className="questMonitorTextContainer"
 					sx={{ 
 						width: "100%",
-						overflowX: "hidden"
+						overflowX: "hidden",
+						transform: `scale(${contentScale})`,
 					}}>
 						<span style={{ fontFamily: "monospace", color: "#54fad0" }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>
 						<MonitorButton>OK!</MonitorButton>
