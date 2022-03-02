@@ -6,7 +6,7 @@ import { Box, Stack } from '../../components'
 import { useQuestContext } from '../../context/Quest'
 import { gateway } from '../lib/ipfs'
 
-import { ipfsImageCIDs } from './modules/ipfsImageCIDs'
+import { IPFS_IMAGE_CID } from './modules/IPFS_IMAGE_CID'
 import { TypedText } from './modules/typedText'
 
 export function AnimatedHeader({ questProgress }) {
@@ -23,7 +23,7 @@ export function AnimatedHeader({ questProgress }) {
 	return <Box
 		sx={{
 			height: '60vh',
-			backgroundImage: `url(${gateway}${ipfsImageCIDs[`header${questProgress}${animated ? '' : '.1'}`]})`,
+			backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${questProgress}${animated ? '' : '.1'}`]})`,
 			backgroundPosition: 'center',
 			backgroundSize: 'contain',
 			backgroundRepeat: 'no-repeat',
@@ -40,9 +40,9 @@ function MonitorStep({ id, questState, onClick }) {
 	return <Box onClick={(e) => {
 		onClick(e)
 	}} style={{ position: 'relative' }}>
-		{hasCompleted && <img width='100%' src={`${gateway}${ipfsImageCIDs['stepDone']}`} />}
+		{hasCompleted && <img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDone']}`} />}
 
-		{isActive && <img width='100%' src={`${gateway}${ipfsImageCIDs['stepActive']}`} />}
+		{isActive && <img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepActive']}`} />}
 		{isActive && <span style={{
 			position: 'absolute',
 			top: '50%',
@@ -54,7 +54,7 @@ function MonitorStep({ id, questState, onClick }) {
 		}}>{id}</span>}
 
 		{(!hasCompleted && !lastStepCompleted) &&
-			<img width='100%' src={`${gateway}${ipfsImageCIDs['stepDisabled']}`} />}
+			<img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDisabled']}`} />}
 		{(!hasCompleted && !lastStepCompleted) &&
 			<span style={{
 				position: 'absolute',
@@ -87,7 +87,7 @@ export function QuestPage() {
 				>
 					{/* Screen */}
 					<img
-						src={`${gateway}${ipfsImageCIDs['screen']}`}
+						src={`${gateway}${IPFS_IMAGE_CID['screen']}`}
 						ref={screenRef}
 						alt='monitor'
 						width='100%'
@@ -132,7 +132,7 @@ export function QuestPage() {
 
 					{/* Scanlines */}
 					<img
-						src={`${gateway}${ipfsImageCIDs['scanlines']}`}
+						src={`${gateway}${IPFS_IMAGE_CID['scanlines']}`}
 						alt='scanlines'
 						width='100%'
 						style={{

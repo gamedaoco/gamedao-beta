@@ -1,4 +1,4 @@
-export const ipfsImageCIDs = {
+export const IPFS_IMAGE_CID = {
 	'defaultButton': 'QmcfuotN4KFwHAFwiqZ8ELALEUKzc7gvi1GfquEHM4fDjH',
 	'disabledButton': 'QmdPXyTmbDUwqgwPzspwceK3JthxY48mcsZrskDGVzRrQj',
 

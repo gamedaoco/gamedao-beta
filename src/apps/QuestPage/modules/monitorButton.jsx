@@ -1,6 +1,6 @@
 import { Box } from '../../../components'
 import { gateway } from '../../lib/ipfs'
-import { ipfsImageCIDs } from './ipfsImageCIDs'
+import { IPFS_IMAGE_CID } from './IPFS_IMAGE_CID'
 
 export function MonitorButton({ text, children, disabled, onClick }) {
 	return <Box style={{
@@ -11,10 +11,10 @@ export function MonitorButton({ text, children, disabled, onClick }) {
 		>
 			{!disabled && <img
 				width='100%'
-				src={`${gateway}${ipfsImageCIDs['defaultButton']}`} />}
+				src={`${gateway}${IPFS_IMAGE_CID['defaultButton']}`} />}
 			{disabled && <img
 				width='100%'
-				src={`${gateway}${ipfsImageCIDs['disabledButton']}`} />}
+				src={`${gateway}${IPFS_IMAGE_CID['disabledButton']}`} />}
 			<span style={{
 				width: '100%',
 				color: 'black',
