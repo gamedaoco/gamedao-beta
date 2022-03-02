@@ -114,7 +114,7 @@
 	filter: brightness(0.8);
 }
 
-.monitor-button:hover span {
+.monitor-button:hover > span {
 	color: blueviolet !important;
 }
 

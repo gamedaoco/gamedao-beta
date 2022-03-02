@@ -7,7 +7,8 @@ export function MonitorButton({ text, children, disabled, onClick }) {
 		position: 'relative', maxWidth: '304px', margin: '0 auto',
 	}}>
 		<div className='monitor-button'
-			 onClick={onClick}
+			 onClick={disabled ? () => {
+			 } : onClick}
 		>
 			{!disabled && <img
 				width='100%'

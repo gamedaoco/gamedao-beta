@@ -1,5 +1,5 @@
 import './textOverride.css'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useComponentSize } from 'react-use-size'
 
 import { Box, Stack } from '../../components'
@@ -31,14 +31,15 @@ export function AnimatedHeader({ questProgress }) {
 	/>
 }
 
-function MonitorStep({ id, questState, onClick }) {
-
+function MonitorStep({ id }) {
+	const questState = useQuestContext()
 	const hasCompleted = questState[`hasQuest${id}Completed`]
-	const lastStepCompleted = !hasCompleted && questState[`hasQuest${id - 1}Completed`]
-	const isActive = !hasCompleted && lastStepCompleted
+	const isActive = !hasCompleted && questState[`quest${id}Played`]
 
-	return <Box onClick={(e) => {
-		onClick(e)
+	return <Box className='monitor-button' onClick={(e) => {
+		if (hasCompleted) {
+			questState.updateQuestState({ screenIndex: id * 2 })
+		}
 	}} style={{ position: 'relative' }}>
 		{hasCompleted && <img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDone']}`} />}
 
@@ -53,9 +54,9 @@ function MonitorStep({ id, questState, onClick }) {
 			fontWeight: 600,
 		}}>{id}</span>}
 
-		{(!hasCompleted && !lastStepCompleted) &&
+		{(!hasCompleted && !isActive) &&
 			<img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDisabled']}`} />}
-		{(!hasCompleted && !lastStepCompleted) &&
+		{(!hasCompleted && !isActive) &&
 			<span style={{
 				position: 'absolute',
 				top: '50%',
@@ -104,12 +105,10 @@ export function QuestPage() {
 							right: '9%',
 						}}
 					>
-						<Stack sx={{ transform: `scale(${contentScale})`, margin: 'auto' }}>
+						<Stack sx={{ transform: `scale(${contentScale / 1.1})`, margin: 'auto' }}>
 							{[1, 2, 3, 4, 5, 6].map((id) => {
-								return <MonitorStep id={id} questState={questState} onClick={() => {
-									console.log(id)
-									setProgress(id)
-								}} />
+
+								return <Fragment key={id}><MonitorStep id={id} /></Fragment>
 							})}
 						</Stack>
 

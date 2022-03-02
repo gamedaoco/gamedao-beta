@@ -5,6 +5,17 @@ import { useApiProvider } from '@substra-hooks/core'
 import { createQuestNotification } from '../utils/notification'
 
 interface QuestState {
+	screenIndex: number;
+	introTextPlayed: boolean;
+	quest1Played: boolean;
+	quest2Played: boolean;
+	quest3Played: boolean;
+	quest4Played: boolean;
+	quest5Played: boolean;
+	quest6Played: boolean;
+	endgamePlayed: boolean;
+	endgameFormPlayed: boolean;
+
 	hasQuest1Completed: boolean
 	hasQuest2Completed: boolean
 	hasQuest3Completed: boolean
@@ -12,9 +23,21 @@ interface QuestState {
 	hasQuest5Completed: boolean
 	hasQuest6Completed: boolean
 	hasAllQuestsCompleted: boolean
+	updateQuestState: any;
 }
 
 const INITIAL_VALUE: QuestState = {
+	screenIndex: 0,
+	introTextPlayed: false,
+	quest1Played: false,
+	quest2Played: false,
+	quest3Played: false,
+	quest4Played: false,
+	quest5Played: false,
+	quest6Played: false,
+	endgamePlayed: false,
+	endgameFormPlayed: false,
+
 	hasQuest1Completed: false,
 	hasQuest2Completed: false,
 	hasQuest3Completed: false,
@@ -22,6 +45,8 @@ const INITIAL_VALUE: QuestState = {
 	hasQuest5Completed: false,
 	hasQuest6Completed: false,
 	hasAllQuestsCompleted: false,
+	updateQuestState: () => {
+	},
 }
 const QuestContext = createContext<QuestState>(INITIAL_VALUE)
 export const useQuestContext = () => useContext<QuestState>(QuestContext)
@@ -29,22 +54,28 @@ export const useQuestContext = () => useContext<QuestState>(QuestContext)
 // Handle quests
 function handleQuests(state: QuestState, apiProvider, address, updateQuestState) {
 	if (!state.hasQuest1Completed) {
-		checkFirstQuest(apiProvider, address, updateQuestState)
+		if (!state.quest1Played) return
+		return checkFirstQuest(apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest2Completed) {
-		checkSecondQuest(apiProvider, address, updateQuestState)
+		if (!state.quest2Played) return
+		return checkSecondQuest(apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest3Completed) {
-		checkThirdQuest(apiProvider, address, updateQuestState)
+		if (!state.quest3Played) return
+		return checkThirdQuest(apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest4Completed) {
-		checkFourthQuest(apiProvider, address, updateQuestState)
+		if (!state.quest4Played) return
+		return checkFourthQuest(apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest5Completed) {
-		checkFifthQuest(apiProvider, address, updateQuestState)
+		if (!state.quest5Played) return
+		return checkFifthQuest(apiProvider, address, updateQuestState)
 	} else if (!state.hasQuest6Completed) {
-		checkSixthQuest(apiProvider, address, updateQuestState)
+		if (!state.quest6Played) return
+		return checkSixthQuest(apiProvider, address, updateQuestState)
 	} else if (
 		!state.hasAllQuestsCompleted
 	) {
-		checkFinalQuestQuest(apiProvider, address, updateQuestState)
-
+		if (!state.endgamePlayed) return
+		return checkFinalQuestQuest(apiProvider, address, updateQuestState)
 	}
 }
 
@@ -266,7 +297,6 @@ export function QuestProvider({ children }) {
 	}, [address, localStoreState])
 
 	useEffect(() => {
-		console.log('QUEST_STATE', 'Update')
 		if (apiProvider && address && state) {
 			if (intervalRef.current) {
 				clearInterval(intervalRef.current)
@@ -284,5 +314,6 @@ export function QuestProvider({ children }) {
 	}, [apiProvider, address, state, updateQuestState])
 
 	console.log('[QUEST_STATE]', state)
-	return <QuestContext.Provider value={state}>{children}</QuestContext.Provider>
+	return <QuestContext.Provider
+		value={{ ...state, updateQuestState }}>{children}</QuestContext.Provider>
 }

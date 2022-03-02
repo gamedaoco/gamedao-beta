@@ -3,16 +3,18 @@ import { useState } from 'react'
 import { MonitorButton } from './monitorButton'
 import { gateway } from '../../lib/ipfs'
 import { IPFS_IMAGE_CID } from './IPFS_IMAGE_CID'
+import { useQuestContext } from '../../../context/Quest'
 
 // Intro
 function Intro() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, introTextPlayed } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(introTextPlayed ? 1 : 45)
 						.typeString(
 							'Shall we play a game?\n' +
 							'\n' +
@@ -29,11 +31,25 @@ function Intro() {
 							'\n' +
 							'Fear not. Follow Hawkins on these six quests, and she’ll help you get there.\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								introTextPlayed: true,
+							})
+						})
 						.start()
 				}}
 			/>
-			{showButton && <MonitorButton text={'play now'} />}
+			{showButton && (
+				<MonitorButton
+					text={'play now'}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 1,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
@@ -41,12 +57,13 @@ function Intro() {
 // Quest one
 function QuestOne() {
 	const [showButton, setShowButton] = useState(false)
+	const { hasQuest1Completed, updateQuestState, quest1Played } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest1Played ? 1 : 45)
 						.typeString(
 							'Cha-ching, baby!\n' +
 							'// Connect your wallet and get tokens\n' +
@@ -64,7 +81,12 @@ function QuestOne() {
 						.typeString(
 							'<span class="monitor-text--hawkins">“Ah, yes, that’s a common problem,”</span> she says. <span class="monitor-text--hawkins--you">“Let me show you to the faucet”\n</span>',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest1Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -78,19 +100,37 @@ function QuestOne() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest1Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 2,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestOneComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['cassette']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				YEAH! Well done, your wallet contains tokens now!
 			</div>
-			<MonitorButton text={'next quest'} />
+			<MonitorButton
+				text={'next quest'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 3,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -98,12 +138,14 @@ function QuestOneComplete() {
 // Quest two
 function QuestTwo() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasQuest2Completed, quest2Played } = useQuestContext()
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest2Played ? 1 : 45)
 						.typeString('I’ve not seen such bravery!\n' + '// Create a DAOs\n\n')
 						.typeString(
 							'<span class="monitor-text--hawkins">“Great, you have tokens,”</span> Hawkins says. <span class="monitor-text--hawkins">“Grab that cassette tape, cos you’ll need a DAO.”\n</span>',
@@ -133,7 +175,12 @@ function QuestTwo() {
 							'<span class="monitor-text--hawkins">“You don’t, but you’ll thank me if you do.”\n' +
 							'“Alrighty, I trust you.” You pop your tape into the DATASETTE PLAYER  on your desktop and press play. “Let’s do this.”\n</span>\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest2Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -147,19 +194,37 @@ function QuestTwo() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest2Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 4,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestTwoComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['datasette']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				You’ve successfully create a DAO! Nice job.
 			</div>
-			<MonitorButton text={'next quest'} />
+			<MonitorButton
+				text={'next quest'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 5,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -167,12 +232,13 @@ function QuestTwoComplete() {
 // Quest three
 function QuestThree() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasQuest3Completed, quest3Played } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest3Played ? 1 : 45)
 						.typeString(
 							'Rally thine allies!\n' + '// Invite two friends into your DAO\n\n',
 						)
@@ -195,7 +261,12 @@ function QuestThree() {
 							'<span class="monitor-text--hawkins">“Great, call them over.”</span>\n',
 						)
 						.typeString('You tap away at your KEYBOARD and send the invites.\n')
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest3Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -210,19 +281,37 @@ function QuestThree() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest3Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 6,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestThreeComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['keyboard']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				Great! You are not alone anymore.
 			</div>
-			<MonitorButton text={'next quest'} />
+			<MonitorButton
+				text={'next quest'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 7,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -230,12 +319,13 @@ function QuestThreeComplete() {
 // Quest four
 function QuestFour() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasQuest4Completed, quest4Played } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest4Played ? 1 : 45)
 						.typeString(
 							'Level up, warrior!\n' +
 							'// Create a fundraising campaign\n\nAfter making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n' +
@@ -258,7 +348,12 @@ function QuestFour() {
 						.typeString(
 							'<span class="monitor-text--hawkins">“This is a fabulous game idea,”</span> Hawkins says. <span class="monitor-text--hawkins">“You should totally create a fundraising campaign.”</span>\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest4Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -272,19 +367,37 @@ function QuestFour() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest4Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 8,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestFourComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['monitor']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				Well done, warrior! Your campaign is ready to be funded!
 			</div>
-			<MonitorButton text={'next quest'} />
+			<MonitorButton
+				text={'next quest'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 9,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -292,12 +405,13 @@ function QuestFourComplete() {
 // Quest five
 function QuestFive() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasQuest5Completed, quest5Played } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest5Played ? 1 : 45)
 						.typeString('Get cash in your stash!\n' + '// Collect campaign funds\n\n')
 						.typeString(
 							'<span class="monitor-text--you">“But I don’t know anything about fundraising,”</span> you groan. <span class="monitor-text--you">“It sounds awful.”</span>\n',
@@ -315,7 +429,12 @@ function QuestFive() {
 						.typeString(
 							'<span class="monitor-text--hawkins">“They sure do, and it’s called crowd-funding.”</span> She laughs. <span class="monitor-text--hawkins">“I invest in all kinds of game projects. That’s why I like hanging out in the arcade. I’m gonna head back there now. But grab your JOYSTICK to navigate through the money maze without me. You got this.”</span>\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest5Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -330,19 +449,37 @@ function QuestFive() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest5Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 10,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestFiveComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['joystick']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				Cha-ching! Your campaign is funded.
 			</div>
-			<MonitorButton text={'next quest'} />
+			<MonitorButton
+				text={'next quest'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 11,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -350,12 +487,13 @@ function QuestFiveComplete() {
 // Quest six
 function QuestSix() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasQuest6Completed, quest6Played } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(quest6Played ? 1 : 45)
 						.typeString(
 							'Name your game!\n' +
 							'Proof of existence\n' +
@@ -376,7 +514,12 @@ function QuestSix() {
 						.typeString(
 							'<span class="monitor-text--hawkins">“GameDAO will guide you through your proposal.”</span>\n<span class="monitor-text--you">“Really?”</span>\n<span class="monitor-text--hawkins">“Yup, really.”</span>\n<span class="monitor-text--you">“Then what?”</span>\n<span class="monitor-text--hawkins">“One step at a time, my friend.”</span> She hands you a model DELOREAN to remember her by. <span class="monitor-text--hawkins">“And there’s only one more to go.”</span>\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								quest6Played: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -390,19 +533,37 @@ function QuestSix() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasQuest6Completed}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 12,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function QuestSixComplete() {
+	const { updateQuestState } = useQuestContext()
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['delorean']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
 				You are ready for the future. Your proposal is waiting for votes.
 			</div>
-			<MonitorButton text={'endgame'} />
+			<MonitorButton
+				text={'endgame'}
+				onClick={() =>
+					updateQuestState({
+						screenIndex: 13,
+					})
+				}
+			/>
 		</>
 	)
 }
@@ -410,12 +571,13 @@ function QuestSixComplete() {
 // Endgame
 function Endgame() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, hasAllQuestsCompleted, endgamePlayed } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(endgamePlayed ? 1 : 45)
 						.typeString(
 							'~ Endgame ~\n' +
 							'Victory is yours!\n' +
@@ -437,7 +599,12 @@ function Endgame() {
 						.typeString(
 							'<span class="monitor-text--you">“That’s how.” “You use your DAO.”</span>\n\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								endgamePlayed: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -452,19 +619,30 @@ function Endgame() {
 					</span>
 				</div>
 			)}
-			{showButton && <MonitorButton text={'next'} />}
+			{showButton && (
+				<MonitorButton
+					text={'next'}
+					disabled={!hasAllQuestsCompleted}
+					onClick={() =>
+						updateQuestState({
+							screenIndex: 14,
+						})
+					}
+				/>
+			)}
 		</>
 	)
 }
 
 function EndgameComplete() {
 	const [showButton, setShowButton] = useState(false)
+	const { updateQuestState, endgameFormPlayed } = useQuestContext()
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(25)
+						.changeDelay(endgameFormPlayed ? 1 : 45)
 						.typeString(
 							'Now you\'re really a player.\n' +
 							'\n' +
@@ -488,7 +666,12 @@ function EndgameComplete() {
 							'\n' +
 							'Fill out this form so she can keep in touch:\n',
 						)
-						.callFunction(() => setShowButton(true))
+						.callFunction(() => {
+							setShowButton(true)
+							updateQuestState({
+								endgameFormPlayed: true,
+							})
+						})
 						.start()
 				}}
 			/>
@@ -506,6 +689,29 @@ function EndgameComplete() {
 	)
 }
 
+const screenSelect = [
+	<Intro />,
+	<QuestOne />,
+	<QuestOneComplete />,
+	<QuestTwo />,
+	<QuestTwoComplete />,
+	<QuestThree />,
+	<QuestThreeComplete />,
+	<QuestFour />,
+	<QuestFourComplete />,
+	<QuestFive />,
+	<QuestFiveComplete />,
+	<QuestSix />,
+	<QuestSixComplete />,
+	<Endgame />,
+	<EndgameComplete />,
+]
+
+function QuestScreenSelect() {
+	const { screenIndex } = useQuestContext()
+	return screenSelect[screenIndex] ?? null
+}
+
 export function TypedText() {
 	return (
 		<div
@@ -519,7 +725,7 @@ export function TypedText() {
 				overflowY: 'auto',
 			}}
 		>
-			<EndgameComplete />
+			<QuestScreenSelect />
 		</div>
 	)
 }
