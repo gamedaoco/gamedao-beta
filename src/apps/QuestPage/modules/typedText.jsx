@@ -328,10 +328,11 @@ function QuestFour() {
 						.changeDelay(quest4Played ? 1 : 45)
 						.typeString(
 							'Level up, warrior!\n' +
-							'// Create a fundraising campaign\n\nAfter making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n' +
-							'Without even thinking, you blurt,<span class="monitor-text--you">“I wish we could play as the bad guys.”</span>\n',
+							'// Create a fundraising campaign\n\n'
 						)
 						.typeString(
+							'After making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n',
+							'Without even thinking, you blurt,<span class="monitor-text--you">“I wish we could play as the bad guys.”</span>\n',
 							'<span class="monitor-text--you">“That’s brilliant, dude!”</span> your friends say. And soon ideas start whizzing around faster than elf arrows. What if we could upgrade our weapons? What if we took the game online? What if we made an MMORPG where people could play as either good or bad guys?\n' +
 							'It’s so very exciting.\n',
 						)
@@ -594,10 +595,10 @@ function Endgame() {
 							'<span class="monitor-text--you">“Absolutely, let’s go!”</span>\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“Now you’ll pitch your proposal to your DAO so everyone can vote. If a majority approves, your funds get released so you can hire the talent you need to start building your game.”</span>\n,
+							'<span class="monitor-text--hawkins">“Now you’ll pitch your proposal to your DAO so everyone can vote. If a majority approves, your funds get released so you can hire the talent you need to start building your game.”</span>\n',
 						)
 						.typeString(
-							'<span class="monitor-text--you">“And that’s how we create the game of our dreams?”</span>\n,
+							'<span class="monitor-text--you">“And that’s how we create the game of our dreams?”</span>\n',
 						)
 						.typeString(
 							'<span class="monitor-text--hawkins">“That’s how.”</span> She winks. <span class="monitor-text--hawkins">“You use your DAO.”</span>\n',
@@ -647,7 +648,7 @@ function EndgameComplete() {
 					typewriter
 						.changeDelay(endgameFormPlayed ? 1 : 45)
 						.typeString(
-							'Now you're really a player.\n' +
+							'Now you’re really a player.\n' +
 							'\n' +
 							'You created a team of allies.\n' +
 							'You raised all the monies.\n' +
