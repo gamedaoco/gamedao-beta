@@ -53,6 +53,10 @@ export const useQuestContext = () => useContext<QuestState>(QuestContext)
 
 // Handle quests
 function handleQuests(state: QuestState, apiProvider, address, updateQuestState) {
+
+	// checkSixthQuest(apiProvider, '3ZYcKFCPWN5tDFsaYJVEgvCJjV5EXxSKMXtD7HgdmhALrCG6', () => {
+	// })
+
 	if (!state.hasQuest1Completed) {
 		if (!state.quest1Played) return
 		return checkFirstQuest(apiProvider, address, updateQuestState)
@@ -167,9 +171,10 @@ async function checkFifthQuest(apiProvider, address, updateQuestState) {
 		const daoList = await apiProvider.query.gameDaoControl.controlledBodies(address)
 		let taskCompleted = false
 		for (let dao of daoList.toHuman()) {
-			const campaignsList = await apiProvider.query.taskCompleted.campaignsOwnedArray(dao)
+			// Should return an array and not just a hash
+			const campaignsList = await apiProvider.query.gameDaoCrowdfunding.campaignsByBody(dao)
 			for (let campaign of campaignsList.toHuman()) {
-				const state = await apiProvider.query.taskCompleted.campaignState(campaign)
+				const state = await apiProvider.query.gameDaoCrowdfunding.campaignState(campaign)
 				if (state.toNumber() === 3) {
 					taskCompleted = true
 					break
@@ -199,6 +204,7 @@ async function checkSixthQuest(apiProvider, address, updateQuestState) {
 		const proposals = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
 			[...new Array(task.toNumber())].map((_, i) => [address, i]),
 		)
+
 		const proposalsData = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
 			proposals.toHuman(),
 		)
