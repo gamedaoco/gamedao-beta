@@ -3,7 +3,7 @@
     font-weight: normal;
     font-style: normal;
     font-display: block;
-    src: url(./gamedao-icon-font.woff2) format('woff2');
+    src: url(./gamedao-icon-font.woff) format('woff');
   }
   
 .gamedao-icon-font {
@@ -21,48 +21,52 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  .icon-calendar:before {
-    content: "\e800";
-  }
-  .icon-arrowdown:before {
-    content: "\e801";
-  }
-  .icon-arrowup:before {
-    content: "\e805";
-  }
-  .icon-campaign:before {
-    content: "\e80d";
-  }
-  .icon-check:before {
-    content: "\e83c";
-  }
-  .icon-dashboard:before {
-    content: "\e83d";
-  }
-  .icon-document:before {
-    content: "\e83e";
-  }
-  .icon-howto:before {
-    content: "\e83f";
-  }
-  .icon-image:before {
-    content: "\e840";
-  }
-  .icon-organization:before {
-    content: "\e841";
-  }
-  .icon-organization2:before {
-    content: "\e842";
-  }
-  .icon-store:before {
-    content: "\e843";
-  }
-  .icon-tangram:before {
-    content: "\e844";
-  }
-  .icon-voting:before {
-    content: "\e845";
-  }
-  .icon-wallet:before {
-    content: "\e846";
-  }
+  
+.icon-castle:before {
+  content: "\e900";
+}
+.icon-calendar:before {
+  content: "\e800";
+}
+.icon-arrowdown:before {
+  content: "\e801";
+}
+.icon-arrowup:before {
+  content: "\e805";
+}
+.icon-campaign:before {
+  content: "\e80d";
+}
+.icon-check:before {
+  content: "\e83c";
+}
+.icon-dashboard:before {
+  content: "\e83d";
+}
+.icon-document:before {
+  content: "\e83e";
+}
+.icon-howto:before {
+  content: "\e83f";
+}
+.icon-image:before {
+  content: "\e840";
+}
+.icon-organization:before {
+  content: "\e841";
+}
+.icon-organization2:before {
+  content: "\e842";
+}
+.icon-store:before {
+  content: "\e843";
+}
+.icon-tangram:before {
+  content: "\e844";
+}
+.icon-voting:before {
+  content: "\e845";
+}
+.icon-wallet:before {
+  content: "\e846";
+}
