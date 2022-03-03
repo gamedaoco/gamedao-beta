@@ -54,9 +54,6 @@ export const useQuestContext = () => useContext<QuestState>(QuestContext)
 // Handle quests
 function handleQuests(state: QuestState, apiProvider, address, updateQuestState) {
 
-	// checkSixthQuest(apiProvider, '3ZYcKFCPWN5tDFsaYJVEgvCJjV5EXxSKMXtD7HgdmhALrCG6', () => {
-	// })
-
 	if (!state.hasQuest1Completed) {
 		if (!state.quest1Played) return
 		return checkFirstQuest(apiProvider, address, updateQuestState)
@@ -200,17 +197,14 @@ async function checkFifthQuest(apiProvider, address, updateQuestState) {
 // Connected wallet has created a proposal
 async function checkSixthQuest(apiProvider, address, updateQuestState) {
 	try {
-		const task = await apiProvider.querygameDaoGovernance.proposalsByOwnerCount(address)
+		const task = await apiProvider.query.gameDaoGovernance.proposalsByOwnerCount(address)
 		const proposals = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
 			[...new Array(task.toNumber())].map((_, i) => [address, i]),
 		)
-
-		const proposalsData = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
-			proposals.toHuman(),
+		const proposalsData = await apiProvider.query.gameDaoGovernance.proposals.multi(
+			proposals.map((x) => x.toHuman()),
 		)
-
-		const data = proposalsData.toHuman().find((prop) => prop['proposal_type'] == 3)
-
+		const data = proposalsData.map((x) => x.toHuman()).find((prop) => prop['proposal_type'] == 3)
 		if (data) {
 			updateQuestState({ hasQuest6Completed: true })
 			createQuestNotification(
@@ -226,20 +220,21 @@ async function checkSixthQuest(apiProvider, address, updateQuestState) {
 // Solved if withdrawal proposal was passed with majority of YES votings
 async function checkFinalQuestQuest(apiProvider, address, updateQuestState) {
 	try {
-		const task = await apiProvider.querygameDaoGovernance.proposalsByOwnerCount(address)
+		const task = await apiProvider.query.gameDaoGovernance.proposalsByOwnerCount(address)
 		const proposals = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
 			[...new Array(task.toNumber())].map((_, i) => [address, i]),
 		)
-		const proposalsData = await apiProvider.query.gameDaoGovernance.proposalsByOwnerArray.multi(
-			proposals.toHuman(),
+		const proposalsData = await apiProvider.query.gameDaoGovernance.proposals.multi(
+			proposals.map((x) => x.toHuman()),
 		)
-
-		const data = proposalsData.toHuman().filter((prop) => prop['proposal_type'] == 3)
+		const data = proposalsData.map((x) => x.toHuman()).filter((prop) => prop['proposal_type'] == 3)
+		if (!data) {
+			return
+		}
 		const state = await apiProvider.query.gameDaoGovernance.proposalStates.multi(
 			data.map((props) => props['proposal_id']),
 		)
-
-		const taskComp = state.toHuman().find((stateData) => stateData == 6)
+		const taskComp = state.map((x) => x.toHuman()).find((stateData) => stateData == 6)
 
 		if (taskComp) {
 			updateQuestState({ hasAllQuestsCompleted: true })
