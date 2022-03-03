@@ -29,7 +29,7 @@ function Intro() {
 							'\n' +
 							'But you just want to have fun.\n' +
 							'\n' +
-							'Fear not. Follow Hawkins on these six quests, and she’ll help you get there.\n',
+							'Fear not. Follow Hawkins on these six quests, and she’ll help you.\n',
 						)
 						.callFunction(() => {
 							setShowButton(true)
@@ -79,7 +79,7 @@ function QuestOne() {
 							'<span class="monitor-text--you">“Hawkins,”</span> you say. <span class="monitor-text--you">“My wallet’s empty.”\n</span>',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“Ah, yes, that’s a common problem,”</span> she says. <span class="monitor-text--hawkins--you">“Let me show you to the faucet”\n</span>',
+							'<span class="monitor-text--hawkins">“Ah, yes, that’s a common problem,”</span> she says. <span class="monitor-text--hawkins--you">“Let me show you to the faucet.”\n</span>',
 						)
 						.callFunction(() => {
 							setShowButton(true)
@@ -146,9 +146,9 @@ function QuestTwo() {
 				onInit={(typewriter) => {
 					typewriter
 						.changeDelay(quest2Played ? 1 : 45)
-						.typeString('I’ve not seen such bravery!\n' + '// Create a DAOs\n\n')
+						.typeString('I’ve not seen such bravery!\n' + '// Create a DAO\n\n')
 						.typeString(
-							'<span class="monitor-text--hawkins">“Great, you have tokens,”</span> Hawkins says. <span class="monitor-text--hawkins">“Grab that cassette tape, cos you’ll need a DAO.”\n</span>',
+							'<span class="monitor-text--hawkins">“Great, you have tokens,”</span> Hawkins says. <span class="monitor-text--hawkins">“Grab that cassette tape, cos next you’ll need a DAO.”\n</span>',
 						)
 						.typeString(
 							'<span class="monitor-text--you">“What’s a DAO?”</span> you ask.\n',
@@ -172,8 +172,8 @@ function QuestTwo() {
 							'<span class="monitor-text--you">“But why do I need a DAO if I just want to play?”</span>\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“You don’t, but you’ll thank me if you do.”\n' +
-							'“Alrighty, I trust you.” You pop your tape into the DATASETTE PLAYER  on your desktop and press play. “Let’s do this.”\n</span>\n',
+							'<span class="monitor-text--hawkins">“You don’t, but you’ll thank me later if you form one now.”\n' +
+							'“Alrighty, I trust you.” You pop your tape into the DATASETTE PLAYER on your desktop and press play. “Let’s do this.”\n</span>\n',
 						)
 						.callFunction(() => {
 							setShowButton(true)
@@ -215,7 +215,7 @@ function QuestTwoComplete() {
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['datasette']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
-				You’ve successfully create a DAO! Nice job.
+				You’ve successfully created a DAO! Nice job.
 			</div>
 			<MonitorButton
 				text={'next quest'}
@@ -243,7 +243,7 @@ function QuestThree() {
 							'Rally thine allies!\n' + '// Invite two friends into your DAO\n\n',
 						)
 						.typeString(
-							'Hawkins says, <span class="monitor-text--hawkins">“Now choose a game to play.”</span>\n',
+							'Hawkins says, <span class="monitor-text--hawkins">“Now, choose a game to play.”</span>\n',
 						)
 						.typeString(
 							'<span class="monitor-text--you">“I saw one I’d like to try.”</span>\n',
@@ -252,7 +252,7 @@ function QuestThree() {
 							'<span class="monitor-text--hawkins">“Oh, really, where?”</span>\nYou point at Gauntlet.\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“That’s fun for sure!”</span> A big smile spreads across her face. <span class="monitor-text--hawkins">“You could play alone, but you’d be going up against all the enemies by yourself. Or you and I could play together… I call dibs on green wizard. We might do alright as partners, but that’s a four-player game. It’s more fun with friends, cos everyone works together to defeat the ghosts, demons, and thieves. Believe me, they can be tricky.”</span>\n',
+							'<span class="monitor-text--hawkins">“That’s a fun game for sure!”</span> A big smile spreads across her face. <span class="monitor-text--hawkins">“You could play alone, but you’d be going up against all the enemies by yourself. Or you and I could play together… I call dibs on green wizard. We might do alright as partners, but that’s a four-player game. It’s more fun with friends, cos everyone works together to defeat the ghosts, demons, and thieves. Believe me, they can be tricky.”</span>\n',
 						)
 						.typeString(
 							'<span class="monitor-text--you">“Hey, I have friends,”</span> you say. <span class="monitor-text--you">“I saw two of them around here somewhere.”</span>\n',
@@ -336,7 +336,7 @@ function QuestFour() {
 							'It’s so very exciting.\n',
 						)
 						.typeString(
-							'Hawkins says, <span class="monitor-text--hawkins">“Green wizard needs food badly,” </span>Hawkins jokes.\n' +
+							'<span class="monitor-text--hawkins">“Green wizard needs food badly,” </span>Hawkins jokes.\n' +
 							'So you all go to the food court to grab a slice of pizza and a Coke.\n' +
 							'Your friends flood your MONITOR as they text you even more ideas. Others witness the online chatter, and come join your DAO. Everyone agrees your game should have gorgeous art, an intriguing story, and solid script…\n' +
 							'You ask, <span class="monitor-text--you">“Can anyone draw, write, or code?”</span>\n',
@@ -417,11 +417,11 @@ function QuestFive() {
 							'<span class="monitor-text--you">“But I don’t know anything about fundraising,”</span> you groan. <span class="monitor-text--you">“It sounds awful.”</span>\n',
 						)
 						.typeString(
-							'Your friends are already in love with the concept and pledge a quarter of what they have in their wallets to get started. Of course, you pitch in too. \n' +
+							'Your friends are already in love with the concept and pledge a quarter of what they have in their wallets to get started. Of course, you pitch in your share too. \n' +
 							'And just like that, your DAO is already off to a healthy start.\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“I think your game idea rocks!” </span>Hawkins offers you ten tokens to start developing it. <span class="monitor-text--hawkins">“We should all tell our friends about this game and see if they want to contribute too.”</span>\n',
+							'<span class="monitor-text--hawkins">“I think your game idea rocks!” </span>Hawkins offers you ten tokens to start developing it. <span class="monitor-text--hawkins">“We should tell all our friends about this game and see if they want to contribute.”</span>\n',
 						)
 						.typeString(
 							'<span class="monitor-text--you">“People do that?”</span> you ask.\n',
@@ -470,7 +470,7 @@ function QuestFiveComplete() {
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['joystick']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
-				Cha-ching! Your campaign is funded.
+				Cha-ching! Your campaign has been funded.
 			</div>
 			<MonitorButton
 				text={'next quest'}
@@ -501,7 +501,7 @@ function QuestSix() {
 						)
 						.typeString(
 							'A few weeks later you meet up with Hawkins in 80s world to thank her.\n' +
-							'You gasp, <span class="monitor-text--you">“I can’t believe we raised all the money.”</span>\n',
+							'You gasp, <span class="monitor-text--you">“I can’t believe we raised all that money.”</span>\n',
 						)
 						.typeString(
 							'<span class="monitor-text--hawkins">“I believe it! I knew you had a great idea,”</span> Hawkins says.<span class="monitor-text--hawkins">“And now that you’ve reached your campaign goals, you’ve proven that you not only can play games, but that you and your team are true visionaries.”\n' +
@@ -512,7 +512,7 @@ function QuestSix() {
 							'<span class="monitor-text--you">“Oh, I don’t know how,”</span> you say.\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“GameDAO will guide you through your proposal.”</span>\n<span class="monitor-text--you">“Really?”</span>\n<span class="monitor-text--hawkins">“Yup, really.”</span>\n<span class="monitor-text--you">“Then what?”</span>\n<span class="monitor-text--hawkins">“One step at a time, my friend.”</span> She hands you a model DELOREAN to remember her by. <span class="monitor-text--hawkins">“And there’s only one more to go.”</span>\n',
+							'<span class="monitor-text--hawkins">“GameDAO will guide you through writing your proposal.”</span>\n<span class="monitor-text--you">“Really?”</span>\n<span class="monitor-text--hawkins">“Yup, really.”</span>\n<span class="monitor-text--you">“Then what?”</span>\n<span class="monitor-text--hawkins">“One step at a time, my friend.”</span> She hands you a model DELOREAN to remember her by. <span class="monitor-text--hawkins">“And there’s only one more to go.”</span>\n',
 						)
 						.callFunction(() => {
 							setShowButton(true)
@@ -554,7 +554,7 @@ function QuestSixComplete() {
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['delorean']}`} />
 			<div style={{ width: '100%', margin: '1rem 0', fontSize: '1.5rem', fontWeight: 600 }}>
-				You are ready for the future. Your proposal is waiting for votes.
+				You're ready for the future. Your proposal is waiting for votes.
 			</div>
 			<MonitorButton
 				text={'endgame'}
@@ -594,10 +594,13 @@ function Endgame() {
 							'<span class="monitor-text--you">“Absolutely, let’s go!”</span>\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“Now you’ll pitch your proposal to your DAO so everyone can vote. If a majority approves, your funds get released so you can hire the talent you need to start building your game.”\n“And that’s how we create the game of our dreams?”</span>\n\n',
+							'<span class="monitor-text--hawkins">“Now you’ll pitch your proposal to your DAO so everyone can vote. If a majority approves, your funds get released so you can hire the talent you need to start building your game.”</span>\n,
 						)
 						.typeString(
-							'<span class="monitor-text--you">“That’s how.” “You use your DAO.”</span>\n\n',
+							'<span class="monitor-text--you">“And that’s how we create the game of our dreams?”</span>\n,
+						)
+						.typeString(
+							'<span class="monitor-text--hawkins">“That’s how.”</span> She winks. <span class="monitor-text--hawkins">“You use your DAO.”</span>\n',
 						)
 						.callFunction(() => {
 							setShowButton(true)
@@ -615,7 +618,7 @@ function Endgame() {
 						<a style={{ color: '#54fad0' }} href={'#'}>
 							discord
 						</a>{' '}
-						to vote for your proposal.
+						to vote on your proposal.
 					</span>
 				</div>
 			)}
@@ -644,7 +647,7 @@ function EndgameComplete() {
 					typewriter
 						.changeDelay(endgameFormPlayed ? 1 : 45)
 						.typeString(
-							'Now you\'re really a player.\n' +
+							'Now you're really a player.\n' +
 							'\n' +
 							'You created a team of allies.\n' +
 							'You raised all the monies.\n' +
@@ -661,7 +664,7 @@ function EndgameComplete() {
 							'But wait, there’s more!\n' +
 							'\n' +
 							'Hawkin’s has a special gift for you.\n' +
-							'But she’s still working on encrypting it.\n' +
+							'She’s still working on encrypting it though.\n' +
 							'Once she’s done, she’ll send a message to let you know.\n' +
 							'\n' +
 							'Fill out this form so she can keep in touch:\n',
