@@ -142,8 +142,7 @@ async function checkFourthQuest(apiProvider, address, updateQuestState) {
 		const daoList = await apiProvider.query.gameDaoControl.controlledBodies(address)
 		let taskCompleted = false
 		for (let dao of daoList.toHuman()) {
-			const campaignsCount = await apiProvider.query.taskCompleted.campaignsOwnedCount(dao)
-
+			const campaignsCount = await apiProvider.query.gameDaoCrowdfunding.campaignsOwnedCount(dao)
 			if (campaignsCount.toNumber() > 0) {
 				taskCompleted = true
 				break
@@ -313,7 +312,6 @@ export function QuestProvider({ children }) {
 		}
 	}, [apiProvider, address, state, updateQuestState])
 
-	console.log('[QUEST_STATE]', state)
 	return <QuestContext.Provider
 		value={{ ...state, updateQuestState }}>{children}</QuestContext.Provider>
 }
