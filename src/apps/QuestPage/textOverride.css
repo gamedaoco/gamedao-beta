@@ -96,9 +96,20 @@
 	height: 12rem;
 }
 
+
+.questMonitorTextContainer {
+	/* Foreground, Background */
+	scrollbar-color: #21E19D  #0b4e36
+}
 .questMonitorTextContainer::-webkit-scrollbar {
-	width: 0px;
-	height: 0px;
+	width: 10px; /* Mostly for vertical scrollbars */
+	height: 10px; /* Mostly for horizontal scrollbars */
+}
+.questMonitorTextContainer::-webkit-scrollbar-thumb { /* Foreground */
+	background:  #21E19D;
+}
+.questMonitorTextContainer::-webkit-scrollbar-track { /* Background */
+	background:  #0b4e36
 }
 
 .Typewriter {
