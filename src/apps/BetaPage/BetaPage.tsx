@@ -1,4 +1,4 @@
-import { Button, Card, Paper, Stack, Typography } from '../../components'
+import { Button, Card, Paper, Stack, Typography, useMediaQuery } from '../../components'
 import { Box, CardContent, CardMedia } from '@mui/material'
 import './textOverride.css'
 import { useTheme } from '@mui/material/styles'
@@ -10,6 +10,7 @@ import { IPFS_IMAGE_CID } from '../QuestPage/modules/IPFS_IMAGE_CID'
 
 export function BetaPage() {
 	const theme = useTheme()
+	const isMobile = useMediaQuery('(min-width:800px)')
 	const { updateWalletState, connected } = useWallet()
 	const { updateStore, allowConnection } = useStore()
 	const handleConnect = useCallback(
@@ -55,7 +56,7 @@ export function BetaPage() {
 				</CardContent>
 			</Card>
 
-			<Stack spacing={4} direction="row" width={'100%'}>
+			<Stack spacing={4} direction={ isMobile ? "row" : "column" } width={'100%'}>
 				<Paper sx={{ flex: '1' }}>
 					<Box width="100%" padding={4}>
 						<Stack direction="row" spacing={4} alignItems="center">
