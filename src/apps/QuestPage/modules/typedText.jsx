@@ -94,7 +94,7 @@ function QuestOne() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to get ZERO tokens in our{' '}
-						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/guides/installing-your-wallet#3.-get-some-zero-game-and-play-tokens'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/installing-your-wallet#3.-get-some-zero-game-and-play-tokens'}>
 							documentation.
 						</a>
 					</span>
@@ -188,7 +188,7 @@ function QuestTwo() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to create a DAO in the{' '}
-						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-an-organisation)'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-an-organisation'}>
 							documentation.
 						</a>
 					</span>
@@ -274,7 +274,7 @@ function QuestThree() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to join your DAO.
@@ -359,7 +359,7 @@ function QuestFour() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a campaign in our{' '}
-						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-a-campaign'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-a-campaign'}>
 							documentation.
 						</a>
 					</span>
@@ -440,7 +440,7 @@ function QuestFive() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to fund your campaign
@@ -525,7 +525,7 @@ function QuestSix() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a withdrawal proposal in our{' '}
-						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/fundamentals/fundraising/fundraising-withdrawal-proposal'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/fundamentals/fundraising/fundraising-withdrawal-proposal'}>
 							documentation.
 						</a>
 					</span>
@@ -613,7 +613,7 @@ function Endgame() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to vote on your proposal.
