@@ -724,6 +724,7 @@ export function TypedText() {
 				flexDirection: 'column',
 				minHeight: '100%',
 				overflowY: 'auto',
+				paddingRight: '1rem'
 			}}
 		>
 			<QuestScreenSelect />
