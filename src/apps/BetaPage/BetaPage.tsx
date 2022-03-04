@@ -6,8 +6,7 @@ import { useCallback } from 'react'
 import { useWallet } from '../../context/Wallet'
 import { useStore } from '../../context/Store'
 import { gateway } from '../lib/ipfs'
-
-import { AnimatedHeader } from "../QuestPage/QuestPage"
+import { IPFS_IMAGE_CID } from '../QuestPage/modules/IPFS_IMAGE_CID'
 
 export function BetaPage() {
 	const theme = useTheme()
@@ -27,7 +26,15 @@ export function BetaPage() {
 
 	return (
 		<Stack spacing={4}>
-			<AnimatedHeader questProgress={"4"} />
+			<Box
+				sx={{
+					height: '60vh',
+					backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${1}`]})`,
+					backgroundPosition: 'center',
+					backgroundSize: 'contain',
+					backgroundRepeat: 'no-repeat',
+				}}
+			/>
 			<Card>
 				<CardContent>
 					<Stack spacing={4} padding={4}>

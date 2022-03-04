@@ -128,3 +128,9 @@
 	color: #FFEF63 !important;
 	white-space: pre-line;
 }
+
+.Typewriter span {
+	font-weight: 600;
+	font-size: 1.1rem;
+	line-height: 1.3;
+}

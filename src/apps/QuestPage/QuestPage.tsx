@@ -9,21 +9,21 @@ import { gateway } from '../lib/ipfs'
 import { IPFS_IMAGE_CID } from './modules/IPFS_IMAGE_CID'
 import { TypedText } from './modules/typedText'
 
-export function AnimatedHeader({ questProgress }) {
+export function AnimatedHeader() {
 	const [animated, setAnimated] = useState(false)
+	const questState = useQuestContext()
 
 	useEffect(() => {
 		const id = setInterval(() => {
 			setAnimated(!animated)
 		}, 1000)
-
 		return () => clearInterval(id)
 	})
 
 	return <Box
 		sx={{
 			height: '60vh',
-			backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${questProgress}${animated ? '' : '.1'}`]})`,
+			backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${questState.screenIndex}${animated ? '' : '.1'}`]})`,
 			backgroundPosition: 'center',
 			backgroundSize: 'contain',
 			backgroundRepeat: 'no-repeat',
@@ -71,15 +71,13 @@ function MonitorStep({ id }) {
 
 
 export function QuestPage() {
-	const questState = useQuestContext()
 	const { ref: screenRef, width } = useComponentSize()
-	const [progress, setProgress] = useState(0)
 	const contentScale = width * (width < 850 ? 0.001 : 0.0008)
 
 	return (
 		<>
 			<Stack spacing={4}>
-				<AnimatedHeader questProgress={progress} />
+				<AnimatedHeader/>
 
 				<Box
 					sx={{
@@ -107,7 +105,6 @@ export function QuestPage() {
 					>
 						<Stack sx={{ transform: `scale(${contentScale / 1.1})`, margin: 'auto' }}>
 							{[1, 2, 3, 4, 5, 6].map((id) => {
-
 								return <Fragment key={id}><MonitorStep id={id} /></Fragment>
 							})}
 						</Stack>
