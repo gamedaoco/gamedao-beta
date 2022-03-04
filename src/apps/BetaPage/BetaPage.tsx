@@ -28,12 +28,11 @@ export function BetaPage() {
 	return (
 		<Stack spacing={4}>
 			<Box
+				component={'img'}
+				alt='hero'
+				src={`${gateway}${IPFS_IMAGE_CID["header0"]}`}
 				sx={{
-					height: '60vh',
-					backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${1}`]})`,
-					backgroundPosition: 'center',
-					backgroundSize: 'contain',
-					backgroundRepeat: 'no-repeat',
+					width: '100%',
 				}}
 			/>
 			<Card>
