@@ -94,7 +94,7 @@ function QuestOne() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to get ZERO tokens in our{' '}
-						<a style={{ color: '#54fad0' }} href={'#'}>
+						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/'}>
 							documentation.
 						</a>
 					</span>
@@ -188,7 +188,7 @@ function QuestTwo() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to create a DAO in the{' '}
-						<a style={{ color: '#54fad0' }} href={'#'}>
+						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/'}>
 							documentation.
 						</a>
 					</span>
@@ -327,8 +327,7 @@ function QuestFour() {
 					typewriter
 						.changeDelay(quest4Played ? 1 : 45)
 						.typeString(
-							'Level up, warrior!\n' +
-							'// Create a fundraising campaign\n\n'
+							'Level up, warrior!\n' + '// Create a fundraising campaign\n',
 						)
 						.typeString(
 							'After making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n',
@@ -362,7 +361,7 @@ function QuestFour() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a campaign in our{' '}
-						<a style={{ color: '#54fad0' }} href={'#'}>
+						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/'}>
 							documentation.
 						</a>
 					</span>
@@ -528,7 +527,7 @@ function QuestSix() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a withdrawal proposal in our{' '}
-						<a style={{ color: '#54fad0' }} href={'#'}>
+						<a style={{ color: '#54fad0' }} href={'https://docs.gamedao.co/'}>
 							documentation.
 						</a>
 					</span>
