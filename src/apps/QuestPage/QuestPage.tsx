@@ -133,8 +133,9 @@ export function QuestPage() {
 						style={{
 							pointerEvents: 'none',
 							position: 'absolute',
-							top: '5%',
-							left: '0%',
+							top: '5',
+							left: '0',
+							padding: '7% 6%',
 						}}
 					/>
 				</Box>
