@@ -102,7 +102,7 @@ export function QuestPage() {
 							right: '9%',
 						}}
 					>
-						<Stack sx={{ transform: `scale(${contentScale / 1.1})`, margin: 'auto' }}>
+						<Stack sx={{ transform: `scale(${contentScale / 0.9})`, margin: 'auto' }}>
 							{[1, 2, 3, 4, 5, 6].map((id) => {
 								return <Fragment key={id}><MonitorStep id={id} /></Fragment>
 							})}
