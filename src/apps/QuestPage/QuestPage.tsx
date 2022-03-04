@@ -21,12 +21,11 @@ export function AnimatedHeader() {
 	})
 
 	return <Box
+		component={'img'}
+		alt='hero'
+		src={`${gateway}${IPFS_IMAGE_CID[`header${Math.trunc(questState.screenIndex / 2)}${animated ? '' : '.1'}`]}`}
 		sx={{
-			height: '60vh',
-			backgroundImage: `url(${gateway}${IPFS_IMAGE_CID[`header${questState.screenIndex}${animated ? '' : '.1'}`]})`,
-			backgroundPosition: 'center',
-			backgroundSize: 'contain',
-			backgroundRepeat: 'no-repeat',
+			width: '100%',
 		}}
 	/>
 }
@@ -77,7 +76,7 @@ export function QuestPage() {
 	return (
 		<>
 			<Stack spacing={4}>
-				<AnimatedHeader/>
+				<AnimatedHeader />
 
 				<Box
 					sx={{
