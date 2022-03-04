@@ -66,7 +66,7 @@ export function BetaPage() {
 							<li>
 								<Typography>
 									Follow the steps in our{' '}
-									<a style={{ color: theme.palette.text.primary }} href={'#'}>
+									<a style={{ color: theme.palette.text.primary }} target="_blank" href={'https://docs.gamedao.co/guides/installing-your-wallet'}>
 										documentation.
 									</a>
 									<span style={{ fontStyle: 'italic' }}>
@@ -88,7 +88,7 @@ export function BetaPage() {
 							<li>
 								<Typography>
 									Join our{' '}
-									<a style={{ color: theme.palette.text.primary }} href={'#'}>
+									<a style={{ color: theme.palette.text.primary }} target="_blank" href={'https://discord.gg/YZT2QANG5m'}>
 										discord server
 									</a>
 								</Typography>

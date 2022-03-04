@@ -63,7 +63,7 @@ const Router = (props) => {
 				<Route path='/' element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route
 					path='/app'
-					element={<LayoutRoute showSidebar showHeader showFooter
+					element={<LayoutRoute showHeader showFooter
 										  element={<BetaPage />} />}
 				></Route>
 				<Route
