@@ -274,6 +274,14 @@ export function QuestProvider({ children }) {
 	)
 
 	useEffect(() => {
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+		}
+	}, [])
+
+	useEffect(() => {
 		// Load old questState from store
 		try {
 			const localStorageState = localStorage.getItem('STORE_QUEST_STATE')
@@ -281,13 +289,7 @@ export function QuestProvider({ children }) {
 		} catch (e) {
 			return
 		}
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current)
-			}
-		}
-	}, [])
+	}, [address])
 
 	useEffect(() => {
 		if (address && localStoreState) {
