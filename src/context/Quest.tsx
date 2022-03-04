@@ -255,19 +255,31 @@ export function QuestProvider({ children }) {
 
 	const updateQuestState = useCallback(
 		(obj) => {
-			const newState = { ...state, ...obj }
 			let storeData = {}
 			const rawAddress = decodeAddressAsString(address)
 			const localStorageState = localStorage.getItem('STORE_QUEST_STATE')
 			if (localStorageState) {
 				storeData = JSON.parse(localStorageState)
 			}
+			let newState = { ...state, ...obj }
+			if (storeData[rawAddress]) {
+				newState = { ...storeData[rawAddress], ...obj }
+			}
+
 			storeData[rawAddress] = newState
 			localStorage.setItem('STORE_QUEST_STATE', JSON.stringify(storeData))
 			setState(newState)
 		},
 		[state, setState, address],
 	)
+
+	useEffect(() => {
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+		}
+	}, [])
 
 	useEffect(() => {
 		// Load old questState from store
@@ -277,13 +289,7 @@ export function QuestProvider({ children }) {
 		} catch (e) {
 			return
 		}
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current)
-			}
-		}
-	}, [])
+	}, [address])
 
 	useEffect(() => {
 		if (address && localStoreState) {
