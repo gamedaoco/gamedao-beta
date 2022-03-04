@@ -14,7 +14,7 @@ function Intro() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(introTextPlayed ? 1 : 45)
+						.changeDelay(introTextPlayed ? 1 : 25)
 						.typeString(
 							'Shall we play a game?\n' +
 							'\n' +
@@ -63,7 +63,7 @@ function QuestOne() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest1Played ? 1 : 45)
+						.changeDelay(quest1Played ? 1 : 25)
 						.typeString(
 							'Cha-ching, baby!\n' +
 							'// Connect your wallet and get tokens\n' +
@@ -145,7 +145,7 @@ function QuestTwo() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest2Played ? 1 : 45)
+						.changeDelay(quest2Played ? 1 : 25)
 						.typeString('I’ve not seen such bravery!\n' + '// Create a DAO\n\n')
 						.typeString(
 							'<span class="monitor-text--hawkins">“Great, you have tokens,”</span> Hawkins says. <span class="monitor-text--hawkins">“Grab that cassette tape, cos next you’ll need a DAO.”\n</span>',
@@ -238,7 +238,7 @@ function QuestThree() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest3Played ? 1 : 45)
+						.changeDelay(quest3Played ? 1 : 25)
 						.typeString(
 							'Rally thine allies!\n' + '// Invite two friends into your DAO\n\n',
 						)
@@ -325,13 +325,11 @@ function QuestFour() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest4Played ? 1 : 45)
+						.changeDelay(quest4Played ? 1 : 25)
+						.typeString('Level up, warrior!\n' + '// Create a fundraising campaign\n\n')
 						.typeString(
-							'Level up, warrior!\n' + '// Create a fundraising campaign\n',
-						)
-						.typeString(
-							'After making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n',
-							'Without even thinking, you blurt,<span class="monitor-text--you">“I wish we could play as the bad guys.”</span>\n',
+							'After making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n' +
+							'Without even thinking, you blurt,<span class="monitor-text--you">“I wish we could play as the bad guys.”</span>\n' +
 							'<span class="monitor-text--you">“That’s brilliant, dude!”</span> your friends say. And soon ideas start whizzing around faster than elf arrows. What if we could upgrade our weapons? What if we took the game online? What if we made an MMORPG where people could play as either good or bad guys?\n' +
 							'It’s so very exciting.\n',
 						)
@@ -411,7 +409,7 @@ function QuestFive() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest5Played ? 1 : 45)
+						.changeDelay(quest5Played ? 1 : 25)
 						.typeString('Get cash in your stash!\n' + '// Collect campaign funds\n\n')
 						.typeString(
 							'<span class="monitor-text--you">“But I don’t know anything about fundraising,”</span> you groan. <span class="monitor-text--you">“It sounds awful.”</span>\n',
@@ -493,7 +491,7 @@ function QuestSix() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest6Played ? 1 : 45)
+						.changeDelay(quest6Played ? 1 : 25)
 						.typeString(
 							'Name your game!\n' +
 							'Proof of existence\n' +
@@ -577,7 +575,7 @@ function Endgame() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(endgamePlayed ? 1 : 45)
+						.changeDelay(endgamePlayed ? 1 : 25)
 						.typeString(
 							'~ Endgame ~\n' +
 							'Victory is yours!\n' +
@@ -645,7 +643,7 @@ function EndgameComplete() {
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(endgameFormPlayed ? 1 : 45)
+						.changeDelay(endgameFormPlayed ? 1 : 25)
 						.typeString(
 							'Now you’re really a player.\n' +
 							'\n' +
