@@ -1,20 +1,45 @@
 import Typewriter from 'typewriter-effect'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MonitorButton } from './monitorButton'
 import { gateway } from '../../lib/ipfs'
 import { IPFS_IMAGE_CID } from './IPFS_IMAGE_CID'
 import { useQuestContext } from '../../../context/Quest'
 
+
+function useAutoscroll(selector, milliseconds = 200){
+	const [ intervalId, setIntervalId ] = useState()
+
+	useEffect( () => {
+		const id = window.setInterval( () => {
+			var elem = document.querySelector(selector);
+			elem.scrollTop = elem.scrollHeight;
+		}, milliseconds)
+
+		setIntervalId(id)
+
+		return () => { 
+			var elem = document.querySelector(selector);
+			if(elem) elem.scrollTop = elem.scrollHeight;
+			window.clearInterval(id) 
+		}
+	} ,[])
+
+	return intervalId
+}
+
+
 // Intro
 function Intro() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, introTextPlayed } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(introTextPlayed ? 1 : 25)
+						.changeDelay(introTextPlayed ? 1 : 35)
 						.typeString(
 							'Shall we play a game?\n' +
 							'\n' +
@@ -32,10 +57,13 @@ function Intro() {
 							'Fear not. Follow Hawkins on these six quests, and she’ll help you.\n',
 						)
 						.callFunction(() => {
+							
 							setShowButton(true)
 							updateQuestState({
 								introTextPlayed: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
+
 						})
 						.start()
 				}}
@@ -58,12 +86,14 @@ function Intro() {
 function QuestOne() {
 	const [showButton, setShowButton] = useState(false)
 	const { hasQuest1Completed, updateQuestState, quest1Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest1Played ? 1 : 25)
+						.changeDelay(quest1Played ? 1 : 35)
 						.typeString(
 							'Cha-ching, baby!\n' +
 							'// Connect your wallet and get tokens\n' +
@@ -79,13 +109,14 @@ function QuestOne() {
 							'<span class="monitor-text--you">“Hawkins,”</span> you say. <span class="monitor-text--you">“My wallet’s empty.”\n</span>',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“Ah, yes, that’s a common problem,”</span> she says. <span class="monitor-text--hawkins--you">“Let me show you to the faucet.”\n</span>',
+							'<span class="monitor-text--hawkins">“Ah, yes, that’s a common problem,”</span> she says. <span class="monitor-text--you">“Let me show you to the faucet.”\n</span>',
 						)
 						.callFunction(() => {
 							setShowButton(true)
 							updateQuestState({
 								quest1Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -117,6 +148,7 @@ function QuestOne() {
 
 function QuestOneComplete() {
 	const { updateQuestState } = useQuestContext()
+
 	return (
 		<>
 			<img width='65%' src={`${gateway}${IPFS_IMAGE_CID['cassette']}`} />
@@ -139,13 +171,14 @@ function QuestOneComplete() {
 function QuestTwo() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest2Completed, quest2Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
 
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest2Played ? 1 : 25)
+						.changeDelay(quest2Played ? 1 : 35)
 						.typeString('I’ve not seen such bravery!\n' + '// Create a DAO\n\n')
 						.typeString(
 							'<span class="monitor-text--hawkins">“Great, you have tokens,”</span> Hawkins says. <span class="monitor-text--hawkins">“Grab that cassette tape, cos next you’ll need a DAO.”\n</span>',
@@ -172,14 +205,15 @@ function QuestTwo() {
 							'<span class="monitor-text--you">“But why do I need a DAO if I just want to play?”</span>\n',
 						)
 						.typeString(
-							'<span class="monitor-text--hawkins">“You don’t, but you’ll thank me later if you form one now.”\n' +
-							'“Alrighty, I trust you.” You pop your tape into the DATASETTE PLAYER on your desktop and press play. “Let’s do this.”\n</span>\n',
+							'<span class="monitor-text--hawkins">“You don’t, but you’ll thank me later if you form one now.”</span>\n' +
+							'<span class="monitor-text--you">“Alrighty, I trust you.”</span> You pop your tape into the DATASETTE PLAYER on your desktop and press play. <span class="monitor-text--you">“Let’s do this.”</span>\n\n',
 						)
 						.callFunction(() => {
 							setShowButton(true)
 							updateQuestState({
 								quest2Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -233,12 +267,14 @@ function QuestTwoComplete() {
 function QuestThree() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest3Completed, quest3Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest3Played ? 1 : 25)
+						.changeDelay(quest3Played ? 1 : 35)
 						.typeString(
 							'Rally thine allies!\n' + '// Invite two friends into your DAO\n\n',
 						)
@@ -266,6 +302,7 @@ function QuestThree() {
 							updateQuestState({
 								quest3Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -320,12 +357,14 @@ function QuestThreeComplete() {
 function QuestFour() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest4Completed, quest4Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest4Played ? 1 : 25)
+						.changeDelay(quest4Played ? 1 : 35)
 						.typeString('Level up, warrior!\n' + '// Create a fundraising campaign\n\n')
 						.typeString(
 							'After making the Gauntlet leaderboard, you all high-five and slap each other on the back.\n' +
@@ -351,6 +390,7 @@ function QuestFour() {
 							updateQuestState({
 								quest4Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -404,12 +444,14 @@ function QuestFourComplete() {
 function QuestFive() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest5Completed, quest5Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest5Played ? 1 : 25)
+						.changeDelay(quest5Played ? 1 : 35)
 						.typeString('Get cash in your stash!\n' + '// Collect campaign funds\n\n')
 						.typeString(
 							'<span class="monitor-text--you">“But I don’t know anything about fundraising,”</span> you groan. <span class="monitor-text--you">“It sounds awful.”</span>\n',
@@ -432,6 +474,7 @@ function QuestFive() {
 							updateQuestState({
 								quest5Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -486,12 +529,14 @@ function QuestFiveComplete() {
 function QuestSix() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest6Completed, quest6Played } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(quest6Played ? 1 : 25)
+						.changeDelay(quest6Played ? 1 : 35)
 						.typeString(
 							'Name your game!\n' +
 							'Proof of existence\n' +
@@ -517,6 +562,7 @@ function QuestSix() {
 							updateQuestState({
 								quest6Played: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -570,12 +616,14 @@ function QuestSixComplete() {
 function Endgame() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasAllQuestsCompleted, endgamePlayed } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(endgamePlayed ? 1 : 25)
+						.changeDelay(endgamePlayed ? 1 : 35)
 						.typeString(
 							'~ Endgame ~\n' +
 							'Victory is yours!\n' +
@@ -605,6 +653,7 @@ function Endgame() {
 							updateQuestState({
 								endgamePlayed: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -638,12 +687,14 @@ function Endgame() {
 function EndgameComplete() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, endgameFormPlayed } = useQuestContext()
+	const intervalId = useAutoscroll(".questMonitorTextContainer")
+
 	return (
 		<>
 			<Typewriter
 				onInit={(typewriter) => {
 					typewriter
-						.changeDelay(endgameFormPlayed ? 1 : 25)
+						.changeDelay(endgameFormPlayed ? 1 : 35)
 						.typeString(
 							'Now you’re really a player.\n' +
 							'\n' +
@@ -672,6 +723,7 @@ function EndgameComplete() {
 							updateQuestState({
 								endgameFormPlayed: true,
 							})
+							setTimeout( () => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}

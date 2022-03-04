@@ -16,7 +16,7 @@ export function AnimatedHeader() {
 	useEffect(() => {
 		const id = setInterval(() => {
 			setAnimated(!animated)
-		}, 1000)
+		}, 1500)
 		return () => clearInterval(id)
 	})
 
