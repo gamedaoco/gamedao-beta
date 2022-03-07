@@ -1,28 +1,30 @@
 import Typewriter from 'typewriter-effect'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MonitorButton } from './monitorButton'
 import { gateway } from '../../lib/ipfs'
 import { IPFS_IMAGE_CID } from './IPFS_IMAGE_CID'
 import { useQuestContext } from '../../../context/Quest'
+import { createPopover } from '@typeform/embed'
+import '@typeform/embed/build/css/popover.css'
 
 
-function useAutoscroll(selector, milliseconds = 200){
-	const [ intervalId, setIntervalId ] = useState()
+function useAutoscroll(selector, milliseconds = 200) {
+	const [intervalId, setIntervalId] = useState()
 
-	useEffect( () => {
-		const id = window.setInterval( () => {
-			var elem = document.querySelector(selector);
-			elem.scrollTop = elem.scrollHeight;
+	useEffect(() => {
+		const id = window.setInterval(() => {
+			var elem = document.querySelector(selector)
+			elem.scrollTop = elem.scrollHeight
 		}, milliseconds)
 
 		setIntervalId(id)
 
-		return () => { 
-			var elem = document.querySelector(selector);
-			if(elem) elem.scrollTop = elem.scrollHeight;
-			window.clearInterval(id) 
+		return () => {
+			var elem = document.querySelector(selector)
+			if (elem) elem.scrollTop = elem.scrollHeight
+			window.clearInterval(id)
 		}
-	} ,[])
+	}, [])
 
 	return intervalId
 }
@@ -32,7 +34,7 @@ function useAutoscroll(selector, milliseconds = 200){
 function Intro() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, introTextPlayed } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -57,12 +59,12 @@ function Intro() {
 							'Fear not. Follow Hawkins on these six quests, and she’ll help you.\n',
 						)
 						.callFunction(() => {
-							
+
 							setShowButton(true)
 							updateQuestState({
 								introTextPlayed: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 
 						})
 						.start()
@@ -86,7 +88,7 @@ function Intro() {
 function QuestOne() {
 	const [showButton, setShowButton] = useState(false)
 	const { hasQuest1Completed, updateQuestState, quest1Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -116,7 +118,7 @@ function QuestOne() {
 							updateQuestState({
 								quest1Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -125,7 +127,8 @@ function QuestOne() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to get ZERO tokens in our{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/installing-your-wallet#3.-get-some-zero-game-and-play-tokens'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://docs.gamedao.co/guides/installing-your-wallet#3.-get-some-zero-game-and-play-tokens'}>
 							documentation.
 						</a>
 					</span>
@@ -171,7 +174,7 @@ function QuestOneComplete() {
 function QuestTwo() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest2Completed, quest2Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -213,7 +216,7 @@ function QuestTwo() {
 							updateQuestState({
 								quest2Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -222,7 +225,8 @@ function QuestTwo() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Need Help? Check how to create a DAO in the{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-an-organisation'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-an-organisation'}>
 							documentation.
 						</a>
 					</span>
@@ -267,7 +271,7 @@ function QuestTwoComplete() {
 function QuestThree() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest3Completed, quest3Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -302,7 +306,7 @@ function QuestThree() {
 							updateQuestState({
 								quest3Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -311,7 +315,8 @@ function QuestThree() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to join your DAO.
@@ -357,7 +362,7 @@ function QuestThreeComplete() {
 function QuestFour() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest4Completed, quest4Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -390,7 +395,7 @@ function QuestFour() {
 							updateQuestState({
 								quest4Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -399,7 +404,8 @@ function QuestFour() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a campaign in our{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-a-campaign'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://docs.gamedao.co/guides/from-dao-to-campaign#creating-a-campaign'}>
 							documentation.
 						</a>
 					</span>
@@ -444,7 +450,7 @@ function QuestFourComplete() {
 function QuestFive() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest5Completed, quest5Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -474,7 +480,7 @@ function QuestFive() {
 							updateQuestState({
 								quest5Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -483,7 +489,8 @@ function QuestFive() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to fund your campaign
@@ -529,7 +536,7 @@ function QuestFiveComplete() {
 function QuestSix() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasQuest6Completed, quest6Played } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -562,7 +569,7 @@ function QuestSix() {
 							updateQuestState({
 								quest6Played: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -571,7 +578,8 @@ function QuestSix() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Check how to create a withdrawal proposal in our{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://docs.gamedao.co/fundamentals/fundraising/fundraising-withdrawal-proposal'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://docs.gamedao.co/fundamentals/fundraising/fundraising-withdrawal-proposal'}>
 							documentation.
 						</a>
 					</span>
@@ -616,7 +624,7 @@ function QuestSixComplete() {
 function Endgame() {
 	const [showButton, setShowButton] = useState(false)
 	const { updateQuestState, hasAllQuestsCompleted, endgamePlayed } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
 
 	return (
 		<>
@@ -653,7 +661,7 @@ function Endgame() {
 							updateQuestState({
 								endgamePlayed: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
@@ -662,7 +670,8 @@ function Endgame() {
 				<div style={{ width: '100%' }}>
 					<span>
 						Ask the community in{' '}
-						<a style={{ color: '#54fad0' }} target="_blank" href={'https://discord.gg/kNTTE8eZX6'}>
+						<a style={{ color: '#54fad0' }} target='_blank'
+						   href={'https://discord.gg/kNTTE8eZX6'}>
 							discord
 						</a>{' '}
 						to vote on your proposal.
@@ -686,8 +695,10 @@ function Endgame() {
 
 function EndgameComplete() {
 	const [showButton, setShowButton] = useState(false)
+	const [popUpState, setPopUpstate] = useState(null)
 	const { updateQuestState, endgameFormPlayed } = useQuestContext()
-	const intervalId = useAutoscroll(".questMonitorTextContainer")
+	const intervalId = useAutoscroll('.questMonitorTextContainer')
+
 
 	return (
 		<>
@@ -723,20 +734,36 @@ function EndgameComplete() {
 							updateQuestState({
 								endgameFormPlayed: true,
 							})
-							setTimeout( () => window.clearInterval(intervalId), 500)
+							setTimeout(() => window.clearInterval(intervalId), 500)
 						})
 						.start()
 				}}
 			/>
 			{showButton && (
+
 				<MonitorButton
 					text={'SIGN UP FOR REWARD'}
-					onClick={() =>
-						window
-							.open('https://dsgl4ddr6q4.typeform.com/to/NRkTEtFl', '_blank')
-							.focus()
+					onClick={() => {
+						if (!popUpState) {
+							const popup = createPopover('NRkTEtFl', {
+								width: 800,
+								height: 800,
+								size: 100,
+								hideHeaders: true,
+								autoResize: true,
+							})
+							setPopUpstate(popup)
+							popup.open()
+						} else {
+							popUpState.toggle()
+						}
+
+					}
+
 					}
 				/>
+
+
 			)}
 		</>
 	)
@@ -776,10 +803,11 @@ export function TypedText() {
 				flexDirection: 'column',
 				minHeight: '100%',
 				overflowY: 'auto',
-				paddingRight: '1rem'
+				paddingRight: '1rem',
 			}}
 		>
-			<QuestScreenSelect />
+			{/*<QuestScreenSelect />*/}
+			<EndgameComplete />
 		</div>
 	)
 }

@@ -2963,6 +2963,19 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
+"@typeform/embed-react@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@typeform/embed-react/-/embed-react-1.9.0.tgz#79702192203df75a6d23145419d9d281a7889f1d"
+  integrity sha512-U6tjQ+pftZU1pYcDunHPT+Kc5ZdzrZOpCxL3NAZMhltsXzkJyxCeNiF7mboGzdvw52TPNrQ+aJv336bjDbV+Xw==
+  dependencies:
+    "@typeform/embed" "1.32.1"
+    fast-deep-equal "^3.1.3"
+
+"@typeform/embed@1.32.1", "@typeform/embed@^1.32.1":
+  version "1.32.1"
+  resolved "https://registry.yarnpkg.com/@typeform/embed/-/embed-1.32.1.tgz#012a0a9516870ebf461a3acde0a29ea7cead8c3a"
+  integrity sha512-lFBCAdq3pMhCG0WFedlRLuZ/ME8amv1PltxgGsgxlKBtgVIoQiTggMH6ZEPRk6PKaUs4IS7hJHxsXwOCe+WBXQ==
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.16"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.16.tgz#bc12c74b7d65e82d29876b5d0baf5c625ac58702"

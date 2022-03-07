@@ -75,7 +75,7 @@ export function QuestPage() {
 
 	return (
 		<>
-			<Stack spacing={4}>
+			<Stack spacing={4} id='quest-page'>
 				<AnimatedHeader />
 
 				<Box
@@ -143,8 +143,3 @@ export function QuestPage() {
 		</>
 	)
 }
-
-
-// <MonitorButton>OK!</MonitorButton>
-// <MonitorButton disabled>OK!</MonitorButton>
-// <img width='100%' src={`${gateway}${ipfsImageCIDs['cassette']}`} />
