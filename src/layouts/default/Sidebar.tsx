@@ -15,7 +15,7 @@ import NetInfo from 'src/components/NetInfo'
 import useHover from 'src/hooks/useHover'
 import { useWallet } from '../../context/Wallet'
 
-interface ComponentProps {	
+interface ComponentProps {
 	showNavigation?: boolean
 }
 
@@ -76,16 +76,16 @@ const ThemeSwitcher = () => {
 				}}
 				onClick={() => setDarkmodeEnabled(true)}
 			/>
-			<Divider orientation='vertical' variant='middle' flexItem />
+			{/*<Divider orientation="vertical" variant="middle" flexItem />
 			<Icons
 				src={ICON_MAPPING.sun}
-				alt='sun'
+				alt="sun"
 				sx={{
 					cursor: 'pointer',
 					filter: darkmodeEnabled ? 'invert(0.5)' : 'invert(1)',
 				}}
 				onClick={() => setDarkmodeEnabled(false)}
-			/>
+			/>*/}
 		</Paper>
 	)
 }

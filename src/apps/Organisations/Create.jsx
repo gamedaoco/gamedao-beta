@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { useWallet } from 'src/context/Wallet'
 import { formatZero, toZeroAddress } from 'src/utils/helper'
 import { useFormik } from 'formik'
+import * as Yup from 'yup';
+
 import {
 	Box,
 	Button,
@@ -13,6 +15,7 @@ import {
 	FormControl,
 	FormHelperText,
 	FormSectionHeadline,
+	InputAdornment,
 	Grid,
 	Image16to9,
 	InputLabel,
@@ -205,6 +208,29 @@ export const Main = (props) => {
 		getCID()
 	}
 
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().max(50).required('You must choose a Name.'),
+    website: Yup.string().url(),
+    description: Yup.string().required('Description is required.'),
+    email: Yup.string().email('Please enter a valid e-mail address.').required(),
+    member_limit: Yup.number().integer('Please enter the maximum number of members.').required('Please enter a member limit'),
+    fee: Yup.number().integer('Needs to be a number.').required('Please enter a membership fee.'),
+    controller: Yup.string().test(
+      'is-valid-controller-address',
+      'Not a valid Account Address!',
+      (value)=> {
+        const test = toZeroAddress(value)
+        return test
+      }),
+    treasury: Yup.string().test(
+      'is-valid-treasury-address',
+      'Not a valid Account Address!',
+      (value)=> {
+        const test = toZeroAddress(value)
+        return test
+      }),
+  });
+
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: persistedData ? persistedData : initialData,
@@ -218,40 +244,12 @@ export const Main = (props) => {
 			const errors = {}
 			console.log(values)
 
-			if (new Blob([values.name]).size > 48)
-				errors.name = 'Please enter a maximum of 48 bytes.'
-			if (!values.name || values.name === '') errors.name = 'You must choose a Name'
-
-			if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-				errors.email = 'Please enter a valid e-mail address.'
-			}
-
-			if (values.website !== '' && !/^(ftp|http|https):\/\/[^ "]+$/i.test(values.website)) {
-				errors.website = 'Please enter a valid URL.'
-			}
-
-			if (!values.member_limit || values.member_limit === '')
-				errors.member_limit = 'Please enter the maximum number of members.'
-			if (values.member_limit && isNaN(parseInt(values.member_limit)))
-				errors.member_limit = 'Needs to be a number.'
-
-			if (!values.fee || values.fee === '') errors.fee = 'Please enter the membership fee.'
-			if (values.fee && !/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/i.test(values.fee))
-				errors.fee = 'Needs to be a number.'
-
-			if (!values.description || values.description === '')
-				errors.description = 'We need a short description'
-
-			if (!toZeroAddress(values.controller))
-				errors.controller = 'Not a valid Account Address!'
-			if (!toZeroAddress(values.treasury)) errors.treasury = 'Not a valid Account Address!'
-
 			if (values.treasury === values.controller)
 				errors.treasury = 'Treasury Account needs to differ from Controller Account!'
 
 			return errors
 		},
-		//validationSchema: validationSchema,
+		validationSchema: validationSchema,
 		onSubmit: handleSubmit,
 	})
 
@@ -327,7 +325,6 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.name && Boolean(formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
-							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -341,7 +338,6 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
-							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -462,17 +458,15 @@ export const Main = (props) => {
 							multiline
 							aria-label="Short Description"
 							minRows={3}
-							placeholder="Minimum 3 rows"
 							fullWidth
 							label="Short Description"
 							name="description"
 							value={formik.values.description}
-							placeholder="Tell us more"
+							placeholder="Tell us more about your organisation..."
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
 							helperText={formik.touched.description && formik.errors.description}
-							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -518,7 +512,6 @@ export const Main = (props) => {
 								'Note: In case you want to create a DAO, the controller must be the organization.'
 							}
 							onChange={formik.handleChange}
-							required
 							onBlur={formik.handleBlur}
 							error={formik.touched.controller && Boolean(formik.errors.controller)}
 							helperText={formik.touched.controller && formik.errors.controller}
@@ -533,7 +526,6 @@ export const Main = (props) => {
 							label="Treasury Account"
 							value={formik.values.treasury}
 							onChange={formik.handleChange}
-							required
 							onBlur={formik.handleBlur}
 							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
 							helperText={formik.touched.treasury && formik.errors.treasury}
@@ -580,7 +572,6 @@ export const Main = (props) => {
 							value={formik.values.member_limit}
 							onChange={formik.handleChange}
 							fullWidth
-							required
 							onBlur={formik.handleBlur}
 							error={
 								formik.touched.member_limit && Boolean(formik.errors.member_limit)
@@ -623,9 +614,11 @@ export const Main = (props) => {
 							label="Membership Fee"
 							placeholder="10"
 							fullWidth
+							InputProps={{
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+							}}
 							value={formik.values.fee}
 							onChange={formik.handleChange}
-							required
 							onBlur={formik.handleBlur}
 							error={formik.touched.fee && Boolean(formik.errors.fee)}
 							helperText={formik.touched.fee && formik.errors.fee}
