@@ -141,7 +141,7 @@ const AccountComponent = () => {
 		if (accounts && allowConnect) {
 			;(async () => {
 				// Return true to override Access key check
-				// return true
+				return true
 
 				return await checkForAccessNFT(accounts.map((acc) => toKusamaAddress(acc.address)))
 			})().then((result: boolean) => {
@@ -161,7 +161,7 @@ const AccountComponent = () => {
 					updateStore({ allowConnection: false, connected: false })
 					updateWalletState({ allowConnect: false, connected: false })
 					createErrorNotification(
-						'Connection failed, seems like you dont own an access key.'
+						'Connection failed, seems like you dont own an access key.',
 					)
 					if (pathname !== '/app') {
 						navigate('/app')
@@ -181,7 +181,7 @@ const AccountComponent = () => {
 				address: toZeroAddress(account.address),
 			})
 		},
-		[allowConnect, accounts]
+		[allowConnect, accounts],
 	)
 
 	function copyAddress(e) {
@@ -200,7 +200,7 @@ const AccountComponent = () => {
 				account &&
 				address && (
 					<AccountBox>
-						<Stack spacing={1} alignItems={'center'} direction={'row'} height="100%">
+						<Stack spacing={1} alignItems={'center'} direction={'row'} height='100%'>
 							<Box
 								sx={{
 									display: 'flex',
@@ -221,7 +221,7 @@ const AccountComponent = () => {
 							<AccountSelect
 								renderValue={(value) => {
 									const account = accounts.find((a) =>
-										compareAddress(a.address, value)
+										compareAddress(a.address, value),
 									)
 									if (!account) return 'n/a'
 									return (
@@ -256,8 +256,8 @@ const AccountComponent = () => {
 							<BalanceAnnotation />
 
 							<IconButton
-								size="small"
-								aria-label="disconnect"
+								size='small'
+								aria-label='disconnect'
 								onClick={handleDisconnect}
 							>
 								<Icons

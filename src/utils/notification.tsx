@@ -19,10 +19,8 @@ export function createInfoNotification(message: string) {
 export function createQuestNotification(message: string) {
 	return toast.info(message, {
 		icon: '📖',
-		// Quest close time 15sec
-		autoClose: 15000,
-		// TODO: Replace mit quest icon
-		// icon: ({theme, type}) =>  <img src="url"/>
+		className: 'Toastify__toast--quest',
+		autoClose: 150000,
 	})
 }
 

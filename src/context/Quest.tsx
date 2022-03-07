@@ -53,7 +53,6 @@ export const useQuestContext = () => useContext<QuestState>(QuestContext)
 
 // Handle quests
 function handleQuests(state: QuestState, apiProvider, address, updateQuestState) {
-
 	if (!state.hasQuest1Completed) {
 		if (!state.quest1Played) return
 		return checkFirstQuest(apiProvider, address, updateQuestState)
