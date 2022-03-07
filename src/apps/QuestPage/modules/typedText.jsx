@@ -746,9 +746,6 @@ function EndgameComplete() {
 					onClick={() => {
 						if (!popUpState) {
 							const popup = createPopover('NRkTEtFl', {
-								width: 800,
-								height: 800,
-								size: 100,
 								hideHeaders: true,
 								autoResize: true,
 							})
@@ -757,9 +754,7 @@ function EndgameComplete() {
 						} else {
 							popUpState.toggle()
 						}
-
 					}
-
 					}
 				/>
 
@@ -806,8 +801,7 @@ export function TypedText() {
 				paddingRight: '1rem',
 			}}
 		>
-			{/*<QuestScreenSelect />*/}
-			<EndgameComplete />
+			<QuestScreenSelect />
 		</div>
 	)
 }

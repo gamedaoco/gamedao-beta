@@ -99,17 +99,20 @@
 
 .questMonitorTextContainer {
 	/* Foreground, Background */
-	scrollbar-color: #21E19D  #0b4e36
+	scrollbar-color: #21E19D #0b4e36
 }
+
 .questMonitorTextContainer::-webkit-scrollbar {
 	width: 10px; /* Mostly for vertical scrollbars */
 	height: 10px; /* Mostly for horizontal scrollbars */
 }
+
 .questMonitorTextContainer::-webkit-scrollbar-thumb { /* Foreground */
-	background:  #21E19D;
+	background: #21E19D;
 }
+
 .questMonitorTextContainer::-webkit-scrollbar-track { /* Background */
-	background:  #0b4e36
+	background: #0b4e36
 }
 
 .Typewriter {
@@ -144,4 +147,20 @@
 	font-weight: 600;
 	font-size: 1.1rem;
 	line-height: 1.3;
+}
+
+
+.tf-v1-popover {
+	right: unset !important;
+	left: 1rem !important;
+}
+
+.tf-v1-popover-button {
+	right: unset !important;
+	left: 26px;
+}
+
+.tf-v1-popover.open {
+	min-width: 60vw !important;
+	min-height: 60vh !important;
 }
