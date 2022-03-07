@@ -94,7 +94,8 @@
 		"three-stdlib": "2.6.1",
 		"toformat": "^2.0.0",
 		"typewriter-effect": "^2.18.2",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"yup": "^0.32.11"
 	},
 	"devDependencies": {
 		"@types/node": "^16.11.11",
