@@ -30,7 +30,7 @@ export function BetaPage() {
 			<Box
 				component={'img'}
 				alt='hero'
-				src={`${gateway}${IPFS_IMAGE_CID['header0']}`}
+				src={`${gateway}${IPFS_IMAGE_CID['header7']}`}
 				sx={{
 					width: '100%',
 				}}
