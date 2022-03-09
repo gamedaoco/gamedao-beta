@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useWallet } from 'src/context/Wallet'
 import { formatZero, toZeroAddress } from 'src/utils/helper'
 import { useFormik } from 'formik'
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 import {
 	Box,
@@ -208,28 +208,34 @@ export const Main = (props) => {
 		getCID()
 	}
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('You must choose a Name.'),
-    website: Yup.string().url(),
-    description: Yup.string().required('Description is required.'),
-    email: Yup.string().email('Please enter a valid e-mail address.').required(),
-    member_limit: Yup.number().integer('Please enter the maximum number of members.').required('Please enter a member limit'),
-    fee: Yup.number().integer('Needs to be a number.').required('Please enter a membership fee.'),
-    controller: Yup.string().test(
-      'is-valid-controller-address',
-      'Not a valid Account Address!',
-      (value)=> {
-        const test = toZeroAddress(value)
-        return test
-      }),
-    treasury: Yup.string().test(
-      'is-valid-treasury-address',
-      'Not a valid Account Address!',
-      (value)=> {
-        const test = toZeroAddress(value)
-        return test
-      }),
-  });
+	const validationSchema = Yup.object().shape({
+		name: Yup.string().max(50).required('You must choose a Name.'),
+		website: Yup.string().url(),
+		description: Yup.string().required('Description is required.'),
+		email: Yup.string().email('Please enter a valid e-mail address.').required(),
+		member_limit: Yup.number()
+			.integer('Please enter the maximum number of members.')
+			.required('Please enter a member limit'),
+		fee: Yup.number()
+			.integer('Needs to be a number.')
+			.required('Please enter a membership fee.'),
+		controller: Yup.string().test(
+			'is-valid-controller-address',
+			'Not a valid Account Address!',
+			(value) => {
+				const test = toZeroAddress(value)
+				return test
+			}
+		),
+		treasury: Yup.string().test(
+			'is-valid-treasury-address',
+			'Not a valid Account Address!',
+			(value) => {
+				const test = toZeroAddress(value)
+				return test
+			}
+		),
+	})
 
 	const formik = useFormik({
 		enableReinitialize: true,
@@ -325,6 +331,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.name && Boolean(formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -338,6 +345,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -467,6 +475,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
 							helperText={formik.touched.description && formik.errors.description}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -515,6 +524,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.controller && Boolean(formik.errors.controller)}
 							helperText={formik.touched.controller && formik.errors.controller}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -529,6 +539,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
 							helperText={formik.touched.treasury && formik.errors.treasury}
+							required
 						/>
 						<Typography variant="caption">
 							Note: The treasury account may not be the same as the controller
@@ -615,7 +626,7 @@ export const Main = (props) => {
 							placeholder="10"
 							fullWidth
 							InputProps={{
-								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>,
 							}}
 							value={formik.values.fee}
 							onChange={formik.handleChange}
