@@ -1,5 +1,5 @@
 import { Image } from '@mui/icons-material'
-import { useApiProvider } from '@substra-hooks/core'
+import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
@@ -29,6 +29,7 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Autocomplete,
 } from '../../components'
 
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
@@ -66,7 +67,7 @@ const random_state = (account) => {
 	const tags = ['dao', 'game']
 	const org = ''
 
-	const admin = toZeroAddress(account.address)
+	const admin = ''
 
 	return {
 		name,
@@ -99,6 +100,7 @@ export const Main = () => {
 	const navigate = useNavigate()
 	const { updateBalance } = useBalance()
 	const blockheight = useBlock()
+	const { accounts } = usePolkadotExtension()
 
 	const [activeMemberships, setActiveMemberships] = useState(null)
 	const [stepperState, setStepperState] = useState(0)
@@ -515,17 +517,35 @@ export const Main = () => {
 					{/* usage of funding and protocol to initiate after successfully raising */}
 
 					<Grid item xs={12} md={6}>
-						<TextField
-							fullWidth
-							label="Admin Account"
-							placeholder="Admin"
+						<Autocomplete
+							freeSolo
+							disableClearable
 							name="admin"
+							fullWidth
 							value={formik.values.admin}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('admin', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('admin', value)
+							}}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							onBlur={formik.handleBlur}
-							error={formik.touched.admin && Boolean(formik.errors.admin)}
-							helperText={formik.touched.admin && formik.errors.admin}
-							required
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Admin Account"
+									placeholder="Admin"
+									onBlur={formik.handleBlur}
+									error={formik.touched.admin && Boolean(formik.errors.admin)}
+									helperText={formik.touched.admin && formik.errors.admin}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>

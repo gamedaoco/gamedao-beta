@@ -1,5 +1,5 @@
-import { Image } from '@mui/icons-material'
-import { useApiProvider } from '@substra-hooks/core'
+import { ConstructionOutlined, Image } from '@mui/icons-material'
+import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWallet } from 'src/context/Wallet'
@@ -28,6 +28,7 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Autocomplete,
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
@@ -47,8 +48,8 @@ const random_state = (account) => {
 	const description = ''
 
 	const creator = toZeroAddress(account.address)
-	const controller = toZeroAddress(account.address)
-	const treasury = toZeroAddress(account.address)
+	const controller = ''
+	const treasury = ''
 
 	const body = 0
 	const access = 0
@@ -105,6 +106,7 @@ export const Main = (props) => {
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 	const navigate = useNavigate()
+	const { accounts } = usePolkadotExtension()
 
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
@@ -510,36 +512,79 @@ export const Main = (props) => {
 						<FormSectionHeadline>Controller Settings</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Autocomplete
+							freeSolo
+							disableClearable
 							id="controller"
-							fullWidth
 							name="controller"
-							placeholder="Controller"
-							label="Controller Account"
+							fullWidth
 							value={formik.values.controller}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							helperText={
 								'Note: In case you want to create a DAO, the controller must be the organization.'
 							}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('controller', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('controller', value)
+							}}
 							onBlur={formik.handleBlur}
-							error={formik.touched.controller && Boolean(formik.errors.controller)}
-							helperText={formik.touched.controller && formik.errors.controller}
-							required
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Controller Account"
+									placeholder="Controller"
+									onBlur={formik.handleBlur}
+									error={
+										formik.touched.controller &&
+										Boolean(formik.errors.controller)
+									}
+									helperText={
+										formik.touched.controller && formik.errors.controller
+									}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Autocomplete
+							freeSolo
+							disableClearable
 							id="treasury"
 							name="treasury"
-							placeholder="Treasury"
 							fullWidth
-							label="Treasury Account"
 							value={formik.values.treasury}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('treasury', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('treasury', value)
+							}}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							onBlur={formik.handleBlur}
-							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
-							helperText={formik.touched.treasury && formik.errors.treasury}
-							required
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Treasury Account"
+									placeholder="Treasury"
+									onBlur={formik.handleBlur}
+									error={
+										formik.touched.treasury && Boolean(formik.errors.treasury)
+									}
+									helperText={formik.touched.treasury && formik.errors.treasury}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 						<Typography variant="caption">
 							Note: The treasury account may not be the same as the controller
