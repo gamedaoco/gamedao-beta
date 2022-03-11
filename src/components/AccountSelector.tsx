@@ -154,10 +154,10 @@ const AccountComponent = () => {
 						address: toZeroAddress(accounts[lastAccountIndex || 0]?.address ?? ''),
 						connected: true,
 					})
-					if (!questState) {
-						setQuestState(true)
-						navigate('/app/quest')
-					}
+					// if (!questState) {
+					// 	setQuestState(true)
+					// 	navigate('/app/quest')
+					// }
 				} else {
 					// Reset wallet state
 					updateStore({ allowConnection: false, connected: false })

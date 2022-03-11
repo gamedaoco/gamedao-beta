@@ -1,18 +1,26 @@
-import { Button, Card, Paper, Stack, Typography, useMediaQuery } from '../../components'
-import { Box, CardContent } from '@mui/material'
-import './textOverride.css'
-import { useTheme } from '@mui/material/styles'
-import { useCallback } from 'react'
-import { useWallet } from '../../context/Wallet'
-import { useStore } from '../../context/Store'
+import { useCallback, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { gateway } from '../lib/ipfs'
 import { IPFS_IMAGE_CID } from '../QuestPage/modules/IPFS_IMAGE_CID'
+import { useWallet } from '../../context/Wallet'
+import { useStore } from '../../context/Store'
+import { useTheme } from '@mui/material/styles'
+import { Box, CardContent } from '@mui/material'
+import { Button, Card, Paper, Stack, Typography, useMediaQuery } from '../../components'
+import './textOverride.css'
 
 export function BetaPage() {
 	const theme = useTheme()
 	const isMobile = useMediaQuery('(min-width:800px)')
 	const { updateWalletState, connected } = useWallet()
 	const { updateStore, allowConnection } = useStore()
+	const navigate = useNavigate()
+
+	useEffect(()=>{
+		if(connected) navigate('/app/quest')
+	},[connected])
+
+
 	const handleConnect = useCallback(
 		(e) => {
 			e.stopPropagation()
