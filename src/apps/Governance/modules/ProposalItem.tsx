@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import moment from 'moment'
 import { blockTime, PROPOSAL_STATE_MAPPING } from 'src/apps/lib/data'
@@ -7,6 +7,9 @@ import { proposal_states } from '../../lib/data'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useBlock } from 'src/hooks/useBlock'
+
+import to from 'await-to-js'
+import { gateway } from '../../lib/ipfs'
 
 import { Divider, LinearProgress } from '@mui/material'
 import { Box, Button, Chip, Grid, Typography, useTheme } from 'src/components'
@@ -29,6 +32,21 @@ export function ProposalItem({ proposal, showDivider }) {
 	const proposalStateColor =
 		(theme.palette as any).proposalStates[PROPOSAL_STATE_MAPPING[proposalState]] ??
 		(theme.palette as any).proposalStates.default
+
+	const [ title, setTitle ] = useState(null)
+	useEffect(()=>{
+
+		if(!proposalMeta?.cid) return
+
+		async function getTheFuckingTitle(cid) {
+			const [err, data] = await to( fetch(`${gateway}${cid}`) )
+			const title = ( await data.json() ).title
+			setTitle( title || '' )
+		}
+
+		getTheFuckingTitle(proposalMeta.cid)
+
+	},[proposalMeta])
 
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
@@ -70,7 +88,7 @@ export function ProposalItem({ proposal, showDivider }) {
 								{(body || campaign).name}
 							</Typography>
 							<Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
-								{proposalMeta.title}
+								{ title || proposalMeta.title }
 							</Typography>
 							<Typography sx={{ fontSize: '0.75rem' }} variant="body1">
 								{expires < 0

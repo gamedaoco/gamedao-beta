@@ -195,7 +195,7 @@ export function Campaign() {
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<Headline component={'h1'}>{content.name}</Headline>
+									<Headline component={'h1'}>{IPFSData.title}</Headline>
 									<Link
 										component={NavLink}
 										to={'/app/organisations/' + content.org}
@@ -218,10 +218,9 @@ export function Campaign() {
 								</Grid>
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>
-										<img height={17} width={17} src={'/assets/play.png'} />
 										<Typography>
-											<strong>{content.balance} PLAY</strong> funded of{' '}
-											{content.cap} goal
+											<strong>{content.balance} </strong> of{' '}
+											{content.cap} contributed.
 										</Typography>
 									</Stack>
 								</Grid>

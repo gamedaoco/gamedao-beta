@@ -48,7 +48,9 @@ const NetInfo = () => {
 
 	return (
 		<Typography variant="body2">
-			{version && `Network ${version}`}
+			Network Info
+			<br />
+			{version && `ZERO ${version}`}
 			<br />
 			{blockNumber && `Blocktime ${blockNumber} / ${blockNumberTimer}s`}
 		</Typography>

@@ -256,14 +256,14 @@ function Main({ showNavigation }: ComponentProps) {
 				<Box sx={{ flex: 1 }} />
 
 				{!isMobile && (
-					<Box sx={{ p: '2rem 0' }}>
-						<NavHeader>Network Info</NavHeader>
+					<Box sx={{ p: '1rem 0' }}>
 						<Box sx={{ px: 2 }}>
 							<NetInfo />
 						</Box>
 					</Box>
 				)}
 
+{/*
 				{!isMobile && (
 					<Box sx={{ display: 'flex', pb: '1rem', alignItems: 'center' }}>
 						<Box sx={{ flex: 1, px: '1rem' }}>
@@ -285,6 +285,7 @@ function Main({ showNavigation }: ComponentProps) {
 						</Box>
 					</Box>
 				)}
+*/}
 			</List>
 		</Box>
 	)

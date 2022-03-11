@@ -194,7 +194,7 @@ export const Main = () => {
 			const payload = [
 				formik.values.org,
 				formik.values.admin,
-				formik.values.title,
+				'GAMEDAO', //formik.values.title,
 				formatZero(formik.values.cap),
 				formatZero(formik.values.deposit),
 				campaign_end,
@@ -210,8 +210,8 @@ export const Main = () => {
 			signAndNotify(
 				apiProvider.tx.gameDaoCrowdfunding.create(...payload),
 				{
-					pending: 'Campaign creation in progress',
-					success: 'Campaign creation successfully',
+					pending: 'Creating campaign...',
+					success: 'Campaign created',
 					error: 'Campaign creation failed',
 				},
 				(state, result) => {
@@ -247,15 +247,15 @@ export const Main = () => {
 		description: Yup.string().required('Please create a description'),
 		title: Yup.string().max(75).required('Please Enter a Campaign Title!'),
 		name: Yup.string()
-			.matches(/^[a-zA-Z\s]*$/i, 'Please enter only letters.')
+			// .matches(/^[a-zA-Z\s]*$/i, 'Please enter only letters.')
 			.required('Please Enter a Name!'),
 		email: Yup.string().email('Please enter a valid e-mail address.').required(),
 		cap: Yup.number()
-			.integer('Funding target must be numerical.')
+			// .integer('Funding target must be numerical.')
 			.min(1, 'Funding target must be greater than 0')
 			.required('Funding Target is required.'),
 		deposit: Yup.number()
-			.integer('Deposit must be numerical.')
+			// .integer('Deposit must be numerical.')
 			.min(1, 'Deposit must be greater than 0')
 			.required('Deposit is required.'),
 		accept: Yup.boolean().test(

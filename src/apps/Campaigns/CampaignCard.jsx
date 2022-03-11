@@ -109,7 +109,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 		signAndNotify(
 			apiProvider.tx.gameDaoCrowdfunding.contribute(...payload),
 			{
-				pending: 'Contribute to campaign',
+				pending: 'Contributing to campaign',
 				success: 'Contribution successful',
 				error: 'Contribution failed',
 			},
@@ -219,7 +219,10 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				imageURL ??
 				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
-			headline={name}
+			//
+			//
+			//
+			headline={ metadata?.title || name }
 			metaHeadline={`${content.backers ? content.backers : ''} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>
@@ -239,7 +242,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				imageURL ??
 				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
-			headline={name}
+			headline={ metadata?.title || name }
 			metaHeadline={`${content.backers} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>

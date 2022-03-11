@@ -107,6 +107,8 @@ const AccountComponent = () => {
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 
+	const [ onceUponATimeAlreadyConnected, setOnceUponATimeAlreadyConnected] = useState(false)
+
 	const handleConnect = (e) => {
 		e.stopPropagation()
 		if (allowConnection) {

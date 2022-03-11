@@ -34,7 +34,7 @@ async function fetchProposalDescription(cid, setter) {
 		return console.error(err)
 	}
 
-	setter(body.description)
+	setter(body)
 }
 
 export function Main() {
@@ -49,7 +49,7 @@ export function Main() {
 	const { bodies, queryBodyMemberState } = useGameDaoControl()
 	const { campaigns } = useCrowdfunding()
 
-	const [description, setDescription] = useState<any>()
+	const [description, setDescription] = useState<any>({description:'',title:''})
 
 	const dispatch = useDispatch()
 
@@ -104,14 +104,19 @@ export function Main() {
 			</Button>
 			{proposal && (body || campaign) && owners ? (
 				<>
-					<ProposalBodyData body={body || campaign} isOrganisation={isOrganisation}
-									  metadata={metadata} proposalId={proposalId} />
+					<ProposalBodyData
+						body={body || campaign}
+						isOrganisation={isOrganisation}
+						metadata={metadata}
+						proposalId={proposalId}
+						title={description.title}
+						/>
 					<Paper sx={{ ...bgPlain, width: '100%' }}>
 						<Stack direction='row' padding={6} spacing={6}>
 							<Stack flex='3'>
 								<Box whiteSpace='pre-line'>
 									<MarkdownViewer
-										markdown={description ?? 'Could not load the description!'}
+										markdown={description.description ?? 'Could not load the description!'}
 									/>
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />

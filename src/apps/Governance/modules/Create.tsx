@@ -176,6 +176,7 @@ export const Main = () => {
 
 		const content = {
 			id: values.id,
+			title: values.title,
 			description: markdownValue,
 		}
 
@@ -221,11 +222,11 @@ export const Main = () => {
 			switch (proposal_type) {
 				case 0:
 					query = apiProvider.tx.gameDaoGovernance.generalProposal
-					payload = [entity, title, cid, start, expiry]
+					payload = [entity, 'loading', cid, start, expiry]
 					break
 				case 3:
 					query = apiProvider.tx.gameDaoGovernance.withdrawProposal
-					payload = [campaign, title, cid, amount, start, expiry]
+					payload = [campaign, 'loading', cid, amount, start, expiry]
 					break
 				default:
 					new Error('Unknown proposal type!')

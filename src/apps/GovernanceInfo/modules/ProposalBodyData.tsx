@@ -25,7 +25,7 @@ async function fetchOrganisationMetaData(cid, setLogo) {
 	}
 }
 
-export function ProposalBodyData({ body, metadata, proposalId, isOrganisation }) {
+export function ProposalBodyData({ body, metadata, proposalId, isOrganisation, title }) {
 	const [imageState, setImageState] = useState<any>()
 	const proposalMeta = metadata?.[proposalId]
 
@@ -39,7 +39,7 @@ export function ProposalBodyData({ body, metadata, proposalId, isOrganisation })
 	return (
 		<Stack direction="row" justifyContent="space-between" width="100%">
 			<Typography variant="h4" sx={{ wordBreak: 'break-word' }}>
-				{proposalMeta.title}
+				{title}
 			</Typography>
 			{imageState ? (
 				<img width="200px" height="100%" src={`${gateway}${imageState}`} />

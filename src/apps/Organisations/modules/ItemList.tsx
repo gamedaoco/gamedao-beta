@@ -8,14 +8,14 @@ const TileWrapper = styled(Box)(({ theme }) => ({
 	gridTemplateColumns: '1fr',
 	rowGap: theme.spacing(2),
 	columnGap: theme.spacing(2),
-	[theme.breakpoints.up('md')]: {
-		gridTemplateColumns: '1fr 1fr',
-	},
-	[theme.breakpoints.up('lg')]: {
-		gridTemplateColumns: '1fr 1fr 1fr',
-	},
+	// [theme.breakpoints.up('md')]: {
+	// 	gridTemplateColumns: '2rem rem',
+	// },
+	// [theme.breakpoints.up('lg')]: {
+	// 	gridTemplateColumns: '1fr 1fr 1fr',
+	// },
 	[theme.breakpoints.up('xl')]: {
-		gridTemplateColumns: '1fr 1fr 1fr 1fr',
+		gridTemplateColumns: '1fr 1fr 1fr',
 	},
 }))
 
