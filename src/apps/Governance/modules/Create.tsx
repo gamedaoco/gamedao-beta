@@ -288,8 +288,8 @@ export const Main = () => {
 				if (!values.campaign || values.campaign === '')
 					errors.org = 'Please choose a Campaign'
 
-				if (!toZeroAddress(values.beneficiary))
-					errors.beneficiary = 'Not a valid Beneficiary Address!'
+				// if (!toZeroAddress(values.beneficiary))
+				// 	errors.beneficiary = 'Not a valid Beneficiary Address!'
 			}
 
 			console.log(errors)
@@ -683,7 +683,7 @@ export const Main = () => {
 											InputLabelProps={{ shrink: true }}
 										/>
 									</Grid>
-									<Grid item xs={12} md={6}>
+{/*									<Grid item xs={12} md={6}>
 										<TextField
 											type={'text'}
 											name={'beneficiary'}
@@ -702,7 +702,7 @@ export const Main = () => {
 											label={'Beneficiary Account'}
 											InputLabelProps={{ shrink: true }}
 										/>
-									</Grid>
+									</Grid>*/}
 								</>
 							)}
 							<Grid item xs={12}>

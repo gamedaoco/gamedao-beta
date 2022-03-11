@@ -433,7 +433,8 @@ export const Main = (props) => {
 							</Typography>
 						</FileDropZone>
 					</Grid>
-					<Grid item xs={12}>
+
+{/*					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h6'}>
 							Header (1920 x 800px)
 						</FormSectionHeadline>
@@ -458,7 +459,7 @@ export const Main = (props) => {
 									'It must be a JPG or PNG, 1920 x 800px no larger than 200 MB.'}
 							</Typography>
 						</FileDropZone>
-					</Grid>
+					</Grid>*/}
 
 					<Grid item xs={12}>
 						<FormSectionHeadline>Meta Information</FormSectionHeadline>

@@ -60,7 +60,7 @@ const CampaignGrid = ({ content }) => {
 	const [page, setPage] = useState(0)
 	const [pageSize, setPageSize] = useState(30)
 	const [totalPages, setTotalPages] = useState(0)
-	const [displayMode, setDisplayMode] = useState(ListTileEnum.TILE)
+	const [displayMode, setDisplayMode] = useState(ListTileEnum.LIST)
 	const { account } = useWallet()
 
 	const [filter, setFilter] = useState('1')
