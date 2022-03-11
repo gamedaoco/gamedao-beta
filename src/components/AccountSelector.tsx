@@ -47,7 +47,7 @@ const AccountSelect = styled(Select)(({ theme }) => ({
 	display: 'block',
 	borderRadius: '50px',
 	height: '100%',
-	['& .MuiSelect-select']: {
+	['& > .MuiSelect-select']: {
 		height: '100%',
 		padding: 0,
 		margin: 0,
