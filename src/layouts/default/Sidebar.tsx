@@ -133,14 +133,16 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</Link>
 				*/}
+				
 				{connected && <Link component={NavLink} to='/app/quest'>
 					<SidebarButton active={pathname === '/app/quest'} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
-							<FontIcon sx={{ ...sideBar }} name='dashboard' />
+							<FontIcon sx={{ ...sideBar }} name="castle" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Quests</Typography>
 					</SidebarButton>
 				</Link>}
+				
 				<Link component={NavLink} to='/app/organisations'>
 					<SidebarButton
 						active={!!pathname.match(/organisations/gi) ? 'active' : null}
@@ -199,18 +201,6 @@ function Main({ showNavigation }: ComponentProps) {
 					</SidebarButton>
 				</Link>
 
-				<Link component={NavLink} to="/app/quest">
-					<SidebarButton
-						active={!!pathname.match(/quest/gi) ? 'active' : null}
-						sx={{ mx: 4, py: 0 }}
-					>
-						<ListItemIcon>
-							<FontIcon sx={{ ...sideBar }} name="castle" />
-						</ListItemIcon>
-						<Typography sx={{ fontSize: '1rem' }}>Quest</Typography>
-					</SidebarButton>
-				</Link>
-				
 				{/* TODO: Activate as soon as we work on the Tangram page  */}
 				{false && (
 					<Link component={NavLink} to='/app/tangram'>
