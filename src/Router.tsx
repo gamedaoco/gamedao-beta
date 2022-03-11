@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { Loader } from './components'
 import Layout from './layouts/default'
 import { BetaPage } from './apps/BetaPage/BetaPage'
@@ -53,6 +53,7 @@ const LayoutRoute = ({
 
 const Router = (props) => {
 	const { connected } = useWallet()
+
 	return (
 		<Suspense
 			fallback={
@@ -112,14 +113,14 @@ const Router = (props) => {
 						<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />
 					}
 				></Route>
-				{
-					connected && <Route
-						path='/app/quest'
-						element={
-							<LayoutRoute showSidebar showHeader showFooter element={<QuestPage />} />
-						}
-					></Route>
-				}
+				<Route
+					path='/app/quest'
+					element={
+						connected
+						? <LayoutRoute showSidebar showHeader showFooter element={<QuestPage />} />
+						: <Navigate to='/app' replace />
+					}
+				/>
 				<Route
 					path='/app/wallet'
 					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}

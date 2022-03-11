@@ -20,7 +20,6 @@ export function BetaPage() {
 		if(connected) navigate('/app/quest')
 	},[connected])
 
-
 	const handleConnect = useCallback(
 		(e) => {
 			e.stopPropagation()
