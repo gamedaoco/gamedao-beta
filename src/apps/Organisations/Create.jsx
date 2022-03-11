@@ -1,11 +1,11 @@
-import { Image } from '@mui/icons-material'
-import { useApiProvider } from '@substra-hooks/core'
+import { ConstructionOutlined, Image } from '@mui/icons-material'
+import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWallet } from 'src/context/Wallet'
 import { formatZero, toZeroAddress } from 'src/utils/helper'
 import { useFormik } from 'formik'
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 import {
 	Box,
@@ -28,6 +28,7 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Autocomplete,
 } from '../../components'
 import config from '../../config'
 import { data, rnd } from '../lib/data'
@@ -47,8 +48,8 @@ const random_state = (account) => {
 	const description = ''
 
 	const creator = toZeroAddress(account.address)
-	const controller = toZeroAddress(account.address)
-	const treasury = toZeroAddress(account.address)
+	const controller = ''
+	const treasury = ''
 
 	const body = 0
 	const access = 0
@@ -105,6 +106,7 @@ export const Main = (props) => {
 	const [headerCID, updateHeaderCID] = useState({})
 	const [content, setContent] = useState()
 	const navigate = useNavigate()
+	const { accounts } = usePolkadotExtension()
 
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
@@ -208,28 +210,34 @@ export const Main = (props) => {
 		getCID()
 	}
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('You must choose a Name.'),
-    website: Yup.string().url(),
-    description: Yup.string().required('Description is required.'),
-    email: Yup.string().email('Please enter a valid e-mail address.').required(),
-    member_limit: Yup.number().integer('Please enter the maximum number of members.').required('Please enter a member limit'),
-    fee: Yup.number().integer('Needs to be a number.').required('Please enter a membership fee.'),
-    controller: Yup.string().test(
-      'is-valid-controller-address',
-      'Not a valid Account Address!',
-      (value)=> {
-        const test = toZeroAddress(value)
-        return test
-      }),
-    treasury: Yup.string().test(
-      'is-valid-treasury-address',
-      'Not a valid Account Address!',
-      (value)=> {
-        const test = toZeroAddress(value)
-        return test
-      }),
-  });
+	const validationSchema = Yup.object().shape({
+		name: Yup.string().max(50).required('You must choose a Name.'),
+		website: Yup.string().url(),
+		description: Yup.string().required('Description is required.'),
+		email: Yup.string().email('Please enter a valid e-mail address.').required(),
+		member_limit: Yup.number()
+			.integer('Please enter the maximum number of members.')
+			.required('Please enter a member limit'),
+		fee: Yup.number()
+			.integer('Needs to be a number.')
+			.required('Please enter a membership fee.'),
+		controller: Yup.string().test(
+			'is-valid-controller-address',
+			'Not a valid Account Address!',
+			(value) => {
+				const test = toZeroAddress(value)
+				return test
+			}
+		),
+		treasury: Yup.string().test(
+			'is-valid-treasury-address',
+			'Not a valid Account Address!',
+			(value) => {
+				const test = toZeroAddress(value)
+				return test
+			}
+		),
+	})
 
 	const formik = useFormik({
 		enableReinitialize: true,
@@ -325,6 +333,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.name && Boolean(formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -338,6 +347,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -467,6 +477,7 @@ export const Main = (props) => {
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
 							helperText={formik.touched.description && formik.errors.description}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -501,34 +512,79 @@ export const Main = (props) => {
 						<FormSectionHeadline>Controller Settings</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Autocomplete
+							freeSolo
+							disableClearable
 							id="controller"
-							fullWidth
 							name="controller"
-							placeholder="Controller"
-							label="Controller Account"
+							fullWidth
 							value={formik.values.controller}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							helperText={
 								'Note: In case you want to create a DAO, the controller must be the organization.'
 							}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('controller', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('controller', value)
+							}}
 							onBlur={formik.handleBlur}
-							error={formik.touched.controller && Boolean(formik.errors.controller)}
-							helperText={formik.touched.controller && formik.errors.controller}
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Controller Account"
+									placeholder="Controller"
+									onBlur={formik.handleBlur}
+									error={
+										formik.touched.controller &&
+										Boolean(formik.errors.controller)
+									}
+									helperText={
+										formik.touched.controller && formik.errors.controller
+									}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Autocomplete
+							freeSolo
+							disableClearable
 							id="treasury"
 							name="treasury"
-							placeholder="Treasury"
 							fullWidth
-							label="Treasury Account"
 							value={formik.values.treasury}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('treasury', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('treasury', value)
+							}}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							onBlur={formik.handleBlur}
-							error={formik.touched.treasury && Boolean(formik.errors.treasury)}
-							helperText={formik.touched.treasury && formik.errors.treasury}
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Treasury Account"
+									placeholder="Treasury"
+									onBlur={formik.handleBlur}
+									error={
+										formik.touched.treasury && Boolean(formik.errors.treasury)
+									}
+									helperText={formik.touched.treasury && formik.errors.treasury}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 						<Typography variant="caption">
 							Note: The treasury account may not be the same as the controller
@@ -615,7 +671,7 @@ export const Main = (props) => {
 							placeholder="10"
 							fullWidth
 							InputProps={{
-								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>,
 							}}
 							value={formik.values.fee}
 							onChange={formik.handleChange}

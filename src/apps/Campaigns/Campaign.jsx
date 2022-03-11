@@ -1,28 +1,27 @@
 import * as React from 'react'
-import { useEffect, lazy } from 'react'
-import { useParams, NavLink } from 'react-router-dom'
+import { useEffect } from 'react'
+import { NavLink, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useApiProvider } from '@substra-hooks/core'
 import { useBlock } from 'src/hooks/useBlock'
 import { gateway } from '../lib/ipfs'
-import { createInfoNotification } from 'src/utils/notification'
 
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import {
 	Box,
-	Typography,
-	Grid,
-	Chip,
-	styled,
-	Container,
 	Button,
-	Stack,
-	Slider,
-	Image16to9,
+	Chip,
+	Container,
 	Countdown,
-	MarkdownViewer,
+	Grid,
+	Image16to9,
 	Link,
+	MarkdownViewer,
+	Slider,
+	Stack,
+	styled,
+	Typography,
 } from '../../components'
 
 import { TileReward } from './TileReward'
@@ -31,7 +30,6 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
-const Koijam = lazy(() => import('./campaignForegrounds/koijam/Koijam'))
 
 const Headline = styled(Typography)(({ theme }) => {
 	return {
@@ -67,7 +65,7 @@ function TabPanel(props) {
 
 	return (
 		<div
-			role="tabpanel"
+			role='tabpanel'
 			hidden={value !== index}
 			id={`simple-tabpanel-${index}`}
 			aria-labelledby={`simple-tab-${index}`}
@@ -202,7 +200,7 @@ export function Campaign() {
 										component={NavLink}
 										to={'/app/organisations/' + content.org}
 									>
-										<Typography variant="caption">{org}</Typography>
+										<Typography variant='caption'>{org}</Typography>
 									</Link>
 								</Grid>
 								{/*<Grid item xs={12}>
@@ -272,10 +270,10 @@ export function Campaign() {
 											},
 										}}
 										value={campaignProgress}
-									/*sx={{ mr: 5 }}*/
+										/*sx={{ mr: 5 }}*/
 									/>
 								</Box>
-								{ funded && <ParticipateButton
+								{funded && <ParticipateButton
 									/*onClick={() => createInfoNotification('Not Implemented Yet!')}*/
 									variant={'contained'}
 								>
@@ -287,11 +285,11 @@ export function Campaign() {
 					</Grid>
 				</Container>
 			</Box>
-			<Container maxWidth="lg" sx={{ marginBottom: 4 }}>
+			<Container maxWidth='lg' sx={{ marginBottom: 4 }}>
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
-						<Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-							<Tab label="Description" {...a11yProps(0)} />
+						<Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
+							<Tab label='Description' {...a11yProps(0)} />
 							{/*<Tab label="Rewards" {...a11yProps(1)} />
 							<Tab label="Milestones" {...a11yProps(2)} />
 							<Tab label="Funding" {...a11yProps(2)} />*/}
@@ -321,8 +319,8 @@ function Description() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">LEVEL UP &</Typography>
-				<Typography variant="h2">BE LEGENDARY</Typography>
+				<Typography variant='h4'>LEVEL UP &</Typography>
+				<Typography variant='h2'>BE LEGENDARY</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
@@ -336,12 +334,12 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h4">CHOOSE YOUR</Typography>
-				<Typography variant="h2">CHAMPION</Typography>
+				<Typography variant='h4'>CHOOSE YOUR</Typography>
+				<Typography variant='h2'>CHAMPION</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Stack direction="row" sx={{ width: '100%' }}>
+				<Stack direction='row' sx={{ width: '100%' }}>
 					{[0, 1, 2, 3, 4].map((x) => (
 						<TileReward />
 					))}
@@ -349,8 +347,8 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h4">SOME CATCHY</Typography>
-				<Typography variant="h2">HEADLINE</Typography>
+				<Typography variant='h4'>SOME CATCHY</Typography>
+				<Typography variant='h2'>HEADLINE</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
@@ -364,14 +362,14 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h4">STUNNING &</Typography>
-				<Typography variant="h2">MYSTICAL WORLDS</Typography>
+				<Typography variant='h4'>STUNNING &</Typography>
+				<Typography variant='h2'>MYSTICAL WORLDS</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Image16to9 />
 			</Grid>
 			<Grid item xs={12}>
-				<Stack direction="row" spacing={2}>
+				<Stack direction='row' spacing={2}>
 					<Image16to9 />
 					<Image16to9 />
 					<Image16to9 />
@@ -386,8 +384,8 @@ function Rewards() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">PRE HEADLINE</Typography>
-				<Typography variant="h2">REWARDS</Typography>
+				<Typography variant='h4'>PRE HEADLINE</Typography>
+				<Typography variant='h2'>REWARDS</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Typography>
@@ -411,8 +409,8 @@ function Milestones() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">PRE HEADLINE</Typography>
-				<Typography variant="h2">MILESTONES</Typography>
+				<Typography variant='h4'>PRE HEADLINE</Typography>
+				<Typography variant='h2'>MILESTONES</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Typography>
@@ -429,8 +427,8 @@ function Funding() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant="h4">PRE HEADLINE</Typography>
-				<Typography variant="h2">FUNDING</Typography>
+				<Typography variant='h4'>PRE HEADLINE</Typography>
+				<Typography variant='h2'>FUNDING</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Typography>

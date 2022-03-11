@@ -13,5 +13,15 @@
 
 .float {
 	transform: translatey(0px);
+	animation: float 9s ease-in-out infinite;
+}
+
+.floatfast {
+	transform: translatey(0px);
+	animation: float 6s ease-in-out infinite;
+}
+
+.floatslow {
+	transform: translatey(0px);
 	animation: float 12s ease-in-out infinite;
 }

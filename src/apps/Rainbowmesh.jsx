@@ -28,6 +28,15 @@ export function Rainbowmesh() {
 	)
 }
 
+export function Starfield() {
+	return (
+		<Canvas camera={{ position: [0, 2, 10], fov: 75 }}>
+			<ambientLight />
+			<Stars />
+		</Canvas>
+	)
+}
+
 const Light = () => {
 	const FakeSphere = () => (
 		<mesh>

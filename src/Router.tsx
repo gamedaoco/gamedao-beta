@@ -1,28 +1,27 @@
-import React, { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import { DEV } from './config'
+import React, { Suspense } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import { Loader } from './components'
 import Layout from './layouts/default'
+import { BetaPage } from './apps/BetaPage/BetaPage'
+import { useWallet } from './context/Wallet'
+import { QuestPage } from './apps/QuestPage/QuestPage'
 
-const Home = lazy(() => import('./apps/Home'))
-const App = lazy(() => import('./apps/'))
+import Home from './apps/Home'
+import Campaigns from './apps/Campaigns'
+import Campaign from './apps/Campaigns/Campaign'
 
-const Dashboard = lazy(() => import('./apps/Dashboard'))
+import Organisations from './apps/Organisations'
+import OrganisationsDashboard from './apps/OrganisationsDashboard'
+import DAOAdmin from './apps/Organisations/admin'
 
-const Campaigns = lazy(() => import('./apps/Campaigns'))
-const Campaign = lazy(() => import('./apps/Campaigns/Campaign'))
+import Tangram from './apps/Tangram'
+import Wallet from './apps/Wallet'
+import Governance from './apps/Governance'
+import GovernanceDetails from './apps/GovernanceInfo'
 
-const Organisations = lazy(() => import('./apps/Organisations'))
-const OrganisationsDashboard = lazy(() => import('./apps/OrganisationsDashboard'))
-const DAOAdmin = lazy(() => import('./apps/Organisations/admin'))
+import { Starfield } from './apps/Rainbowmesh'
+import { ScrollToTop } from './Providers'
 
-const Tangram = lazy(() => import('./apps/Tangram'))
-const Wallet = lazy(() => import('./apps/Wallet'))
-
-const Designsystem = DEV && lazy(() => import('./apps/Designsystem'))
-
-const Governance = lazy(() => import('./apps/Governance'))
-const GovernanceDetails = lazy(() => import('./apps/GovernanceInfo'))
 
 export interface ComponentProps {
 	children?: React.ReactNode
@@ -36,12 +35,12 @@ export interface ComponentProps {
 }
 
 const LayoutRoute = ({
-	showFooter,
-	showHeader,
-	showSidebar,
-	element,
-	noContainer,
-}: ComponentProps) => (
+						 showFooter,
+						 showHeader,
+						 showSidebar,
+						 element,
+						 noContainer,
+					 }: ComponentProps) => (
 	<Layout
 		showHeader={showHeader ? showHeader : null}
 		showFooter={showFooter ? showFooter : null}
@@ -53,20 +52,22 @@ const LayoutRoute = ({
 )
 
 const Router = (props) => {
+	const { connected } = useWallet()
 	return (
 		<Suspense
 			fallback={
-				<LayoutRoute showSidebar showHeader showFooter element={<Loader text="" />} />
+				<LayoutRoute showSidebar showHeader showFooter element={<Loader text='' />} />
 			}
 		>
 			<Routes>
-				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
+				<Route path='/' element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route
-					path="/app"
-					element={<LayoutRoute showSidebar showHeader showFooter element={<App />} />}
+					path='/app'
+					element={<LayoutRoute showHeader showFooter
+										  element={<BetaPage />} />}
 				></Route>
 				<Route
-					path="/app/organisations"
+					path='/app/organisations'
 					element={
 						<LayoutRoute
 							showSidebar
@@ -77,13 +78,13 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path="/app/governance"
+					path='/app/governance'
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />
 					}
 				></Route>
 				<Route
-					path="/app/governance/:proposalId"
+					path='/app/governance/:proposalId'
 					element={
 						<LayoutRoute
 							showSidebar
@@ -94,55 +95,61 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path="/app/campaigns/:id"
+					path='/app/campaigns/:id'
 					element={
 						<LayoutRoute showSidebar noContainer showFooter element={<Campaign />} />
 					}
 				></Route>
 				<Route
-					path="/app/campaigns"
+					path='/app/campaigns'
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />
 					}
 				></Route>
 				<Route
-					path="/app/tangram"
+					path='/app/tangram'
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />
 					}
 				></Route>
+				{
+					connected && <Route
+						path='/app/quest'
+						element={
+							<LayoutRoute showSidebar showHeader showFooter element={<QuestPage />} />
+						}
+					></Route>
+				}
 				<Route
-					path="/app/wallet"
+					path='/app/wallet'
 					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}
 				></Route>
 				{}
-				{DEV && (
-					<Route
-						path="/app/designsystem"
-						element={
-							<LayoutRoute
-								showSidebar
-								showHeader
-								showFooter
-								element={<Designsystem />}
-							/>
-						}
-					></Route>
-				)}
 				<Route
-					path="/app/organisations/admin/:id"
+					path='/app/organisations/admin/:id'
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />
 					}
 				></Route>
 				<Route
-					path="/app/organisations/:id"
+					path='/app/organisations/:id'
 					element={
 						<LayoutRoute
 							showSidebar
 							showHeader
 							showFooter
 							element={<OrganisationsDashboard />}
+						/>
+					}
+				></Route>
+				<Route
+					path='*'
+					element={
+						<LayoutRoute
+							showSidebar
+							showHeader
+							showFooter
+							element={<div style={{height: "90vh", textAlign: "center" }}>404 Not Found... Or Wallet Disconnected?<Starfield/><ScrollToTop/></div>}
 						/>
 					}
 				></Route>

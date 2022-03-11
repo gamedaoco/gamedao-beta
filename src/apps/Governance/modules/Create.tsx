@@ -11,7 +11,7 @@ import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
 import config from '../../../config'
 import { blocksPerDay, data, proposal_types, voting_types } from '../../lib'
 import { rnd } from '../../lib/data'
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 // import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 
@@ -261,19 +261,19 @@ export const Main = () => {
 		}
 	}
 
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().min(6).max(130).required('Proposal title is required.'),
-    entity: Yup.string().required('Please choose an organisation.'),
-    // TODO: validate max length of description
-    // TODO: Conditional validation for optionally present fields
-    // beneficiary: Yup.string().test(
-    //   'is-valid-beneficiary-address',
-    //   'Not a valid Beneficiary Address!',
-    //   (value)=> {
-    //     const test = toZeroAddress(value)
-    //     return typeof test === "string"
-    //   }),
-  });
+	const validationSchema = Yup.object().shape({
+		title: Yup.string().min(6).max(130).required('Proposal title is required.'),
+		entity: Yup.string().required('Please choose an organisation.'),
+		// TODO: validate max length of description
+		// TODO: Conditional validation for optionally present fields
+		// beneficiary: Yup.string().test(
+		//   'is-valid-beneficiary-address',
+		//   'Not a valid Beneficiary Address!',
+		//   (value)=> {
+		//     const test = toZeroAddress(value)
+		//     return typeof test === "string"
+		//   }),
+	})
 
 	useEffect(() => {}, [])
 
@@ -281,7 +281,6 @@ export const Main = () => {
 		enableReinitialize: true,
 		initialValues: persistedData || INITIAL_STATE,
 		validate: (values) => {
-			
 			const errors: Partial<GenericForm> = {}
 
 			// Check campaign
@@ -289,8 +288,8 @@ export const Main = () => {
 				if (!values.campaign || values.campaign === '')
 					errors.org = 'Please choose a Campaign'
 
-        if (!toZeroAddress(values.beneficiary))
-          errors.beneficiary = 'Not a valid Beneficiary Address!'
+				if (!toZeroAddress(values.beneficiary))
+					errors.beneficiary = 'Not a valid Beneficiary Address!'
 			}
 
 			console.log(errors)
@@ -388,7 +387,7 @@ export const Main = () => {
 									<InputLabel>Organisation</InputLabel>
 									<Select
 										required
-										label="Organisation *"
+										label="Organisation"
 										fullWidth
 										name="entity"
 										value={formik.values.entity}
@@ -422,6 +421,7 @@ export const Main = () => {
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 										fullWidth
+										required
 									>
 										{proposal_types.map((pt) => (
 											<MenuItem key={pt.key} value={pt.value}>
@@ -489,6 +489,7 @@ export const Main = () => {
 									error={formik.touched.title && Boolean(formik.errors.title)}
 									helperText={formik.touched.title && formik.errors.title}
 									fullWidth
+									required
 								/>
 							</Grid>
 
@@ -575,7 +576,11 @@ export const Main = () => {
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
 											InputProps={{
-												endAdornment: <InputAdornment position="end">GAME</InputAdornment>
+												endAdornment: (
+													<InputAdornment position="end">
+														GAME
+													</InputAdornment>
+												),
 											}}
 											error={
 												formik.touched.collateral_amount &&
@@ -667,7 +672,11 @@ export const Main = () => {
 												formik.touched.amount && formik.errors.amount
 											}
 											InputProps={{
-												endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+												endAdornment: (
+													<InputAdornment position="end">
+														ZERO
+													</InputAdornment>
+												),
 											}}
 											fullWidth
 											label={'Amount to transfer on success'}
@@ -707,7 +716,9 @@ export const Main = () => {
 								>
 									Publish Proposal
 								</Button>
-								{Object.keys(formik.errors).length !== 0 && <Typography style={{color: "red"}}>Errors Present</Typography>}
+								{Object.keys(formik.errors).length !== 0 && (
+									<Typography style={{ color: 'red' }}>Errors Present</Typography>
+								)}
 							</Grid>
 						</Grid>
 					</form>

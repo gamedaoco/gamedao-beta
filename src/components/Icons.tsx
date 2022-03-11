@@ -18,6 +18,7 @@ export const ICON_MAPPING = {
 	moon: `${process.env.PUBLIC_URL}/assets/icon_moon.svg`,
 	sun: `${process.env.PUBLIC_URL}/assets/icon_sun.svg`,
 	logout: `${process.env.PUBLIC_URL}/assets/icon_logout.svg`,
+	quest: `${process.env.PUBLIC_URL}/assets/quest.png`,
 }
 
 export function Icons({ src, alt, ...props }) {
@@ -25,5 +26,5 @@ export function Icons({ src, alt, ...props }) {
 }
 
 export function FontIcon({ name = 'tangram', ...props }) {
-	return <Icon baseClassName="gamedao-icon-font" className={'icon-' + name} {...props} />
+	return <Icon baseClassName='gamedao-icon-font' className={'icon-' + name} {...props} />
 }

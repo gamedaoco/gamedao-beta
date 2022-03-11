@@ -1,15 +1,15 @@
-import React, { useEffect, useState, lazy } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApiProvider } from '@substra-hooks/core'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useWallet } from 'src/context/Wallet'
-import { alpha, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-import { Button, Box, Container } from '../../components'
+import { Box, Button, Container } from '../../components'
 import { ItemList } from './modules/ItemList'
 
-const CreateDAO = lazy(() => import('./Create'))
+import CreateDAO from './Create'
 
 export const Main = (props) => {
 	const theme = useTheme()
@@ -78,7 +78,7 @@ export const Main = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<Container maxWidth="lg">
+		<Container maxWidth='lg'>
 			<Box
 				sx={{
 					display: 'flex',
@@ -100,7 +100,7 @@ export const Main = (props) => {
 				<Box>
 					{address && showCreateMode ? (
 						<Button
-							variant="outlined"
+							variant='outlined'
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
 						>
@@ -108,7 +108,7 @@ export const Main = (props) => {
 						</Button>
 					) : account && connected ? (
 						<Button
-							variant="outlined"
+							variant='outlined'
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
 						>

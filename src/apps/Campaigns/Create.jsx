@@ -1,10 +1,10 @@
 import { Image } from '@mui/icons-material'
-import { useApiProvider } from '@substra-hooks/core'
+import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import { useTheme } from '@mui/material/styles'
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 import {
 	Box,
@@ -29,6 +29,7 @@ import {
 	Stepper,
 	TextField,
 	Typography,
+	Autocomplete,
 } from '../../components'
 
 import defaultMarkdown from '!!raw-loader!src/components/markdown/MarkdownDefault.md'
@@ -66,7 +67,7 @@ const random_state = (account) => {
 	const tags = ['dao', 'game']
 	const org = ''
 
-	const admin = toZeroAddress(account.address)
+	const admin = ''
 
 	return {
 		name,
@@ -99,6 +100,7 @@ export const Main = () => {
 	const navigate = useNavigate()
 	const { updateBalance } = useBalance()
 	const blockheight = useBlock()
+	const { accounts } = usePolkadotExtension()
 
 	const [activeMemberships, setActiveMemberships] = useState(null)
 	const [stepperState, setStepperState] = useState(0)
@@ -141,9 +143,13 @@ export const Main = () => {
 	useEffect(() => {
 		if (!bodyStates || !memberships) return
 
-		setActiveMemberships(
-			(memberships?.[address] ?? []).filter((bodyHash) => bodyStates?.[bodyHash] === '1'),
-		)
+		// Show only own created daos
+		if (apiProvider?.query?.gameDaoControl) {
+			;(async () => {
+				const daos = await apiProvider.query.gameDaoControl.controlledBodies(address)
+				setActiveMemberships(daos.toHuman())
+			})()
+		}
 	}, [bodyStates, memberships])
 
 	const onFileChange = (files, event) => {
@@ -229,37 +235,45 @@ export const Main = () => {
 					if (!state) {
 						// TODO: 2075 Do we need error handling here?
 					}
-				},
+				}
 			)
 		}
 
 		getCID()
 	}
 
-  const validationSchema = Yup.object().shape({
-    org: Yup.string().required('Please choose an Organization'),
-    description: Yup.string().required('Please create a description'),
-    title: Yup.string().max(75).required('Please Enter a Campaign Title!'),
-    name: Yup.string().matches(/^[a-zA-Z\s]*$/i,'Please enter only letters.').required('Please Enter a Name!'),
-    email: Yup.string().email('Please enter a valid e-mail address.').required(),
-    cap: Yup.number().integer('Funding target must be numerical.')
-      .min(1, 'Funding target must be greater than 0').required('Funding Target is required.'),
-    deposit: Yup.number().integer('Deposit must be numerical.')
-      .min(1, 'Deposit must be greater than 0').required('Deposit is required.'),
-    accept: Yup.boolean().test(
-      'is-terms-checked',
-      'Please accept the Terms and Conditions',
-      (value)=> {
-        return value === true
-      }),
-    admin: Yup.string().test(
-        'is-valid-admin-address',
-        'Not a valid Account Address!',
-        (value)=> {
-          const test = toZeroAddress(value)
-          return test
-        }),
-  });
+	const validationSchema = Yup.object().shape({
+		org: Yup.string().required('Please choose an Organization'),
+		description: Yup.string().required('Please create a description'),
+		title: Yup.string().max(75).required('Please Enter a Campaign Title!'),
+		name: Yup.string()
+			.matches(/^[a-zA-Z\s]*$/i, 'Please enter only letters.')
+			.required('Please Enter a Name!'),
+		email: Yup.string().email('Please enter a valid e-mail address.').required(),
+		cap: Yup.number()
+			.integer('Funding target must be numerical.')
+			.min(1, 'Funding target must be greater than 0')
+			.required('Funding Target is required.'),
+		deposit: Yup.number()
+			.integer('Deposit must be numerical.')
+			.min(1, 'Deposit must be greater than 0')
+			.required('Deposit is required.'),
+		accept: Yup.boolean().test(
+			'is-terms-checked',
+			'Please accept the Terms and Conditions',
+			(value) => {
+				return value === true
+			}
+		),
+		admin: Yup.string().test(
+			'is-valid-admin-address',
+			'Not a valid Account Address!',
+			(value) => {
+				const test = toZeroAddress(value)
+				return test
+			}
+		),
+	})
 
 	const formik = useFormik({
 		enableReinitialize: true,
@@ -288,7 +302,7 @@ export const Main = () => {
 			localStorage.setItem('gamedao-markdown-create-campaign', markdownValue)
 		},
 		[logoCID, headerCID, formik.values, markdownValue],
-		2000,
+		2000
 	)
 
 	useEffect(() => {
@@ -299,7 +313,7 @@ export const Main = () => {
 	}, [account, refresh])
 
 	if (!daoControl || !daoControl.bodies || !formik.values)
-		return <Loader text='Create Campaign' />
+		return <Loader text="Create Campaign" />
 
 	const orgs = Object.keys(daoControl.bodies).map((key) => daoControl.bodies[key])
 
@@ -328,7 +342,7 @@ export const Main = () => {
 				</Grid>
 			</Box>
 			<Paper sx={{ p: 4, ...bgPlain }}>
-				<Grid container spacing={3} component='form'>
+				<Grid container spacing={3} component="form">
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h5'}>
 							General Information
@@ -339,15 +353,15 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.org && Boolean(formik.errors.org)}
 						>
-							<InputLabel id='org-select-label'>Organization</InputLabel>
+							<InputLabel id="org-select-label">Organization</InputLabel>
 							<Select
 								component={Select}
-								labelId='org-select-label'
-								id='org'
+								labelId="org-select-label"
+								id="org"
 								required
-								label='Organization'
-								placeholder='Organization'
-								name='org'
+								label="Organization"
+								placeholder="Organization"
+								name="org"
 								value={formik.values.org}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -366,14 +380,15 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Campaign name'
-							placeholder='Give your campaign a name...'
-							name='title'
+							label="Campaign name"
+							placeholder="Give your campaign a name..."
+							name="title"
 							value={formik.values.title}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.title && Boolean(formik.errors.title)}
 							helperText={formik.touched.title && formik.errors.title}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -381,14 +396,15 @@ export const Main = () => {
 							fullWidth
 							multiline
 							minRows={5}
-							label='Campaign Description'
-							placeholder='Tell us more about your idea...'
-							name='description'
+							label="Campaign Description"
+							placeholder="Tell us more about your idea..."
+							name="description"
 							value={formik.values.description}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.description && Boolean(formik.errors.description)}
 							helperText={formik.touched.description && formik.errors.description}
+							required
 						/>
 					</Grid>
 
@@ -399,7 +415,7 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h6'}>Logo (800 x 800px)</FormSectionHeadline>
 						<FileDropZone
-							name='logo'
+							name="logo"
 							onDroppedFiles={onFileChange}
 							onDeleteItem={() => updateLogoCID({})}
 						>
@@ -425,7 +441,7 @@ export const Main = () => {
 							Header Image (1920 x 800px)
 						</FormSectionHeadline>
 						<FileDropZone
-							name='header'
+							name="header"
 							onDroppedFiles={onFileChange}
 							onDeleteItem={() => updateHeaderCID({})}
 						>
@@ -468,27 +484,29 @@ export const Main = () => {
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Name'
-							placeholder='Name'
-							name='name'
+							label="Name"
+							placeholder="Name"
+							name="name"
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.name && Boolean(formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
+							required
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
 							fullWidth
-							label='Email'
-							placeholder='Email'
-							name='email'
+							label="Email"
+							placeholder="Email"
+							name="email"
 							value={formik.values.email}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
+							required
 						/>
 					</Grid>
 
@@ -499,28 +517,47 @@ export const Main = () => {
 					{/* usage of funding and protocol to initiate after successfully raising */}
 
 					<Grid item xs={12} md={6}>
-						<TextField
+						<Autocomplete
+							freeSolo
+							disableClearable
+							name="admin"
 							fullWidth
-							label='Admin Account'
-							placeholder='Admin'
-							name='admin'
 							value={formik.values.admin}
-							onChange={formik.handleChange}
+							onChange={(_, value) => {
+								formik.setFieldValue('admin', value)
+							}}
+							onInputChange={(_, value) => {
+								formik.setFieldValue('admin', value)
+							}}
+							options={accounts.map((a) => toZeroAddress(a.address))}
 							onBlur={formik.handleBlur}
-							error={formik.touched.admin && Boolean(formik.errors.admin)}
-							helperText={formik.touched.admin && formik.errors.admin}
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Admin Account"
+									placeholder="Admin"
+									onBlur={formik.handleBlur}
+									error={formik.touched.admin && Boolean(formik.errors.admin)}
+									helperText={formik.touched.admin && formik.errors.admin}
+									required
+									InputProps={{
+										...params.InputProps,
+										type: 'search',
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FormControl fullWidth>
-							<InputLabel id='usage-select-label'>Usage of funds</InputLabel>
+							<InputLabel id="usage-select-label">Usage of funds</InputLabel>
 							<Select
-								labelId='usage-select-label'
+								labelId="usage-select-label"
 								label={'Usage of funds'}
-								id='usage'
+								id="usage"
 								required
-								name='usage'
-								placeholder='Usage'
+								name="usage"
+								placeholder="Usage"
 								value={formik.values.usage}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -541,15 +578,15 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.protocol && Boolean(formik.errors.protocol)}
 						>
-							<InputLabel id='protocol-select-label'>Protocol</InputLabel>
+							<InputLabel id="protocol-select-label">Protocol</InputLabel>
 							<Select
-								labelId='protocol-select-label'
-								id='protocol'
+								labelId="protocol-select-label"
+								id="protocol"
 								required
 								fullWidth
-								name='protocol'
+								name="protocol"
 								label={'protocol'}
-								placeholder='Protocol'
+								placeholder="Protocol"
 								value={formik.values.protocol}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -569,11 +606,11 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Deposit'
-							placeholder='Deposit'
-							name='deposit'
+							label="Deposit"
+							placeholder="Deposit"
+							name="deposit"
 							InputProps={{
-								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>,
 							}}
 							value={formik.values.deposit}
 							onChange={formik.handleChange}
@@ -585,11 +622,11 @@ export const Main = () => {
 					<Grid item xs={12} md={4}>
 						<TextField
 							fullWidth
-							label='Funding Target'
-							placeholder='Cap'
-							name='cap'
+							label="Funding Target"
+							placeholder="Cap"
+							name="cap"
 							InputProps={{
-								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>
+								endAdornment: <InputAdornment position="end">ZERO</InputAdornment>,
 							}}
 							value={formik.values.cap}
 							onChange={formik.handleChange}
@@ -604,14 +641,14 @@ export const Main = () => {
 							fullWidth
 							error={formik.touched.duration && Boolean(formik.errors.duration)}
 						>
-							<InputLabel id='duration-select-label'>Campaign Duration</InputLabel>
+							<InputLabel id="duration-select-label">Campaign Duration</InputLabel>
 							<Select
-								labelId='duration-select-label'
-								id='duration'
+								labelId="duration-select-label"
+								id="duration"
 								required
-								label='Campaign Duration'
-								placeholder='Campaign Duration'
-								name='duration'
+								label="Campaign Duration"
+								placeholder="Campaign Duration"
+								name="duration"
 								value={formik.values.duration}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -633,10 +670,10 @@ export const Main = () => {
 							error={formik.touched.governance && Boolean(formik.errors.governance)}
 						>
 							<FormControlLabel
-								label='DAO Governance'
+								label="DAO Governance"
 								control={
 									<Checkbox
-										name='governance'
+										name="governance"
 										checked={formik.values.governance}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -651,10 +688,10 @@ export const Main = () => {
 					<Grid item xs={12}>
 						<FormControl error={formik.touched.accept && Boolean(formik.errors.accept)}>
 							<FormControlLabel
-								label='I agree to the Terms and Conditions'
+								label="I agree to the Terms and Conditions"
 								control={
 									<Checkbox
-										name='accept'
+										name="accept"
 										checked={formik.values.accept}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -669,7 +706,7 @@ export const Main = () => {
 				</Grid>
 			</Paper>
 			<Container maxWidth={'xs'} sx={{ p: 4 }}>
-				<Button type='submit' variant='contained' fullWidth>
+				<Button type="submit" variant="contained" fullWidth>
 					Create Campaign
 				</Button>
 				<Typography sx={{ color: 'red' }}>
