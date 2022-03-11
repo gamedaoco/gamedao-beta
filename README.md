@@ -1,4 +1,4 @@
-# GameDAO BETA 1
+# GameDAO BETA
 
 GameDAO is a EU based community owned and governed DAO providing community centric protocols:
 
@@ -30,6 +30,7 @@ Also, check out https://github.com/gamedaoco/subzero for rust based modules runn
 - prettier to normalize general syntax
 - imports sorted from outside to inside
 - use typescript for all new code and migrate to typescript everything you touch
+- conventional commit / lint
 
 ## license
 © Copyright 2019 GameDAO, GameDAO.co, GameDAO AG
