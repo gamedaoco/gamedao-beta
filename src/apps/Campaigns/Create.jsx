@@ -1,3 +1,5 @@
+import { hexToString } from "@polkadot/util"
+
 import { Image } from '@mui/icons-material'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import React, { useEffect, useState } from 'react'
@@ -48,6 +50,8 @@ import { useGameDaoGovernance } from 'src/hooks/useGameDaoGovernance'
 import { useDebouncedEffect } from 'src/hooks/useDebouncedEffect'
 
 const dev = config.dev
+
+const flat = arr => Array.from( new Set(arr) )
 
 const random_state = (account) => {
 	const name = ''
@@ -147,7 +151,7 @@ export const Main = () => {
 		if (apiProvider?.query?.gameDaoControl) {
 			;(async () => {
 				const daos = await apiProvider.query.gameDaoControl.controlledBodies(address)
-				setActiveMemberships(daos.toHuman())
+				setActiveMemberships( flat( daos.toHuman() ) )
 			})()
 		}
 	}, [bodyStates, memberships])
@@ -368,7 +372,10 @@ export const Main = () => {
 							>
 								{activeMemberships?.map((e) => (
 									<MenuItem key={e} value={e}>
-										{bodies?.[e]?.name}
+										{(bodies?.[e]?.name.slice(0,2)==='0x')
+											? hexToString( bodies?.[e]?.name )
+											: bodies?.[e]?.name
+										}
 									</MenuItem>
 								))}
 							</Select>

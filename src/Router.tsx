@@ -7,6 +7,7 @@ import { useWallet } from './context/Wallet'
 import { QuestPage } from './apps/QuestPage/QuestPage'
 
 import Home from './apps/Home'
+import Dashboard from './apps/Dashboard'
 import Campaigns from './apps/Campaigns'
 import Campaign from './apps/Campaigns/Campaign'
 
@@ -76,6 +77,12 @@ const Router = (props) => {
 							showFooter
 							element={<Organisations />}
 						/>
+					}
+				></Route>
+				<Route
+					path='/app/dashboard'
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />
 					}
 				></Route>
 				<Route

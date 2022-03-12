@@ -11,7 +11,7 @@ import Tab from '@mui/material/Tab'
 import {
 	Box,
 	Button,
-	Chip,
+	// Chip,
 	Container,
 	Countdown,
 	Grid,
@@ -38,12 +38,12 @@ const Headline = styled(Typography)(({ theme }) => {
 	}
 })
 
-const CampaignChip = styled(Chip)(({ theme }) => ({
-	color: theme.palette.common.white,
-	borderColor: theme.palette.common.white,
-	padding: 0,
-	height: '22px',
-}))
+// const CampaignChip = styled(Chip)(({ theme }) => ({
+// 	color: theme.palette.common.white,
+// 	borderColor: theme.palette.common.white,
+// 	padding: 0,
+// 	height: '22px',
+// }))
 
 const ParticipateButton = styled(Button)(({ theme }) => ({
 	borderRadius: '50px',
@@ -95,7 +95,7 @@ function a11yProps(index) {
 
 export function Campaign() {
 	// TODO: implement tags
-	const t = ['Indie', 'Solo Dev', 'Pondbox']
+	// const t = ['Indie', 'Solo Dev', 'Pondbox']
 
 	const id = useParams().id
 
@@ -122,9 +122,9 @@ export function Campaign() {
 	}
 
 	// markdown editor
-	function handleEditorChange({ html, text }) {
-		console.log('handleEditorChange', html, text)
-	}
+	// function handleEditorChange({ html, text }) {
+	// 	console.log('handleEditorChange', html, text)
+	// }
 
 	// fetch chain data
 	useEffect(() => {
@@ -137,7 +137,7 @@ export function Campaign() {
 		}
 
 		setContent(content)
-	}, [campaignBalance, campaignState, campaigns])
+	}, [id, campaignBalance, campaignState, campaigns])
 
 	useEffect(() => {
 		// ToDo: When cid not valid output an error on the page?
@@ -155,7 +155,7 @@ export function Campaign() {
 	//console.log(content, IPFSData)
 	//console.log(bodies)
 
-	const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
+	// const createdTimestamp = parseInt(content.created.replaceAll(',', ''))
 	const campaignEndBlockHeight = parseInt(content.expiry.replaceAll(',', ''))
 	const blocksUntilExpiry = campaignEndBlockHeight - blockheight
 	const expiryTimestamp = Date.now() + blocksUntilExpiry * 3 * 1000
@@ -379,66 +379,66 @@ function Description() {
 	)
 }
 
-function Rewards() {
-	return (
-		<Grid container spacing={4}>
-			<Grid item xs={12}>
-				<Typography variant='h4'>PRE HEADLINE</Typography>
-				<Typography variant='h2'>REWARDS</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography>
-					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-					vero eos et accusam et justo.
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Grid container spacing={2}>
-					{[0, 1, 2, 3, 4].map((x) => (
-						<TileReward />
-					))}
-				</Grid>
-			</Grid>
-		</Grid>
-	)
-}
+// function Rewards() {
+// 	return (
+// 		<Grid container spacing={4}>
+// 			<Grid item xs={12}>
+// 				<Typography variant='h4'>PRE HEADLINE</Typography>
+// 				<Typography variant='h2'>REWARDS</Typography>
+// 			</Grid>
+// 			<Grid item xs={12}>
+// 				<Typography>
+// 					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+// 					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+// 					vero eos et accusam et justo.
+// 				</Typography>
+// 			</Grid>
+// 			<Grid item xs={12}>
+// 				<Grid container spacing={2}>
+// 					{[0, 1, 2, 3, 4].map((x) => (
+// 						<TileReward />
+// 					))}
+// 				</Grid>
+// 			</Grid>
+// 		</Grid>
+// 	)
+// }
 
-function Milestones() {
-	return (
-		<Grid container spacing={4}>
-			<Grid item xs={12}>
-				<Typography variant='h4'>PRE HEADLINE</Typography>
-				<Typography variant='h2'>MILESTONES</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography>
-					Lorem ipsum dur sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-					vero eos et accusam et justo.
-				</Typography>
-			</Grid>
-		</Grid>
-	)
-}
+// function Milestones() {
+// 	return (
+// 		<Grid container spacing={4}>
+// 			<Grid item xs={12}>
+// 				<Typography variant='h4'>PRE HEADLINE</Typography>
+// 				<Typography variant='h2'>MILESTONES</Typography>
+// 			</Grid>
+// 			<Grid item xs={12}>
+// 				<Typography>
+// 					Lorem ipsum dur sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+// 					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+// 					vero eos et accusam et justo.
+// 				</Typography>
+// 			</Grid>
+// 		</Grid>
+// 	)
+// }
 
-function Funding() {
-	return (
-		<Grid container spacing={4}>
-			<Grid item xs={12}>
-				<Typography variant='h4'>PRE HEADLINE</Typography>
-				<Typography variant='h2'>FUNDING</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography>
-					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-					vero eos et accusam et justo.
-				</Typography>
-			</Grid>
-		</Grid>
-	)
-}
+// function Funding() {
+// 	return (
+// 		<Grid container spacing={4}>
+// 			<Grid item xs={12}>
+// 				<Typography variant='h4'>PRE HEADLINE</Typography>
+// 				<Typography variant='h2'>FUNDING</Typography>
+// 			</Grid>
+// 			<Grid item xs={12}>
+// 				<Typography>
+// 					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+// 					tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+// 					vero eos et accusam et justo.
+// 				</Typography>
+// 			</Grid>
+// 		</Grid>
+// 	)
+// }
 
 export default function Component(props) {
 	const apiProvider = useApiProvider()

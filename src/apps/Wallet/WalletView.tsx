@@ -1,22 +1,101 @@
 import React, { useEffect, useState } from 'react'
-import { useApiProvider } from '@substra-hooks/core'
 import { useWallet } from 'src/context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
+import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
+
+import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
 
 import { alpha, useTheme } from '@mui/material/styles'
 
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import { Button, Typography, Box, Paper } from 'src/components'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from 'src/components'
+import { Grid, Stack, Button, Typography, Box, Paper } from 'src/components'
+
+import HeartIcon from '@mui/icons-material/FavoriteBorder'
+import VerifiedIcon from '@mui/icons-material/Verified'
+
+const TopBar = ({ id, xp, rep, trust }) => {
+
+	const { account, address } = useWallet()
+	const theme = useTheme()
+	const bgPlain = {
+		backgroundColor: theme.palette.grey[500_16],
+	}
+	const convertedAddress = useEncodedAddress(address, 25) || ''
+
+	const copyAddress = (e) => {
+		e.preventDefault()
+		navigator.clipboard.writeText(address)
+		createInfoNotification('Address Copied to Clipboard!')
+	}
+
+	return (
+		<Grid container spacing={4}>
+			<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
+				<Stack direction="row" spacing={2} m={2}>
+					<Box
+						sx={{
+							...bgPlain,
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							// backgroundColor: '#22201f',
+							borderRadius: '50%',
+							marginRight: 2,
+							height: '3.5rem',
+							width: '3.5rem',
+						}}
+					>
+						<HeartIcon onClick={copyAddress} />
+					</Box>
+					<Stack>
+						<Typography variant="h5">
+							{ id.display && <>{id.display}{' '}<VerifiedIcon fontSize="small" sx={{ color: '#f0f' }} /></> }
+							{ !id?.display && <>{account?.meta?.name} <small>(Wallet)</small> </>}
+						</Typography>
+
+						<Typography
+							sx={{ fontSize: '0.8rem', fontWeight: '100' }}
+							variant="body2"
+						>
+							{account && convertedAddress}
+						</Typography>
+					</Stack>
+				</Stack>
+			</Grid>
+
+{/*			<Grid item xs={12} sm={6} sx={{ display: 'flex', verticalAlign: 'middle', justifyContent: 'end' }}>
+				<Stack direction="row" spacing={2} m={2}>
+					<Stack>
+						<Typography sx={{ fontWeight: '100' }} variant="body2">
+							{' '}
+							XP{' '}
+						</Typography>
+						<Typography variant="overline">{xp}</Typography>
+					</Stack>
+					<Stack>
+						<Typography sx={{ fontWeight: '100' }} variant="body2">
+							{' '}
+							Rep{' '}
+						</Typography>
+						<Typography variant="overline">{rep}</Typography>
+					</Stack>
+					<Stack>
+						<Typography sx={{ fontWeight: '100' }} variant="body2">
+							{' '}
+							Trust{' '}
+						</Typography>
+						<Typography variant="overline">Level {trust}</Typography>
+					</Stack>
+				</Stack>
+			</Grid>*/}
+		</Grid>
+	)
+}
 
 const SmallTable = ({ data }) => {
 	if (!data) return
 	return (
-		<Table sx={{ minWidth: 400 }} size="small" aria-label="table">
+		<Table sx={{ minWidth: '300px' }} size="small" aria-label="table">
 			<TableBody>
 				{data.map((d) => (
 					<TableRow
@@ -48,20 +127,20 @@ const SmallTable = ({ data }) => {
 }
 
 export const Component = () => {
+
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
-	const { address } = useWallet()
+	const { address, account } = useWallet()
 	const { identities } = useIdentity(address)
 
-	// ZERO identity
 	const [identity, setIdentity] = useState({
 		identity: {},
-		legal: 'anonymouse',
-		email: 'me@anonymou.se',
-		web: 'https://anonymou.se',
-		twitter: '@anonymouse',
-		discord: '1234123412341234',
+		display: null, //'anonymouse',
+		email: null, //'me@anonymou.se',
+		web: null, //'https://anonymou.se',
+		twitter: null, //'@anonymouse',
+		discord: null, //'1234123412341234',
 		cid: null,
 		verified: true,
 		kilt: null,
@@ -70,9 +149,9 @@ export const Component = () => {
 
 	// ZERO sense
 	const [sense, setSense] = useState({
-		xp: 0,
-		rep: 0,
-		trust: 0,
+		xp: 9000,
+		rep: 1337,
+		trust: 42,
 	})
 
 	// balances
@@ -89,63 +168,94 @@ export const Component = () => {
 		unclaimed: { count: 0, items: [] },
 	})
 
-	useEffect(() => {
+	useEffect(()=>{
+
+		if ( !identities || !identities[address] ) return
+		const id = identities[address]?.toHuman()
+		if(!id) return
+
 		setIdentity({
 			...identity,
-			identity: identities?.[address]?.toHuman()?.info?.display?.Raw || null,
+			display: id.info.display.Raw,
+			email: id.info.email.Raw,
+			twitter: id.info.twitter.Raw,
+			web: id.info.web.Raw,
+			discord: id.info.discord?.Raw || '',
 		})
-	}, [identities, address])
+
+		console.log(
+			address,
+			id.info.display.Raw
+		)
+
+	},[address, identities])
 
 	return (
 		<Box>
-			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
-				<Box
-					sx={{
-						display: 'flex',
-						verticalAlign: 'middle',
-						justifyContent: 'space-between',
-					}}
-				>
-					<Typography variant="h3" sx={{ height: 'auto', m: 0 }}>
-						{' '}
-						Account{' '}
-					</Typography>
-					<Button
-						size="small"
-						sx={{ borderRadius: '100vw' }}
-						variant="outlined"
-						color="secondary"
+			{ identity && <TopBar id={identity} xp={sense.xp} rep={sense.rep} trust={sense.trust} /> }
+			{ identity &&
+				<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
+				{/*
+					<Box
+						sx={{
+							display: 'flex',
+							verticalAlign: 'middle',
+							justifyContent: 'space-between',
+						}}
 					>
-						Refresh
-					</Button>
-				</Box>
+						<Typography variant="h3" sx={{ height: 'auto', m: 0 }}>
+							{' '}
+							Account{' '}
+						</Typography>
+						<Button
+							size="small"
+							sx={{ borderRadius: '100vw' }}
+							variant="outlined"
+							color="secondary"
+						>
+							Refresh
+						</Button>
+					</Box>*/}
 
-				<Typography variant="h4" sx={{ mt: 2, mb: 2 }}>
+					<Typography variant="h4" sx={{ mb: 2 }}>
+						{' '}
+						Identity{' '}
+					</Typography>
+					<Typography variant="body2" sx={{ mb: 2 }}>
+						Level up your score using GameDAO protocols and collaborating with the community.
+						Trust is based on identity, SocialKYC and doing the liveness check.
+					</Typography>
+					<SmallTable
+						data={[
+							['identity', identity.display, ''],
+							['email', identity.email, 'mailto:' + identity.email],
+							['website', identity.web, 'https://' + identity.web],
+							['twitter', identity.twitter, 'https://twitter.com/' + identity.twitter],
+							['discord id', identity.discord, ''],
+						]}
+					/>
+				</Paper>
+			}
+
+			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
+				<Typography variant="h4" sx={{ mb: 2 }}>
 					{' '}
-					Identity{' '}
+					Achievements{' '}
+				</Typography>
+				<Typography variant="body2" sx={{ mb: 2 }}>
+					Level up your score using GameDAO protocols and collaborating with the community.
+					Trust is based on identity, SocialKYC and doing the liveness check.
 				</Typography>
 				<SmallTable
 					data={[
-						['identity', 'gamedao', ''],
-						['email', 'hey@gamedao.co', 'mailto:hey@gamedao.co'],
-						['website', 'gamedao.co', 'https://gamedao.co'],
-						['twitter', '@gamedaoco', 'https://twitter.com/gamedaoco'],
-						['discord', 'gamedao#1337', ''],
-					]}
-				/>
-				<Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-					{' '}
-					Sense{' '}
-				</Typography>
-				<SmallTable
-					data={[
-						['xp', 9000],
-						['rep', 1337],
-						['trust', 42],
+						['xp', sense.xp],
+						['rep', sense.rep],
+						['trust', sense.trust],
 					]}
 				/>
 			</Paper>
 
+{/*
 			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
 				<Box
 					sx={{
@@ -158,11 +268,11 @@ export const Component = () => {
 						{' '}
 						Portfolio{' '}
 					</Typography>
-					{/*
+
 					<Button size="small" sx={{borderRadius: '100vw'}} variant="outlined" color="secondary">
 						Refresh
 					</Button>
-*/}
+
 				</Box>
 
 				<Typography variant="h4" sx={{ my: 2 }}>
@@ -175,7 +285,7 @@ export const Component = () => {
 					Collectables{' '}
 				</Typography>
 				<hr />
-				{/*
+
 				<Box sx={{display: 'flex', justifyContent: 'end' }}>
 					<a href="https://docs.gamedao.co/" target="_blank">
 						<Button size="small" sx={{mr:2}}>
@@ -188,8 +298,8 @@ export const Component = () => {
 						</Button>
 					</a>
 				</Box>
-*/}
 			</Paper>
+*/}
 		</Box>
 	)
 }

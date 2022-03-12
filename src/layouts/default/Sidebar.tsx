@@ -135,7 +135,7 @@ function Main({ showNavigation }: ComponentProps) {
 				*/}
 				
 				{connected && <Link component={NavLink} to='/app/quest'>
-					<SidebarButton active={pathname === '/app/quest'} sx={{ mx: 4, py: 0 }}>
+					<SidebarButton active={pathname === '/app/quest'?'active':null} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="castle" />
 						</ListItemIcon>
@@ -216,14 +216,16 @@ function Main({ showNavigation }: ComponentProps) {
 					</Link>
 				)}
 
-				{/*				<Link component={NavLink} to="/app/wallet">
+				{/*
+				*/}
+				{ connected && <Link component={NavLink} to="/app/wallet">
 					<SidebarButton active={!!pathname.match(/wallet/gi) ? 'active' : null} sx={{ mx: 4, py: 0 }}>
 						<ListItemIcon>
 							<FontIcon sx={{ ...sideBar }} name="wallet" />
 						</ListItemIcon>
 						<Typography sx={{ fontSize: '1rem' }}>Wallet</Typography>
 					</SidebarButton>
-				</Link>*/}
+				</Link>}
 
 				<List
 					sx={{ display: 'flex', flex: 1, flexDirection: 'column', margin: '2.5rem 0' }}

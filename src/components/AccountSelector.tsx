@@ -163,7 +163,7 @@ const AccountComponent = () => {
 					updateStore({ allowConnection: false, connected: false })
 					updateWalletState({ allowConnect: false, connected: false })
 					createErrorNotification(
-						'Connection failed, seems like you dont own an access key.'
+						'Connection failed, seems like you do not own an access key.'
 					)
 					if (pathname !== '/app') {
 						navigate('/app')

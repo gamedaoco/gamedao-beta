@@ -34,8 +34,8 @@ export const TileItem: React.FC<
 	return (
 		<Card sx={{
 			minHeight: '100%',
-			minWidth: '320px',
-			maxWidth: '320px',
+			minWidth: '300px',
+			maxWidth: '300px',
 			border: '1px solid rgba(0,0,0,0)',
 			'&:hover': {borderColor: 'primary.main'},
 			...bgPlain
@@ -45,7 +45,7 @@ export const TileItem: React.FC<
 					<img
 						style={{ objectFit: 'cover' }}
 						width="100%"
-						height="320px"
+						height="300px"
 						src={props.imageURL}
 					/>
 				</Link>

@@ -1,3 +1,4 @@
+import { styled } from '../../components'
 import { Box, Container } from '@mui/material'
 import Header from './Header'
 import Sidebar from './Sidebar'
@@ -11,6 +12,20 @@ interface ComponentProps {
 	noContainer?: boolean
 	children?: React.ReactNode
 }
+
+const Wrapper = styled(Container)( ({ theme }) => ({
+	minHeight: '100vh',
+	padding: '0.5rem',
+	[theme.breakpoints.up('sm')]: {
+		padding: '1rem'
+	},
+	[theme.breakpoints.up('md')]: {
+		padding: '1rem'
+	},
+	[theme.breakpoints.up('lg')]: {
+		padding: '2rem'
+	},
+}))
 
 const Layout = ({
 	showHeader,
@@ -45,9 +60,7 @@ const Layout = ({
 					{noContainer ? (
 						<Box>{children}</Box>
 					) : (
-						<Container>
-							<Box sx={{ minHeight: '100vh', padding: '2rem' }}>{children}</Box>
-						</Container>
+						<Wrapper>{children}</Wrapper>
 					)}
 				</Box>
 			</Box>
