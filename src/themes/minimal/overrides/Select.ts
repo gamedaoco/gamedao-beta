@@ -9,9 +9,12 @@ export default function Select(theme: Theme) {
 			defaultProps: {
 				IconComponent: ExpandMoreRoundedIcon,
 			},
-
 			styleOverrides: {
-				root: {},
+				root: {
+				},
+				sizeSmall: {
+					padding: '1.5em 2em',
+				},
 			},
 		},
 	}

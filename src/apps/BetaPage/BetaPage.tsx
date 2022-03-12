@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { gateway } from '../lib/ipfs'
 import { IPFS_IMAGE_CID } from '../QuestPage/modules/IPFS_IMAGE_CID'
@@ -18,7 +18,7 @@ export function BetaPage() {
 
 	useEffect(()=>{
 		if(connected) navigate('/app/quest')
-	},[connected])
+	},[connected, navigate])
 
 	const handleConnect = useCallback(
 		(e) => {
@@ -72,7 +72,7 @@ export function BetaPage() {
 							<li>
 								<Typography>
 									Follow the steps in our{' '}
-									<a style={{ color: theme.palette.text.primary }} target='_blank'
+									<a style={{ color: theme.palette.text.primary }} target='_blank' rel="noreferrer"
 									   href={'https://docs.gamedao.co/guides/installing-your-wallet'}>
 										documentation.
 									</a>
@@ -96,7 +96,7 @@ export function BetaPage() {
 							<li>
 								<Typography>
 									Join our{' '}
-									<a style={{ color: theme.palette.text.primary }} target='_blank'
+									<a style={{ color: theme.palette.text.primary }} target='_blank' rel="noreferrer"
 									   href={'https://discord.gg/YZT2QANG5m'}>
 										discord server
 									</a>

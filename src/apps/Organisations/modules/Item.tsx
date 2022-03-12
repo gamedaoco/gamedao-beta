@@ -112,6 +112,11 @@ export function Item({ data, displayMode }) {
 		)
 	}, [data, metaDataState, displayMode])
 
+	const limit = (displayMode === ListTileEnum.LIST) ? 256 : 128
+	const description = '' + (metaDataState?.description.length > limit)
+		? metaDataState?.description.slice(0,limit) + '...'
+		: metaDataState?.description
+
 	if (displayMode === ListTileEnum.LIST) {
 		return (
 			<ListItem
@@ -121,7 +126,7 @@ export function Item({ data, displayMode }) {
 				metaHeadline={textState}
 				metaContent={metaContent}
 			>
-				<Typography>{metaDataState?.description || ''}</Typography>
+				<Typography >{description}</Typography>
 			</ListItem>
 		)
 	}
@@ -134,7 +139,7 @@ export function Item({ data, displayMode }) {
 			metaHeadline={textState}
 			metaContent={metaContent}
 		>
-			<Typography>{metaDataState?.description || ''}</Typography>
+			<Typography>{description}</Typography>
 		</TileItem>
 	)
 }

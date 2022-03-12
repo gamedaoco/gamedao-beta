@@ -99,7 +99,7 @@ export const countries = [
 	{ key: '1', flag: 'de', text: 'Germany', value: 'de' },
 	{ key: '2', flag: 'ch', text: 'Switzerland', value: 'ch' },
 	{ key: '3', flag: 'li', text: 'Liechtenstein', value: 'li' },
-	{ key: '4', flag: 'xx', text: 'other', value: 'xx' },
+	{ key: '999', flag: 'xx', text: 'other', value: '999' },
 ]
 
 export const curve_function = [

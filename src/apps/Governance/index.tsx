@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles'
 
 import Add from '@mui/icons-material/Add'
 import Close from '@mui/icons-material/Close'
-import { Badge, Box, Button, Paper, Stack, styled, Typography } from 'src/components'
+import { Badge, Box, Button, Container, styled, Typography, Paper } from 'src/components'
 
 import CreateProposal from './modules/Create'
 import ProposalList from './modules/ProposalList'
@@ -18,48 +18,66 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 	},
 }))
 
-function Main() {
+export const Main = () => {
+
 	const theme = useTheme()
-	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
-
 	const { connected } = useWallet()
-
 	const [proposalCount, setProposalCount] = useState(0)
 	const [showCreateMode, setCreateMode] = useState(false)
+	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	return (
-		<Stack spacing={4}>
-			<Paper sx={{ ...bgPlain }}>
-				<Box display='flex' padding={4}>
-					<Stack flex='2' spacing={1}>
-						<Typography variant='h6'>
-							{proposalCount === 0
-								? 'No proposals yet. Create one!'
-								: `Total proposals: ${proposalCount ?? 0}`}
-						</Typography>
-						<Typography variant='body2'>
-							Decisions are governed by proposals and voting to ensure everyone in the
-							organisation has a voice.
-						</Typography>
-					</Stack>
-					<Box display='flex' justifyContent='flex-end' alignItems='center' flex='1'>
-						{connected && (
-							<Button
-								onClick={() => setCreateMode(!showCreateMode)}
-								startIcon={showCreateMode ? <Close /> : <Add />}
-							>
-								{showCreateMode ? 'Cancel' : 'New Proposal'}
-							</Button>
+		<Container maxWidth='xl'>
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				<Box>
+					<Typography variant='h6'>
+
+						{!proposalCount || proposalCount === 0 ? (
+							proposalCount === 0 ? (
+								showCreateMode ? `Create Proposal` : `No proposals yet. Create one!`
+							) : (
+								`Loading...`
+							)
+						) : (
+							`Total proposals: ${proposalCount}`
 						)}
-					</Box>
+					</Typography>
 				</Box>
-			</Paper>
-			{showCreateMode && connected ? (
-				<CreateProposal />
-			) : (
-				<ProposalList setProposalCount={setProposalCount} />
-			)}
-		</Stack>
+
+
+
+				<Box display='flex' justifyContent='flex-end' alignItems='center' flex='1'>
+					{connected && (
+						<Button
+							variant='outlined'
+							onClick={() => setCreateMode(!showCreateMode)}
+							startIcon={showCreateMode ? <Close /> : <Add />}
+						>
+							{showCreateMode ? 'Cancel' : 'New Proposal'}
+						</Button>
+					)}
+				</Box>
+
+			</Box>
+
+{/*			<Box>
+				<Typography variant='body2'>
+					Collective decisions are made through proposals and votes
+					to ensure everyone in the organisation has a voice.
+				</Typography>
+			</Box>*/}
+
+			<br />
+			{ showCreateMode && connected && <CreateProposal /> }
+			{ !showCreateMode && <ProposalList setProposalCount={setProposalCount} /> }
+
+		</Container>
 	)
 }
 

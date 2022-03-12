@@ -70,11 +70,17 @@ const PRIMARY = {
 	// dark: '#007B55',
 	// darker: '#005249',
 
-	lighter: '#ABE5D0',
-	light: '#70E4BB',
-	main: '#21E39E',
-	dark: '#27BD88',
-	darker: '#880ef4',
+	lighter: '#ee55ff',
+	light: '#dd44cc',
+	main: '#cc3399',
+	dark: '#bb2266',
+	darker: '#aa1133',
+
+	// lighter: '#ABE5D0',
+	// light: '#70E4BB',
+	// main: '#21E39E',
+	// dark: '#27BD88',
+	// darker: '#880ef4',
 }
 const SECONDARY = {
 	// lighter: '#D6E4FF',
@@ -157,12 +163,12 @@ const CHART_COLORS = {
 
 const COMMON = {
 	common: { black: '#000', white: '#FCFCFC' },
-	primary: { ...PRIMARY, contrastText: '#fff' },
-	secondary: { ...SECONDARY, contrastText: '#fff' },
-	info: { ...INFO, contrastText: '#fff' },
+	primary: { ...PRIMARY, contrastText: '#FCFCFC' },
+	secondary: { ...SECONDARY, contrastText: '#FCFCFC' },
+	info: { ...INFO, contrastText: '#FCFCFC' },
 	success: { ...SUCCESS, contrastText: GREY[800] },
 	warning: { ...WARNING, contrastText: GREY[800] },
-	error: { ...ERROR, contrastText: '#fff' },
+	error: { ...ERROR, contrastText: '#FCFCFC' },
 	grey: GREY,
 	gradients: GRADIENTS,
 	chart: CHART_COLORS,
@@ -183,10 +189,10 @@ const palette = {
 	light: {
 		...COMMON,
 		text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
-		background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
+		background: { paper: '#fcfcfc', default: '#fcfcfc', neutral: GREY[200] },
 		action: { active: GREY[600], ...COMMON.action },
 		tabButton: {
-			normal: '#fff',
+			normal: '#fcfcfc',
 			active: '#82807f29',
 		},
 		proposalStates: {
@@ -199,7 +205,7 @@ const palette = {
 	},
 	dark: {
 		...COMMON,
-		text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
+		text: { primary: '#fcfcfc', secondary: GREY[500], disabled: GREY[600] },
 		background: { paper: '#25282B', default: GREY[900], neutral: GREY[500_16] },
 		action: { active: GREY[500], ...COMMON.action },
 		tabButton: {

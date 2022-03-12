@@ -5,7 +5,7 @@ import { useWallet } from 'src/context/Wallet'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
-import { Box, Button, Loader, Typography } from '../../components'
+import { Box, Button, Loader, Typography, Container } from '../../components'
 
 import CampaignGrid from './CampaignGrid'
 import CreateCampaign from './Create'
@@ -60,7 +60,7 @@ export const Campaigns = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<>
+		<Container>
 			<Box
 				sx={{
 					display: 'flex',
@@ -103,9 +103,17 @@ export const Campaigns = (props) => {
 				</Box>
 			</Box>
 			<br />
-			{showCreateMode && connected && <CreateCampaign />}
-			{!showCreateMode && content && campaignsCount > 0 && <CampaignGrid content={content} />}
-		</>
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				{showCreateMode && connected && <CreateCampaign />}
+				{!showCreateMode && content && campaignsCount > 0 && <CampaignGrid content={content} />}
+			</Box>
+		</Container>
 	)
 }
 

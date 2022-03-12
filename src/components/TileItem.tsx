@@ -32,13 +32,20 @@ export const TileItem: React.FC<
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	return (
-		<Card sx={{ minHeight: '100%', minWidth: '20%', ...bgPlain }}>
+		<Card sx={{
+			minHeight: '100%',
+			minWidth: '320px',
+			maxWidth: '320px',
+			border: '1px solid rgba(0,0,0,0)',
+			'&:hover': {borderColor: 'primary.main'},
+			...bgPlain
+		}}>
 			<Stack sx={{ height: '100%' }}>
 				<Link to={props.linkTo || ''}>
 					<img
 						style={{ objectFit: 'cover' }}
 						width="100%"
-						height="250px"
+						height="320px"
 						src={props.imageURL}
 					/>
 				</Link>

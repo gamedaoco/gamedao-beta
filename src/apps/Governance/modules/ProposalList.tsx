@@ -59,7 +59,7 @@ export function ProposalList({ setProposalCount }) {
 		<Paper sx={{ ...bgPlain }}>
 			<Box display="flex" padding={4}>
 				<Stack width={'100%'} spacing={5}>
-					<Typography variant="h6">Open votings</Typography>
+{/*					<Typography variant="h6">Open votings</Typography> */}
 					<Box>
 						{filteredProposals.map((proposal: any, i: number, arr: string[]) => (
 							<ProposalItem

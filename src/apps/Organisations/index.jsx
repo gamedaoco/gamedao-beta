@@ -78,7 +78,7 @@ export const Main = (props) => {
 	const handleCloseBtn = (e) => setCreateMode(false)
 
 	return (
-		<Container maxWidth='lg'>
+		<Container>
 			<Box
 				sx={{
 					display: 'flex',
@@ -118,8 +118,16 @@ export const Main = (props) => {
 				</Box>
 			</Box>
 			<br />
-			{showCreateMode && connected && <CreateDAO />}
-			{!showCreateMode && content && <ItemList data={content} />}
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				{showCreateMode && connected && <CreateDAO />}
+				{!showCreateMode && content && <ItemList data={content} />}
+			</Box>
 		</Container>
 	)
 }
