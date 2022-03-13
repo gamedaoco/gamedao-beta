@@ -324,32 +324,48 @@ export const Main = (props) => {
 						</FormSectionHeadline>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<TextField
-							label="Name"
+						<FormControl
 							fullWidth
-							placeholder="Name"
-							name="name"
-							value={formik.values.name}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
 							error={formik.touched.name && Boolean(formik.errors.name)}
-							helperText={formik.touched.name && formik.errors.name}
-							required
-						/>
+						>
+							<InputLabel id="org-name-label">Organization Name</InputLabel>
+							<TextField
+								label="Organization Name"
+								labelId="org-name-label"
+								placeholder="Organization Name"
+								name="name"
+								value={formik.values.name}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								required
+							/>
+							<FormHelperText>
+								{formik.touched.name && formik.errors.name}
+							</FormHelperText>
+						</FormControl>
+
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<TextField
-							label="Contact Email"
+						<FormControl
 							fullWidth
-							placeholder="email"
-							name="email"
-							value={formik.values.email}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
 							error={formik.touched.email && Boolean(formik.errors.email)}
-							helperText={formik.touched.email && formik.errors.email}
-							required
-						/>
+						>
+							<InputLabel id="org-email-label">Organization email</InputLabel>
+							<TextField
+								label="Organization email"
+								labelId="org-email-label"
+								fullWidth
+								placeholder="email"
+								name="email"
+								value={formik.values.email}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								required
+							/>
+							<FormHelperText>
+								{formik.touched.email && formik.errors.email}
+							</FormHelperText>
+						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
 						<FormControl
