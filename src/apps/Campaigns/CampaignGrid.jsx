@@ -74,8 +74,8 @@ const CampaignGrid = ({ content }) => {
 	const [pageContent, setPageContent] = useState([])
 	const [filteredContent, setFilteredContent] = useState([])
 
-	const [filter, setFilter] = useState('1')
-	const [protocol, setProtocol] = useState('1') // 0 any
+	const [filter, setFilter] = useState('-1')
+	const [protocol, setProtocol] = useState('-1')
 	const [scope, setScope] = useState('1') // 0 any 1 owned 2 contributed
 
 	const [page, setPage] = useState(0)
@@ -115,9 +115,11 @@ const CampaignGrid = ({ content }) => {
 		// 				if (scope === 2) return account.address === admin ? item : null
 		// 		  })
 
+		let new_set = [].concat(filterByProtocol)
+
 		// console.log('filter:', filter, protocol, scope, filterByProtocol)
 		// setFilteredContent(filterByProtocol)
-		setPageContent(filterByProtocol)
+		setPageContent(new_set)
 
 		// reset page
 		setPage(0)

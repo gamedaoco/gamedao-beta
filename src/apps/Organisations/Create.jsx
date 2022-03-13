@@ -355,7 +355,7 @@ export const Main = (props) => {
 								label="Organization email"
 								labelId="org-email-label"
 								fullWidth
-								placeholder="email"
+								placeholder="Organization email"
 								name="email"
 								value={formik.values.email}
 								onChange={formik.handleChange}
