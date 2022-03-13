@@ -1,38 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import HeartIcon from '@mui/icons-material/FavoriteBorder'
-import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
-import { useWallet } from 'src/context/Wallet'
-import IconButton from '@mui/material/IconButton'
-import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
-import { useStore } from 'src/context/Store'
-import { useThemeState } from 'src/context/ThemeState'
-import { useBalance } from 'src/hooks/useBalance'
-import { styled } from '../components'
-import { ICON_MAPPING, Icons } from './Icons'
-import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
-import { compareAddress, toKusamaAddress, toZeroAddress } from '../utils/helper'
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router'
 
+import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
+import { useStore } from 'src/context/Store'
+import { useThemeState } from 'src/context/ThemeState'
+import { useWallet } from 'src/context/Wallet'
+import { useBalance } from 'src/hooks/useBalance'
+import { useIdentity } from 'src/hooks/useIdentity'
+
+import { compareAddress, toKusamaAddress, toZeroAddress } from '../utils/helper'
+import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
+
+import { styled } from '../components'
+import { Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { ICON_MAPPING, Icons } from './Icons'
+import IconButton from '@mui/material/IconButton'
+import HeartIcon from '@mui/icons-material/FavoriteBorder'
+
 const COLLECTIONS = 'a0afbe96d2541b6446-BETA'
 
-function accountString(account) {
+const  accountString = (account) => {
 	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
 
 const AccountBox = styled(Box)(({ theme }) => ({
-	borderRadius: '50px',
+	borderRadius: '1rem',
 	backgroundColor: theme.palette.background.neutral,
 	paddingRight: theme.spacing(2),
 	paddingLeft: '2px',
 	paddingTop: '2px',
 	paddingBottom: '2px',
 	color: theme.palette.text.primary,
+	'* >': { transitionTimingFunction: 'ease-in-out;', transitionDuration: '150ms' },
 }))
 
 const ConnectButton = styled(Button)(({ theme }) => ({
-	borderRadius: '50px',
+	borderRadius: '1rem',
 	padding: '1em 2em',
 	color: theme.palette.text.primary,
 	backgroundColor: theme.palette.background.neutral,
@@ -42,13 +47,12 @@ const ConnectButton = styled(Button)(({ theme }) => ({
 }))
 
 const AccountSelect = styled(Select)(({ theme }) => ({
-	margin: 0,
-	backgroundColor: theme.palette.background.default,
 	display: 'block',
-	borderRadius: '50px',
-	height: '100%',
+	justifyContent: 'center',
+	margin: 0,
+	// backgroundColor: theme.palette.background.default,
+	// borderRadius: '.8rem',
 	['& > .MuiSelect-select']: {
-		height: '100%',
 		padding: 0,
 		margin: 0,
 		border: 0,
@@ -106,6 +110,10 @@ const AccountComponent = () => {
 	const [questState, setQuestState] = useState(false)
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
+
+	const { identities } = useIdentity(address)
+	const [ identity, setIdentity ] = useState()
+	const [ verified, setVerified ] = useState(false)
 
 	const [ onceUponATimeAlreadyConnected, setOnceUponATimeAlreadyConnected] = useState(false)
 
@@ -209,7 +217,7 @@ const AccountComponent = () => {
 									alignItems: 'center',
 									justifyContent: 'center',
 									backgroundColor: '#292B2D',
-									borderRadius: '50%',
+									borderRadius: '.8rem',
 									marginLeft: '4px',
 									marginTop: '4px',
 									marginBottom: '4px',
