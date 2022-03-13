@@ -6,6 +6,8 @@ import { useBlock } from 'src/hooks/useBlock'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { useApiProvider } from '@substra-hooks/core'
 
+import { hexToString } from "@polkadot/util"
+
 import { toZeroAddress } from 'src/utils/helper'
 import { gateway, pinJSONToIPFS } from '../../lib/ipfs'
 import config from '../../../config'
@@ -395,9 +397,13 @@ export const Main = () => {
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 									>
+
 										{activeMemberships?.map((e) => (
 											<MenuItem key={e} value={e}>
-												{bodies?.[e]?.name}
+												{(bodies?.[e]?.name.slice(0,2)==='0x')
+													? hexToString( bodies?.[e]?.name )
+													: bodies?.[e]?.name
+												}
 											</MenuItem>
 										))}
 									</Select>
