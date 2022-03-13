@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { data } from '../lib/data'
-import { Container, Box, Select, MenuItem } from '@mui/material'
+import { Container, Box, Select, MenuItem , FormControl, InputLabel } from '@mui/material'
 import { styled } from '../../components'
 import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 import CampaignCard from './CampaignCard'
@@ -25,9 +25,18 @@ const FilterBar = ({ filter, setFilter }) => {
 	const handleOnChange = (e) => setFilter(e.target.value)
 	const options = [{ key: '-1', text: 'all', value: '-1' }].concat(data.campaign_states)
 	return (
-		<Select size="small" label="Status" sx={{ mr: 1 }} value={filter} fullWidth onChange={handleOnChange}>
-			{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
-		</Select>
+		<FormControl fullWidth>
+			<InputLabel id="filter-status-label">Campaign State</InputLabel>
+			<Select
+				size="small"
+				label="Campaign State"
+				labelId="filter-status-label"
+				sx={{ mr: 1 }}
+				value={filter}
+				onChange={handleOnChange}>
+				{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
+			</Select>
+		</FormControl>
 	)
 }
 
@@ -35,9 +44,13 @@ const ProtocolBar = ({ filter, setFilter }) => {
 	const handleOnChange = (e) => setFilter(e.target.value)
 	const options = [{ key: '-1', text: 'all protocols', value: '-1' }].concat(data.protocol_types)
 	return (
-		<Select size="small" sx={{ mr: 1 }} label="Protocol" value={filter} fullWidth onChange={handleOnChange}>
-			{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
-		</Select>
+		<FormControl fullWidth>
+			<InputLabel id="filter-protocol-label">Protocol</InputLabel>
+			<Select  labelId="filter-protocol-label"
+				size="small" sx={{ mr: 1 }} label="Protocol" value={filter} onChange={handleOnChange}>
+				{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
+			</Select>
+		</FormControl>
 	)
 }
 
