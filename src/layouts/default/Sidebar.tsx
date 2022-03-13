@@ -26,7 +26,7 @@ const SidebarButton = styled(ListItemButton)<{ active?: string | boolean }>(
 		marginRight: theme.spacing(1),
 		marginTop: theme.spacing(0.5),
 		marginBottom: theme.spacing(0.5),
-		borderRadius: '2rem',
+		borderRadius: '1rem',
 		color: active ? theme.palette.grey[500] : theme.palette.grey[500_48],
 		backgroundColor: active ? theme.palette.grey[500_16] : 'transparent',
 		'&:hover': {
@@ -44,7 +44,7 @@ const NavHeader = styled(ListSubheader)(({ theme }) => ({
 const NavBadge = styled(Badge)(({ theme }) => ({
 	'& .MuiBadge-badge': {
 		color: theme.palette.background.default,
-		borderRadius: '2rem',
+		borderRadius: '1rem',
 		right: 'initial',
 	},
 }))
