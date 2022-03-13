@@ -60,6 +60,7 @@
 		"await-to-js": "^3.0.0",
 		"big.js": "^6.1.1",
 		"bignumber.js": "^9.0.1",
+		"blueimp-md5": "^2.19.0",
 		"change-case": "^4.1.2",
 		"formik": "^2.2.9",
 		"framer-motion": "^5.4.1",

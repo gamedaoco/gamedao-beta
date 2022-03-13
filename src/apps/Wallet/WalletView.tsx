@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
+
 import { useWallet } from 'src/context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
 import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
 
+// import { hexToString } from "@polkadot/util"
+import hash from 'blueimp-md5'
+
 import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
 
 import { alpha, useTheme } from '@mui/material/styles'
-
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from 'src/components'
 import { Grid, Stack, Button, Typography, Box, Paper } from 'src/components'
 
@@ -38,14 +41,18 @@ const TopBar = ({ id, xp, rep, trust }) => {
 							display: 'flex',
 							alignItems: 'center',
 							justifyContent: 'center',
-							// backgroundColor: '#22201f',
-							borderRadius: '50%',
+							// backgroundColor: '#111111',
+							borderRadius: '1rem',
 							marginRight: 2,
 							height: '3.5rem',
 							width: '3.5rem',
 						}}
 					>
-						<HeartIcon onClick={copyAddress} />
+						{ id.email
+							? <img src={`https://www.gravatar.com/avatar/${hash(id.email)}`} onClick={copyAddress} />
+							: <HeartIcon onClick={copyAddress} />
+						}
+
 					</Box>
 					<Stack>
 						<Typography variant="h5">
