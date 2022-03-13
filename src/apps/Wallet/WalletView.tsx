@@ -222,8 +222,8 @@ export const Component = () => {
 						Identity{' '}
 					</Typography>
 					<Typography variant="body2" sx={{ mb: 2 }}>
-						Level up your score using GameDAO protocols and collaborating with the community.
-						Trust is based on identity, SocialKYC and doing the liveness check.
+						Identity data is aggregated from various sources, like the ZERO Identity, Kilt SocialKYC and more.
+						Improving the quality of this data helps in building up a reputation!
 					</Typography>
 					<SmallTable
 						data={[
@@ -243,7 +243,7 @@ export const Component = () => {
 					Achievements{' '}
 				</Typography>
 				<Typography variant="body2" sx={{ mb: 2 }}>
-					Level up your score using GameDAO protocols and collaborating with the community.
+					Level up your score by using GameDAO protocols and collaborating with the community.
 					Trust is based on identity, SocialKYC and doing the liveness check.
 				</Typography>
 				<SmallTable
