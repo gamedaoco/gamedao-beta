@@ -113,8 +113,16 @@ export function ProposalItem({ proposal, showDivider }) {
 								<Typography>{Math.round(calculatePercentage(noCount))}%</Typography>
 							</Box>
 							<LinearProgress
-								sx={{ width: '100%', margin: '0 1rem' }}
+								sx={{
+									borderRadius: '2px',
+									'*': { borderRadius: '0px' },
+									backgroundColor:'#093',
+									width: '100%',
+									height:'.5rem',
+									margin: '0 1rem'
+								}}
 								variant="determinate"
+								color="secondary"
 								value={calculatePercentage(noCount)}
 							/>
 							<Box display="flex" justifyContent="center" flexDirection="column">
