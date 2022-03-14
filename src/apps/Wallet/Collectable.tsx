@@ -41,7 +41,7 @@ const CollectableView = ({ content }) => {
 		async function getMetadata(cid) {
 			const URL = GATEWAY + cid.slice(12)
 			const [err, data] = await to( fetch(URL) )
-			console.log(data)
+			// console.log(data)
 			setMetadata( await data.json() )
 		}
 		getMetadata(content.metadata)
