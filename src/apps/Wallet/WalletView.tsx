@@ -16,6 +16,8 @@ import { Grid, Stack, Button, Typography, Box, Paper } from 'src/components'
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import VerifiedIcon from '@mui/icons-material/Verified'
 
+import Collectables from './Collectables'
+
 const TopBar = ({ id, xp, rep, trust }) => {
 
 	const { account, address } = useWallet()
@@ -34,6 +36,7 @@ const TopBar = ({ id, xp, rep, trust }) => {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
+
 				<Stack direction="row" spacing={2} m={2}>
 					<Box
 						sx={{
@@ -68,6 +71,7 @@ const TopBar = ({ id, xp, rep, trust }) => {
 						</Typography>
 					</Stack>
 				</Stack>
+
 			</Grid>
 
 {/*			<Grid item xs={12} sm={6} sx={{ display: 'flex', verticalAlign: 'middle', justifyContent: 'end' }}>
@@ -102,7 +106,7 @@ const TopBar = ({ id, xp, rep, trust }) => {
 const SmallTable = ({ data }) => {
 	if (!data) return
 	return (
-		<Table sx={{ minWidth: '300px' }} size="small" aria-label="table">
+		<Table sx={{ minWidth: '200px' }} size="small" aria-label="table">
 			<TableBody>
 				{data.map((d) => (
 					<TableRow
@@ -190,77 +194,104 @@ export const Component = () => {
 			discord: id.info.discord?.Raw || '',
 		})
 
-		console.log(
-			address,
-			id.info.display.Raw
-		)
-
 	},[address, identities])
 
 	return (
 		<Box>
 			{ identity && <TopBar id={identity} xp={sense.xp} rep={sense.rep} trust={sense.trust} /> }
-			{ identity &&
-				<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
-				{/*
-					<Box
-						sx={{
-							display: 'flex',
-							verticalAlign: 'middle',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography variant="h3" sx={{ height: 'auto', m: 0 }}>
+			<Grid container spacing={2} mt={2}>
+				<Grid item xs={12} md={6}>
+					{ identity &&
+						<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
+						{/*
+							<Box
+								sx={{
+									display: 'flex',
+									verticalAlign: 'middle',
+									justifyContent: 'space-between',
+								}}
+							>
+								<Typography variant="h3" sx={{ height: 'auto', m: 0 }}>
+									{' '}
+									Account{' '}
+								</Typography>
+								<Button
+									size="small"
+									sx={{ borderRadius: '100vw' }}
+									variant="outlined"
+									color="secondary"
+								>
+									Refresh
+								</Button>
+							</Box>*/}
+
+							<Typography variant="h4" sx={{ mb: 2 }}>
+								{' '}
+								Identity{' '}
+							</Typography>
+							<Typography variant="body2" sx={{ mb: 2 }}>
+								Identity data is aggregated from various sources, like the ZERO Identity, Kilt SocialKYC and more.
+								Improving the quality of this data helps in building up a reputation!
+							</Typography>
+							<SmallTable
+								data={[
+									['identity', identity.display, ''],
+									['email', identity.email, 'mailto:' + identity.email],
+									['website', identity.web, 'https://' + identity.web],
+									['twitter', identity.twitter, 'https://twitter.com/' + identity.twitter],
+									['discord id', identity.discord, ''],
+								]}
+							/>
+						</Paper>
+					}
+				</Grid>
+
+				<Grid item xs={12} md={6}>
+					<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
+						<Typography variant="h4" sx={{ mb: 2 }}>
 							{' '}
-							Account{' '}
+							Achievements{' '}
 						</Typography>
-						<Button
-							size="small"
-							sx={{ borderRadius: '100vw' }}
-							variant="outlined"
-							color="secondary"
-						>
-							Refresh
+						<Typography variant="body2" sx={{ mb: 2 }}>
+							Level up your score by using GameDAO protocols and collaborating with the community.
+							Trust is based on identity, SocialKYC and doing the liveness check.
+						</Typography>
+						<SmallTable
+							data={[
+								['xp', sense.xp],
+								['rep', sense.rep],
+								['trust', sense.trust],
+							]}
+						/>
+					</Paper>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
+						<Typography variant="h4" sx={{ mb: 2 }}> Collectables </Typography>
+{/*
+						<Typography variant="body2" sx={{ mb: 2 }}>
+							Collectables are non fungible items coming from various chains and are aggregated here.
+						</Typography>
+*/}
+
+						<Collectables/>
+
+{/*				<Box sx={{display: 'flex', justifyContent: 'end' }}>
+					<a href="https://docs.gamedao.co/" target="_blank">
+						<Button size="small" sx={{mr:2}}>
+							Learn More
 						</Button>
-					</Box>*/}
-
-					<Typography variant="h4" sx={{ mb: 2 }}>
-						{' '}
-						Identity{' '}
-					</Typography>
-					<Typography variant="body2" sx={{ mb: 2 }}>
-						Identity data is aggregated from various sources, like the ZERO Identity, Kilt SocialKYC and more.
-						Improving the quality of this data helps in building up a reputation!
-					</Typography>
-					<SmallTable
-						data={[
-							['identity', identity.display, ''],
-							['email', identity.email, 'mailto:' + identity.email],
-							['website', identity.web, 'https://' + identity.web],
-							['twitter', identity.twitter, 'https://twitter.com/' + identity.twitter],
-							['discord id', identity.discord, ''],
-						]}
-					/>
-				</Paper>
-			}
-
-			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
-				<Typography variant="h4" sx={{ mb: 2 }}>
-					{' '}
-					Achievements{' '}
-				</Typography>
-				<Typography variant="body2" sx={{ mb: 2 }}>
-					Level up your score by using GameDAO protocols and collaborating with the community.
-					Trust is based on identity, SocialKYC and doing the liveness check.
-				</Typography>
-				<SmallTable
-					data={[
-						['xp', sense.xp],
-						['rep', sense.rep],
-						['trust', sense.trust],
-					]}
-				/>
-			</Paper>
+					</a>
+					<a href="https://polkadot.js.org/extension/" target="_blank">
+						<Button size="small" sx={{borderRadius: '100px'}} variant="outlined">
+							Download
+						</Button>
+					</a>
+				</Box>
+*/}
+					</Paper>
+				</Grid>
 
 {/*
 			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
@@ -307,6 +338,7 @@ export const Component = () => {
 				</Box>
 			</Paper>
 */}
+			</Grid>
 		</Box>
 	)
 }
