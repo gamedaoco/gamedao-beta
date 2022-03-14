@@ -10,7 +10,7 @@ const GRAPH_URL = 'https://gql-rmrk2-prod.graphcdn.app'
 
 async function fetchCollectables(address) {
 
-	console.log(address)
+	// console.log(address)
 
 	const headers = {
 		'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const CollectablesView = () => {
 				<Grid container spacing={2}>
 					{ !collection
 						? ('Searching...')
-						: ( collection.map( (nft, index) => <Collectable content={nft}/> ) )
+						: ( collection.map( (nft, index) => <Collectable key={nft.id} content={nft}/> ) )
 					}
 				</Grid>
 			</Box>
