@@ -38,13 +38,12 @@ export function ProposalItem({ proposal, showDivider }) {
 
 		if(!proposalMeta?.cid) return
 
-		async function getTheFuckingTitle(cid) {
+		async function getTitle(cid) {
 			const [err, data] = await to( fetch(`${gateway}${cid}`) )
 			const title = ( await data.json() ).title
 			setTitle( title || '' )
 		}
-
-		getTheFuckingTitle(proposalMeta.cid)
+		getTitle(proposalMeta.cid)
 
 	},[proposalMeta])
 
