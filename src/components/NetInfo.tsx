@@ -47,10 +47,8 @@ const NetInfo = () => {
 	if (!apiProvider || blockNumber === 0) return null
 
 	return (
-		<Typography variant="body2">
-			Network Info
-			<br />
-			{version && `ZERO ${version}`}
+		<Typography sx={{ fontSize: '10px'}}>
+			Network: {version && `ZERO ${version}`}
 			<br />
 			{blockNumber && `Blocktime ${blockNumber} / ${blockNumberTimer}s`}
 		</Typography>

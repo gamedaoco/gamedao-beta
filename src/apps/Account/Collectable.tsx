@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useWallet } from 'src/context/Wallet'
-import { useTheme } from '@mui/material/styles'
+// import { useWallet } from 'src/context/Wallet'
+// import { useTheme } from '@mui/material/styles'
 import Modal from '@mui/material/Modal'
-import { Grid, Card, Typography, Box } from 'src/components'
+import { Grid, Card, Typography, Box, Link } from 'src/components'
 import to from 'await-to-js'
 
 const style = {
@@ -22,26 +22,26 @@ const style = {
 
 const CollectableView = ({ content }) => {
 
-	const theme = useTheme()
-	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
-
-	const { account, address } = useWallet()
+	// const theme = useTheme()
+	// const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
+	// const { account, address } = useWallet()
 	const [ metadata, setMetadata ] = useState(null);
 	const [ thumbnailURI, setThumbnailURI ] = useState(null);
 	const [ mediaURI, setMediaURI ] = useState(null);
 
 	const [open, setOpen] = useState(false)
-	const handleOpen = () => setOpen(true)
+	const handleOpen = () => null // setOpen(true)
 	const handleClose = () => setOpen(false)
 
 	const GATEWAY = 'https://rmrk.mypinata.cloud/ipfs/'
+	const SINGULAR_URL = 'https://singular.app/collectibles/'
 
 	useEffect(()=>{
 		if (!content?.metadata) return
 		async function getMetadata(cid) {
 			const URL = GATEWAY + cid.slice(12)
 			const [err, data] = await to( fetch(URL) )
-			console.log(data)
+			// console.log(data)
 			setMetadata( await data.json() )
 		}
 		getMetadata(content.metadata)
@@ -70,11 +70,11 @@ const CollectableView = ({ content }) => {
 				<Card sx={{ width: '240px', minHeight: '240px',	alignItems: 'center', justifyContent: 'center' }}>
 					{ !metadata
 						? ('Loading...')
-						: (<>
+						: (<Link sx={{ color: '#f0f', fontStyle: 'italic'}} href={ SINGULAR_URL + content.id } target='_blank' rel="noreferrer">
 							<img src={thumbnailURI} width='100%' height='auto' onClick={handleOpen}/>
 							<Typography sx={{ pt: 1, px: 2, fontFamily: 'PT Serif Regular'}}>{content.metadata_name}</Typography>
 							<Typography sx={{ pb: 1, px: 2, fontFamily:'PT Serif Regular'}}>{content.sn}</Typography>
-						</>)
+						</Link>)
 					}
 				</Card>
 			</Grid>
