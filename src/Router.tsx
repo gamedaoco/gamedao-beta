@@ -16,7 +16,7 @@ import OrganisationsDashboard from './apps/OrganisationsDashboard'
 import DAOAdmin from './apps/Organisations/admin'
 
 import Tangram from './apps/Tangram'
-import Wallet from './apps/Wallet'
+import Account from './apps/Account'
 import Governance from './apps/Governance'
 import GovernanceDetails from './apps/GovernanceInfo'
 
@@ -129,8 +129,8 @@ const Router = (props) => {
 					}
 				/>
 				<Route
-					path='/app/wallet'
-					element={<LayoutRoute showSidebar showHeader showFooter element={<Wallet />} />}
+					path='/app/account'
+					element={<LayoutRoute showSidebar showHeader showFooter element={<Account />} />}
 				></Route>
 				{}
 				<Route

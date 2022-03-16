@@ -4,7 +4,7 @@ import { useWallet } from 'src/context/Wallet'
 
 import { Container, Typography } from 'src/components'
 import ConnectOrInstall from './ConnectOrInstall'
-import WalletView from './WalletView'
+import Overview from './Overview'
 
 const Component = (props) => {
 	const { address, connected } = useWallet()
@@ -19,10 +19,10 @@ const Component = (props) => {
 					transition: '150ms',
 				}}
 			>
-				Wallet
+				Account
 			</Typography>
 
-			{!address || !connected ? <ConnectOrInstall /> : <WalletView />}
+			{!address || !connected ? <ConnectOrInstall /> : <Overview />}
 		</Container>
 	)
 }
