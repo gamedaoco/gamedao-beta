@@ -222,7 +222,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 			//
 			//
 			//
-			headline={ metadata?.title || name }
+			headline={ metadata?.title || '' }
 			metaHeadline={`${content.backers ? content.backers : ''} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { toKusamaAddress } from 'src/utils/helper'
-import { Grid, Card, Stack, Button, Typography, Box, Paper } from 'src/components'
+import { Grid, Box } from 'src/components'
 import Collectable from './Collectable'
-import { getJSON } from '../lib/ipfs'
 
 const COLLECTION = 'a0afbe96d2541b6446-BETA'
 const GRAPH_URL = 'https://gql-rmrk2-prod.graphcdn.app'
@@ -42,7 +41,6 @@ async function fetchCollectables(address) {
 			method: 'POST', headers, body: JSON.stringify(query),
 		})
 		const parsed = await req.json()
-		// console.log('parsed', parsed.data.nfts )
 		if (parsed.data.nfts.length > 0) {
 			return parsed.data.nfts
 		}
@@ -54,9 +52,8 @@ async function fetchCollectables(address) {
 
 const CollectablesView = () => {
 
-	const { account, address } = useWallet()
+	const { address } = useWallet()
 	const [ collection, setCollection ] = useState([]);
-	const [ metadata, setMetadata ] = useState([]);
 
 	useEffect( () => {
 		if (!address) return
@@ -65,7 +62,7 @@ const CollectablesView = () => {
 			setCollection(_)
 		}
 		getCollectables()
-	}, [account]);
+	}, [address]);
 
 	return (
 			<Box>

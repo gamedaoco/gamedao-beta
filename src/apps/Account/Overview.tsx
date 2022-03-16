@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 import { useWallet } from 'src/context/Wallet'
 import { useIdentity } from 'src/hooks/useIdentity'
-import { useApiProvider, useEncodedAddress } from '@substra-hooks/core'
+import { useEncodedAddress } from '@substra-hooks/core'
 
-// import { hexToString } from "@polkadot/util"
 import hash from 'blueimp-md5'
 
-import { createErrorNotification, createInfoNotification } from 'src/utils/notification'
+import { createInfoNotification } from 'src/utils/notification'
 
-import { alpha, useTheme } from '@mui/material/styles'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from 'src/components'
-import { Grid, Stack, Button, Typography, Box, Paper } from 'src/components'
+import { useTheme } from '@mui/material/styles'
+import { Table, TableBody, TableCell, TableRow } from 'src/components'
+import { Grid, Stack, Typography, Box, Paper } from 'src/components'
 
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import VerifiedIcon from '@mui/icons-material/Verified'
@@ -52,7 +51,7 @@ const TopBar = ({ id, xp, rep, trust }) => {
 						}}
 					>
 						{ id.email
-							? <img src={`https://www.gravatar.com/avatar/${hash(id.email)}`} onClick={copyAddress} />
+							? <img alt={id.email} src={`https://www.gravatar.com/avatar/${hash(id.email)}`} onClick={copyAddress} />
 							: <HeartIcon onClick={copyAddress} />
 						}
 
@@ -142,7 +141,7 @@ export const Component = () => {
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
-	const { address, account } = useWallet()
+	const { address } = useWallet()
 	const { identities } = useIdentity(address)
 
 	const [identity, setIdentity] = useState({

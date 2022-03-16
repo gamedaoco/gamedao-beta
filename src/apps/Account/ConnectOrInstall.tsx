@@ -1,5 +1,5 @@
 import React from 'react'
-import { alpha, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { Button, Typography, Box, Paper } from 'src/components'
 
 export const Component = () => {

@@ -41,8 +41,8 @@ const CollectableView = ({ content }) => {
 		async function getMetadata(cid) {
 			const URL = GATEWAY + cid.slice(12)
 			const [err, data] = await to( fetch(URL) )
-			// console.log(data)
-			setMetadata( await data.json() )
+			if (err) console.error(err)
+			else setMetadata( await data.json() )
 		}
 		getMetadata(content.metadata)
 	},[content.metadata])
@@ -71,7 +71,7 @@ const CollectableView = ({ content }) => {
 					{ !metadata
 						? ('Loading...')
 						: (<Link sx={{ color: '#f0f', fontStyle: 'italic'}} href={ SINGULAR_URL + content.id } target='_blank' rel="noreferrer">
-							<img src={thumbnailURI} width='100%' height='auto' onClick={handleOpen}/>
+							<img alt={content.metadata_name} src={thumbnailURI} width='100%' height='auto' onClick={handleOpen}/>
 							<Typography sx={{ pt: 1, px: 2, fontFamily: 'PT Serif Regular'}}>{content.metadata_name}</Typography>
 							<Typography sx={{ pb: 1, px: 2, fontFamily:'PT Serif Regular'}}>{content.sn}</Typography>
 						</Link>)
