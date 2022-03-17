@@ -18,7 +18,7 @@ export type WalletState = {
 	signAndNotify: (
 		tx: SubmittableExtrinsic<'promise', ISubmittableResult>,
 		msg: SignMSG,
-		callback?: Function,
+		callback?: Function
 	) => void
 }
 
@@ -34,10 +34,8 @@ const INITIAL_STATE: WalletState = {
 	account: null,
 	connected: false,
 	signer: null,
-	updateWalletState: () => {
-	},
-	signAndNotify: () => {
-	},
+	updateWalletState: () => {},
+	signAndNotify: () => {},
 }
 
 const WalletContext = createContext<WalletState>(INITIAL_STATE)
@@ -55,7 +53,7 @@ const WalletProvider = ({ children }) => {
 	const handleSignAndNotify = async (
 		tx: SubmittableExtrinsic<'promise', ISubmittableResult>,
 		msg: SignMSG,
-		callback?: Function,
+		callback?: Function
 	) => {
 		const promise = new Promise(async (resolve, reject) => {
 			if (!state.address || !state.signer) {
@@ -72,34 +70,34 @@ const WalletProvider = ({ children }) => {
 						result.events
 							// find/filter for failed events
 							.filter(({ event }) =>
-								ApiProvider.events.system.ExtrinsicFailed.is(event),
+								ApiProvider.events.system.ExtrinsicFailed.is(event)
 							)
 							// we know that data for system.ExtrinsicFailed is
 							// (DispatchError, DispatchInfo)
 							.forEach(
 								({
-									 event: {
-										 data: [error, info],
-									 },
-								 }) => {
+									event: {
+										data: [error, info],
+									},
+								}) => {
 									hasError = true
 									if ((error as any).isModule) {
 										// for module errors, we have the section indexed, lookup
 										const decoded = ApiProvider.registry.findMetaError(
-											(error as any).asModule,
+											(error as any).asModule
 										)
 										const { docs, method, section } = decoded
 
 										console.log(
 											`Wallet Transaction Result : LOG ${section}.${method}: ${docs.join(
-												' ',
-											)}`,
+												' '
+											)}`
 										)
 									} else {
 										// Other, CannotLookup, BadOrigin, no extra info
 										console.log('Wallet Transaction Result:', error.toString())
 									}
-								},
+								}
 							)
 
 						result.events.forEach(
@@ -110,9 +108,9 @@ const WalletProvider = ({ children }) => {
 									section,
 									data.toHuman(),
 									meta.toHuman(),
-									typeDef,
+									typeDef
 								)
-							},
+							}
 						)
 
 						if (hasError) {
@@ -123,7 +121,7 @@ const WalletProvider = ({ children }) => {
 							return resolve('')
 						}
 					}
-				}),
+				})
 			)
 			if (error) {
 				console.log('Transaction failing with', error)
@@ -133,7 +131,7 @@ const WalletProvider = ({ children }) => {
 		})
 
 		const [errPRO, dataPRO] = await to(
-			createPromiseNotification(promise, msg.pending, msg.success, msg.error),
+			createPromiseNotification(promise, msg.pending, msg.success, msg.error)
 		)
 		// TODO Remove only for testing / debug
 		console.log('🚀 ~ file: Wallet.tsx ~ line 79 ~ WalletProvider ~ dataPRO', dataPRO)
@@ -146,7 +144,6 @@ const WalletProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (state?.account?.meta?.source) {
-
 			;(async () => {
 				setState({
 					...state,

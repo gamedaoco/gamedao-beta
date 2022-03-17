@@ -100,7 +100,7 @@ export const Main = (props) => {
 				<Box>
 					{address && showCreateMode ? (
 						<Button
-							variant='outlined'
+							variant="outlined"
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
 						>
@@ -108,7 +108,7 @@ export const Main = (props) => {
 						</Button>
 					) : account && connected ? (
 						<Button
-							variant='outlined'
+							variant="outlined"
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
 						>

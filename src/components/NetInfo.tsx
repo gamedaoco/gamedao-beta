@@ -47,7 +47,7 @@ const NetInfo = () => {
 	if (!apiProvider || blockNumber === 0) return null
 
 	return (
-		<Typography sx={{ fontSize: '10px'}}>
+		<Typography sx={{ fontSize: '10px' }}>
 			Network: {version && `ZERO ${version}`}
 			<br />
 			{blockNumber && `Blocktime ${blockNumber} / ${blockNumberTimer}s`}

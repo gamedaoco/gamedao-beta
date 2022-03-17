@@ -26,5 +26,5 @@ export function Icons({ src, alt, ...props }) {
 }
 
 export function FontIcon({ name = 'tangram', ...props }) {
-	return <Icon baseClassName='gamedao-icon-font' className={'icon-' + name} {...props} />
+	return <Icon baseClassName="gamedao-icon-font" className={'icon-' + name} {...props} />
 }

@@ -23,7 +23,6 @@ import GovernanceDetails from './apps/GovernanceInfo'
 import { Starfield } from './apps/Rainbowmesh'
 import { ScrollToTop } from './Providers'
 
-
 export interface ComponentProps {
 	children?: React.ReactNode
 	path?: string
@@ -36,12 +35,12 @@ export interface ComponentProps {
 }
 
 const LayoutRoute = ({
-						 showFooter,
-						 showHeader,
-						 showSidebar,
-						 element,
-						 noContainer,
-					 }: ComponentProps) => (
+	showFooter,
+	showHeader,
+	showSidebar,
+	element,
+	noContainer,
+}: ComponentProps) => (
 	<Layout
 		showHeader={showHeader ? showHeader : null}
 		showFooter={showFooter ? showFooter : null}
@@ -58,18 +57,24 @@ const Router = (props) => {
 	return (
 		<Suspense
 			fallback={
-				<LayoutRoute showSidebar showHeader showFooter element={<Loader text='' />} />
+				<LayoutRoute showSidebar showHeader showFooter element={<Loader text="" />} />
 			}
 		>
 			<Routes>
-				<Route path='/' element={<LayoutRoute showFooter element={<Home />} />}></Route>
+				<Route path="/" element={<LayoutRoute showFooter element={<Home />} />}></Route>
 				<Route
-					path='/app'
-					element={<LayoutRoute showHeader showFooter showSidebar={connected}
-										  element={<BetaPage />} />}
+					path="/app"
+					element={
+						<LayoutRoute
+							showHeader
+							showFooter
+							showSidebar={connected}
+							element={<BetaPage />}
+						/>
+					}
 				></Route>
 				<Route
-					path='/app/organisations'
+					path="/app/organisations"
 					element={
 						<LayoutRoute
 							showSidebar
@@ -80,19 +85,19 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path='/app/dashboard'
+					path="/app/dashboard"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Dashboard />} />
 					}
 				></Route>
 				<Route
-					path='/app/governance'
+					path="/app/governance"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Governance />} />
 					}
 				></Route>
 				<Route
-					path='/app/governance/:proposalId'
+					path="/app/governance/:proposalId"
 					element={
 						<LayoutRoute
 							showSidebar
@@ -103,44 +108,53 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path='/app/campaigns/:id'
+					path="/app/campaigns/:id"
 					element={
 						<LayoutRoute showSidebar noContainer showFooter element={<Campaign />} />
 					}
 				></Route>
 				<Route
-					path='/app/campaigns'
+					path="/app/campaigns"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Campaigns />} />
 					}
 				></Route>
 				<Route
-					path='/app/tangram'
+					path="/app/tangram"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<Tangram />} />
 					}
 				></Route>
 				<Route
-					path='/app/quest'
+					path="/app/quest"
 					element={
-						connected
-						? <LayoutRoute showSidebar showHeader showFooter element={<QuestPage />} />
-						: <Navigate to='/app' replace />
+						connected ? (
+							<LayoutRoute
+								showSidebar
+								showHeader
+								showFooter
+								element={<QuestPage />}
+							/>
+						) : (
+							<Navigate to="/app" replace />
+						)
 					}
 				/>
 				<Route
-					path='/app/account'
-					element={<LayoutRoute showSidebar showHeader showFooter element={<Account />} />}
+					path="/app/account"
+					element={
+						<LayoutRoute showSidebar showHeader showFooter element={<Account />} />
+					}
 				></Route>
 				{}
 				<Route
-					path='/app/organisations/admin/:id'
+					path="/app/organisations/admin/:id"
 					element={
 						<LayoutRoute showSidebar showHeader showFooter element={<DAOAdmin />} />
 					}
 				></Route>
 				<Route
-					path='/app/organisations/:id'
+					path="/app/organisations/:id"
 					element={
 						<LayoutRoute
 							showSidebar
@@ -151,13 +165,19 @@ const Router = (props) => {
 					}
 				></Route>
 				<Route
-					path='*'
+					path="*"
 					element={
 						<LayoutRoute
 							showSidebar
 							showHeader
 							showFooter
-							element={<div style={{height: "90vh", textAlign: "center" }}>404 Not Found... Or Wallet Disconnected?<Starfield/><ScrollToTop/></div>}
+							element={
+								<div style={{ height: '90vh', textAlign: 'center' }}>
+									404 Not Found... Or Wallet Disconnected?
+									<Starfield />
+									<ScrollToTop />
+								</div>
+							}
 						/>
 					}
 				></Route>

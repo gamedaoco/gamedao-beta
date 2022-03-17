@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { hexToString } from "@polkadot/util"
+import { hexToString } from '@polkadot/util'
 import { useFormik } from 'formik'
 import { useApiProvider, usePolkadotExtension } from '@substra-hooks/core'
 import { useWallet } from 'src/context/Wallet'
@@ -343,7 +343,6 @@ export const Main = (props) => {
 								{formik.touched.name && formik.errors.name}
 							</FormHelperText>
 						</FormControl>
-
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FormControl
@@ -451,7 +450,7 @@ export const Main = (props) => {
 						</FileDropZone>
 					</Grid>
 
-{/*					<Grid item xs={12}>
+					{/*					<Grid item xs={12}>
 						<FormSectionHeadline variant={'h6'}>
 							Header (1920 x 800px)
 						</FormSectionHeadline>

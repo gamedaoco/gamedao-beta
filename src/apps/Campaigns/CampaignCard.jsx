@@ -222,7 +222,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 			//
 			//
 			//
-			headline={ metadata?.title || '' }
+			headline={metadata?.title || ''}
 			metaHeadline={`${content.backers ? content.backers : ''} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>
@@ -242,7 +242,7 @@ const CampaignCard = ({ displayMode, item, index }) => {
 				imageURL ??
 				'https://ipfs.gamedao.co/gateway/QmUxC9MpMjieyrGXZ4zC4yJZmH7s8H2bxMk7oQAMzfNLhY'
 			}
-			headline={ metadata?.title || name }
+			headline={metadata?.title || name}
 			metaHeadline={`${content.backers} backer(s)`}
 			metaContent={
 				<Stack direction={'column'} spacing={2}>

@@ -8,7 +8,6 @@ const COLLECTION = 'a0afbe96d2541b6446-BETA'
 const GRAPH_URL = 'https://gql-rmrk2-prod.graphcdn.app'
 
 async function fetchCollectables(address) {
-
 	// console.log(address)
 
 	const headers = {
@@ -38,7 +37,9 @@ async function fetchCollectables(address) {
 
 	try {
 		const req = await fetch(GRAPH_URL, {
-			method: 'POST', headers, body: JSON.stringify(query),
+			method: 'POST',
+			headers,
+			body: JSON.stringify(query),
 		})
 		const parsed = await req.json()
 		if (parsed.data.nfts.length > 0) {
@@ -51,30 +52,27 @@ async function fetchCollectables(address) {
 }
 
 const CollectablesView = () => {
-
 	const { address } = useWallet()
-	const [ collection, setCollection ] = useState([]);
+	const [collection, setCollection] = useState([])
 
-	useEffect( () => {
+	useEffect(() => {
 		if (!address) return
 		const getCollectables = async () => {
-			const _ = await fetchCollectables( toKusamaAddress(address) )
+			const _ = await fetchCollectables(toKusamaAddress(address))
 			setCollection(_)
 		}
 		getCollectables()
-	}, [address]);
+	}, [address])
 
 	return (
-			<Box>
-				<Grid container spacing={2}>
-					{ !collection
-						? ('Searching...')
-						: ( collection.map( (nft, index) => <Collectable key={nft.id} content={nft}/> ) )
-					}
-				</Grid>
-			</Box>
-		)
-
+		<Box>
+			<Grid container spacing={2}>
+				{!collection
+					? 'Searching...'
+					: collection.map((nft, index) => <Collectable key={nft.id} content={nft} />)}
+			</Grid>
+		</Box>
+	)
 }
 
 export default CollectablesView

@@ -49,7 +49,7 @@ export function Main() {
 	const { bodies, queryBodyMemberState } = useGameDaoControl()
 	const { campaigns } = useCrowdfunding()
 
-	const [description, setDescription] = useState<any>({description:'',title:''})
+	const [description, setDescription] = useState<any>({ description: '', title: '' })
 
 	const dispatch = useDispatch()
 
@@ -110,13 +110,16 @@ export function Main() {
 						metadata={metadata}
 						proposalId={proposalId}
 						title={description.title}
-						/>
+					/>
 					<Paper sx={{ ...bgPlain, width: '100%' }}>
-						<Stack direction='row' padding={6} spacing={6}>
-							<Stack flex='3'>
-								<Box whiteSpace='pre-line'>
+						<Stack direction="row" padding={6} spacing={6}>
+							<Stack flex="3">
+								<Box whiteSpace="pre-line">
 									<MarkdownViewer
-										markdown={description.description ?? 'Could not load the description!'}
+										markdown={
+											description.description ??
+											'Could not load the description!'
+										}
 									/>
 								</Box>
 								<ProposalVoteProgress proposalId={proposalId} />

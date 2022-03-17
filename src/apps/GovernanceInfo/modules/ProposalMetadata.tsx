@@ -11,14 +11,14 @@ import { useGameDaoGovernance } from '../../../hooks/useGameDaoGovernance'
 import { useCrowdfunding } from '../../../hooks/useCrowdfunding'
 
 export function ProposalMetadata({
-									 address,
-									 body,
-									 proposalOwner,
-									 proposal,
-									 apiProvider,
-									 onVoteClicked,
-									 isOrganisation,
-								 }) {
+	address,
+	body,
+	proposalOwner,
+	proposal,
+	apiProvider,
+	onVoteClicked,
+	isOrganisation,
+}) {
 	const blockNumber = useSelector(blockStateSelector)
 	const { bodyMemberState, memberships, queryBodyMemberState, queryMemberships } =
 		useGameDaoControl()
@@ -45,7 +45,9 @@ export function ProposalMetadata({
 					setIsMemberState(memberships?.includes(bodyId))
 				} else {
 					setIsMemberState(
-						memberships?.includes(body?.org) || (campaignContributors?.[bodyId]?.includes(address) && campaignState?.[bodyId] === '3'),
+						memberships?.includes(body?.org) ||
+							(campaignContributors?.[bodyId]?.includes(address) &&
+								campaignState?.[bodyId] === '3')
 					)
 				}
 			}
@@ -55,59 +57,59 @@ export function ProposalMetadata({
 	}, [address, proposalId])
 
 	return (
-		<Stack flex='1' spacing={3}>
+		<Stack flex="1" spacing={3}>
 			<Box>
 				<Typography>{isOrganisation ? 'Organisation' : 'Campaign'}</Typography>
 				<Link
-					display='block'
+					display="block"
 					component={NavLink}
 					to={
 						isOrganisation ? `/app/organisations/${bodyId}` : `/app/campaigns/${bodyId}`
 					}
 				>
-					<Typography variant='body1'>{body.name}</Typography>
+					<Typography variant="body1">{body.name}</Typography>
 				</Link>
 			</Box>
 			<Box>
 				<Typography>Creator</Typography>
-				<Link display='block' component={'a'} href={`https://sub.id/#/${proposalOwner}`}>
-					<Typography variant='body1'>{`${proposalOwner.substr(
+				<Link display="block" component={'a'} href={`https://sub.id/#/${proposalOwner}`}>
+					<Typography variant="body1">{`${proposalOwner.substr(
 						0,
-						15,
+						15
 					)}...${proposalOwner.substr(proposalOwner.length - 6)}`}</Typography>
 				</Link>
 			</Box>
 			<Box>
 				<Typography>Start</Typography>
-				<Typography display='block' variant='body1'>
+				<Typography display="block" variant="body1">
 					{moment().add(start, 'seconds').format('YYYY-MM-DD HH:mm')}
 				</Typography>
 			</Box>
 			<Box>
 				<Typography>End</Typography>
-				<Typography display='block' variant='body1'>
+				<Typography display="block" variant="body1">
 					{moment().add(expires, 'seconds').format('YYYY-MM-DD HH:mm')}
 				</Typography>
 			</Box>
-			<Box marginTop='auto !important' paddingTop={3}>
+			<Box marginTop="auto !important" paddingTop={3}>
 				<Typography>Vote</Typography>
 				{proposalState !== 1 ? (
-					<Typography display='block' variant='body1'>
+					<Typography display="block" variant="body1">
 						The voting is no longer active.
 					</Typography>
 				) : isMemberState ? (
 					!hasVoted ? (
-						<Stack direction='row' justifyContent='space-between'>
+						<Stack direction="row" justifyContent="space-between">
 							<Button onClick={() => onVoteClicked(false)}>No</Button>
 							<Button onClick={() => onVoteClicked(true)}>Yes</Button>
 						</Stack>
 					) : (
-						<Typography display='block' variant='body1'>
+						<Typography display="block" variant="body1">
 							You have already voted for this proposal.
 						</Typography>
 					)
 				) : (
-					<Typography display='block' variant='body1'>
+					<Typography display="block" variant="body1">
 						You need to be a member in order to vote for this proposal.
 					</Typography>
 				)}

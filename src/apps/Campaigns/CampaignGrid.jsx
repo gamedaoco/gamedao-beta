@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'src/context/Wallet'
 import { data } from '../lib/data'
-import { Container, Box, Select, MenuItem , FormControl, InputLabel } from '@mui/material'
+import { Container, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
 import { styled } from '../../components'
 import { ListTileSwitch, ListTileEnum } from '../components/ListTileSwitch'
 import CampaignCard from './CampaignCard'
@@ -33,8 +33,14 @@ const FilterBar = ({ filter, setFilter }) => {
 				labelId="filter-status-label"
 				sx={{ mr: 1 }}
 				value={filter}
-				onChange={handleOnChange}>
-				{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
+				onChange={handleOnChange}
+			>
+				{options.map((o) => (
+					<MenuItem key={o.key} value={o.value}>
+						{' '}
+						{o.text}{' '}
+					</MenuItem>
+				))}
 			</Select>
 		</FormControl>
 	)
@@ -46,9 +52,20 @@ const ProtocolBar = ({ filter, setFilter }) => {
 	return (
 		<FormControl fullWidth>
 			<InputLabel id="filter-protocol-label">Protocol</InputLabel>
-			<Select  labelId="filter-protocol-label"
-				size="small" sx={{ mr: 1 }} label="Protocol" value={filter} onChange={handleOnChange}>
-				{options.map((o) => <MenuItem key={o.key} value={o.value}> {o.text} </MenuItem>)}
+			<Select
+				labelId="filter-protocol-label"
+				size="small"
+				sx={{ mr: 1 }}
+				label="Protocol"
+				value={filter}
+				onChange={handleOnChange}
+			>
+				{options.map((o) => (
+					<MenuItem key={o.key} value={o.value}>
+						{' '}
+						{o.text}{' '}
+					</MenuItem>
+				))}
 			</Select>
 		</FormControl>
 	)

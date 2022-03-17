@@ -132,7 +132,11 @@ const Dashboard = (props) => {
 						</Typography>
 
 						<Box sx={{ display: 'flex', justifyContent: 'end' }} mt="2rem">
-							<a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
+							<a
+								href="https://polkadot.js.org/extension/"
+								target="_blank"
+								rel="noreferrer"
+							>
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}
@@ -183,7 +187,11 @@ const Dashboard = (props) => {
 									Learn more in the GameDAO Docs
 								</Button>
 							</a>
-							<a href="https://discord.gg/P7NHWGzJ7r" target="_blank" rel="noreferrer">
+							<a
+								href="https://discord.gg/P7NHWGzJ7r"
+								target="_blank"
+								rel="noreferrer"
+							>
 								<Button
 									size="small"
 									sx={{ borderRadius: '100px' }}

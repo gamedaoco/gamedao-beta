@@ -33,19 +33,17 @@ export function ProposalItem({ proposal, showDivider }) {
 		(theme.palette as any).proposalStates[PROPOSAL_STATE_MAPPING[proposalState]] ??
 		(theme.palette as any).proposalStates.default
 
-	const [ title, setTitle ] = useState(null)
-	useEffect(()=>{
-
-		if(!proposalMeta?.cid) return
+	const [title, setTitle] = useState(null)
+	useEffect(() => {
+		if (!proposalMeta?.cid) return
 
 		async function getTitle(cid) {
-			const [err, data] = await to( fetch(`${gateway}${cid}`) )
-			const title = ( await data.json() ).title
-			setTitle( title || '' )
+			const [err, data] = await to(fetch(`${gateway}${cid}`))
+			const title = (await data.json()).title
+			setTitle(title || '')
 		}
 		getTitle(proposalMeta.cid)
-
-	},[proposalMeta])
+	}, [proposalMeta])
 
 	const expires = (normalizeNumber(proposal.expiry) - blockNumber) * blockTime
 
@@ -87,7 +85,7 @@ export function ProposalItem({ proposal, showDivider }) {
 								{(body || campaign).name}
 							</Typography>
 							<Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
-								{ title || proposalMeta.title }
+								{title || proposalMeta.title}
 							</Typography>
 							<Typography sx={{ fontSize: '0.75rem' }} variant="body1">
 								{expires < 0
@@ -115,10 +113,10 @@ export function ProposalItem({ proposal, showDivider }) {
 								sx={{
 									borderRadius: '2px',
 									'*': { borderRadius: '0px' },
-									backgroundColor:'#093',
+									backgroundColor: '#093',
 									width: '100%',
-									height:'.5rem',
-									margin: '0 1rem'
+									height: '.5rem',
+									margin: '0 1rem',
 								}}
 								variant="determinate"
 								color="secondary"

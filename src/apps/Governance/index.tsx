@@ -19,7 +19,6 @@ const NavBadge = styled(Badge)(({ theme }) => ({
 }))
 
 export const Main = () => {
-
 	const theme = useTheme()
 	const { connected } = useWallet()
 	const [proposalCount, setProposalCount] = useState(0)
@@ -27,7 +26,7 @@ export const Main = () => {
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
 	return (
-		<Container maxWidth='xl'>
+		<Container maxWidth="xl">
 			<Box
 				sx={{
 					display: 'flex',
@@ -36,26 +35,21 @@ export const Main = () => {
 				}}
 			>
 				<Box>
-					<Typography variant='h6'>
-
-						{!proposalCount || proposalCount === 0 ? (
-							proposalCount === 0 ? (
-								showCreateMode ? `Create Proposal` : `No proposals yet. Create one!`
-							) : (
-								`Loading...`
-							)
-						) : (
-							`Total proposals: ${proposalCount}`
-						)}
+					<Typography variant="h6">
+						{!proposalCount || proposalCount === 0
+							? proposalCount === 0
+								? showCreateMode
+									? `Create Proposal`
+									: `No proposals yet. Create one!`
+								: `Loading...`
+							: `Total proposals: ${proposalCount}`}
 					</Typography>
 				</Box>
 
-
-
-				<Box display='flex' justifyContent='flex-end' alignItems='center' flex='1'>
+				<Box display="flex" justifyContent="flex-end" alignItems="center" flex="1">
 					{connected && (
 						<Button
-							variant='outlined'
+							variant="outlined"
 							onClick={() => setCreateMode(!showCreateMode)}
 							startIcon={showCreateMode ? <Close /> : <Add />}
 						>
@@ -63,10 +57,9 @@ export const Main = () => {
 						</Button>
 					)}
 				</Box>
-
 			</Box>
 
-{/*			<Box>
+			{/*			<Box>
 				<Typography variant='body2'>
 					Collective decisions are made through proposals and votes
 					to ensure everyone in the organisation has a voice.
@@ -74,9 +67,8 @@ export const Main = () => {
 			</Box>*/}
 
 			<br />
-			{ showCreateMode && connected && <CreateProposal /> }
-			{ !showCreateMode && <ProposalList setProposalCount={setProposalCount} /> }
-
+			{showCreateMode && connected && <CreateProposal />}
+			{!showCreateMode && <ProposalList setProposalCount={setProposalCount} />}
 		</Container>
 	)
 }

@@ -20,7 +20,7 @@ import HeartIcon from '@mui/icons-material/FavoriteBorder'
 
 const COLLECTIONS = 'a0afbe96d2541b6446-BETA'
 
-const  accountString = (account) => {
+const accountString = (account) => {
 	const text = account?.meta?.name || toZeroAddress(account?.address ?? '') || ''
 	return text.length < 10 ? text : `${text.slice(0, 6)} ... ${text.slice(-6)}`
 }
@@ -112,10 +112,10 @@ const AccountComponent = () => {
 	const { pathname } = useLocation()
 
 	const { identities } = useIdentity(address)
-	const [ identity, setIdentity ] = useState()
-	const [ verified, setVerified ] = useState(false)
+	const [identity, setIdentity] = useState()
+	const [verified, setVerified] = useState(false)
 
-	const [ onceUponATimeAlreadyConnected, setOnceUponATimeAlreadyConnected] = useState(false)
+	const [onceUponATimeAlreadyConnected, setOnceUponATimeAlreadyConnected] = useState(false)
 
 	const handleConnect = (e) => {
 		e.stopPropagation()

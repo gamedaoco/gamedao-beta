@@ -20,14 +20,20 @@ export function AnimatedHeader() {
 		return () => clearInterval(id)
 	})
 
-	return <Box
-		component={'img'}
-		alt='hero'
-		src={`${gateway}${IPFS_IMAGE_CID[`header${Math.trunc(questState.screenIndex / 2)}${animated ? '' : '.1'}`]}`}
-		sx={{
-			width: '100%',
-		}}
-	/>
+	return (
+		<Box
+			component={'img'}
+			alt="hero"
+			src={`${gateway}${
+				IPFS_IMAGE_CID[
+					`header${Math.trunc(questState.screenIndex / 2)}${animated ? '' : '.1'}`
+				]
+			}`}
+			sx={{
+				width: '100%',
+			}}
+		/>
+	)
 }
 
 function MonitorStep({ id }) {
@@ -35,39 +41,56 @@ function MonitorStep({ id }) {
 	const hasCompleted = questState[`hasQuest${id}Completed`]
 	const isActive = !hasCompleted && questState[`quest${id}Played`]
 
-	return <Box className='monitor-button' onClick={(e) => {
-		if (hasCompleted) {
-			questState.updateQuestState({ screenIndex: id * 2 })
-		}
-	}} style={{ position: 'relative' }}>
-		{hasCompleted && <img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDone']}`} />}
+	return (
+		<Box
+			className="monitor-button"
+			onClick={(e) => {
+				if (hasCompleted) {
+					questState.updateQuestState({ screenIndex: id * 2 })
+				}
+			}}
+			style={{ position: 'relative' }}
+		>
+			{hasCompleted && <img width="100%" src={`${gateway}${IPFS_IMAGE_CID['stepDone']}`} />}
 
-		{isActive && <img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepActive']}`} />}
-		{isActive && <span style={{
-			position: 'absolute',
-			top: '50%',
-			left: '50%',
-			transform: 'translate(-54%, -58%)',
-			color: 'black',
-			fontSize: '1.5rem',
-			fontWeight: 600,
-		}}>{id}</span>}
+			{isActive && <img width="100%" src={`${gateway}${IPFS_IMAGE_CID['stepActive']}`} />}
+			{isActive && (
+				<span
+					style={{
+						position: 'absolute',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-54%, -58%)',
+						color: 'black',
+						fontSize: '1.5rem',
+						fontWeight: 600,
+					}}
+				>
+					{id}
+				</span>
+			)}
 
-		{(!hasCompleted && !isActive) &&
-			<img width='100%' src={`${gateway}${IPFS_IMAGE_CID['stepDisabled']}`} />}
-		{(!hasCompleted && !isActive) &&
-			<span style={{
-				position: 'absolute',
-				top: '50%',
-				left: '50%',
-				transform: 'translate(-54%, -58%)',
-				color: '#54fad0',
-				fontSize: '1.5rem',
-				fontWeight: 600,
-			}}>{id}</span>}
-	</Box>
+			{!hasCompleted && !isActive && (
+				<img width="100%" src={`${gateway}${IPFS_IMAGE_CID['stepDisabled']}`} />
+			)}
+			{!hasCompleted && !isActive && (
+				<span
+					style={{
+						position: 'absolute',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-54%, -58%)',
+						color: '#54fad0',
+						fontSize: '1.5rem',
+						fontWeight: 600,
+					}}
+				>
+					{id}
+				</span>
+			)}
+		</Box>
+	)
 }
-
 
 export function QuestPage() {
 	const { ref: screenRef, width } = useComponentSize()
@@ -75,7 +98,7 @@ export function QuestPage() {
 
 	return (
 		<>
-			<Stack spacing={4} id='quest-page'>
+			<Stack spacing={4} id="quest-page">
 				<AnimatedHeader />
 
 				<Box
@@ -87,8 +110,8 @@ export function QuestPage() {
 					<img
 						src={`${gateway}${IPFS_IMAGE_CID['screen']}`}
 						ref={screenRef}
-						alt='monitor'
-						width='100%'
+						alt="monitor"
+						width="100%"
 					/>
 
 					<Box
@@ -104,32 +127,40 @@ export function QuestPage() {
 					>
 						<Stack sx={{ transform: `scale(${contentScale / 0.9})`, margin: 'auto' }}>
 							{[1, 2, 3, 4, 5, 6].map((id) => {
-								return <Fragment key={id}><MonitorStep id={id} /></Fragment>
+								return (
+									<Fragment key={id}>
+										<MonitorStep id={id} />
+									</Fragment>
+								)
 							})}
 						</Stack>
 
 						<Box
-							className='questMonitorTextContainer'
+							className="questMonitorTextContainer"
 							sx={{
 								width: '100%',
 								overflowX: 'hidden',
 								transform: `scale(${contentScale})`,
-							}}>
-							<span style={{
-								width: '100%',
-								fontFamily: 'monospace',
-								color: '#54fad0',
-								whiteSpace: 'pre-line',
-							}}><TypedText /></span>
+							}}
+						>
+							<span
+								style={{
+									width: '100%',
+									fontFamily: 'monospace',
+									color: '#54fad0',
+									whiteSpace: 'pre-line',
+								}}
+							>
+								<TypedText />
+							</span>
 						</Box>
 					</Box>
-
 
 					{/* Scanlines */}
 					<img
 						src={`${gateway}${IPFS_IMAGE_CID['scanlines']}`}
-						alt='scanlines'
-						width='100%'
+						alt="scanlines"
+						width="100%"
 						style={{
 							pointerEvents: 'none',
 							position: 'absolute',

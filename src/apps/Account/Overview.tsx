@@ -18,7 +18,6 @@ import VerifiedIcon from '@mui/icons-material/Verified'
 import Collectables from './Collectables'
 
 const TopBar = ({ id, xp, rep, trust }) => {
-
 	const { account, address } = useWallet()
 	const theme = useTheme()
 	const bgPlain = {
@@ -35,7 +34,6 @@ const TopBar = ({ id, xp, rep, trust }) => {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'start' }}>
-
 				<Stack direction="row" spacing={2} m={2}>
 					<Box
 						sx={{
@@ -50,30 +48,39 @@ const TopBar = ({ id, xp, rep, trust }) => {
 							width: '3.5rem',
 						}}
 					>
-						{ id.email
-							? <img alt={id.email} src={`https://www.gravatar.com/avatar/${hash(id.email)}`} onClick={copyAddress} />
-							: <HeartIcon onClick={copyAddress} />
-						}
-
+						{id.email ? (
+							<img
+								alt={id.email}
+								src={`https://www.gravatar.com/avatar/${hash(id.email)}`}
+								onClick={copyAddress}
+							/>
+						) : (
+							<HeartIcon onClick={copyAddress} />
+						)}
 					</Box>
 					<Stack>
 						<Typography variant="h5">
-							{ id.display && <>{id.display}{' '}<VerifiedIcon fontSize="small" sx={{ color: '#f0f' }} /></> }
-							{ !id?.display && <>{account?.meta?.name} <small>(Wallet)</small> </>}
+							{id.display && (
+								<>
+									{id.display}{' '}
+									<VerifiedIcon fontSize="small" sx={{ color: '#f0f' }} />
+								</>
+							)}
+							{!id?.display && (
+								<>
+									{account?.meta?.name} <small>(Wallet)</small>{' '}
+								</>
+							)}
 						</Typography>
 
-						<Typography
-							sx={{ fontSize: '0.8rem', fontWeight: '100' }}
-							variant="body2"
-						>
+						<Typography sx={{ fontSize: '0.8rem', fontWeight: '100' }} variant="body2">
 							{account && convertedAddress}
 						</Typography>
 					</Stack>
 				</Stack>
-
 			</Grid>
 
-{/*			<Grid item xs={12} sm={6} sx={{ display: 'flex', verticalAlign: 'middle', justifyContent: 'end' }}>
+			{/*			<Grid item xs={12} sm={6} sx={{ display: 'flex', verticalAlign: 'middle', justifyContent: 'end' }}>
 				<Stack direction="row" spacing={2} m={2}>
 					<Stack>
 						<Typography sx={{ fontWeight: '100' }} variant="body2">
@@ -137,7 +144,6 @@ const SmallTable = ({ data }) => {
 }
 
 export const Component = () => {
-
 	const theme = useTheme()
 	const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
 
@@ -178,11 +184,10 @@ export const Component = () => {
 		unclaimed: { count: 0, items: [] },
 	})
 
-	useEffect(()=>{
-
-		if ( !identities || !identities[address] ) return
+	useEffect(() => {
+		if (!identities || !identities[address]) return
 		const id = identities[address]?.toHuman()
-		if(!id) return
+		if (!id) return
 
 		setIdentity({
 			...identity,
@@ -192,17 +197,16 @@ export const Component = () => {
 			web: id.info.web.Raw,
 			discord: id.info.discord?.Raw || '',
 		})
-
-	},[address, identities])
+	}, [address, identities])
 
 	return (
 		<Box>
-			{ identity && <TopBar id={identity} xp={sense.xp} rep={sense.rep} trust={sense.trust} /> }
+			{identity && <TopBar id={identity} xp={sense.xp} rep={sense.rep} trust={sense.trust} />}
 			<Grid container spacing={2} mt={2}>
 				<Grid item xs={12} md={6}>
-					{ identity &&
+					{identity && (
 						<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
-						{/*
+							{/*
 							<Box
 								sx={{
 									display: 'flex',
@@ -229,20 +233,25 @@ export const Component = () => {
 								Identity{' '}
 							</Typography>
 							<Typography variant="body2" sx={{ mb: 2 }}>
-								Identity data is aggregated from various sources, like the ZERO Identity, Kilt SocialKYC and more.
-								Improving the quality of this data helps in building up a reputation!
+								Identity data is aggregated from various sources, like the ZERO
+								Identity, Kilt SocialKYC and more. Improving the quality of this
+								data helps in building up a reputation!
 							</Typography>
 							<SmallTable
 								data={[
 									['identity', identity.display, ''],
 									['email', identity.email, 'mailto:' + identity.email],
 									['website', identity.web, 'https://' + identity.web],
-									['twitter', identity.twitter, 'https://twitter.com/' + identity.twitter],
+									[
+										'twitter',
+										identity.twitter,
+										'https://twitter.com/' + identity.twitter,
+									],
 									['discord id', identity.discord, ''],
 								]}
 							/>
 						</Paper>
-					}
+					)}
 				</Grid>
 
 				<Grid item xs={12} md={6}>
@@ -252,8 +261,9 @@ export const Component = () => {
 							Achievements{' '}
 						</Typography>
 						<Typography variant="body2" sx={{ mb: 2 }}>
-							Level up your score by using GameDAO protocols and collaborating with the community.
-							Trust is based on identity, SocialKYC and doing the liveness check.
+							Level up your score by using GameDAO protocols and collaborating with
+							the community. Trust is based on identity, SocialKYC and doing the
+							liveness check.
 						</Typography>
 						<SmallTable
 							data={[
@@ -267,16 +277,19 @@ export const Component = () => {
 
 				<Grid item xs={12}>
 					<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
-						<Typography variant="h4" sx={{ mb: 2 }}> Collectables </Typography>
-{/*
+						<Typography variant="h4" sx={{ mb: 2 }}>
+							{' '}
+							Collectables{' '}
+						</Typography>
+						{/*
 						<Typography variant="body2" sx={{ mb: 2 }}>
 							Collectables are non fungible items coming from various chains and are aggregated here.
 						</Typography>
 */}
 
-						<Collectables/>
+						<Collectables />
 
-{/*				<Box sx={{display: 'flex', justifyContent: 'end' }}>
+						{/*				<Box sx={{display: 'flex', justifyContent: 'end' }}>
 					<a href="https://docs.gamedao.co/" target="_blank">
 						<Button size="small" sx={{mr:2}}>
 							Learn More
@@ -292,7 +305,7 @@ export const Component = () => {
 					</Paper>
 				</Grid>
 
-{/*
+				{/*
 			<Paper elevation={10} sx={{ my: 2, p: 4, ...bgPlain }}>
 				<Box
 					sx={{

@@ -139,10 +139,10 @@ export const project_durations = [
 
 // add 30min window for beta users
 const isBeta = true
-if(isBeta){
+if (isBeta) {
 	project_durations.push({ key: '3', text: '20 Minutes', value: '0.013888' })
 	project_durations.push({ key: '4', text: '60 Minutes', value: '0.041666' })
-	project_durations.push({ key: '5', text: '120 Minutes',value: '0.083333' })
+	project_durations.push({ key: '5', text: '120 Minutes', value: '0.083333' })
 }
 
 if (dev) {

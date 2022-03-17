@@ -13,17 +13,17 @@ interface ComponentProps {
 	children?: React.ReactNode
 }
 
-const Wrapper = styled(Container)( ({ theme }) => ({
+const Wrapper = styled(Container)(({ theme }) => ({
 	minHeight: '100vh',
 	padding: '0.5rem',
 	[theme.breakpoints.up('sm')]: {
-		padding: '1rem'
+		padding: '1rem',
 	},
 	[theme.breakpoints.up('md')]: {
-		padding: '1rem'
+		padding: '1rem',
 	},
 	[theme.breakpoints.up('lg')]: {
-		padding: '2rem'
+		padding: '2rem',
 	},
 }))
 
@@ -57,11 +57,7 @@ const Layout = ({
 				)}
 
 				<Box flexGrow={1}>
-					{noContainer ? (
-						<Box>{children}</Box>
-					) : (
-						<Wrapper>{children}</Wrapper>
-					)}
+					{noContainer ? <Box>{children}</Box> : <Wrapper>{children}</Wrapper>}
 				</Box>
 			</Box>
 

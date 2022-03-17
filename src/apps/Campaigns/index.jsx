@@ -38,7 +38,7 @@ export const Campaigns = (props) => {
 			}
 		})
 
-		content.sort(function(a, b) {
+		content.sort(function (a, b) {
 			if (!a.expiry || !b.expiry) return 0
 
 			var A = parseInt(a.expiry.replaceAll(',', ''))
@@ -73,19 +73,19 @@ export const Campaigns = (props) => {
 						campaignsCount === 0 ? (
 							<h4>No campaigns yet. Create one!</h4>
 						) : !content ? (
-							<Loader text='' />
+							<Loader text="" />
 						) : (
-							<h4>Total campaigns: {campaignsCount ?? <Loader text='' />}</h4>
+							<h4>Total campaigns: {campaignsCount ?? <Loader text="" />}</h4>
 						)
 					) : (
 						<h4>Create Campaign</h4>
 					)}
 				</Box>
 
-				<Box marginLeft='auto'>
+				<Box marginLeft="auto">
 					{showCreateMode ? (
 						<Button
-							variant='outlined'
+							variant="outlined"
 							startIcon={<ClearIcon />}
 							onClick={handleCloseBtn}
 						>
@@ -93,7 +93,7 @@ export const Campaigns = (props) => {
 						</Button>
 					) : account && connected ? (
 						<Button
-							variant='outlined'
+							variant="outlined"
 							startIcon={<AddIcon />}
 							onClick={handleCreateBtn}
 						>
@@ -111,7 +111,9 @@ export const Campaigns = (props) => {
 				}}
 			>
 				{showCreateMode && connected && <CreateCampaign />}
-				{!showCreateMode && content && campaignsCount > 0 && <CampaignGrid content={content} />}
+				{!showCreateMode && content && campaignsCount > 0 && (
+					<CampaignGrid content={content} />
+				)}
 			</Box>
 		</Container>
 	)

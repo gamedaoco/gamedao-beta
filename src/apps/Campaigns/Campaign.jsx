@@ -30,7 +30,6 @@ import { useCrowdfunding } from 'src/hooks/useCrowdfunding'
 import { useGameDaoControl } from 'src/hooks/useGameDaoControl'
 import { foregroundContentMap } from './campaignForegrounds/foregroundContentMap'
 
-
 const Headline = styled(Typography)(({ theme }) => {
 	return {
 		fontSize: '1.3rem',
@@ -65,7 +64,7 @@ function TabPanel(props) {
 
 	return (
 		<div
-			role='tabpanel'
+			role="tabpanel"
 			hidden={value !== index}
 			id={`simple-tabpanel-${index}`}
 			aria-labelledby={`simple-tab-${index}`}
@@ -200,7 +199,7 @@ export function Campaign() {
 										component={NavLink}
 										to={'/app/organisations/' + content.org}
 									>
-										<Typography variant='caption'>{org}</Typography>
+										<Typography variant="caption">{org}</Typography>
 									</Link>
 								</Grid>
 								{/*<Grid item xs={12}>
@@ -219,8 +218,8 @@ export function Campaign() {
 								<Grid item xs={12}>
 									<Stack direction={'row'} alignItems={'center'} spacing={1}>
 										<Typography>
-											<strong>{content.balance} </strong> of{' '}
-											{content.cap} contributed.
+											<strong>{content.balance} </strong> of {content.cap}{' '}
+											contributed.
 										</Typography>
 									</Stack>
 								</Grid>
@@ -272,23 +271,25 @@ export function Campaign() {
 										/*sx={{ mr: 5 }}*/
 									/>
 								</Box>
-								{funded && <ParticipateButton
-									/*onClick={() => createInfoNotification('Not Implemented Yet!')}*/
-									variant={'contained'}
-								>
-									{/*!funded && 'Participate'*/}
-									{funded && 'Funded!'}
-								</ParticipateButton>}
+								{funded && (
+									<ParticipateButton
+										/*onClick={() => createInfoNotification('Not Implemented Yet!')}*/
+										variant={'contained'}
+									>
+										{/*!funded && 'Participate'*/}
+										{funded && 'Funded!'}
+									</ParticipateButton>
+								)}
 							</Stack>
 						</Grid>
 					</Grid>
 				</Container>
 			</Box>
-			<Container maxWidth='lg' sx={{ marginBottom: 4 }}>
+			<Container maxWidth="lg" sx={{ marginBottom: 4 }}>
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
-						<Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
-							<Tab label='Description' {...a11yProps(0)} />
+						<Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+							<Tab label="Description" {...a11yProps(0)} />
 							{/*<Tab label="Rewards" {...a11yProps(1)} />
 							<Tab label="Milestones" {...a11yProps(2)} />
 							<Tab label="Funding" {...a11yProps(2)} />*/}
@@ -318,8 +319,8 @@ function Description() {
 	return (
 		<Grid container spacing={4}>
 			<Grid item xs={12}>
-				<Typography variant='h4'>LEVEL UP &</Typography>
-				<Typography variant='h2'>BE LEGENDARY</Typography>
+				<Typography variant="h4">LEVEL UP &</Typography>
+				<Typography variant="h2">BE LEGENDARY</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
@@ -333,12 +334,12 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h4'>CHOOSE YOUR</Typography>
-				<Typography variant='h2'>CHAMPION</Typography>
+				<Typography variant="h4">CHOOSE YOUR</Typography>
+				<Typography variant="h2">CHAMPION</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Stack direction='row' sx={{ width: '100%' }}>
+				<Stack direction="row" sx={{ width: '100%' }}>
 					{[0, 1, 2, 3, 4].map((x) => (
 						<TileReward />
 					))}
@@ -346,8 +347,8 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h4'>SOME CATCHY</Typography>
-				<Typography variant='h2'>HEADLINE</Typography>
+				<Typography variant="h4">SOME CATCHY</Typography>
+				<Typography variant="h2">HEADLINE</Typography>
 			</Grid>
 
 			<Grid item xs={12}>
@@ -361,14 +362,14 @@ function Description() {
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h4'>STUNNING &</Typography>
-				<Typography variant='h2'>MYSTICAL WORLDS</Typography>
+				<Typography variant="h4">STUNNING &</Typography>
+				<Typography variant="h2">MYSTICAL WORLDS</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Image16to9 />
 			</Grid>
 			<Grid item xs={12}>
-				<Stack direction='row' spacing={2}>
+				<Stack direction="row" spacing={2}>
 					<Image16to9 />
 					<Image16to9 />
 					<Image16to9 />
