@@ -10,12 +10,15 @@ import { createInfoNotification } from 'src/utils/notification'
 
 import { useTheme } from '@mui/material/styles'
 import { Table, TableBody, TableCell, TableRow } from 'src/components'
-import { Grid, Stack, Typography, Box, Paper } from 'src/components'
+import { Grid, Stack, Typography, Box, Paper, Button, Link } from 'src/components'
 
 import HeartIcon from '@mui/icons-material/FavoriteBorder'
 import VerifiedIcon from '@mui/icons-material/Verified'
 
 import Collectables from './Collectables'
+
+const IDENTITY_URL = 'https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fsubzero.gamedao.co#/accounts'
+const IDENTITY_TUTORIAL = 'https://docs.gamedao.co/guides/from-dao-to-campaign#1.-create-a-wallet-and-claim-an-identity'
 
 const TopBar = ({ id, xp, rep, trust }) => {
 	const { account, address } = useWallet()
@@ -207,31 +210,22 @@ export const Component = () => {
 					{identity && (
 						<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
 							{/*
+						*/}
 							<Box
 								sx={{
 									display: 'flex',
 									verticalAlign: 'middle',
 									justifyContent: 'space-between',
+									pb: 2
 								}}
 							>
-								<Typography variant="h3" sx={{ height: 'auto', m: 0 }}>
+								<Typography variant="h4" sx={{ height: 'auto', m: 0 }}>
 									{' '}
-									Account{' '}
+									Identity{' '}
 								</Typography>
-								<Button
-									size="small"
-									sx={{ borderRadius: '100vw' }}
-									variant="outlined"
-									color="secondary"
-								>
-									Refresh
-								</Button>
-							</Box>*/}
 
-							<Typography variant="h4" sx={{ mb: 2 }}>
-								{' '}
-								Identity{' '}
-							</Typography>
+							</Box>
+
 							<Typography variant="body2" sx={{ mb: 2 }}>
 								Identity data is aggregated from various sources, like the ZERO
 								Identity, Kilt SocialKYC and more. Improving the quality of this
@@ -250,13 +244,44 @@ export const Component = () => {
 									['discord id', identity.discord, ''],
 								]}
 							/>
+
+							<Box
+								sx={{
+									display: 'flex',
+									verticalAlign: 'middle',
+									justifyContent: 'space-between',
+									pt: 2
+								}}
+							>
+								<Link href={IDENTITY_TUTORIAL} target="_blank">
+									<Button
+										size="small"
+										sx={{ borderRadius: '1rem' }}
+										variant="outlined"
+										color="secondary"
+									>
+										Docs
+									</Button>
+								</Link>
+								<Link href={IDENTITY_URL} target="_blank">
+									<Button
+										size="small"
+										sx={{ borderRadius: '1rem' }}
+										variant="outlined"
+										color="secondary"
+									>
+										Claim Identity
+									</Button>
+								</Link>
+							</Box>
+
 						</Paper>
 					)}
 				</Grid>
 
 				<Grid item xs={12} md={6}>
 					<Paper elevation={10} sx={{ p: 4, ...bgPlain, height: '100%' }}>
-						<Typography variant="h4" sx={{ mb: 2 }}>
+						<Typography variant="h4" sx={{ pb: 2 }}>
 							{' '}
 							Achievements{' '}
 						</Typography>
