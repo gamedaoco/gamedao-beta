@@ -4,6 +4,33 @@ import { useEffect, useState } from 'react'
 import Modal from '@mui/material/Modal'
 import { Grid, Card, Typography, Box, Link } from 'src/components'
 import to from 'await-to-js'
+// import '@google/model-viewer/dist/model-viewer'
+
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            "model-viewer": {
+                src: string
+                "ios-src"?: string
+                "camera-controls"?: boolean
+                "disable-zoom"?: boolean
+                "auto-rotate"?: boolean
+                ar?: boolean
+                autoplay?: boolean
+                alt?: string
+                "shadow-intensity"?: number | string
+                "ar-scale"?: number | string
+                toBlob?: () => Promise<Blob>
+                width?: string | number
+                height?: string | number
+                style?: string
+            } & React.DetailedHTMLProps<
+                React.HTMLAttributes<HTMLElement>,
+                HTMLElement
+            >
+        }
+    }
+}
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -13,14 +40,15 @@ const style = {
 	width: '90vw',
 	height: '90vw',
 	bgcolor: 'black',
-	boxShadow: 24,
 	borderRadius: '1rem',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
+	outline: 0,
+	'*': { width: '90%', height: '90%' }
 }
 
-const CollectableView = ({ content }) => {
+const Collectable = ({ content }) => {
 
 	// const theme = useTheme()
 	// const bgPlain = { backgroundColor: theme.palette.grey[500_16] }
@@ -30,7 +58,7 @@ const CollectableView = ({ content }) => {
 	const [ mediaURI, setMediaURI ] = useState(null);
 
 	const [open, setOpen] = useState(false)
-	const handleOpen = () => null // setOpen(true)
+	const handleOpen = () => setOpen(true)
 	const handleClose = () => setOpen(false)
 
 	const GATEWAY = 'https://rmrk.mypinata.cloud/ipfs/'
@@ -62,7 +90,18 @@ const CollectableView = ({ content }) => {
 					aria-labelledby="modal-modal-title"
 					aria-describedby="modal-modal-description"
 					>
-					<Box sx={{ ...style }}>Content
+					<Box sx={{ ...style }}>
+						<model-viewer
+							src={mediaURI}
+							alt={content.metadata_name}
+							ios-src=""
+							camera-controls
+							environment-image="neutral"
+							shadow-intensity="1"
+							auto-rotate
+							autoplay
+							ar
+						/>
 					</Box>
 				</Modal>
 			}
@@ -70,8 +109,8 @@ const CollectableView = ({ content }) => {
 				<Card sx={{ width: '240px', minHeight: '240px',	alignItems: 'center', justifyContent: 'center' }}>
 					{ !metadata
 						? ('Loading...')
-						: (<Link sx={{ color: '#f0f', fontStyle: 'italic'}} href={ SINGULAR_URL + content.id } target='_blank' rel="noreferrer">
-							<img alt={content.metadata_name} src={thumbnailURI} width='100%' height='auto' onClick={handleOpen}/>
+						: (<Link sx={{ color: '#f0f', fontStyle: 'italic'}} target='_blank' onClick={handleOpen}>
+							<img alt={content.metadata_name} src={thumbnailURI} width='100%' height='auto'/>
 							<Typography sx={{ pt: 1, px: 2, fontFamily: 'PT Serif Regular'}}>{content.metadata_name}</Typography>
 							<Typography sx={{ pb: 1, px: 2, fontFamily:'PT Serif Regular'}}>{content.sn}</Typography>
 						</Link>)
@@ -83,4 +122,4 @@ const CollectableView = ({ content }) => {
 
 }
 
-export default CollectableView
+export default Collectable
