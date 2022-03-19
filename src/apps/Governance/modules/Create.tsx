@@ -213,9 +213,9 @@ export const Main = () => {
 			const expiry = formik.values.duration * blocksPerDay + start // take current block as offset
 			const { entity, campaign, title, amount, proposal_type } = formik.values
 
-			console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formik.values)
-			console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
-			console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
+			// console.log('🚀 ~ file: Create.tsx ~ line 189 ~ sendTX ~ formData', formik.values)
+			// console.log('🚀 ~ file: Create.tsx ~ line 190 ~ sendTX ~ start', start)
+			// console.log('🚀 ~ file: Create.tsx ~ line 191 ~ sendTX ~ expiry', expiry)
 
 			let query, payload
 
@@ -238,7 +238,7 @@ export const Main = () => {
 			signAndNotify(
 				query(...payload),
 				{
-					pending: 'Proposal creation in progress',
+					pending: 'Creating Proposal',
 					success: 'Proposal created',
 					error: 'Proposal creation failed',
 				},

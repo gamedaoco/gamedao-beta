@@ -29,7 +29,7 @@ export const Component = () => {
 						</Button>
 					</a>
 					<a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
-						<Button size="small" sx={{ borderRadius: '100px' }} variant="outlined">
+						<Button size="small" sx={{ borderRadius: '1rem' }} variant="outlined">
 							Download
 						</Button>
 					</a>
