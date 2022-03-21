@@ -93,6 +93,8 @@ const WalletProvider = ({ children }) => {
 												' '
 											)}`
 										)
+
+										createErrorNotification(docs.join(' '))
 									} else {
 										// Other, CannotLookup, BadOrigin, no extra info
 										console.log('Wallet Transaction Result:', error.toString())
