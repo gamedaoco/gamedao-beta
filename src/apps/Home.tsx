@@ -32,6 +32,7 @@ export default function SignIn() {
 					height: '100vh',
 					top: '0px',
 					left: '0px',
+					'*': { textDecoration: 'none' }
 				}}
 			>
 				<Rainbowmesh />
@@ -42,7 +43,7 @@ export default function SignIn() {
 			<Grid item xs={12}>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} mt={2}>
 					<Icons src={ICON_MAPPING.logoWhite} alt={'GameDAO'} sx={{ height: '48px' }} />
-					<a href="https://blog.gamedao.co/" target="_blank" rel="noreferrer">
+					<a href="/app" target="_blank" rel="noreferrer">
 						<Button size="large" color="primary" variant="outlined">
 							Enter
 						</Button>
