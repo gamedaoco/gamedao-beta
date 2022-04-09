@@ -68,7 +68,7 @@
 		"ipfs-http-client": "^54.0.2",
 		"markdown-it": "^12.3.2",
 		"material-ui-image": "^3.3.2",
-		"moment": "^2.29.1",
+		"moment": "^2.29.2",
 		"nprogress": "^0.2.0",
 		"numeral": "2.0.6",
 		"postprocessing": "6.21.3",
