@@ -17,7 +17,7 @@ services:
       LETSENCRYPT_EMAIL: ${LEMAIL}
 
   subzero:
-    image: playzero/subzero:latest
+    image: playzero/subzero:1.51.0
     container_name: "zero"
     restart: always
     ports:
