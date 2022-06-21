@@ -13,11 +13,11 @@ CMD ["ls", "-al", "build"]
 
 FROM nginx:stable-alpine as app
 
-WORKDIR /usr/share/nginx/html
+COPY --from=builder /app/.docker/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/.docker/.env .
+COPY --from=builder /app/.docker/env.sh .
 COPY --from=builder /app/build /usr/share/nginx/html
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY .env .
-COPY ./docker/env.sh .
+WORKDIR /usr/share/nginx/html
 
 RUN apk add --no-cache bash; chmod +x env.sh
 
