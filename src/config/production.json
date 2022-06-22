@@ -1,5 +1,5 @@
 {
-	"PROVIDER_SOCKET": "wss://alphaville.zero.io",
+	"PROVIDER_SOCKET": "ws://gamedao-node",
 	"API_URL": "ipfs.gamedao.co",
 	"API_PROTOCOL": "https",
 	"API_PORT": 5001,
