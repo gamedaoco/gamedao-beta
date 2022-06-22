@@ -15,7 +15,8 @@
 		"predeploy": "yarn build",
 		"deploy": "gh-pages -d build -m '[ci skip] Updates'",
 		"format": "prettier --write --check 'src/**/*.{js,json,jsx,ts,tsx}'",
-		"format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'"
+		"format:verify": "prettier --check 'src/**/*.{js,json,jsx,ts,tsx}'",
+        "reset": "yarn rimraf node_modules build"
 	},
 	"dependencies": {
 		"@emotion/cache": "^11.6.0",
