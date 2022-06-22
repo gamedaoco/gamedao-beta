@@ -6,12 +6,12 @@ FROM node:lts as builder
 
 WORKDIR /app
 COPY . .
-RUN yarn install --prefer-offline --frozen-lockfile
+RUN time yarn install --prefer-offline --frozen-lockfile
 
 # ENV YARN_CACHE_FOLDER=/tmp/yarn_cache
 # RUN --mount=type=cache,target=/tmp/yarn_cache yarn install --prefer-offline --frozen-lockfile
 
-RUN yarn build
+RUN time yarn build
 
 # ===========================================================
 
@@ -24,10 +24,10 @@ COPY --from=builder /app/.docker/env.sh .
 # static build
 COPY --from=builder /app/build /usr/share/nginx/html
 
-WORKDIR /usr/share/nginx/html
-
 RUN apk add --no-cache bash;
 RUN chmod +x /env.sh
+
+WORKDIR /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -22,7 +22,7 @@ services:
       LETSENCRYPT_EMAIL: hey@gamedao.co
 
   app:
-    image: gamedao/app:latest
+    image: gamedao/app:local
     container_name: gamedao-app
     restart: always
     ports:
